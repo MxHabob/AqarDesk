@@ -12,3 +12,7 @@ type-specific details, listings and price/status history, listing media
 metadata, and user favorites. The app service layer must validate that a
 property type matches its detail record and write price/status history in the
 same transaction as listing updates.
+
+Run `bun run db:seed` after migrations to insert the default admin, manager,
+staff, and read-only roles and their permissions. The seed is safe to rerun;
+it does not create user accounts or grant the admin role to one.

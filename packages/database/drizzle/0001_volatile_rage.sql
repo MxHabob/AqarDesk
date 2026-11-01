@@ -247,6 +247,16 @@ CREATE TABLE "yard_details" (
 );
 --> statement-breakpoint
 DROP INDEX "user_role_idx";--> statement-breakpoint
+INSERT INTO "role" ("id", "key", "name")
+SELECT DISTINCT COALESCE(NULLIF(btrim("role"), ''), 'staff'),
+	COALESCE(NULLIF(btrim("role"), ''), 'staff'),
+	COALESCE(NULLIF(btrim("role"), ''), 'staff')
+FROM "user"
+ON CONFLICT DO NOTHING;--> statement-breakpoint
+INSERT INTO "user_role" ("user_id", "role_id")
+SELECT "id", COALESCE(NULLIF(btrim("role"), ''), 'staff')
+FROM "user"
+ON CONFLICT DO NOTHING;--> statement-breakpoint
 ALTER TABLE "role_permission" ADD CONSTRAINT "role_permission_role_id_role_id_fk" FOREIGN KEY ("role_id") REFERENCES "public"."role"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "role_permission" ADD CONSTRAINT "role_permission_permission_id_permission_id_fk" FOREIGN KEY ("permission_id") REFERENCES "public"."permission"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint
 ALTER TABLE "user_role" ADD CONSTRAINT "user_role_user_id_user_id_fk" FOREIGN KEY ("user_id") REFERENCES "public"."user"("id") ON DELETE cascade ON UPDATE no action;--> statement-breakpoint

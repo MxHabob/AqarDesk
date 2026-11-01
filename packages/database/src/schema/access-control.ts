@@ -20,7 +20,7 @@ export const roles = pgTable("role", {
 
 export const permissions = pgTable("permission", {
   id: text("id").primaryKey(),
-  key: text("key").notNull(),
+  key: text("key").notNull().unique(),
   description: text("description"),
 })
 

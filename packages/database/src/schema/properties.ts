@@ -107,17 +107,26 @@ export const propertyOwners = pgTable(
   ]
 )
 
-export const buildingDetails = pgTable("building_details", {
-  propertyId: uuid("property_id")
-    .primaryKey()
-    .references(() => properties.id, { onDelete: "cascade" }),
-  currentFloors: integer("current_floors"),
-  constructionDesign: text("construction_design"),
-  deedIssuer: text("deed_issuer"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-})
+export const buildingDetails = pgTable(
+  "building_details",
+  {
+    propertyId: uuid("property_id")
+      .primaryKey()
+      .references(() => properties.id, { onDelete: "cascade" }),
+    currentFloors: integer("current_floors"),
+    constructionDesign: text("construction_design"),
+    deedIssuer: text("deed_issuer"),
+    createdAt: timestamp("created_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (table) => [
+    check(
+      "building_current_floors_nonnegative",
+      sql`${table.currentFloors} is null or ${table.currentFloors} >= 0`
+    ),
+  ]
+)
 
 export const landDetails = pgTable("land_details", {
   propertyId: uuid("property_id")
@@ -126,21 +135,34 @@ export const landDetails = pgTable("land_details", {
   deedIssuer: text("deed_issuer"),
 })
 
-export const houseVillaDetails = pgTable("house_villa_details", {
-  propertyId: uuid("property_id")
-    .primaryKey()
-    .references(() => properties.id, { onDelete: "cascade" }),
-  currentFloors: integer("current_floors"),
-  apartmentCount: integer("apartment_count"),
-  constructionDesign: text("construction_design"),
-  finish: propertyFinishEnum("finish"),
-  hasYard: boolean("has_yard"),
-  hasReception: boolean("has_reception"),
-  isFurnished: boolean("is_furnished"),
-  hasBasement: boolean("has_basement"),
-  hasGuardRoom: boolean("has_guard_room"),
-  deedIssuer: text("deed_issuer"),
-})
+export const houseVillaDetails = pgTable(
+  "house_villa_details",
+  {
+    propertyId: uuid("property_id")
+      .primaryKey()
+      .references(() => properties.id, { onDelete: "cascade" }),
+    currentFloors: integer("current_floors"),
+    apartmentCount: integer("apartment_count"),
+    constructionDesign: text("construction_design"),
+    finish: propertyFinishEnum("finish"),
+    hasYard: boolean("has_yard"),
+    hasReception: boolean("has_reception"),
+    isFurnished: boolean("is_furnished"),
+    hasBasement: boolean("has_basement"),
+    hasGuardRoom: boolean("has_guard_room"),
+    deedIssuer: text("deed_issuer"),
+  },
+  (table) => [
+    check(
+      "house_villa_current_floors_nonnegative",
+      sql`${table.currentFloors} is null or ${table.currentFloors} >= 0`
+    ),
+    check(
+      "house_villa_apartment_count_nonnegative",
+      sql`${table.apartmentCount} is null or ${table.apartmentCount} >= 0`
+    ),
+  ]
+)
 
 export const investmentDetails = pgTable("investment_details", {
   propertyId: uuid("property_id")
@@ -152,26 +174,52 @@ export const investmentDetails = pgTable("investment_details", {
   deedIssuer: text("deed_issuer"),
 })
 
-export const commercialDetails = pgTable("commercial_details", {
-  propertyId: uuid("property_id")
-    .primaryKey()
-    .references(() => properties.id, { onDelete: "cascade" }),
-  previousActivity: text("previous_activity"),
-  openingCount: integer("opening_count"),
-  toiletCount: integer("toilet_count"),
-  hasStorage: boolean("has_storage"),
-  storageDetails: text("storage_details"),
-  additionalDetails: text("additional_details"),
-})
+export const commercialDetails = pgTable(
+  "commercial_details",
+  {
+    propertyId: uuid("property_id")
+      .primaryKey()
+      .references(() => properties.id, { onDelete: "cascade" }),
+    previousActivity: text("previous_activity"),
+    openingCount: integer("opening_count"),
+    toiletCount: integer("toilet_count"),
+    hasStorage: boolean("has_storage"),
+    storageDetails: text("storage_details"),
+    additionalDetails: text("additional_details"),
+  },
+  (table) => [
+    check(
+      "commercial_openings_nonnegative",
+      sql`${table.openingCount} is null or ${table.openingCount} >= 0`
+    ),
+    check(
+      "commercial_toilets_nonnegative",
+      sql`${table.toiletCount} is null or ${table.toiletCount} >= 0`
+    ),
+  ]
+)
 
-export const warehouseDetails = pgTable("warehouse_details", {
-  propertyId: uuid("property_id")
-    .primaryKey()
-    .references(() => properties.id, { onDelete: "cascade" }),
-  openingCount: integer("opening_count"),
-  toiletCount: integer("toilet_count"),
-  additionalDetails: text("additional_details"),
-})
+export const warehouseDetails = pgTable(
+  "warehouse_details",
+  {
+    propertyId: uuid("property_id")
+      .primaryKey()
+      .references(() => properties.id, { onDelete: "cascade" }),
+    openingCount: integer("opening_count"),
+    toiletCount: integer("toilet_count"),
+    additionalDetails: text("additional_details"),
+  },
+  (table) => [
+    check(
+      "warehouse_openings_nonnegative",
+      sql`${table.openingCount} is null or ${table.openingCount} >= 0`
+    ),
+    check(
+      "warehouse_toilets_nonnegative",
+      sql`${table.toiletCount} is null or ${table.toiletCount} >= 0`
+    ),
+  ]
+)
 
 export const yardDetails = pgTable("yard_details", {
   propertyId: uuid("property_id")
@@ -185,19 +233,36 @@ export const yardDetails = pgTable("yard_details", {
   additionalDetails: text("additional_details"),
 })
 
-export const apartmentDetails = pgTable("apartment_details", {
-  propertyId: uuid("property_id")
-    .primaryKey()
-    .references(() => properties.id, { onDelete: "cascade" }),
-  roomCount: integer("room_count"),
-  toiletCount: integer("toilet_count"),
-  kitchenDetails: text("kitchen_details"),
-  hasSeparateMajlis: boolean("has_separate_majlis"),
-  entranceCount: integer("entrance_count"),
-  floorNumber: text("floor_number"),
-  hasYard: boolean("has_yard"),
-  isFurnished: boolean("is_furnished"),
-  buildingType: text("building_type"),
-  preferredTenant: tenantTypeEnum("preferred_tenant"),
-  additionalDetails: text("additional_details"),
-})
+export const apartmentDetails = pgTable(
+  "apartment_details",
+  {
+    propertyId: uuid("property_id")
+      .primaryKey()
+      .references(() => properties.id, { onDelete: "cascade" }),
+    roomCount: integer("room_count"),
+    toiletCount: integer("toilet_count"),
+    kitchenDetails: text("kitchen_details"),
+    hasSeparateMajlis: boolean("has_separate_majlis"),
+    entranceCount: integer("entrance_count"),
+    floorNumber: text("floor_number"),
+    hasYard: boolean("has_yard"),
+    isFurnished: boolean("is_furnished"),
+    buildingType: text("building_type"),
+    preferredTenant: tenantTypeEnum("preferred_tenant"),
+    additionalDetails: text("additional_details"),
+  },
+  (table) => [
+    check(
+      "apartment_rooms_nonnegative",
+      sql`${table.roomCount} is null or ${table.roomCount} >= 0`
+    ),
+    check(
+      "apartment_toilets_nonnegative",
+      sql`${table.toiletCount} is null or ${table.toiletCount} >= 0`
+    ),
+    check(
+      "apartment_entrances_nonnegative",
+      sql`${table.entranceCount} is null or ${table.entranceCount} >= 0`
+    ),
+  ]
+)

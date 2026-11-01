@@ -15,6 +15,7 @@ Generate and apply schema migrations from the repository root:
 ```bash
 bun run db:generate
 bun run db:migrate
+bun run db:seed
 ```
 
 The schema contains Better Auth users, sessions, accounts, and verifications,
@@ -23,6 +24,12 @@ media metadata, favorites, and role/permission tables. Public sign-up is
 disabled; provision staff through a trusted administrative workflow. Listing
 types, status transitions, and permission checks must also be validated by
 server-side application services.
+
+Listing photos, plans, videos, and documents use the S3-compatible
+`@workspace/storage` package. Set `STORAGE_BUCKET` and `STORAGE_REGION`; for
+R2, MinIO, or another custom endpoint, also set `STORAGE_ENDPOINT` and its
+access keys. Keep the bucket private and issue short-lived signed URLs only
+after checking the user's permission to access that listing.
 
 ## Code quality
 

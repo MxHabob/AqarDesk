@@ -1,0 +1,12 @@
+ALTER TABLE "permission" ADD CONSTRAINT "permission_key_unique" UNIQUE("key");--> statement-breakpoint
+ALTER TABLE "listing" ADD CONSTRAINT "listing_status_matches_type" CHECK (("listing"."type" = 'sale' and "listing"."status" <> 'rented') or ("listing"."type" = 'rent' and "listing"."status" <> 'sold'));--> statement-breakpoint
+ALTER TABLE "apartment_details" ADD CONSTRAINT "apartment_rooms_nonnegative" CHECK ("apartment_details"."room_count" is null or "apartment_details"."room_count" >= 0);--> statement-breakpoint
+ALTER TABLE "apartment_details" ADD CONSTRAINT "apartment_toilets_nonnegative" CHECK ("apartment_details"."toilet_count" is null or "apartment_details"."toilet_count" >= 0);--> statement-breakpoint
+ALTER TABLE "apartment_details" ADD CONSTRAINT "apartment_entrances_nonnegative" CHECK ("apartment_details"."entrance_count" is null or "apartment_details"."entrance_count" >= 0);--> statement-breakpoint
+ALTER TABLE "building_details" ADD CONSTRAINT "building_current_floors_nonnegative" CHECK ("building_details"."current_floors" is null or "building_details"."current_floors" >= 0);--> statement-breakpoint
+ALTER TABLE "commercial_details" ADD CONSTRAINT "commercial_openings_nonnegative" CHECK ("commercial_details"."opening_count" is null or "commercial_details"."opening_count" >= 0);--> statement-breakpoint
+ALTER TABLE "commercial_details" ADD CONSTRAINT "commercial_toilets_nonnegative" CHECK ("commercial_details"."toilet_count" is null or "commercial_details"."toilet_count" >= 0);--> statement-breakpoint
+ALTER TABLE "house_villa_details" ADD CONSTRAINT "house_villa_current_floors_nonnegative" CHECK ("house_villa_details"."current_floors" is null or "house_villa_details"."current_floors" >= 0);--> statement-breakpoint
+ALTER TABLE "house_villa_details" ADD CONSTRAINT "house_villa_apartment_count_nonnegative" CHECK ("house_villa_details"."apartment_count" is null or "house_villa_details"."apartment_count" >= 0);--> statement-breakpoint
+ALTER TABLE "warehouse_details" ADD CONSTRAINT "warehouse_openings_nonnegative" CHECK ("warehouse_details"."opening_count" is null or "warehouse_details"."opening_count" >= 0);--> statement-breakpoint
+ALTER TABLE "warehouse_details" ADD CONSTRAINT "warehouse_toilets_nonnegative" CHECK ("warehouse_details"."toilet_count" is null or "warehouse_details"."toilet_count" >= 0);

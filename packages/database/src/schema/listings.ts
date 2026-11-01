@@ -99,6 +99,10 @@ export const listings = pgTable(
       sql`(${table.type} = 'sale' and ${table.monthlyRent} is null and ${table.keyMoney} is null and ${table.advanceAmount} is null and ${table.leaseDurationMonths} is null) or (${table.type} = 'rent' and ${table.salePrice} is null)`
     ),
     check(
+      "listing_status_matches_type",
+      sql`(${table.type} = 'sale' and ${table.status} <> 'rented') or (${table.type} = 'rent' and ${table.status} <> 'sold')`
+    ),
+    check(
       "listing_currency_code_format",
       sql`${table.currencyCode} ~ '^[A-Z]{3}$'`
     ),

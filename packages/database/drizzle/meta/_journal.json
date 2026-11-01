@@ -15,6 +15,13 @@
       "when": 1793552107895,
       "tag": "0001_volatile_rage",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793552525626,
+      "tag": "0002_big_black_widow",
+      "breakpoints": true
     }
   ]
 }
