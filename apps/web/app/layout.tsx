@@ -1,6 +1,8 @@
 import { Geist_Mono, Roboto } from "next/font/google"
 
 import "@aqardesk/ui/globals.css"
+import { Toaster } from "@aqardesk/ui/components/toaster"
+import { TooltipProvider } from "@aqardesk/ui/components/tooltip"
 import { cn } from "@aqardesk/ui/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 
@@ -18,7 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="ar"
+      dir="rtl"
       suppressHydrationWarning
       className={cn(
         "antialiased",
@@ -28,7 +31,12 @@ export default function RootLayout({
       )}
     >
       <body>
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider>
+          <TooltipProvider>
+            {children}
+            <Toaster />
+          </TooltipProvider>
+        </ThemeProvider>
       </body>
     </html>
   )
