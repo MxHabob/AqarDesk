@@ -8,9 +8,16 @@
   },
   "exports": {
     ".": "./src/index.ts",
-    "./templates": "./src/templates.ts"
+    "./emails/*": "./src/emails/*.tsx",
+    "./render": "./src/render.ts"
+  },
+  "dependencies": {
+    "@react-email/components": "1.0.10",
+    "@react-email/render": "2.0.4",
+    "react": "^19.0.0"
   },
   "devDependencies": {
+    "@types/react": "^19",
     "@aqardesk/typescript-config": "workspace:*",
     "typescript": "^5"
   }

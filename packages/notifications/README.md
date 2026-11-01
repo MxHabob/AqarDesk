@@ -1,7 +1,9 @@
 # Notifications
 
-PostgreSQL-backed, per-user in-app notifications. The package supports creating
-notifications, cursor-paginated listing, and marking one or all as read.
+PostgreSQL-backed, per-user in-app notifications. Notification types and
+validation schemas are defined separately from the service modules. The
+package supports creating notifications, cursor-paginated listing, and
+marking one or all as read.
 Notification rows are scoped by `userId`; API handlers must take that ID from
 the authenticated session, never from untrusted request input.
 

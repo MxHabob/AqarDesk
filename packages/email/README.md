@@ -1,7 +1,7 @@
 # Email
 
-Provider-neutral Arabic RTL templates for staff invitations and password
-resets. `EmailProvider` is the delivery boundary; configure a provider in the
+Arabic RTL React Email templates for staff invitations and password resets.
+`EmailProvider` is the delivery boundary; configure a provider in the
 application without coupling templates to a vendor.
 
 The package only creates messages. It does not send email or contain provider

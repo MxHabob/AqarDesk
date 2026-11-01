@@ -1,9 +1,9 @@
 {
-  "extends": "@aqardesk/typescript-config/base.json",
+  "extends": "@aqardesk/typescript-config/react-library.json",
   "compilerOptions": {
     "noEmit": true,
     "module": "ESNext",
     "moduleResolution": "Bundler"
   },
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "src/**/*.tsx"]
 }

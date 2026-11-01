@@ -6,9 +6,15 @@
   "scripts": {
     "typecheck": "tsc --noEmit"
   },
+  "dependencies": {
+    "date-fns": "^4.1.0"
+  },
   "exports": {
     ".": "./src/index.ts",
-    "./format": "./src/format.ts"
+    "./currency": "./src/currency.ts",
+    "./date": "./src/date.ts",
+    "./format": "./src/format.ts",
+    "./number": "./src/number.ts"
   },
   "devDependencies": {
     "@aqardesk/typescript-config": "workspace:*",

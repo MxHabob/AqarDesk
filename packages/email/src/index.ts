@@ -1,12 +1,5 @@
-export * from "./templates"
-
-export interface EmailMessage {
-  to: string
-  subject: string
-  html: string
-  text: string
-}
-
-export interface EmailProvider {
-  send(message: EmailMessage): Promise<void>
-}
+export type { PasswordResetEmailInput } from "./emails/password-reset"
+export { createPasswordResetEmail } from "./emails/password-reset"
+export type { StaffInvitationEmailInput } from "./emails/staff-invitation"
+export { createStaffInvitationEmail } from "./emails/staff-invitation"
+export type { EmailMessage, EmailProvider } from "./types"

@@ -39,7 +39,7 @@ after checking the user's permission to access that listing.
 - `@aqardesk/validators` provides Zod input schemas for properties and
   listings.
 - `@aqardesk/utils` formats numbers and currencies by locale and formats dates
-  using the Gregorian calendar by default.
+  with date-fns and its Arabic locale.
 - `@aqardesk/notifications` stores user-scoped in-app notifications in
   PostgreSQL. API routes must derive the recipient ID from the authenticated
   session.
