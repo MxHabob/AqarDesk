@@ -5,6 +5,7 @@
   "scripts": {
     "build": "bun --env-file=.env run turbo build",
     "dev": "bun --env-file=.env run turbo dev",
+    "web:dev": "bun --env-file=.env run --filter @aqardesk/web dev",
     "check": "biome check .",
     "lint": "biome lint .",
     "format": "biome format --write .",
