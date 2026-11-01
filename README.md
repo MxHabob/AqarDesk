@@ -17,9 +17,12 @@ bun run db:generate
 bun run db:migrate
 ```
 
-The initial schema contains Better Auth users, sessions, accounts, and
-verifications. Public sign-up is disabled; user provisioning and office
-permissions must be implemented through a trusted administrative workflow.
+The schema contains Better Auth users, sessions, accounts, and verifications,
+along with properties, owners, sale/rent listings, type-specific details,
+media metadata, favorites, and role/permission tables. Public sign-up is
+disabled; provision staff through a trusted administrative workflow. Listing
+types, status transitions, and permission checks must also be validated by
+server-side application services.
 
 ## Code quality
 
