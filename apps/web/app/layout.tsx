@@ -1,7 +1,7 @@
 import { Geist_Mono, Roboto } from "next/font/google"
 
-import "@workspace/ui/globals.css"
-import { cn } from "@workspace/ui/lib/utils"
+import "@aqardesk/ui/globals.css"
+import { cn } from "@aqardesk/ui/lib/utils"
 import { ThemeProvider } from "@/components/theme-provider"
 
 const roboto = Roboto({ subsets: ["latin"], variable: "--font-sans" })

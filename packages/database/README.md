@@ -9,9 +9,9 @@ The connection is created lazily by `getDatabase()`, and `closeDatabase()` is
 available for scripts and tests. The schema currently contains Better Auth
 tables, roles and permissions, owners and their phone numbers, properties with
 type-specific details, listings and price/status history, listing media
-metadata, and user favorites. The app service layer must validate that a
-property type matches its detail record and write price/status history in the
-same transaction as listing updates.
+metadata, user favorites, and recipient-scoped notifications. The app service
+layer must validate that a property type matches its detail record and write
+price/status history in the same transaction as listing updates.
 
 Run `bun run db:seed` after migrations to insert the default admin, manager,
 staff, and read-only roles and their permissions. The seed is safe to rerun;

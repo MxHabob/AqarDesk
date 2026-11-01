@@ -1,4 +1,4 @@
-import { auth, toNextJsHandler } from "@workspace/auth/server"
+import { auth, toNextJsHandler } from "@aqardesk/auth/server"
 
 export const runtime = "nodejs"
 

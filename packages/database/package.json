@@ -1,5 +1,5 @@
 {
-  "name": "@workspace/database",
+  "name": "@aqardesk/database",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,12 +11,13 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
+    "@aqardesk/categories": "workspace:*",
     "drizzle-orm": "^0.45.4",
     "postgres": "^4.0.0"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",
-    "@workspace/typescript-config": "workspace:*",
+    "@aqardesk/typescript-config": "workspace:*",
     "dotenv": "^18.0.9",
     "drizzle-kit": "^0.31.11",
     "typescript": "^5"

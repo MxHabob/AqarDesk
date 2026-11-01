@@ -22,6 +22,13 @@
       "when": 1793552525626,
       "tag": "0002_big_black_widow",
       "breakpoints": true
+    },
+    {
+      "idx": 3,
+      "version": "7",
+      "when": 1793553006976,
+      "tag": "0003_busy_jack_power",
+      "breakpoints": true
     }
   ]
 }

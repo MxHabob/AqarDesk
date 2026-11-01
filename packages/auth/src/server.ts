@@ -1,4 +1,4 @@
-import { getDatabase, schema } from "@workspace/database"
+import { getDatabase, schema } from "@aqardesk/database"
 import { betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 

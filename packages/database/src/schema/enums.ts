@@ -1,15 +1,7 @@
+import { propertyTypeValues } from "@aqardesk/categories"
 import { pgEnum } from "drizzle-orm/pg-core"
 
-export const propertyTypeEnum = pgEnum("property_type", [
-  "building",
-  "land",
-  "house_villa",
-  "investment",
-  "commercial",
-  "warehouse",
-  "yard",
-  "apartment",
-])
+export const propertyTypeEnum = pgEnum("property_type", propertyTypeValues)
 
 export const listingTypeEnum = pgEnum("listing_type", ["sale", "rent"])
 

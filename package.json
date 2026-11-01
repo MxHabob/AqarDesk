@@ -10,14 +10,14 @@
     "format": "biome format --write .",
     "format:check": "biome format .",
     "typecheck": "turbo typecheck",
-    "db:generate": "bun --env-file=.env run --filter @workspace/database generate",
-    "db:migrate": "bun --env-file=.env run --filter @workspace/database migrate",
-    "db:studio": "bun --env-file=.env run --filter @workspace/database studio",
-    "db:seed": "bun --env-file=.env run --filter @workspace/database seed"
+    "db:generate": "bun --env-file=.env run --filter @aqardesk/database generate",
+    "db:migrate": "bun --env-file=.env run --filter @aqardesk/database migrate",
+    "db:studio": "bun --env-file=.env run --filter @aqardesk/database studio",
+    "db:seed": "bun --env-file=.env run --filter @aqardesk/database seed"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.4",
-    "@workspace/typescript-config": "workspace:*",
+    "@aqardesk/typescript-config": "workspace:*",
     "turbo": "^2.11.10",
     "typescript": "^5"
   },

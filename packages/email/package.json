@@ -1,0 +1,17 @@
+{
+  "name": "@aqardesk/email",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./templates": "./src/templates.ts"
+  },
+  "devDependencies": {
+    "@aqardesk/typescript-config": "workspace:*",
+    "typescript": "^5"
+  }
+}

@@ -1,0 +1,21 @@
+{
+  "name": "@aqardesk/validators",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@aqardesk/categories": "workspace:*",
+    "zod": "^4.3.6"
+  },
+  "devDependencies": {
+    "@aqardesk/typescript-config": "workspace:*",
+    "typescript": "^5"
+  },
+  "exports": {
+    ".": "./src/index.ts",
+    "./listings": "./src/listings.ts"
+  }
+}

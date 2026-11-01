@@ -14,8 +14,8 @@
     "components": "@/components",
     "hooks": "@/hooks",
     "lib": "@/lib",
-    "utils": "@workspace/ui/lib/utils",
-    "ui": "@workspace/ui/components"
+    "utils": "@aqardesk/ui/lib/utils",
+    "ui": "@aqardesk/ui/components"
   },
   "rtl": true,
   "menuColor": "default-translucent",

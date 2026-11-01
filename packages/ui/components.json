@@ -11,11 +11,11 @@
   },
   "iconLibrary": "lucide",
   "aliases": {
-    "components": "@workspace/ui/components",
-    "utils": "@workspace/ui/lib/utils",
-    "hooks": "@workspace/ui/hooks",
-    "lib": "@workspace/ui/lib",
-    "ui": "@workspace/ui/components"
+    "components": "@aqardesk/ui/components",
+    "utils": "@aqardesk/ui/lib/utils",
+    "hooks": "@aqardesk/ui/hooks",
+    "lib": "@aqardesk/ui/lib",
+    "ui": "@aqardesk/ui/components"
   },
   "rtl": true,
   "menuColor": "default-translucent",

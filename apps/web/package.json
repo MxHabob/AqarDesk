@@ -10,9 +10,14 @@
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
-    "@workspace/auth": "workspace:*",
-    "@workspace/storage": "workspace:*",
-    "@workspace/ui": "workspace:*",
+    "@aqardesk/auth": "workspace:*",
+    "@aqardesk/categories": "workspace:*",
+    "@aqardesk/email": "workspace:*",
+    "@aqardesk/notifications": "workspace:*",
+    "@aqardesk/storage": "workspace:*",
+    "@aqardesk/ui": "workspace:*",
+    "@aqardesk/utils": "workspace:*",
+    "@aqardesk/validators": "workspace:*",
     "lucide-react": "^1.66.0",
     "next": "16.4.3",
     "next-themes": "^0.4.6",
@@ -24,7 +29,7 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@workspace/typescript-config": "workspace:*",
+    "@aqardesk/typescript-config": "workspace:*",
     "typescript": "^5"
   }
 }

@@ -1,5 +1,5 @@
 {
-  "name": "@workspace/storage",
+  "name": "@aqardesk/storage",
   "version": "0.0.0",
   "private": true,
   "type": "module",
@@ -11,7 +11,7 @@
     "@aws-sdk/s3-request-presigner": "^3.1161.0"
   },
   "devDependencies": {
-    "@workspace/typescript-config": "workspace:*",
+    "@aqardesk/typescript-config": "workspace:*",
     "@types/node": "^26.6.6",
     "typescript": "^5"
   },
