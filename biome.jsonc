@@ -6,6 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
+    "includes": ["**", "!packages/database/drizzle/meta"],
     "ignoreUnknown": true
   },
   "formatter": {

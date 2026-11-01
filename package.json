@@ -3,13 +3,16 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "build": "turbo build",
-    "dev": "turbo dev",
+    "build": "bun --env-file=.env run turbo build",
+    "dev": "bun --env-file=.env run turbo dev",
     "check": "biome check .",
     "lint": "biome lint .",
     "format": "biome format --write .",
     "format:check": "biome format .",
-    "typecheck": "turbo typecheck"
+    "typecheck": "turbo typecheck",
+    "db:generate": "bun --env-file=.env run --filter @workspace/database generate",
+    "db:migrate": "bun --env-file=.env run --filter @workspace/database migrate",
+    "db:studio": "bun --env-file=.env run --filter @workspace/database studio"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.4",
