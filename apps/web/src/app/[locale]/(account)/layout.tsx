@@ -1,13 +1,10 @@
 import { auth } from "@aqardesk/auth/server"
-import { Button } from "@aqardesk/ui/components/button"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
-import Link from "next/link"
 import { redirect } from "next/navigation"
 import type { ReactNode } from "react"
-import { SignOutButton } from "@/components/account/sign-out-button"
-import { LanguageSwitcher } from "@/components/layout/language-switcher"
-import { getScopedI18n, initializeLocale } from "@/locales/server"
+import { Header } from "@/components/account/header"
+import { initializeLocale } from "@/locales/server"
 
 export const metadata: Metadata = {
   robots: { index: false, follow: false },
@@ -27,40 +24,9 @@ export default async function AccountLayout({
     redirect("/account/login")
   }
 
-  const t = await getScopedI18n("account")
-
   return (
-    <div className="mx-auto min-h-svh max-w-screen-xl space-y-8 px-5 py-8">
-      <header className="flex flex-wrap items-center justify-between gap-4 border-b pb-5">
-        <Link href="/account" className="font-semibold">
-          {t("title")}
-        </Link>
-        <nav className="flex flex-wrap items-center gap-3">
-          <Button
-            nativeButton={false}
-            variant="ghost"
-            render={<Link href="/account" />}
-          >
-            {t("title")}
-          </Button>
-          <Button
-            nativeButton={false}
-            variant="ghost"
-            render={<Link href="/account/favorites" />}
-          >
-            {t("favoritesTitle")}
-          </Button>
-          <Button
-            nativeButton={false}
-            variant="outline"
-            render={<Link href="/" />}
-          >
-            AqarDesk
-          </Button>
-          <LanguageSwitcher />
-          <SignOutButton />
-        </nav>
-      </header>
+    <div className="mx-auto min-h-svh max-w-screen-2xl space-y-6 px-4 py-5 sm:px-6 sm:py-8 lg:px-8">
+      <Header />
       <main>{children}</main>
     </div>
   )

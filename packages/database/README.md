@@ -13,6 +13,8 @@ metadata, user favorites, and recipient-scoped notifications. The app service
 layer must validate that a property type matches its detail record and write
 price/status history in the same transaction as listing updates.
 
-Run `bun run db:seed` after migrations to insert the default admin, manager,
-staff, and read-only roles and their permissions. The seed is safe to rerun;
-it does not create user accounts or grant the admin role to one.
+Run `bun run db:seed` after migrations to insert the default roles, permissions,
+and development sample listings. The root command also creates
+`admin@aqrdesk.com` with the development-only password `admin`; it refuses to
+run in production. Existing accounts with that email are granted the admin
+role without having their password changed. The seed is safe to rerun.

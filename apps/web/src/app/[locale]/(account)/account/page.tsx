@@ -1,17 +1,11 @@
 import { auth } from "@aqardesk/auth/server"
 import { getDatabase, schema } from "@aqardesk/database"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/components/card"
 import { eq } from "drizzle-orm"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import { notFound } from "next/navigation"
-import { ProfileForm } from "@/components/account/profile-form"
+import { ProfileCard } from "@/components/account/profile-card"
+import { PageHeader } from "@/components/layout/page-header"
 import { getScopedI18n, initializeLocale } from "@/locales/server"
 
 export async function generateMetadata({
@@ -54,20 +48,9 @@ export default async function AccountPage({
   }
 
   return (
-    <section className="space-y-6">
-      <header className="space-y-2">
-        <h1 className="text-2xl font-semibold">{t("title")}</h1>
-        <p className="text-sm text-muted-foreground">{t("description")}</p>
-      </header>
-      <Card className="max-w-2xl">
-        <CardHeader>
-          <CardTitle>{t("profileTitle")}</CardTitle>
-          <CardDescription>{t("profileDescription")}</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <ProfileForm name={user.name} email={user.email} />
-        </CardContent>
-      </Card>
+    <section className="space-y-5">
+      <PageHeader title={t("title")} />
+      <ProfileCard title={t("profileTitle")} name={user.name} email={user.email} />
     </section>
   )
 }

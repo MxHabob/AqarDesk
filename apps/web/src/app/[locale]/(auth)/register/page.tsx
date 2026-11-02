@@ -1,13 +1,7 @@
 import { Button } from "@aqardesk/ui/components/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/components/card"
 import type { Metadata } from "next"
 import Link from "next/link"
+import { AuthCard } from "@/components/auth/auth-card"
 import { RegisterForm } from "@/components/auth/register-form"
 import { getScopedI18n, initializeLocale } from "@/locales/server"
 
@@ -34,13 +28,9 @@ export default async function RegisterPage({
   const t = await getScopedI18n("auth")
 
   return (
-    <main className="flex min-h-svh items-center justify-center bg-muted/30 p-6">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>{t("registerTitle")}</CardTitle>
-          <CardDescription>{t("registerDescription")}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-5">
+    <main className="flex min-h-svh items-center justify-center bg-muted/30 p-4 sm:p-6">
+      <AuthCard title={t("registerTitle")} description={t("registerDescription")}>
+        <div className="space-y-5">
           <RegisterForm />
           <p className="text-center text-sm text-muted-foreground">
             {t("haveAccount")}{" "}
@@ -52,8 +42,8 @@ export default async function RegisterPage({
               {t("signIn")}
             </Button>
           </p>
-        </CardContent>
-      </Card>
+        </div>
+      </AuthCard>
     </main>
   )
 }

@@ -4,11 +4,13 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "seed": "bun run src/seed.ts",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@aqardesk/database": "workspace:*",
-    "better-auth": "^1.7.15"
+    "better-auth": "^1.7.15",
+    "drizzle-orm": "^0.45.4"
   },
   "devDependencies": {
     "@types/node": "^26.6.6",

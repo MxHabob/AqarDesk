@@ -3,6 +3,7 @@ import { getDatabase, schema } from "@aqardesk/database"
 import { count, eq } from "drizzle-orm"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
+import { PageHeader } from "@/components/layout/page-header"
 import { MetricsGrid } from "@/components/metrics/metrics-grid"
 import { assertPermission } from "@/lib/auth/permissions"
 import { getScopedI18n, initializeLocale } from "@/locales/server"
@@ -49,13 +50,8 @@ export default async function DashboardPage({
   }
 
   return (
-    <div className="space-y-8">
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold">{t("greeting")}</h1>
-          <p className="text-sm text-muted-foreground">{t("description")}</p>
-        </div>
-      </header>
+    <div className="space-y-6">
+      <PageHeader title={t("greeting")} />
       <MetricsGrid
         metrics={metrics}
         labels={{

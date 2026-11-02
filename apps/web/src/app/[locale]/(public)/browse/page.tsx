@@ -1,16 +1,11 @@
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/components/card"
 import { formatNumber } from "@aqardesk/utils"
 import type { Metadata } from "next"
+import { PageHeader } from "@/components/layout/page-header"
 import {
   PublicListingFilters,
   PublicListingPagination,
 } from "@/components/listings/public-listing-filters"
-import { ListingCard } from "@/components/public/listing-card"
+import { ListingGrid } from "@/components/public/listing-grid"
 import { getFilteredPublicListings } from "@/lib/listings/public-queries"
 import { loadPublicListingSearchParams } from "@/lib/listings/public-search-loader"
 import { getScopedI18n, initializeLocale } from "@/locales/server"
@@ -48,35 +43,20 @@ export default async function BrowsePage({
   ])
 
   return (
-    <main className="mx-auto max-w-screen-xl space-y-8 px-5 py-16">
-      <header className="space-y-3">
-        <h1 className="text-3xl font-semibold">{t("title")}</h1>
-        <p className="text-base text-muted-foreground">{t("description")}</p>
-      </header>
+    <main className="mx-auto max-w-screen-2xl space-y-6 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <PageHeader title={t("title")} />
       <PublicListingFilters />
       <p className="text-sm text-muted-foreground">
         {t("resultsCount")}: {formatNumber(listings.total, { locale })}
       </p>
-      {listings.rows.length === 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("emptyTitle")}</CardTitle>
-            <CardDescription>{t("emptyDescription")}</CardDescription>
-          </CardHeader>
-        </Card>
-      ) : (
-        <section className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {listings.rows.map((listing) => (
-            <ListingCard
-              key={listing.id}
-              listing={listing}
-              locale={locale}
-              propertyTypeLabel={categories(listing.propertyType)}
-              detailsLabel={t("details")}
-            />
-          ))}
-        </section>
-      )}
+      <ListingGrid
+        listings={listings.rows}
+        locale={locale}
+        propertyTypeLabel={(type) => categories(type)}
+        detailsLabel={t("details")}
+        emptyTitle={t("emptyTitle")}
+        emptyDescription={t("emptyDescription")}
+      />
       <PublicListingPagination
         page={listings.page}
         pageCount={listings.pageCount}

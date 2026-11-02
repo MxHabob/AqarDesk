@@ -1,13 +1,7 @@
 import { Button } from "@aqardesk/ui/components/button"
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/components/card"
 import type { Metadata } from "next"
 import Link from "next/link"
+import { AuthCard } from "@/components/auth/auth-card"
 import { LoginForm } from "@/components/auth/login-form"
 import { getScopedI18n, initializeLocale } from "@/locales/server"
 
@@ -37,13 +31,12 @@ export default async function CustomerLoginPage({
   ])
 
   return (
-    <main className="flex min-h-svh items-center justify-center bg-muted/30 p-6">
-      <Card className="w-full max-w-md">
-        <CardHeader>
-          <CardTitle>{t("customerLoginTitle")}</CardTitle>
-          <CardDescription>{t("customerLoginDescription")}</CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-5">
+    <main className="flex min-h-svh items-center justify-center bg-muted/30 p-4 sm:p-6">
+      <AuthCard
+        title={t("customerLoginTitle")}
+        description={t("customerLoginDescription")}
+      >
+        <div className="space-y-5">
           <LoginForm defaultDestination="/account" />
           <p className="text-center text-sm text-muted-foreground">
             {t("noAccount")}{" "}
@@ -63,8 +56,8 @@ export default async function CustomerLoginPage({
           >
             {site("home")}
           </Button>
-        </CardContent>
-      </Card>
+        </div>
+      </AuthCard>
     </main>
   )
 }

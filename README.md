@@ -18,6 +18,12 @@ bun run db:migrate
 bun run db:seed
 ```
 
+The development seed adds sample listings across all property categories and
+creates the admin account `admin@aqrdesk.com` with password `admin`. It refuses
+to run when `NODE_ENV=production`; these default credentials are for local
+development only. If that email already exists, the seed grants it the admin
+role without changing its password.
+
 The schema contains Better Auth users, sessions, accounts, and verifications,
 along with properties, owners, sale/rent listings, type-specific details,
 media metadata, favorites, notifications, and role/permission tables. Public

@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-
+import { PageHeader } from "@/components/layout/page-header"
 import { ListingFilters } from "@/components/listings/listing-filters"
 import { ListingsTableView } from "@/components/listings/listings-table-view"
 import { CreateListingButton } from "@/components/sheets/create-listing-sheet"
@@ -24,14 +24,8 @@ export default async function ListingsPage({
   const t = await getScopedI18n("listings")
 
   return (
-    <div className="space-y-6">
-      <header className="flex flex-wrap items-start justify-between gap-4">
-        <div className="space-y-2">
-          <h1 className="text-2xl font-semibold">{t("title")}</h1>
-          <p className="text-sm text-muted-foreground">{t("description")}</p>
-        </div>
-        <CreateListingButton />
-      </header>
+    <div className="space-y-5">
+      <PageHeader title={t("title")} action={<CreateListingButton />} />
       <ListingFilters />
       <ListingsTableView />
     </div>

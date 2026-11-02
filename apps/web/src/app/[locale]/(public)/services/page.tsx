@@ -1,10 +1,6 @@
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/components/card"
 import type { Metadata } from "next"
+import { PageHeader } from "@/components/layout/page-header"
+import { ServiceGrid } from "@/components/public/service-grid"
 import { getScopedI18n, initializeLocale } from "@/locales/server"
 
 export async function generateMetadata({
@@ -37,23 +33,17 @@ export default async function ServicesPage({
   ] as const
 
   return (
-    <main className="mx-auto max-w-screen-xl space-y-8 px-5 py-16">
-      <header className="max-w-3xl space-y-3">
-        <h1 className="text-3xl font-semibold">{t("servicesTitle")}</h1>
-        <p className="text-base leading-8 text-muted-foreground">
-          {t("servicesDescription")}
-        </p>
-      </header>
-      <section className="grid gap-4 sm:grid-cols-2">
-        {services.map(([title, description]) => (
-          <Card key={title}>
-            <CardHeader>
-              <CardTitle>{t(title)}</CardTitle>
-              <CardDescription>{t(description)}</CardDescription>
-            </CardHeader>
-          </Card>
-        ))}
-      </section>
+    <main className="mx-auto max-w-screen-2xl space-y-6 px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
+      <PageHeader
+        title={t("servicesTitle")}
+        description={t("servicesDescription")}
+      />
+      <ServiceGrid
+        services={services.map(([title, description]) => ({
+          title: t(title),
+          description: t(description),
+        }))}
+      />
     </main>
   )
 }

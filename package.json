@@ -14,7 +14,7 @@
     "db:generate": "bun --env-file=.env run --filter @aqardesk/database generate",
     "db:migrate": "bun --env-file=.env run --filter @aqardesk/database migrate",
     "db:studio": "bun --env-file=.env run --filter @aqardesk/database studio",
-    "db:seed": "bun --env-file=.env run --filter @aqardesk/database seed"
+    "db:seed": "bun --env-file=.env run --filter @aqardesk/database seed && bun --env-file=.env run --filter @aqardesk/auth seed"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.6.4",

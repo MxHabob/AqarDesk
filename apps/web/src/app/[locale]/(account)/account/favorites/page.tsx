@@ -1,17 +1,12 @@
 import { auth } from "@aqardesk/auth/server"
 import { getDatabase, schema } from "@aqardesk/database"
-import {
-  Card,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/components/card"
 import { and, desc, eq, gt, isNull, or } from "drizzle-orm"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
-import Link from "next/link"
 import { redirect } from "next/navigation"
-import { FavoriteToggleButton } from "@/components/account/favorite-toggle-button"
+import { FavoritesGrid } from "@/components/account/favorites-grid"
+import { EmptyState } from "@/components/empty-state"
+import { PageHeader } from "@/components/layout/page-header"
 import { getScopedI18n, initializeLocale } from "@/locales/server"
 
 export async function generateMetadata({
@@ -74,43 +69,16 @@ export default async function AccountFavoritesPage({
     .orderBy(desc(schema.favorites.createdAt))
 
   return (
-    <section className="space-y-6">
-      <header className="space-y-2">
-        <h1 className="text-2xl font-semibold">{t("favoritesTitle")}</h1>
-        <p className="text-sm text-muted-foreground">
-          {t("favoritesDescription")}
-        </p>
-      </header>
+    <section className="space-y-5">
+      <PageHeader title={t("favoritesTitle")} />
       {listings.length === 0 ? (
-        <Card>
-          <CardHeader>
-            <CardTitle>{t("favoritesTitle")}</CardTitle>
-            <CardDescription>{t("emptyFavorites")}</CardDescription>
-          </CardHeader>
-        </Card>
+        <EmptyState description={t("emptyFavorites")} />
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {listings.map((listing) => (
-            <Card key={listing.id} className="flex flex-col">
-              <CardHeader>
-                <CardDescription>
-                  {categories(listing.propertyType)}
-                </CardDescription>
-                <CardTitle>
-                  <Link href={`/p/${listing.id}`}>{listing.title}</Link>
-                </CardTitle>
-                <CardDescription>
-                  {[listing.city, listing.district]
-                    .filter(Boolean)
-                    .join(locale === "ar" ? "، " : ", ")}
-                </CardDescription>
-              </CardHeader>
-              <div className="mt-auto px-6 pb-6">
-                <FavoriteToggleButton listingId={listing.id} initialFavorite />
-              </div>
-            </Card>
-          ))}
-        </div>
+        <FavoritesGrid
+          listings={listings}
+          locale={locale}
+          propertyTypeLabel={(type) => categories(type)}
+        />
       )}
     </section>
   )
