@@ -68,7 +68,11 @@ export default async function PublicListingPage({
 
   return (
     <main className="mx-auto max-w-screen-xl space-y-6 px-5 py-16">
-      <Button variant="outline" render={<Link href="/browse" />}>
+      <Button
+        nativeButton={false}
+        variant="outline"
+        render={<Link href="/browse" />}
+      >
         {t("title")}
       </Button>
       <Card>

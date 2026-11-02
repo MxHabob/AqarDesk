@@ -47,11 +47,20 @@ export default async function CustomerLoginPage({
           <LoginForm defaultDestination="/account" />
           <p className="text-center text-sm text-muted-foreground">
             {t("noAccount")}{" "}
-            <Button variant="link" render={<Link href="/register" />}>
+            <Button
+              nativeButton={false}
+              variant="link"
+              render={<Link href="/register" />}
+            >
               {t("signUp")}
             </Button>
           </p>
-          <Button variant="ghost" className="w-full" render={<Link href="/" />}>
+          <Button
+            nativeButton={false}
+            variant="ghost"
+            className="w-full"
+            render={<Link href="/" />}
+          >
             {site("home")}
           </Button>
         </CardContent>

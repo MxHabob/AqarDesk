@@ -54,6 +54,7 @@ export function ListingCard({
             })}
         </span>
         <Button
+          nativeButton={false}
           size="sm"
           variant="outline"
           render={<Link href={`/p/${listing.id}`} />}

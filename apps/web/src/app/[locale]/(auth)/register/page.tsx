@@ -44,7 +44,11 @@ export default async function RegisterPage({
           <RegisterForm />
           <p className="text-center text-sm text-muted-foreground">
             {t("haveAccount")}{" "}
-            <Button variant="link" render={<Link href="/account/login" />}>
+            <Button
+              nativeButton={false}
+              variant="link"
+              render={<Link href="/account/login" />}
+            >
               {t("signIn")}
             </Button>
           </p>

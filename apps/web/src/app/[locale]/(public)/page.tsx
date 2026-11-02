@@ -48,10 +48,14 @@ export default async function PublicHomePage({
             {t("heroDescription")}
           </p>
           <div className="flex flex-wrap gap-3">
-            <Button render={<Link href="/browse" />}>
+            <Button nativeButton={false} render={<Link href="/browse" />}>
               {t("browseListings")}
             </Button>
-            <Button variant="outline" render={<Link href="/login" />}>
+            <Button
+              nativeButton={false}
+              variant="outline"
+              render={<Link href="/login" />}
+            >
               {t("officeLogin")}
             </Button>
           </div>
@@ -81,7 +85,11 @@ export default async function PublicHomePage({
             ))}
           </div>
         )}
-        <Button variant="outline" render={<Link href="/browse" />}>
+        <Button
+          nativeButton={false}
+          variant="outline"
+          render={<Link href="/browse" />}
+        >
           {t("browseListings")}
         </Button>
       </section>

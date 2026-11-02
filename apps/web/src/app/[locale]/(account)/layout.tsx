@@ -36,13 +36,25 @@ export default async function AccountLayout({
           {t("title")}
         </Link>
         <nav className="flex flex-wrap items-center gap-3">
-          <Button variant="ghost" render={<Link href="/account" />}>
+          <Button
+            nativeButton={false}
+            variant="ghost"
+            render={<Link href="/account" />}
+          >
             {t("title")}
           </Button>
-          <Button variant="ghost" render={<Link href="/account/favorites" />}>
+          <Button
+            nativeButton={false}
+            variant="ghost"
+            render={<Link href="/account/favorites" />}
+          >
             {t("favoritesTitle")}
           </Button>
-          <Button variant="outline" render={<Link href="/" />}>
+          <Button
+            nativeButton={false}
+            variant="outline"
+            render={<Link href="/" />}
+          >
             AqarDesk
           </Button>
           <LanguageSwitcher />
