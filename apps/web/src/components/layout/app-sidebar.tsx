@@ -10,10 +10,10 @@ import {
 } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useCurrentLocale, useScopedI18n } from "@/locales/client"
+import { useScopedI18n } from "@/locales/client"
 
 const navigation = [
-  { href: "", key: "dashboard" as const, icon: LayoutDashboard },
+  { href: "/dashboard", key: "dashboard" as const, icon: LayoutDashboard },
   { href: "/listings", key: "listings" as const, icon: Building2 },
   { href: "/properties", key: "properties" as const, icon: Building2 },
   { href: "/owners", key: "owners" as const, icon: Users },
@@ -22,7 +22,6 @@ const navigation = [
 ]
 
 export function AppSidebar() {
-  const locale = useCurrentLocale()
   const t = useScopedI18n("common")
   const pathname = usePathname()
 
@@ -33,7 +32,7 @@ export function AppSidebar() {
       </div>
       <nav className="space-y-1 p-3" aria-label={t("navigationLabel")}>
         {navigation.map(({ href, key, icon: Icon }) => {
-          const target = `/${locale}${href || ""}`
+          const target = href
           const active = pathname === target
 
           return (

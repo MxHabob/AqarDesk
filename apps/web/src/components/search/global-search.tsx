@@ -8,7 +8,7 @@ import { Search, X } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import { searchListingsAction } from "@/actions/listings/search-listings"
-import { useCurrentLocale, useScopedI18n } from "@/locales/client"
+import { useScopedI18n } from "@/locales/client"
 import { useSearchStore } from "./search-store"
 
 export function GlobalSearch() {
@@ -16,7 +16,6 @@ export function GlobalSearch() {
   const setOpen = useSearchStore((state) => state.setOpen)
   const t = useScopedI18n("common")
   const router = useRouter()
-  const locale = useCurrentLocale()
   const [query, setQuery] = useState("")
 
   useEffect(() => {
@@ -105,7 +104,7 @@ export function GlobalSearch() {
               onClick={() => {
                 setOpen(false)
                 router.push(
-                  `/${locale}/listings?q=${encodeURIComponent(row.title)}`
+                  `/listings?q=${encodeURIComponent(row.title)}`
                 )
               }}
             >

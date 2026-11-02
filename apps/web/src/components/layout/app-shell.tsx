@@ -1,5 +1,7 @@
 import type { ReactNode } from "react"
 
+import { OverlayProvider } from "@/components/overlays/overlay-provider"
+import { GlobalSearch } from "@/components/search/global-search"
 import { AppHeader } from "./app-header"
 import { AppSidebar } from "./app-sidebar"
 
@@ -13,6 +15,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           {children}
         </main>
       </div>
+      <GlobalSearch />
+      <OverlayProvider />
     </div>
   )
 }

@@ -1,13 +1,23 @@
 import { Card, CardContent } from "@aqardesk/ui/components/card"
 import type { Metadata } from "next"
-import { getScopedI18n } from "@/locales/server"
+import { getScopedI18n, initializeLocale } from "@/locales/server"
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  await initializeLocale(params)
   const t = await getScopedI18n("favorites")
   return { title: t("title"), description: t("description") }
 }
 
-export default async function FavoritesPage() {
+export default async function FavoritesPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  await initializeLocale(params)
   const [t, common] = await Promise.all([
     getScopedI18n("favorites"),
     getScopedI18n("common"),

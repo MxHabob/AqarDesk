@@ -32,6 +32,31 @@ export const auth = betterAuth({
   }),
   emailAndPassword: {
     enabled: true,
-    disableSignUp: true,
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        after: async (user) => {
+          const database = getDatabase()
+
+          await database.transaction(async (transaction) => {
+            await transaction
+              .insert(schema.roles)
+              .values({
+                id: "customer",
+                key: "customer",
+                name: "Customer",
+                description: "Customer account",
+              })
+              .onConflictDoNothing()
+
+            await transaction
+              .insert(schema.userRoles)
+              .values({ userId: user.id, roleId: "customer" })
+              .onConflictDoNothing()
+          })
+        },
+      },
+    },
   },
 })

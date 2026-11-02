@@ -1,4 +1,3 @@
-import { auth } from "@aqardesk/auth/server"
 import { type NextRequest, NextResponse } from "next/server"
 import { createI18nMiddleware } from "next-international/middleware"
 import { locales } from "./locales/config"
@@ -6,71 +5,26 @@ import { locales } from "./locales/config"
 const handleI18n = createI18nMiddleware({
   locales: [...locales],
   defaultLocale: "ar",
-  urlMappingStrategy: "redirect",
+  urlMappingStrategy: "rewrite",
 })
 
-function getSafeReturnTo(
-  value: string | null,
-  baseUrl: URL,
-  locale: (typeof locales)[number]
-) {
-  if (
-    !value?.startsWith("/") ||
-    value.startsWith("//") ||
-    value.includes("\\")
-  ) {
-    return null
-  }
-
-  const url = new URL(value, baseUrl)
-  const loginPath = `/${locale}/login`
-  const localePath = `/${locale}`
-
-  return url.origin === baseUrl.origin &&
-    (url.pathname === localePath ||
-      url.pathname.startsWith(`${localePath}/`)) &&
-    url.pathname !== loginPath
-    ? url
-    : null
-}
-
-export async function proxy(request: NextRequest) {
-  const response = handleI18n(request)
-  const pathnameLocale = request.nextUrl.pathname.split("/", 2)[1]
-  const locale = locales.find(
-    (supportedLocale) => supportedLocale === pathnameLocale
+export function proxy(request: NextRequest) {
+  const originalPathname = request.nextUrl.pathname
+  const localePrefix = locales.find(
+    (locale) => locale === originalPathname.split("/", 2)[1]
   )
+  const response = handleI18n(request)
 
-  if (!locale) {
-    return response
-  }
+  if (localePrefix && !response.headers.has("location")) {
+    const url = request.nextUrl.clone()
+    url.pathname = originalPathname.slice(localePrefix.length + 1) || "/"
+    const redirectResponse = NextResponse.redirect(url)
 
-  if (request.method !== "GET" && request.method !== "HEAD") {
-    return response
-  }
+    for (const cookie of response.cookies.getAll()) {
+      redirectResponse.cookies.set(cookie)
+    }
 
-  const isLoginPage = request.nextUrl.pathname === `/${locale}/login`
-  const session = await auth.api.getSession({ headers: request.headers })
-
-  if (!session && !isLoginPage) {
-    const loginUrl = request.nextUrl.clone()
-    loginUrl.pathname = `/${locale}/login`
-    loginUrl.search = ""
-    loginUrl.searchParams.set(
-      "return_to",
-      `${request.nextUrl.pathname}${request.nextUrl.search}`
-    )
-
-    return NextResponse.redirect(loginUrl)
-  }
-
-  if (session && isLoginPage) {
-    const returnTo = getSafeReturnTo(
-      request.nextUrl.searchParams.get("return_to"),
-      request.nextUrl,
-      locale
-    )
-    return NextResponse.redirect(returnTo ?? new URL(`/${locale}`, request.url))
+    return redirectResponse
   }
 
   return response

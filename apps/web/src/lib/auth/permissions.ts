@@ -1,7 +1,7 @@
 import { getDatabase, schema } from "@aqardesk/database"
 import { and, eq } from "drizzle-orm"
 
-export async function assertPermission(userId: string, permissionKey: string) {
+export async function hasPermission(userId: string, permissionKey: string) {
   const database = getDatabase()
   const [permission] = await database
     .select({ key: schema.permissions.key })
@@ -22,7 +22,11 @@ export async function assertPermission(userId: string, permissionKey: string) {
     )
     .limit(1)
 
-  if (!permission) {
+  return Boolean(permission)
+}
+
+export async function assertPermission(userId: string, permissionKey: string) {
+  if (!(await hasPermission(userId, permissionKey))) {
     throw new Error("Forbidden")
   }
 }

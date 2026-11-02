@@ -7,8 +7,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query"
 import { NuqsAdapter } from "nuqs/adapters/next/app"
 import type { ReactNode } from "react"
 import { useState } from "react"
-import { OverlayProvider } from "@/components/overlays/overlay-provider"
-import { GlobalSearch } from "@/components/search/global-search"
 import { ThemeProvider } from "@/components/theme-provider"
 import {
   type AppLocale,
@@ -22,8 +20,6 @@ function LocalizedOverlays({ children }: { children: ReactNode }) {
   return (
     <>
       {children}
-      <GlobalSearch />
-      <OverlayProvider />
       <Toaster closeLabel={common("close")} />
     </>
   )

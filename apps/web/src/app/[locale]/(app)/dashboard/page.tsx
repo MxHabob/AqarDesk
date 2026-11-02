@@ -5,19 +5,23 @@ import { headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { MetricsGrid } from "@/components/metrics/metrics-grid"
 import { assertPermission } from "@/lib/auth/permissions"
-import { getCurrentLocale, getScopedI18n } from "@/locales/server"
+import { getScopedI18n, initializeLocale } from "@/locales/server"
 
-export default async function DashboardPage() {
-  const [t, metricsT, locale, requestHeaders] = await Promise.all([
+export default async function DashboardPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const locale = await initializeLocale(params)
+  const [t, metricsT, requestHeaders] = await Promise.all([
     getScopedI18n("dashboard"),
     getScopedI18n("metrics"),
-    getCurrentLocale(),
     headers(),
   ])
   const session = await auth.api.getSession({ headers: requestHeaders })
 
   if (!session) {
-    redirect(`/${locale}/login`)
+    redirect("/login")
   }
 
   await assertPermission(session.user.id, "listings.read")

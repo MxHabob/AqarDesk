@@ -36,10 +36,6 @@ export async function generateMetadata({
     description: translations.metadata.description,
     applicationName: "AqarDesk",
     category: "real estate",
-    robots: {
-      index: false,
-      follow: false,
-    },
     openGraph: {
       type: "website",
       locale: locale === "ar" ? "ar_SA" : "en_US",
@@ -78,9 +74,12 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale} suppressHydrationWarning>
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      suppressHydrationWarning
+    >
       <body
-        dir={locale === "ar" ? "rtl" : "ltr"}
         className={cn(
           "min-h-svh whitespace-pre-line overscroll-none antialiased"
         )}

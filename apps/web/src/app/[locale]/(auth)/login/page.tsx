@@ -7,14 +7,24 @@ import {
 } from "@aqardesk/ui/components/card"
 import type { Metadata } from "next"
 import { LoginForm } from "@/components/auth/login-form"
-import { getScopedI18n } from "@/locales/server"
+import { getScopedI18n, initializeLocale } from "@/locales/server"
 
-export async function generateMetadata(): Promise<Metadata> {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  await initializeLocale(params)
   const t = await getScopedI18n("auth")
   return { title: t("loginTitle"), robots: { index: false, follow: false } }
 }
 
-export default async function LoginPage() {
+export default async function LoginPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  await initializeLocale(params)
   const t = await getScopedI18n("auth")
 
   return (

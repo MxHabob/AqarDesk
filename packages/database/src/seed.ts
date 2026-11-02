@@ -30,6 +30,12 @@ const readPermissions = [
 
 const roleDefinitions = [
   {
+    key: "customer",
+    name: "Customer",
+    description: "Customer account with no office permissions.",
+    permissionKeys: [],
+  },
+  {
     key: "admin",
     name: "Administrator",
     description: "Full access to office data and access control.",

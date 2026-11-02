@@ -8,7 +8,11 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useScopedI18n } from "@/locales/client"
 
-export function LoginForm() {
+export function LoginForm({
+  defaultDestination = "/dashboard",
+}: {
+  defaultDestination?: string
+}) {
   const t = useScopedI18n("auth")
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
@@ -40,7 +44,7 @@ export function LoginForm() {
       !returnTo.startsWith("//") &&
       !returnTo.includes("\\")
         ? returnTo
-        : "/"
+        : defaultDestination
 
     router.replace(destination)
     router.refresh()
