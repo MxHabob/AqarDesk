@@ -2,7 +2,7 @@
   "extends": "@aqardesk/typescript-config/nextjs.json",
   "compilerOptions": {
     "paths": {
-      "@/*": ["./*"],
+      "@/*": ["./src/*"],
       "@aqardesk/ui/*": ["../../packages/ui/src/*"]
     },
     "plugins": [

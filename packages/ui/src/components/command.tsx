@@ -1,9 +1,5 @@
 "use client"
 
-import * as React from "react"
-import { Command as CommandPrimitive } from "cmdk"
-import { cn } from "cn"
-
 import {
   Dialog,
   DialogContent,
@@ -15,7 +11,10 @@ import {
   InputGroup,
   InputGroupAddon,
 } from "@aqardesk/ui/components/input-group"
-import { SearchIcon, CheckIcon } from "lucide-react"
+import { Command as CommandPrimitive } from "cmdk"
+import { cn } from "cn"
+import { CheckIcon, SearchIcon } from "lucide-react"
+import type * as React from "react"
 
 function Command({
   className,
@@ -34,8 +33,9 @@ function Command({
 }
 
 function CommandDialog({
-  title = "Command Palette",
-  description = "Search for a command to run...",
+  title,
+  description,
+  closeLabel,
   children,
   className,
   showCloseButton = false,
@@ -43,6 +43,7 @@ function CommandDialog({
 }: Omit<React.ComponentProps<typeof Dialog>, "children"> & {
   title?: string
   description?: string
+  closeLabel?: string
   className?: string
   showCloseButton?: boolean
   children: React.ReactNode
@@ -56,6 +57,7 @@ function CommandDialog({
       <DialogContent
         className={cn("top-1/3 translate-y-0 overflow-hidden p-0", className)}
         showCloseButton={showCloseButton}
+        closeLabel={closeLabel}
       >
         {children}
       </DialogContent>
@@ -183,11 +185,11 @@ function CommandShortcut({
 export {
   Command,
   CommandDialog,
-  CommandInput,
-  CommandList,
   CommandEmpty,
   CommandGroup,
+  CommandInput,
   CommandItem,
-  CommandShortcut,
+  CommandList,
   CommandSeparator,
+  CommandShortcut,
 }

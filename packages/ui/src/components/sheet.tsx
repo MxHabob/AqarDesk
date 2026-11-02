@@ -40,10 +40,12 @@ function SheetContent({
   children,
   side = "right",
   showCloseButton = true,
+  closeLabel,
   ...props
 }: SheetPrimitive.Popup.Props & {
   side?: "top" | "right" | "bottom" | "left"
   showCloseButton?: boolean
+  closeLabel?: string
 }) {
   return (
     <SheetPortal>
@@ -67,7 +69,7 @@ function SheetContent({
                   variant="ghost"
                   className="absolute top-0 end-0 bg-secondary"
                   size="icon-sm"
-                  aria-label="إغلاق اللوحة"
+                  aria-label={closeLabel}
                 />
               }
             >

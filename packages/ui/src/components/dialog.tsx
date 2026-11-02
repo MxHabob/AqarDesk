@@ -1,11 +1,10 @@
 "use client"
 
-import * as React from "react"
+import { Button } from "@aqardesk/ui/components/button"
 import { Dialog as DialogPrimitive } from "@base-ui/react/dialog"
 import { cn } from "cn"
-
-import { Button } from "@aqardesk/ui/components/button"
 import { XIcon } from "lucide-react"
+import type * as React from "react"
 
 function Dialog({ ...props }: DialogPrimitive.Root.Props) {
   return <DialogPrimitive.Root data-slot="dialog" {...props} />
@@ -43,9 +42,11 @@ function DialogContent({
   className,
   children,
   showCloseButton = true,
+  closeLabel,
   ...props
 }: DialogPrimitive.Popup.Props & {
   showCloseButton?: boolean
+  closeLabel?: string
 }) {
   return (
     <DialogPortal>
@@ -67,12 +68,11 @@ function DialogContent({
                 variant="ghost"
                 className="absolute top-5 end-5 bg-secondary"
                 size="icon-sm"
+                aria-label={closeLabel}
               />
             }
           >
-            <XIcon
-            />
-            <span className="sr-only">Close</span>
+            <XIcon />
           </DialogPrimitive.Close>
         )}
       </DialogPrimitive.Popup>
@@ -93,10 +93,12 @@ function DialogHeader({ className, ...props }: React.ComponentProps<"div">) {
 function DialogFooter({
   className,
   showCloseButton = false,
+  closeLabel,
   children,
   ...props
 }: React.ComponentProps<"div"> & {
   showCloseButton?: boolean
+  closeLabel?: string
 }) {
   return (
     <div
@@ -110,7 +112,7 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close render={<Button variant="outline" />}>
-          Close
+          {closeLabel}
         </DialogPrimitive.Close>
       )}
     </div>

@@ -23,9 +23,16 @@ interface ToasterProps
   children?: React.ReactNode
   toastManager?: typeof toast
   className?: string
+  closeLabel?: string
 }
 
-function ToastList({ className }: { className?: string }) {
+function ToastList({
+  className,
+  closeLabel,
+}: {
+  className?: string
+  closeLabel?: string
+}) {
   const { toasts } = ToastPrimitive.useToastManager<ToastData>()
 
   return toasts.map((toastItem) => (
@@ -58,7 +65,7 @@ function ToastList({ className }: { className?: string }) {
           )}
         </div>
         {toastItem.actionProps && <ToastAction {...toastItem.actionProps} />}
-        <ToastClose />
+        <ToastClose closeLabel={closeLabel} />
       </ToastContent>
       {toastItem.data?.footer && (
         <div className="flex w-full justify-end border-t pt-3">
@@ -75,6 +82,7 @@ function Toaster({
   className,
   limit = 3,
   timeout = 5000,
+  closeLabel,
   ...props
 }: ToasterProps) {
   return (
@@ -87,7 +95,7 @@ function Toaster({
       {children}
       <ToastPortal>
         <ToastViewport>
-          <ToastList className={cn(className)} />
+          <ToastList className={cn(className)} closeLabel={closeLabel} />
         </ToastViewport>
       </ToastPortal>
     </ToastProvider>

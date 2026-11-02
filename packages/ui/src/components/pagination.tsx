@@ -1,14 +1,15 @@
-import * as React from "react"
-import { cn } from "cn"
-
 import { Button } from "@aqardesk/ui/components/button"
-import { ChevronLeftIcon, ChevronRightIcon, MoreHorizontalIcon } from "lucide-react"
+import { cn } from "cn"
+import {
+  ChevronLeftIcon,
+  ChevronRightIcon,
+  MoreHorizontalIcon,
+} from "lucide-react"
+import type * as React from "react"
 
 function Pagination({ className, ...props }: React.ComponentProps<"nav">) {
   return (
     <nav
-      role="navigation"
-      aria-label="pagination"
       data-slot="pagination"
       className={cn("mx-auto flex w-full justify-center", className)}
       {...props}
@@ -64,12 +65,16 @@ function PaginationLink({
 
 function PaginationPrevious({
   className,
-  text = "Previous",
+  text,
+  ariaLabel,
   ...props
-}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
+}: React.ComponentProps<typeof PaginationLink> & {
+  text?: string
+  ariaLabel?: string
+}) {
   return (
     <PaginationLink
-      aria-label="Go to previous page"
+      aria-label={ariaLabel}
       size="default"
       className={cn("ps-2!", className)}
       {...props}
@@ -82,12 +87,16 @@ function PaginationPrevious({
 
 function PaginationNext({
   className,
-  text = "Next",
+  text,
+  ariaLabel,
   ...props
-}: React.ComponentProps<typeof PaginationLink> & { text?: string }) {
+}: React.ComponentProps<typeof PaginationLink> & {
+  text?: string
+  ariaLabel?: string
+}) {
   return (
     <PaginationLink
-      aria-label="Go to next page"
+      aria-label={ariaLabel}
       size="default"
       className={cn("pe-2!", className)}
       {...props}
@@ -100,8 +109,9 @@ function PaginationNext({
 
 function PaginationEllipsis({
   className,
+  label,
   ...props
-}: React.ComponentProps<"span">) {
+}: React.ComponentProps<"span"> & { label?: string }) {
   return (
     <span
       aria-hidden
@@ -112,9 +122,8 @@ function PaginationEllipsis({
       )}
       {...props}
     >
-      <MoreHorizontalIcon
-      />
-      <span className="sr-only">More pages</span>
+      <MoreHorizontalIcon />
+      {label && <span className="sr-only">{label}</span>}
     </span>
   )
 }
