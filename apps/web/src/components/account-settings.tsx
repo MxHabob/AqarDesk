@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import { ChangeEmail } from "@/components/change-email";
 import { ChangeTheme } from "@/components/change-theme";
@@ -15,5 +15,5 @@ export function AccountSettings() {
       <ChangeTheme />
       <DeleteAccount />
     </div>
-  );
+  )
 }

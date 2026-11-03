@@ -42,7 +42,9 @@ export function DeleteAccount() {
   return (
     <Card className="border-destructive">
       <CardHeader>
-        <CardTitle>Delete account</CardTitle>
+        <CardTitle className="normal-case tracking-normal">
+          Delete account
+        </CardTitle>
         <CardDescription>
           Permanently remove your AqarDesk account and sign-in data. This action
           cannot be undone.
@@ -71,7 +73,9 @@ export function DeleteAccount() {
           </Button>
           <AlertDialogContent>
             <AlertDialogHeader>
-              <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
+              <AlertDialogTitle className="normal-case tracking-normal">
+                Are you absolutely sure?
+              </AlertDialogTitle>
               <AlertDialogDescription>
                 This action cannot be undone. This will permanently delete your
                 account and remove your data from our servers.

@@ -8,88 +8,34 @@ import {
   CardHeader,
   CardTitle,
 } from "@aqardesk/ui/card";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from "@aqardesk/ui/form";
+import { Button } from "@aqardesk/ui/button";
 import { Input } from "@aqardesk/ui/input";
-import { SubmitButton } from "@aqardesk/ui/submit-button";
-import { z } from "zod/v3";
-import { useUserMutation, useUserQuery } from "@/hooks/use-user";
-import { useZodForm } from "@/hooks/use-zod-form";
-
-const formSchema = z.object({
-  email: z.string().email(),
-});
+import { useUserQuery } from "@/hooks/use-user";
 
 export function ChangeEmail() {
   const { data: user } = useUserQuery();
-  const updateUserMutation = useUserMutation();
-
-  const form = useZodForm(formSchema, {
-    defaultValues: {
-      email: user?.email ?? undefined,
-    },
-  });
-
-  const onSubmit = form.handleSubmit((data) => {
-    updateUserMutation.mutate(
-      { email: data.email },
-      {
-        onError: (error) =>
-          form.setError("email", { message: error.message }),
-      }
-    )
-  });
 
   return (
-    <Form {...form}>
-      <form onSubmit={onSubmit}>
-        <Card>
-          <CardHeader>
-            <CardTitle>Email</CardTitle>
-            <CardDescription>Change your email address.</CardDescription>
-          </CardHeader>
-
-          <CardContent>
-            <FormField
-              control={form.control}
-              name="email"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input
-                      {...field}
-                      className="max-w-[300px]"
-                      autoComplete="off"
-                      autoCapitalize="none"
-                      autoCorrect="off"
-                      spellCheck="false"
-                      type="email"
-                    />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </CardContent>
-
-          <CardFooter className="flex justify-between">
-            <div>
-              This is your primary email address for notifications and more.
-            </div>
-            <SubmitButton
-              type="submit"
-              isSubmitting={updateUserMutation.isPending}
-            >
-              Save
-            </SubmitButton>
-          </CardFooter>
-        </Card>
-      </form>
-    </Form>
+    <Card>
+      <CardHeader>
+        <CardTitle className="normal-case tracking-normal">Email</CardTitle>
+        <CardDescription>Change your email address.</CardDescription>
+      </CardHeader>
+      <CardContent>
+        <Input
+          id="account-email"
+          className="max-w-[300px]"
+          value={user?.email ?? ""}
+          readOnly
+          dir="ltr"
+        />
+      </CardContent>
+      <CardFooter className="flex justify-between">
+        <div>This is your primary email address for notifications and more.</div>
+        <Button type="button" disabled>
+          Save
+        </Button>
+      </CardFooter>
+    </Card>
   );
 }

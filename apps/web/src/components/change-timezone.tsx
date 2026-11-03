@@ -88,7 +88,9 @@ export function ChangeTimezone() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("timezone.title")}</CardTitle>
+        <CardTitle className="normal-case tracking-normal">
+          {t("timezone.title")}
+        </CardTitle>
         <CardDescription>{t("timezone.description")}</CardDescription>
       </CardHeader>
 

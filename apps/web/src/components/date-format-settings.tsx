@@ -23,7 +23,9 @@ export function DateFormatSettings() {
   return (
     <Card className="flex justify-between items-center">
       <CardHeader>
-        <CardTitle>Date Display Format</CardTitle>
+        <CardTitle className="normal-case tracking-normal">
+          Date Display Format
+        </CardTitle>
         <CardDescription>
           Select the format used to display dates throughout the app.
         </CardDescription>

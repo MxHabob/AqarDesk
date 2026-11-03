@@ -5,8 +5,8 @@ export default function Layout({ children }: { children: React.ReactNode }) {
     <div className="max-w-[800px]">
       <SecondaryMenu
         items={[
-          { path: "/settings", label: "General" },
-          { path: "/settings/members", label: "Members" },
+          { path: "/dashboard/settings", label: "General" },
+          { path: "/dashboard/settings/members", label: "Members" },
         ]}
       />
 

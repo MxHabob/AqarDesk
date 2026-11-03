@@ -23,7 +23,9 @@ export function TimeFormatSettings() {
   return (
     <Card className="flex justify-between items-center">
       <CardHeader>
-        <CardTitle>Time Display Format</CardTitle>
+        <CardTitle className="normal-case tracking-normal">
+          Time Display Format
+        </CardTitle>
         <CardDescription>
           Choose between 12-hour or 24-hour clock format for displaying time.
         </CardDescription>
@@ -38,7 +40,9 @@ export function TimeFormatSettings() {
           }}
         >
           <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Time format" />
+            <SelectValue
+              placeholder="Time format"
+            />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="12">12 hours (AM/PM)</SelectItem>

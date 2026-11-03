@@ -50,7 +50,9 @@ export function MfaSettingsList({ enabled }: { enabled: boolean }) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>{t("auth.twoFactorTitle")}</CardTitle>
+        <CardTitle className="normal-case tracking-normal">
+          {t("auth.twoFactorTitle")}
+        </CardTitle>
         <CardDescription>{t("auth.mfaSettingsDescription")}</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">

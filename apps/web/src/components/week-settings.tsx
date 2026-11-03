@@ -17,7 +17,9 @@ export function WeekSettings() {
   return (
     <Card className="flex justify-between items-center">
       <CardHeader>
-        <CardTitle>Start Week on Monday</CardTitle>
+        <CardTitle className="normal-case tracking-normal">
+          Start Week on Monday
+        </CardTitle>
         <CardDescription>
           Set the first day of the week in calendar views.
         </CardDescription>

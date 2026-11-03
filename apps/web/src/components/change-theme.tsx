@@ -11,7 +11,9 @@ export function ChangeTheme() {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Appearance</CardTitle>
+        <CardTitle className="normal-case tracking-normal">
+          Appearance
+        </CardTitle>
         <CardDescription>
           Customize how AqarDesk looks on your device.
         </CardDescription>

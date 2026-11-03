@@ -69,15 +69,15 @@ export function UserMenu({ onlySignOut }: Props) {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <Link href={`/${locale}/account`}>
+              <Link href={`/${locale}/dashboard/account`}>
                 <DropdownMenuItem className="text-xs">Account</DropdownMenuItem>
               </Link>
 
-              <Link href={`/${locale}/account/support`}>
+              <Link href={`/${locale}/dashboard/account/support`}>
                 <DropdownMenuItem className="text-xs">Support</DropdownMenuItem>
               </Link>
 
-              <Link href={`/${locale}/account/teams`}>
+              <Link href={`/${locale}/dashboard/teams`}>
                 <DropdownMenuItem className="text-xs">Teams</DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>

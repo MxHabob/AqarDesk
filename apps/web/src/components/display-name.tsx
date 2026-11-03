@@ -46,7 +46,9 @@ export function DisplayName() {
       <form onSubmit={onSubmit}>
         <Card>
           <CardHeader>
-            <CardTitle>Display Name</CardTitle>
+            <CardTitle className="normal-case tracking-normal">
+              Display Name
+            </CardTitle>
             <CardDescription>
               Please enter your full name, or a display name you are comfortable
               with.

@@ -12,6 +12,7 @@ import {
 } from "@aqardesk/database/queries"
 import { revalidatePath } from "next/cache"
 import { cookies, headers } from "next/headers"
+import { redirect } from "next/navigation"
 import { z } from "zod"
 import { assertPermission } from "@/lib/auth/permissions"
 
@@ -54,6 +55,18 @@ export async function switchActiveTeamAction(teamId: string) {
   })
 
   return { selectedTeamId: parsedTeamId }
+}
+
+export async function viewTeamFromAccountAction(formData: FormData) {
+  const { teamId, locale } = z
+    .object({ teamId: z.uuid(), locale: z.enum(["ar", "en"]) })
+    .parse({
+      teamId: formData.get("teamId"),
+      locale: formData.get("locale"),
+    })
+
+  await switchActiveTeamAction(teamId)
+  redirect(`/${locale}/dashboard`)
 }
 
 export async function archiveActiveTeamAction() {
