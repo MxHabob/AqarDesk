@@ -29,13 +29,13 @@ export function CheckoutSuccessDesktop({
           src={appIcon}
           width={80}
           height={80}
-          alt="Midday"
+          alt="AqarDesk"
           quality={100}
           className="mb-10"
         />
         <p>Checkout successful</p>
         <p className="mb-4">
-          If Midday dosen't open in a few seconds,{" "}
+          If AqarDesk dosen't open in a few seconds,{" "}
           <a className="underline" href={`${schemeUrl}${redirectPath}`}>
             click here
           </a>

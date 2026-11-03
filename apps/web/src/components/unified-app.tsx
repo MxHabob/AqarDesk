@@ -563,7 +563,7 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
                     ? "Connected app"
                     : app.type === "external"
                       ? `By ${app.developerName}`
-                      : "By Midday"}
+                      : "By AqarDesk"}
                 </span>
               </div>
 

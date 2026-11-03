@@ -163,7 +163,7 @@ export function BankSearchContent({
     token: plaidToken,
     publicKey: "",
     env: process.env.NEXT_PUBLIC_PLAID_ENVIRONMENT!,
-    clientName: "Midday",
+    clientName: "AqarDesk",
     product: ["transactions"],
     onSuccess: async (public_token, metadata) => {
       const result = await exchangeToken.mutateAsync({

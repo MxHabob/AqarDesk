@@ -88,7 +88,7 @@ export function ReconnectProvider({
     token: plaidToken,
     publicKey: "",
     env: process.env.NEXT_PUBLIC_PLAID_ENVIRONMENT!,
-    clientName: "Midday",
+    clientName: "AqarDesk",
     product: ["transactions"],
     onSuccess: () => {
       setPlaidToken(undefined);

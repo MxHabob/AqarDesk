@@ -10,7 +10,7 @@ import { Providers } from "@/app/[locale]/dashboard/providers"
 import { DesktopHeader } from "@/components/desktop-header"
 
 export const metadata: Metadata = {
-  title: "Midday | Run your business smarter",
+  title: "AqarDesk | Run your business smarter",
   description:
     "Automate financial tasks, stay organized, and make informed decisions effortlessly.",
 }

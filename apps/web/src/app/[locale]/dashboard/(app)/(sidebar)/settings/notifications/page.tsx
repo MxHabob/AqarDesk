@@ -3,7 +3,7 @@ import { Suspense } from "react";
 import { NotificationsSettingsList } from "@/components/notifications-settings-list";
 
 export const metadata: Metadata = {
-  title: "Notifications | Midday",
+  title: "Notifications | AqarDesk",
 };
 
 export default async function Notifications() {

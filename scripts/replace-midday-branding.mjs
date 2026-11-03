@@ -1,11 +1,11 @@
-import fs from "node:fs";
-import path from "node:path";
-import process from "node:process";
-import ts from "typescript";
-import { fileURLToPath } from "node:url";
+import fs from "node:fs"
+import path from "node:path"
+import process from "node:process"
+import { fileURLToPath } from "node:url"
+import ts from "typescript"
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
-const writeChanges = process.argv.includes("--write");
+const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..")
+const writeChanges = process.argv.includes("--write")
 const ignoredDirectories = new Set([
   ".git",
   ".next",
@@ -15,67 +15,70 @@ const ignoredDirectories = new Set([
   "coverage",
   "dist",
   "node_modules",
-]);
-const sourceExtensions = new Set([".js", ".jsx", ".ts", ".tsx"]);
-const excludedPathParts = new Set(["legal", "policy", "terms"]);
+])
+const sourceExtensions = new Set([".js", ".jsx", ".ts", ".tsx"])
+const excludedPathParts = new Set(["legal", "policy", "terms"])
 const excludedFileNames = new Set([
   "app-sunset-banner.tsx",
   "competitors.ts",
   "sunset-banner.tsx",
-]);
-const brandingPattern = /\bMidday\b/g;
+])
+const brandingPattern = /Midday/g
 
 function isExcluded(filePath) {
-  const relativePath = path.relative(root, filePath);
-  const parts = relativePath.split(path.sep);
+  const relativePath = path.relative(root, filePath)
+  const parts = relativePath.split(path.sep)
 
   return (
     parts.some((part) => excludedPathParts.has(part.toLowerCase())) ||
     excludedFileNames.has(path.basename(filePath).toLowerCase())
-  );
+  )
 }
 
 function getSourceFiles(directory) {
-  const files = [];
+  const files = []
 
   for (const entry of fs.readdirSync(directory, { withFileTypes: true })) {
-    const entryPath = path.join(directory, entry.name);
+    const entryPath = path.join(directory, entry.name)
 
     if (entry.isDirectory()) {
       if (!ignoredDirectories.has(entry.name)) {
-        files.push(...getSourceFiles(entryPath));
+        files.push(...getSourceFiles(entryPath))
       }
 
-      continue;
+      continue
     }
 
-    if (sourceExtensions.has(path.extname(entry.name)) && !isExcluded(entryPath)) {
-      files.push(entryPath);
+    if (
+      sourceExtensions.has(path.extname(entry.name)) &&
+      !isExcluded(entryPath)
+    ) {
+      files.push(entryPath)
     }
   }
 
-  return files;
+  return files
 }
 
 function isImportOrExportSpecifier(node) {
-  const parent = node.parent;
+  const parent = node.parent
 
   if (
     (ts.isImportDeclaration(parent) || ts.isExportDeclaration(parent)) &&
     parent.moduleSpecifier === node
   ) {
-    return true;
+    return true
   }
 
   return (
     ts.isCallExpression(parent) &&
     parent.expression.kind === ts.SyntaxKind.ImportKeyword &&
     parent.arguments.includes(node)
-  );
+  )
 }
 
 function isPropertyName(node) {
-  const parent = node.parent;
+  const parent = node.parent
 
   return (
     ((ts.isPropertyAssignment(parent) ||
@@ -83,14 +86,14 @@ function isPropertyName(node) {
       ts.isMethodDeclaration(parent)) &&
       parent.name === node) ||
     (ts.isElementAccessExpression(parent) && parent.argumentExpression === node)
-  );
+  )
 }
 
 function collectTextRanges(sourceFile) {
-  const ranges = [];
+  const ranges = []
 
   function addRange(start, end) {
-    const text = sourceFile.text.slice(start, end);
+    const text = sourceFile.text.slice(start, end)
 
     if (
       !text.includes("Midday") ||
@@ -98,10 +101,10 @@ function collectTextRanges(sourceFile) {
       text.includes("@midday") ||
       text.includes("midday.ai")
     ) {
-      return;
+      return
     }
 
-    ranges.push({ start, end });
+    ranges.push({ start, end })
   }
 
   function visit(node) {
@@ -110,81 +113,86 @@ function collectTextRanges(sourceFile) {
       !isImportOrExportSpecifier(node) &&
       !isPropertyName(node)
     ) {
-      const start = node.getStart(sourceFile);
-      addRange(start + 1, node.end - 1);
+      const start = node.getStart(sourceFile)
+      addRange(start + 1, node.end - 1)
     } else if (ts.isJsxText(node)) {
-      addRange(node.getStart(sourceFile), node.end);
+      addRange(node.getStart(sourceFile), node.end)
     } else if (ts.isTemplateExpression(node)) {
-      const head = node.head;
-      addRange(head.getStart(sourceFile) + 1, head.end);
+      const head = node.head
+      addRange(head.getStart(sourceFile) + 1, head.end)
 
       for (const span of node.templateSpans) {
-        const literal = span.literal;
-        const hasClosingTick = literal.kind === ts.SyntaxKind.TemplateTail;
-        addRange(literal.getStart(sourceFile), literal.end - Number(hasClosingTick));
+        const literal = span.literal
+        const hasClosingTick = literal.kind === ts.SyntaxKind.TemplateTail
+        addRange(
+          literal.getStart(sourceFile),
+          literal.end - Number(hasClosingTick)
+        )
       }
     }
 
-    ts.forEachChild(node, visit);
+    ts.forEachChild(node, visit)
   }
 
-  visit(sourceFile);
-  return ranges;
+  visit(sourceFile)
+  return ranges
 }
 
 function updateFile(filePath) {
-  const original = fs.readFileSync(filePath, "utf8");
+  const original = fs.readFileSync(filePath, "utf8")
   const scriptKind =
     path.extname(filePath) === ".tsx" || path.extname(filePath) === ".jsx"
       ? ts.ScriptKind.TSX
-      : ts.ScriptKind.TS;
+      : ts.ScriptKind.TS
   const sourceFile = ts.createSourceFile(
     filePath,
     original,
     ts.ScriptTarget.Latest,
     true,
-    scriptKind,
-  );
-  const ranges = collectTextRanges(sourceFile);
+    scriptKind
+  )
+  const ranges = collectTextRanges(sourceFile)
 
   if (ranges.length === 0) {
-    return 0;
+    return 0
   }
 
-  let updated = original;
+  let updated = original
 
-  for (const { start, end } of ranges.toReversed()) {
-    const text = updated.slice(start, end);
+  for (const { start, end } of ranges.sort(
+    (left, right) => right.start - left.start
+  )) {
+    const text = updated.slice(start, end)
     updated =
       updated.slice(0, start) +
       text.replace(brandingPattern, "AqarDesk") +
-      updated.slice(end);
+      updated.slice(end)
   }
 
   if (writeChanges) {
-    fs.writeFileSync(filePath, updated, "utf8");
+    fs.writeFileSync(filePath, updated, "utf8")
   }
 
-  const relativePath = path.relative(root, filePath);
-  console.log(`${writeChanges ? "Updated" : "Would update"} ${relativePath}`);
-  return ranges.length;
+  const relativePath = path.relative(root, filePath)
+  console.log(`${writeChanges ? "Updated" : "Would update"} ${relativePath}`)
+  return ranges.length
 }
 
-let changedFiles = 0;
-let replacements = 0;
+let changedFiles = 0
+let replacements = 0
 
 for (const filePath of getSourceFiles(root)) {
-  const count = updateFile(filePath);
+  const count = updateFile(filePath)
 
   if (count > 0) {
-    changedFiles += 1;
-    replacements += count;
+    changedFiles += 1
+    replacements += count
   }
 }
 
 console.log(
-  `${writeChanges ? "Applied" : "Preview"}: ${replacements} branding replacement(s) in ${changedFiles} file(s).`,
-);
+  `${writeChanges ? "Applied" : "Preview"}: ${replacements} branding replacement(s) in ${changedFiles} file(s).`
+)
 if (!writeChanges) {
-  console.log("Run with --write to apply these changes.");
+  console.log("Run with --write to apply these changes.")
 }

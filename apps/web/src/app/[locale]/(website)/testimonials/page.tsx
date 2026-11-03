@@ -4,11 +4,11 @@ import { createPageMetadata } from "@/website/lib/metadata";
 export const metadata = createPageMetadata({
   title: "Customer Stories",
   description:
-    "See how solo founders use Midday to run their businesses with less admin.",
+    "See how solo founders use AqarDesk to run their businesses with less admin.",
   path: "/testimonials",
   og: {
     title: "Customer Stories",
-    description: "How founders run their business with Midday",
+    description: "How founders run their business with AqarDesk",
   },
   keywords: [
     "customer testimonials",

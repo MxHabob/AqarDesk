@@ -35,17 +35,17 @@ const hedvigSerif = Hedvig_Letters_Serif({
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "Midday — The business stack for modern founders",
-    template: "%s | Midday",
+    default: "AqarDesk — The business stack for modern founders",
+    template: "%s | AqarDesk",
   },
   description:
     "Invoicing, automatic reconciliation, time tracking, documents, and financial exports in one place. The business stack that replaces the tools you've outgrown.",
   openGraph: {
-    title: "Midday — The business stack for modern founders",
+    title: "AqarDesk — The business stack for modern founders",
     description:
       "Invoicing, automatic reconciliation, time tracking, documents, and financial exports in one place. The business stack that replaces the tools you've outgrown.",
     url: baseUrl,
-    siteName: "Midday",
+    siteName: "AqarDesk",
     locale: "en_US",
     type: "website",
     images: [
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    title: "Midday — The business stack for modern founders",
+    title: "AqarDesk — The business stack for modern founders",
     description:
       "Invoicing, automatic reconciliation, time tracking, documents, and financial exports in one place. The business stack that replaces the tools you've outgrown.",
     images: [
@@ -101,7 +101,7 @@ export const viewport = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
-  name: "Midday",
+  name: "AqarDesk",
   url: "https://midday.ai",
   logo: "https://cdn.midday.ai/logo.png",
   sameAs: [

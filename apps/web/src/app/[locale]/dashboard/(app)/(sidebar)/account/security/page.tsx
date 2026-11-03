@@ -5,7 +5,7 @@ import { redirect } from "next/navigation"
 import { MfaSettingsList } from "@/components/mfa-settings-list"
 
 export const metadata: Metadata = {
-  title: "Security | Midday",
+  title: "Security | AqarDesk",
 };
 
 export default async function Security({
