@@ -6,7 +6,10 @@ import { normalizePagination } from "../utils/pagination"
 import { escapeLikePattern } from "../utils/search"
 import type { DatabaseOrTransaction } from "./types"
 
-export async function getPropertyById(id: string, database = getDatabase()) {
+export async function getPropertyById(
+  id: string,
+  database: DatabaseOrTransaction = getDatabase()
+) {
   const [property] = await database
     .select()
     .from(schema.properties)

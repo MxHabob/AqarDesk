@@ -6,7 +6,10 @@ import { normalizePagination } from "../utils/pagination"
 import { escapeLikePattern } from "../utils/search"
 import type { DatabaseOrTransaction } from "./types"
 
-export async function getOwnerById(id: string, database = getDatabase()) {
+export async function getOwnerById(
+  id: string,
+  database: DatabaseOrTransaction = getDatabase()
+) {
   const [owner] = await database
     .select()
     .from(schema.owners)

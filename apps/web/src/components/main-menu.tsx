@@ -1,7 +1,7 @@
 "use client"
 
-import { cn } from "@midday/ui/cn"
-import { Icons } from "@midday/ui/icons"
+import { Icons } from "@aqardesk/ui/components/icons"
+import { cn } from "@aqardesk/ui/lib/utils"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -13,6 +13,7 @@ const icons = {
   "/invoices": () => <Icons.Invoice size={20} />,
   "/tracker": () => <Icons.Tracker size={20} />,
   "/customers": () => <Icons.Customers size={20} />,
+  "/properties": () => <Icons.Overview size={20} />,
   "/vault": () => <Icons.Vault size={20} />,
   "/settings": () => <Icons.Settings size={20} />,
   "/apps": () => <Icons.Apps size={20} />,
@@ -69,6 +70,15 @@ const items = [
     path: "/customers",
     name: "Customers",
     children: [{ path: "/customers?createCustomer=true", name: "Create new" }],
+  },
+  {
+    path: "/properties",
+    name: "العقارات",
+    children: [
+      { path: "/properties", name: "العقارات" },
+      { path: "/listings", name: "الإعلانات" },
+      { path: "/owners", name: "الملاك" },
+    ],
   },
   {
     path: "/vault",
@@ -250,7 +260,7 @@ const Item = ({
             shouldShowChildren ? "max-h-96 mt-1" : "max-h-0"
           )}
         >
-          {item.children!.map((child, index) => {
+          {item.children?.map((child, index) => {
             const isChildActive = pathname === child.path
             return (
               <ChildItem

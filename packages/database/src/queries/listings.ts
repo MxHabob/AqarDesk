@@ -44,7 +44,10 @@ export type PublicListingSearch = {
   pageSize?: number
 }
 
-export async function getListingById(id: string, database = getDatabase()) {
+export async function getListingById(
+  id: string,
+  database: DatabaseOrTransaction = getDatabase()
+) {
   const [listing] = await database
     .select()
     .from(schema.listings)

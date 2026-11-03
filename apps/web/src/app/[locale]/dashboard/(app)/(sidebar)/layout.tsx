@@ -24,7 +24,6 @@ export default async function Layout({
   batchPrefetch([
     trpc.team.current.queryOptions(),
     trpc.invoice.defaultSettings.queryOptions(),
-    trpc.search.global.queryOptions({ searchTerm: "" }),
   ]);
 
   // Fetch the user – .catch → redirect so a transient API failure

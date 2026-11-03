@@ -1,4 +1,4 @@
-import { Icons } from "@midday/ui/icons"
+import { Icons } from "@aqardesk/ui/components/icons"
 
 export function SearchFooter() {
   return (
