@@ -1,11 +1,11 @@
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/card";
-import { SelectCurrency } from "./select-currency";
+  SettingsCard as Card,
+  SettingsCardContent as CardContent,
+  SettingsCardDescription as CardDescription,
+  SettingsCardHeader as CardHeader,
+  SettingsCardTitle as CardTitle,
+} from "@/components/settings-card"
+import { SelectCurrency } from "./select-currency"
 
 export function BaseCurrency() {
   return (
@@ -23,5 +23,5 @@ export function BaseCurrency() {
         <SelectCurrency />
       </CardContent>
     </Card>
-  );
+  )
 }

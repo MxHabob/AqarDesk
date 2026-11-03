@@ -30,6 +30,8 @@ export default {
     of: "من",
     rowsPerPage: "صفوف في الصفحة",
     selectedRows: "صفوف محددة",
+    deselectAll: "إلغاء التحديد",
+    exportSelected: "تصدير CSV",
     noResults: "لا توجد نتائج مطابقة.",
     columns: "الأعمدة",
     selectAll: "تحديد الكل",

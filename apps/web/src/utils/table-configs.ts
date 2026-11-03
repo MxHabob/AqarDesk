@@ -19,6 +19,18 @@ export const STICKY_COLUMNS: Record<TableId, StickyColumnConfig[]> = {
     { id: "select", width: 50 },
     { id: "title", width: 250 },
   ],
+  properties: [
+    { id: "select", width: 50 },
+    { id: "title", width: 280 },
+  ],
+  listings: [
+    { id: "select", width: 50 },
+    { id: "title", width: 280 },
+  ],
+  owners: [
+    { id: "select", width: 50 },
+    { id: "name", width: 240 },
+  ],
 }
 
 /**
@@ -60,6 +72,23 @@ export const SORT_FIELD_MAPS: Record<TableId, Record<string, string>> = {
     tags: "tags",
   },
   vault: {}, // Vault doesn't have sorting
+  properties: {
+    title: "title",
+    city: "city",
+    neighborhood: "neighborhood",
+    lotAreaM2: "lot_area_m2",
+  },
+  listings: {
+    title: "title",
+    listingType: "listing_type",
+    status: "status",
+    price: "price",
+  },
+  owners: {
+    name: "name",
+    notes: "notes",
+    createdAt: "created_at",
+  },
 }
 
 /**
@@ -70,6 +99,9 @@ export const NON_REORDERABLE_COLUMNS: Record<TableId, Set<string>> = {
   invoices: new Set(["select", "invoiceNumber", "actions"]),
   customers: new Set(["name", "actions"]),
   vault: new Set(["select", "title", "actions"]),
+  properties: new Set(["select", "title", "actions"]),
+  listings: new Set(["select", "title", "actions"]),
+  owners: new Set(["select", "name", "actions"]),
 }
 
 /**
@@ -80,6 +112,9 @@ export const ROW_HEIGHTS: Record<TableId, number> = {
   invoices: 57,
   customers: 45,
   vault: 45,
+  properties: 45,
+  listings: 45,
+  owners: 45,
 }
 
 /**
@@ -123,6 +158,27 @@ export const TABLE_CONFIGS: Record<TableId, TableConfig> = {
     sortFieldMap: SORT_FIELD_MAPS.vault,
     nonReorderableColumns: NON_REORDERABLE_COLUMNS.vault,
     rowHeight: ROW_HEIGHTS.vault,
+  },
+  properties: {
+    tableId: "properties",
+    stickyColumns: STICKY_COLUMNS.properties,
+    sortFieldMap: SORT_FIELD_MAPS.properties,
+    nonReorderableColumns: NON_REORDERABLE_COLUMNS.properties,
+    rowHeight: ROW_HEIGHTS.properties,
+  },
+  listings: {
+    tableId: "listings",
+    stickyColumns: STICKY_COLUMNS.listings,
+    sortFieldMap: SORT_FIELD_MAPS.listings,
+    nonReorderableColumns: NON_REORDERABLE_COLUMNS.listings,
+    rowHeight: ROW_HEIGHTS.listings,
+  },
+  owners: {
+    tableId: "owners",
+    stickyColumns: STICKY_COLUMNS.owners,
+    sortFieldMap: SORT_FIELD_MAPS.owners,
+    nonReorderableColumns: NON_REORDERABLE_COLUMNS.owners,
+    rowHeight: ROW_HEIGHTS.owners,
   },
 }
 

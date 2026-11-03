@@ -7,6 +7,7 @@ import { PropertiesTable } from "@/components/tables/properties"
 import { PropertiesSkeleton } from "@/components/tables/properties/skeleton"
 import { realEstateQueries } from "@/queries/real-estate"
 import { getQueryClient, HydrateClient } from "@/queries/server"
+import { getInitialTableSettings } from "@/utils/columns"
 
 export const metadata: Metadata = {
   title: "العقارات | AqarDesk",
@@ -14,16 +15,21 @@ export const metadata: Metadata = {
 
 export default async function PropertiesPage() {
   const queryClient = getQueryClient()
-  await queryClient.prefetchQuery(realEstateQueries.properties())
+  const [_, initialSettings] = await Promise.all([
+    queryClient.prefetchQuery(realEstateQueries.properties()),
+    getInitialTableSettings("properties"),
+  ])
 
   return (
     <HydrateClient>
-      <ScrollableContent>
-        <ErrorBoundary errorComponent={ErrorFallback}>
-          <Suspense fallback={<PropertiesSkeleton />}>
-            <PropertiesTable />
-          </Suspense>
-        </ErrorBoundary>
+      <ScrollableContent className="flex h-[calc(100dvh-86px)] min-h-0 flex-col overflow-hidden">
+        <div className="flex min-h-0 flex-1">
+          <ErrorBoundary errorComponent={ErrorFallback}>
+            <Suspense fallback={<PropertiesSkeleton />}>
+              <PropertiesTable initialSettings={initialSettings} />
+            </Suspense>
+          </ErrorBoundary>
+        </div>
       </ScrollableContent>
     </HydrateClient>
   )

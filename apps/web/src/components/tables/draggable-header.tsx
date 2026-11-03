@@ -1,11 +1,11 @@
 "use client"
 
-import { useSortable } from "@dnd-kit/sortable"
-import { CSS } from "@dnd-kit/utilities"
 import { cn } from "@aqardesk/ui/cn"
 import { TableHead } from "@aqardesk/ui/table"
+import { useSortable } from "@dnd-kit/sortable"
+import { CSS } from "@dnd-kit/utilities"
 import { GripVertical } from "lucide-react"
-import type { CSSProperties, ReactNode } from "react"
+import type { CSSProperties, MouseEventHandler, ReactNode } from "react"
 
 interface DraggableHeaderProps {
   id: string
@@ -13,6 +13,7 @@ interface DraggableHeaderProps {
   className?: string
   style?: CSSProperties
   disabled?: boolean
+  onClick?: MouseEventHandler<HTMLTableCellElement>
 }
 
 export function DraggableHeader({
@@ -21,6 +22,7 @@ export function DraggableHeader({
   className,
   style,
   disabled = false,
+  onClick,
 }: DraggableHeaderProps) {
   const {
     attributes,
@@ -51,6 +53,7 @@ export function DraggableHeader({
         className
       )}
       style={dragStyle}
+      onClick={onClick}
     >
       <div className="flex-1 min-w-0 overflow-hidden">{children}</div>
       {!disabled && (

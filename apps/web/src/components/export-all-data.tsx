@@ -1,17 +1,17 @@
 "use client"
 
 import { Button } from "@aqardesk/ui/button"
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/card"
 import { useToast } from "@aqardesk/ui/use-toast"
 import { useMutation } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { exportOfficeDataAction } from "@/actions/office-export"
+import {
+  SettingsCard as Card,
+  SettingsCardDescription as CardDescription,
+  SettingsCardFooter as CardFooter,
+  SettingsCardHeader as CardHeader,
+  SettingsCardTitle as CardTitle,
+} from "@/components/settings-card"
 import { downloadFile } from "@/lib/download"
 import { useExportStore } from "@/store/export"
 

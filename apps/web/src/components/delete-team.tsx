@@ -12,13 +12,6 @@ import {
   AlertDialogTrigger,
 } from "@aqardesk/ui/alert-dialog"
 import { Button } from "@aqardesk/ui/button"
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/card"
 import { Input } from "@aqardesk/ui/input"
 import { Label } from "@aqardesk/ui/label"
 import { useToast } from "@aqardesk/ui/use-toast"
@@ -27,6 +20,13 @@ import { Loader2 } from "lucide-react"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { archiveActiveTeamAction } from "@/actions/teams"
+import {
+  SettingsCard as Card,
+  SettingsCardDescription as CardDescription,
+  SettingsCardFooter as CardFooter,
+  SettingsCardHeader as CardHeader,
+  SettingsCardTitle as CardTitle,
+} from "@/components/settings-card"
 
 export function DeleteTeam() {
   const [value, setValue] = useState("")

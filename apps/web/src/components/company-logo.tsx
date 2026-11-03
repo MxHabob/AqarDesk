@@ -1,21 +1,21 @@
 "use client"
 
 import { Avatar, AvatarFallback, AvatarImage } from "@aqardesk/ui/avatar"
-import {
-  Card,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/card"
 import { Spinner } from "@aqardesk/ui/spinner"
 import { stripSpecialCharacters } from "@aqardesk/utils"
 import { useRef } from "react"
 import {
+  SettingsCard as Card,
+  SettingsCardDescription as CardDescription,
+  SettingsCardFooter as CardFooter,
+  SettingsCardHeader as CardHeader,
+  SettingsCardTitle as CardTitle,
+} from "@/components/settings-card"
+import { useFileUrl } from "@/hooks/use-file-url"
+import {
   useOfficeSettingsMutation,
   useOfficeSettingsQuery,
 } from "@/hooks/use-office-settings"
-import { useFileUrl } from "@/hooks/use-file-url"
 import { useUpload } from "@/hooks/use-upload"
 
 export function CompanyLogo() {

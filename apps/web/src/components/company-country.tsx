@@ -1,14 +1,6 @@
 "use client"
 
 import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/card"
-import {
   Form,
   FormControl,
   FormField,
@@ -17,6 +9,14 @@ import {
 } from "@aqardesk/ui/form"
 import { SubmitButton } from "@aqardesk/ui/submit-button"
 import { z } from "zod/v3"
+import {
+  SettingsCard as Card,
+  SettingsCardContent as CardContent,
+  SettingsCardDescription as CardDescription,
+  SettingsCardFooter as CardFooter,
+  SettingsCardHeader as CardHeader,
+  SettingsCardTitle as CardTitle,
+} from "@/components/settings-card"
 import {
   useOfficeSettingsMutation,
   useOfficeSettingsQuery,

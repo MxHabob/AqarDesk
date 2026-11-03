@@ -37,6 +37,7 @@ function VirtualRowInner<TData>({
   onCellClick,
   getStickyStyle,
   getStickyClassName,
+  isSelected,
   nonClickableColumns = new Set(["select", "actions"]),
 }: VirtualRowProps<TData>) {
   const cells = row.getVisibleCells()
@@ -52,8 +53,9 @@ function VirtualRowInner<TData>({
   return (
     <TableRow
       data-index={row.index}
+      data-state={isSelected ? "selected" : undefined}
       className={cn(
-        "group cursor-pointer select-text",
+        "group cursor-pointer select-text data-[state=selected]:bg-muted/50",
         "hover:bg-[#F2F1EF] hover:dark:bg-[#0f0f0f]",
         "flex items-center border-0",
         "absolute top-0 start-0 w-full min-w-full"

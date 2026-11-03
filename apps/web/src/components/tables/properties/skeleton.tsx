@@ -12,16 +12,19 @@ const headers = ["العقار", "المدينة", "الحي", "المساحة",
 
 export function PropertiesSkeleton() {
   return (
-    <section className="w-full space-y-5 py-6">
-      <div className="flex flex-wrap items-end justify-between gap-4">
+    <section className="flex h-full min-h-0 flex-1 flex-col gap-4 py-6">
+      <div className="flex shrink-0 flex-wrap items-end justify-between gap-4">
         <div className="space-y-2">
           <Skeleton className="h-7 w-32" />
           <Skeleton className="h-4 w-64" />
         </div>
-        <Skeleton className="h-9 w-28" />
+        <div className="flex w-full items-center gap-2 sm:w-auto">
+          <Skeleton className="h-9 w-64" />
+          <Skeleton className="size-9" />
+          <Skeleton className="h-9 w-28" />
+        </div>
       </div>
-      <Skeleton className="h-10 w-full" />
-      <Table>
+      <Table containerClassName="min-h-0 flex-1 overflow-auto scrollbar-hide">
         <TableHeader>
           <TableRow>
             {headers.map((header) => (
@@ -39,6 +42,10 @@ export function PropertiesSkeleton() {
             "property-skeleton-6",
             "property-skeleton-7",
             "property-skeleton-8",
+            "property-skeleton-9",
+            "property-skeleton-10",
+            "property-skeleton-11",
+            "property-skeleton-12",
           ].map((key) => (
             <TableRow key={key}>
               <TableCell>

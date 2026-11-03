@@ -14,6 +14,12 @@ export default {
     listings: "Listings",
     owners: "Owners",
     settings: "Settings",
+    columns: "Columns",
+    selectAll: "Select all rows",
+    selectRow: "Select row",
+    selectedRows: "selected",
+    deselectAll: "Deselect all",
+    exportSelected: "Export CSV",
     notAvailable: "—",
   },
   publicListings: {

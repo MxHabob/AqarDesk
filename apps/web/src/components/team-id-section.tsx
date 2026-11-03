@@ -1,16 +1,16 @@
 "use client"
 
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@aqardesk/ui/card"
 import { useQuery } from "@tanstack/react-query"
 import { getUserTeamsAction } from "@/actions/teams"
 import { CopyInput } from "@/components/copy-input"
+import {
+  SettingsCard as Card,
+  SettingsCardContent as CardContent,
+  SettingsCardDescription as CardDescription,
+  SettingsCardFooter as CardFooter,
+  SettingsCardHeader as CardHeader,
+  SettingsCardTitle as CardTitle,
+} from "@/components/settings-card"
 
 export function TeamIdSection() {
   const { data } = useQuery({
