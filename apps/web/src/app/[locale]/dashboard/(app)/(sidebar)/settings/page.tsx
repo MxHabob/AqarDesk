@@ -1,9 +1,9 @@
 import { auth } from "@aqardesk/auth/server"
 import type { Metadata } from "next"
-import { Suspense } from "react"
 import { headers } from "next/headers"
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { Suspense } from "react"
 import { BaseCurrency } from "@/components/base-currency/base-currency"
 import { CompanyCountry } from "@/components/company-country"
 import { CompanyEmail } from "@/components/company-email"
@@ -13,14 +13,23 @@ import { CompanyName } from "@/components/company-name"
 import { CompanyPhone } from "@/components/company-phone"
 import { DeleteTeam } from "@/components/delete-team"
 import { ExportAllData } from "@/components/export-all-data"
-import { TeamIdSection } from "@/components/team-id-section"
 import { SettingsLoading } from "@/components/settings-loading"
+import { TeamIdSection } from "@/components/team-id-section"
 import { hasPermission } from "@/lib/auth/permissions"
+import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 import { officeSettingsQueryOptions } from "@/queries/office-settings"
 import { getQueryClient, HydrateClient } from "@/queries/server"
 
-export const metadata: Metadata = {
-  title: "Team Settings | AqarDesk",
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  setStaticParamsLocale(locale)
+  const t = await getScopedI18n("teamManagement")
+
+  return { title: t("settingsPageTitle") }
 }
 
 export default async function Account({
@@ -29,6 +38,7 @@ export default async function Account({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
+  setStaticParamsLocale(locale)
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (!session) {
@@ -36,26 +46,22 @@ export default async function Account({
   }
 
   if (!(await hasPermission(session.user.id, "office_settings.read"))) {
-    const isArabic = locale === "ar"
+    const t = await getScopedI18n("teamManagement")
 
     return (
       <div
         role="alert"
         className="mx-auto max-w-xl space-y-3 py-16 text-center"
       >
-        <h1 className="text-lg font-semibold">
-          {isArabic ? "لا تملك صلاحية الوصول" : "Access denied"}
-        </h1>
+        <h1 className="text-lg font-semibold">{t("accessDenied")}</h1>
         <p className="text-sm text-muted-foreground">
-          {isArabic
-            ? "ليس لديك صلاحية عرض إعدادات المكتب. تواصل مع مسؤول المكتب إذا كنت تعتقد أن هذا غير صحيح."
-            : "You don't have permission to view office settings. Contact your office administrator if you think this is a mistake."}
+          {t("accessDeniedDescription")}
         </p>
         <Link
           href={`/${locale}/dashboard`}
           className="inline-flex h-9 items-center border border-border px-4 text-sm hover:bg-muted"
         >
-          {isArabic ? "العودة إلى لوحة التحكم" : "Back to dashboard"}
+          {t("backToDashboard")}
         </Link>
       </div>
     )

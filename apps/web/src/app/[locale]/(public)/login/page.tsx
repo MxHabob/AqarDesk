@@ -11,11 +11,14 @@ import { redirect } from "next/navigation"
 import { LoginForm } from "@/components/login-form"
 import { LoginVideoBackground } from "@/components/login-video-background"
 import { getRoleDestination, getUserRoleKeys } from "@/lib/auth/roles"
-import ar from "@/locales/ar"
-import en from "@/locales/en"
+import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
-export const metadata: Metadata = {
-  title: "Sign in | AqarDesk",
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale } = await params
+  setStaticParamsLocale(locale)
+  const t = await getScopedI18n("auth")
+
+  return { title: t("loginTitle") }
 }
 
 type Props = {
@@ -25,6 +28,8 @@ type Props = {
 
 export default async function Page({ params, searchParams }: Props) {
   const [{ locale }, { error }] = await Promise.all([params, searchParams])
+  setStaticParamsLocale(locale)
+  const t = await getScopedI18n("auth")
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (session) {
@@ -35,8 +40,6 @@ export default async function Page({ params, searchParams }: Props) {
       redirect(destination)
     }
   }
-
-  const copy = locale === "ar" ? ar.auth : en.auth
 
   return (
     <main
@@ -49,7 +52,7 @@ export default async function Page({ params, searchParams }: Props) {
           aria-label="AqarDesk"
           className="inline-flex items-center transition-opacity hover:opacity-75"
         >
-          <Icons.LogoSmall className="size-6 text-white" />
+          <Icons.LogoSmall className="text-white" />
         </Link>
       </header>
 
@@ -63,16 +66,16 @@ export default async function Page({ params, searchParams }: Props) {
           <div className="flex flex-1 flex-col justify-center space-y-8">
             <div className="space-y-2 text-center">
               <h1 className="mb-4 font-serif text-lg lg:text-xl">
-                {copy.loginTitle}
+                {t("loginTitle")}
               </h1>
               <p className="font-sans text-sm text-muted-foreground">
-                {copy.loginDescription}
+                {t("loginDescription")}
               </p>
             </div>
 
             {error === "role" && (
               <p role="alert" className="text-center text-sm text-destructive">
-                {copy.loginRoleError}
+                {t("loginRoleError")}
               </p>
             )}
 
@@ -84,19 +87,19 @@ export default async function Page({ params, searchParams }: Props) {
 
           <footer className="mt-auto text-center">
             <p className="font-sans text-xs text-muted-foreground">
-              {copy.signInTerms}{" "}
+              {t("signInTerms")}{" "}
               <Link
                 href={`/${locale}/terms`}
                 className="underline transition-colors hover:text-foreground"
               >
-                {copy.termsOfService}
+                {t("termsOfService")}
               </Link>{" "}
-              {copy.and}{" "}
+              {t("and")}{" "}
               <Link
                 href={`/${locale}/policy`}
                 className="underline transition-colors hover:text-foreground"
               >
-                {copy.privacyPolicy}
+                {t("privacyPolicy")}
               </Link>
             </p>
           </footer>

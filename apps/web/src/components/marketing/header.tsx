@@ -7,6 +7,7 @@ import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { marketingServices } from "@/lib/marketing/services"
+import { useScopedI18n } from "@/locales/client"
 import { MarketingAccountMenu } from "./account-menu"
 import { HeaderPreferences } from "./header-preferences"
 
@@ -44,11 +45,7 @@ export function Header({
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false)
   const [headerHeight, setHeaderHeight] = useState(72)
   const headerRef = useRef<HTMLDivElement>(null)
-  const isArabic = locale === "ar"
-  const servicesLabel = isArabic ? "خدماتنا" : "Services"
-  const aboutLabel = isArabic ? "من نحن" : "About us"
-  const portfolioLabel = isArabic ? "ملف الأعمال" : "Portfolio"
-  const signInLabel = isArabic ? "تسجيل الدخول" : "Sign in"
+  const t = useScopedI18n("site")
 
   useEffect(() => {
     const header = headerRef.current
@@ -65,7 +62,7 @@ export function Header({
   return (
     <>
       <button
-        aria-label={isArabic ? "إغلاق قائمة الخدمات" : "Close services menu"}
+        aria-label={t("closeServicesMenu")}
         className={cn(
           "fixed inset-x-0 bottom-0 z-40 border-0 bg-black/40 p-0 transition-opacity duration-150",
           isServicesOpen
@@ -88,16 +85,16 @@ export function Header({
           )}
         >
           <Link
-            aria-label="AqarDesk - Go to homepage"
+            aria-label={t("homeLinkLabel")}
             className="flex items-center gap-2 transition-opacity hover:opacity-80"
             href="/"
             onClick={() => setIsMenuOpen(false)}
           >
-            <span className="size-6">
+            <span className="size-9">
               <Icons.LogoSmall className="size-full text-foreground" />
             </span>
-            <span className="font-sans text-base text-foreground xl:hidden">
-              AqarDesk
+            <span className="max-w-40 truncate font-sans text-base text-foreground xl:hidden sm:max-w-none">
+              {t("officeName")}
             </span>
           </Link>
 
@@ -111,7 +108,7 @@ export function Header({
                   onMouseEnter={() => setIsServicesOpen(true)}
                   type="button"
                 >
-                  {servicesLabel}
+                  {t("services")}
                   <Icons.ArrowDropDown
                     className={cn(
                       "size-4 transition-transform duration-200",
@@ -146,18 +143,14 @@ export function Header({
                                       >
                                         <span className="flex flex-col ps-2">
                                           <span className="mb-1 font-sans text-base text-foreground">
-                                            {
-                                              service.title[
-                                                isArabic ? "ar" : "en"
-                                              ]
-                                            }
+                                            {t(
+                                              `serviceCopy.${service.copyKey}.title`
+                                            )}
                                           </span>
                                           <span className="font-sans text-xs text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
-                                            {
-                                              service.description[
-                                                isArabic ? "ar" : "en"
-                                              ]
-                                            }
+                                            {t(
+                                              `serviceCopy.${service.copyKey}.description`
+                                            )}
                                           </span>
                                         </span>
                                       </Link>
@@ -200,12 +193,8 @@ export function Header({
                                   <span className="mt-1 block font-sans text-xs text-muted-foreground transition-colors group-hover:text-foreground">
                                     {listing.location ||
                                       (listing.listingType === "sale"
-                                        ? isArabic
-                                          ? "عقار للبيع"
-                                          : "Property for sale"
-                                        : isArabic
-                                          ? "عقار للإيجار"
-                                          : "Property for rent")}
+                                        ? t("forSale")
+                                        : t("forRent"))}
                                   </span>
                                 </span>
                               </Link>
@@ -218,13 +207,11 @@ export function Header({
                               >
                                 <span className="flex flex-1 items-center justify-center bg-secondary">
                                   <span className="font-serif text-2xl text-muted-foreground">
-                                    {portfolioLabel}
+                                    {t("portfolio")}
                                   </span>
                                 </span>
                                 <span className="border-t border-border bg-background p-3 font-sans text-xs text-foreground">
-                                  {isArabic
-                                    ? "أحدث العقارات"
-                                    : "Latest properties"}
+                                  {t("latestProperties")}
                                 </span>
                               </Link>
                             )}
@@ -240,13 +227,13 @@ export function Header({
                 className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 href="/about"
               >
-                {aboutLabel}
+                {t("about")}
               </Link>
               <Link
                 className="text-sm text-muted-foreground transition-colors hover:text-foreground"
                 href="/portfolio"
               >
-                {portfolioLabel}
+                {t("portfolio")}
               </Link>
 
               <HeaderPreferences
@@ -265,7 +252,7 @@ export function Header({
                     className="text-sm text-primary transition-colors hover:text-primary/80"
                     href="/login"
                   >
-                    {signInLabel}
+                    {t("login")}
                   </Link>
                 )}
               </div>
@@ -276,15 +263,7 @@ export function Header({
             <div className="flex items-center gap-2 xl:hidden">
               <button
                 aria-expanded={isMenuOpen}
-                aria-label={
-                  isMenuOpen
-                    ? isArabic
-                      ? "إغلاق القائمة"
-                      : "Close menu"
-                    : isArabic
-                      ? "فتح القائمة"
-                      : "Open menu"
-                }
+                aria-label={isMenuOpen ? t("closeMenu") : t("openMenu")}
                 className="relative flex min-h-11 min-w-11 items-center justify-end p-2 text-primary"
                 onClick={() => setIsMenuOpen((open) => !open)}
                 type="button"
@@ -328,7 +307,7 @@ export function Header({
                   className="text-sm text-primary transition-colors hover:text-primary/80"
                   href="/login"
                 >
-                  {signInLabel}
+                  {t("login")}
                 </Link>
               )}
             </div>
@@ -346,7 +325,7 @@ export function Header({
                 onClick={() => setIsMobileServicesOpen((open) => !open)}
                 type="button"
               >
-                <span>{servicesLabel}</span>
+                <span>{t("services")}</span>
                 <Icons.ArrowDropDown
                   className={cn(
                     "size-6 transition-transform duration-200",
@@ -363,7 +342,7 @@ export function Header({
                       href="/services"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      {isArabic ? "كل الخدمات" : "All services"}
+                      {t("allServices")}
                     </Link>
                     {marketingServices.map((service) => (
                       <Link
@@ -372,7 +351,7 @@ export function Header({
                         key={service.slug}
                         onClick={() => setIsMenuOpen(false)}
                       >
-                        {service.title[isArabic ? "ar" : "en"]}
+                        {t(`serviceCopy.${service.copyKey}.title`)}
                       </Link>
                     ))}
                   </div>
@@ -385,14 +364,14 @@ export function Header({
               href="/about"
               onClick={() => setIsMenuOpen(false)}
             >
-              {aboutLabel}
+              {t("about")}
             </Link>
             <Link
               className="py-2 text-2xl text-primary"
               href="/portfolio"
               onClick={() => setIsMenuOpen(false)}
             >
-              {portfolioLabel}
+              {t("portfolio")}
             </Link>
           </div>
         </div>

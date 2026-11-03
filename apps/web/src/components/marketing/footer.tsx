@@ -29,7 +29,7 @@ export function Footer() {
       ],
     },
     {
-      title: t("marketingFooter.aboutAqarDesk"),
+      title: t("marketingFooter.aboutOffice"),
       items: [
         { href: "/about", label: t("marketingFooter.aboutUs") },
         { href: "/services", label: t("marketingFooter.services") },
@@ -164,7 +164,7 @@ export function Footer() {
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div className="hidden md:flex items-center gap-2">
             <span className="font-sans text-sm text-muted-foreground">
-              AqarDesk
+              {t("site.officeName")}
             </span>
           </div>
           <p className="font-sans text-sm text-muted-foreground">

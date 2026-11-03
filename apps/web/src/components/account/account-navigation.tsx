@@ -5,9 +5,10 @@ import { Button } from "@aqardesk/ui/components/button"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
+import { useScopedI18n } from "@/locales/client"
 
 export function AccountNavigation({ locale }: { locale: string }) {
-  const isArabic = locale === "ar"
+  const t = useScopedI18n("account")
   const router = useRouter()
   const [error, setError] = useState(false)
   const [isSigningOut, setIsSigningOut] = useState(false)
@@ -34,16 +35,14 @@ export function AccountNavigation({ locale }: { locale: string }) {
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
-      <nav aria-label={isArabic ? "إدارة الحساب" : "Account navigation"}>
+      <nav aria-label={t("navigationLabel")}>
         <ul className="flex flex-wrap gap-4 text-sm">
           <li>
-            <Link href={`/${locale}/account`}>
-              {isArabic ? "حسابي" : "My account"}
-            </Link>
+            <Link href={`/${locale}/account`}>{t("title")}</Link>
           </li>
           <li>
             <Link href={`/${locale}/account/favorites`}>
-              {isArabic ? "عقاراتي المفضلة" : "Saved properties"}
+              {t("favoritesTitle")}
             </Link>
           </li>
         </ul>
@@ -54,19 +53,11 @@ export function AccountNavigation({ locale }: { locale: string }) {
         type="button"
         variant="outline"
       >
-        {isSigningOut
-          ? isArabic
-            ? "جارٍ الخروج..."
-            : "Signing out..."
-          : isArabic
-            ? "تسجيل الخروج"
-            : "Sign out"}
+        {isSigningOut ? t("signingOut") : t("signOut")}
       </Button>
       {error && (
         <p role="alert" className="w-full text-sm text-destructive">
-          {isArabic
-            ? "تعذر تسجيل الخروج. حاول مرة أخرى."
-            : "Unable to sign out. Please try again."}
+          {t("signOutError")}
         </p>
       )}
     </div>

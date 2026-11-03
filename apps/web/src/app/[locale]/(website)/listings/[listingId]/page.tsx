@@ -261,13 +261,13 @@ export default async function ListingDetailsPage({
         {
           "@type": "ListItem",
           position: 1,
-          name: locale === "ar" ? "الرئيسية" : "Home",
+          name: translate("site.home"),
           item: getSiteUrl(`/${locale}`),
         },
         {
           "@type": "ListItem",
           position: 2,
-          name: locale === "ar" ? "العقارات" : "Properties",
+          name: translate("site.browseListings"),
           item: getSiteUrl(`/${locale}/listings`),
         },
         {

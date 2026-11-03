@@ -10,6 +10,27 @@ import {
 import { useTransition } from "react"
 import { saveWebsitePreferences } from "@/actions/website-preferences"
 import { websiteCountries } from "@/lib/countries"
+import { useScopedI18n } from "@/locales/client"
+
+const countryTranslationKeys = {
+  YE: "countryYemen",
+  EG: "countryEgypt",
+  SA: "countrySaudiArabia",
+  AE: "countryUnitedArabEmirates",
+  BH: "countryBahrain",
+  KW: "countryKuwait",
+  JO: "countryJordan",
+  QA: "countryQatar",
+  OM: "countryOman",
+  IQ: "countryIraq",
+  LB: "countryLebanon",
+  US: "countryUnitedStates",
+  GB: "countryUnitedKingdom",
+  CA: "countryCanada",
+  AU: "countryAustralia",
+  IN: "countryIndia",
+  PK: "countryPakistan",
+} as const
 
 export function HeaderPreferences({
   idPrefix,
@@ -20,13 +41,13 @@ export function HeaderPreferences({
   locale: string
   countryCode: string
 }) {
-  const isArabic = locale === "ar"
+  const t = useScopedI18n("site")
   const localeId = `${idPrefix}-header-locale`
   const countryId = `${idPrefix}-header-country`
   const isCompact = idPrefix === "mobile"
   const [isPending, startTransition] = useTransition()
   const countryName = (country: (typeof websiteCountries)[number]) =>
-    isArabic ? country.nameAr : country.name
+    t(countryTranslationKeys[country.code])
   const selectedCountry = websiteCountries.find(
     (country) => country.code === countryCode
   )
@@ -49,7 +70,7 @@ export function HeaderPreferences({
       >
         <SelectTrigger
           id={localeId}
-          aria-label={isArabic ? "اللغة" : "Language"}
+          aria-label={t("language")}
           disabled={isPending}
           className={
             isCompact ? "h-9 w-14 px-2 text-xs" : "h-9 w-24 px-2 text-xs"
@@ -59,13 +80,13 @@ export function HeaderPreferences({
             {isCompact
               ? locale.toUpperCase()
               : locale === "ar"
-                ? "العربية"
-                : "English"}
+                ? t("arabic")
+                : t("english")}
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
-          <SelectItem value="ar">العربية</SelectItem>
-          <SelectItem value="en">English</SelectItem>
+          <SelectItem value="ar">{t("arabic")}</SelectItem>
+          <SelectItem value="en">{t("english")}</SelectItem>
         </SelectContent>
       </Select>
 
@@ -77,7 +98,7 @@ export function HeaderPreferences({
       >
         <SelectTrigger
           id={countryId}
-          aria-label={isArabic ? "الدولة" : "Country"}
+          aria-label={t("country")}
           disabled={isPending}
           className={
             isCompact ? "h-9 w-16 px-2 text-xs" : "h-9 w-36 px-2 text-xs"

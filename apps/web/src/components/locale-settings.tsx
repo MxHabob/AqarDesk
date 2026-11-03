@@ -19,7 +19,7 @@ export function LocaleSettings() {
 
   const localeItems = locales.map((locale) => ({
     id: locale,
-    label: locale === "ar" ? "العربية (ar)" : "English (en)",
+    label: t(`locale.${locale}`),
     value: locale,
   }))
 

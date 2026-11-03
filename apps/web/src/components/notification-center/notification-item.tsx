@@ -10,7 +10,7 @@ import {
   getMetadata,
   getMetadataProperty,
 } from "@/hooks/use-notifications"
-import { useCurrentLocale } from "@/locales/client"
+import { useCurrentLocale, useScopedI18n } from "@/locales/client"
 import { getActivityIcon } from "@/utils/activity-utils"
 import { NotificationLink } from "./notification-link"
 
@@ -27,14 +27,15 @@ export function NotificationItem({
   activity,
   markMessageAsRead,
 }: NotificationItemProps) {
-  const isArabic = useCurrentLocale() === "ar"
+  const locale = useCurrentLocale()
+  const t = useScopedI18n("notifications")
 
   const recordId = getMetadataProperty(activity, "recordId")
   const metadata = getMetadata(activity)
   const description = activity.title || activity.type.replaceAll("_", " ")
   const timeAgo = formatDistanceToNow(new Date(activity.createdAt), {
     addSuffix: true,
-    locale: isArabic ? ar : undefined,
+    locale: locale === "ar" ? ar : undefined,
   })
 
   const notificationContent = (
@@ -65,7 +66,7 @@ export function NotificationItem({
         variant="secondary"
         className="rounded-full bg-transparent dark:hover:bg-[#1A1A1A] hover:bg-[#F6F6F3]"
         onClick={() => markMessageAsRead(id)}
-        title={isArabic ? "أرشفة الإشعار" : "Archive notification"}
+        title={t("archive")}
       >
         <Icons.Inventory2 />
       </Button>

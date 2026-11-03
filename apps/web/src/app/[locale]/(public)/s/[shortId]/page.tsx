@@ -29,7 +29,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   }
 
   return {
-    ...createPageMetadata({
+    ...(await createPageMetadata({
       title: listing.title,
       description:
         listing.description ??
@@ -40,7 +40,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ogImagePath: `/listings/${listing.id}/opengraph-image`,
       type: "article",
       canonical: false,
-    }),
+    })),
     robots: { index: false, follow: true },
   }
 }

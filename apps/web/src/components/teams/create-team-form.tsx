@@ -1,9 +1,10 @@
 import { Button } from "@aqardesk/ui/button"
 import { Input } from "@aqardesk/ui/input"
 import { createTeamAction } from "@/actions/teams"
+import { useScopedI18n } from "@/locales/client"
 
-export function CreateTeamForm({ locale }: { locale: string }) {
-  const isArabic = locale === "ar"
+export function CreateTeamForm() {
+  const t = useScopedI18n("teamManagement")
 
   return (
     <form action={createTeamAction} className="flex flex-col gap-3 sm:flex-row">
@@ -11,10 +12,10 @@ export function CreateTeamForm({ locale }: { locale: string }) {
         name="name"
         required
         maxLength={100}
-        placeholder={isArabic ? "اسم الفريق" : "Team name"}
-        aria-label={isArabic ? "اسم الفريق" : "Team name"}
+        placeholder={t("teamName")}
+        aria-label={t("teamName")}
       />
-      <Button type="submit">{isArabic ? "إنشاء فريق" : "Create team"}</Button>
+      <Button type="submit">{t("createTeam")}</Button>
     </form>
   )
 }

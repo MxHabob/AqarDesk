@@ -18,6 +18,7 @@ import {
   getSiteUrl,
 } from "@/lib/marketing/metadata"
 import { locales } from "@/locales/config"
+import { getScopedI18n } from "@/locales/server"
 
 export async function generateMetadata({
   params,
@@ -25,20 +26,21 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
+  const t = await getScopedI18n("site")
   const copy = getMarketingPageCopy("home", locale)
   const localizedUrl = getSiteUrl(`/${locale}`)
 
   return {
     title: {
       default: copy.title,
-      template: locale === "ar" ? "%s | عقار دِسك" : "%s | AqarDesk",
+      template: t("titleTemplate"),
     },
     description: copy.description,
     openGraph: {
       title: copy.title,
       description: copy.description,
       url: localizedUrl,
-      siteName: "AqarDesk",
+      siteName: t("officeName"),
       locale: locale === "ar" ? "ar_SA" : "en_US",
       alternateLocale: locales
         .filter((item) => item !== locale)
@@ -84,6 +86,7 @@ export default async function Layout({
     params,
     auth.api.getSession({ headers: await headers() }),
   ])
+  const t = await getScopedI18n("site")
   const countryCode = await getSelectedPublicCountryCode()
   const roleKeys = session ? await getUserRoleKeys(session.user.id) : []
   const roleDestination = session ? getRoleDestination(roleKeys, locale) : null
@@ -112,7 +115,7 @@ export default async function Layout({
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
-    name: "AqarDesk",
+    name: t("officeName"),
     url: getSiteUrl(),
     logo: getSiteUrl("/appicon.png"),
     description: getMarketingPageCopy("home", locale).description,
@@ -120,7 +123,7 @@ export default async function Layout({
   const websiteJsonLd = {
     "@context": "https://schema.org",
     "@type": "WebSite",
-    name: "AqarDesk",
+    name: t("officeName"),
     url: getSiteUrl(`/${locale}`),
     inLanguage: locale,
     potentialAction: {
@@ -149,7 +152,7 @@ export default async function Layout({
           __html: createSafeJsonLd(websiteJsonLd),
         }}
       />
-      <SunsetBanner />
+      <SunsetBanner locale={locale} />
       <Header
         countryCode={countryCode}
         listingPreviews={listingPreviews}

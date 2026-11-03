@@ -7,6 +7,7 @@ import {
   SelectValue,
 } from "@aqardesk/ui/select"
 import { addTeamMemberAction, removeTeamMemberAction } from "@/actions/teams"
+import { useScopedI18n } from "@/locales/client"
 
 type Member = {
   userId: string
@@ -27,7 +28,6 @@ type Props = {
   members: Member[]
   availableUsers: AvailableUser[]
   canManage: boolean
-  locale: string
 }
 
 export function TeamMembers({
@@ -35,9 +35,8 @@ export function TeamMembers({
   members,
   availableUsers,
   canManage,
-  locale,
 }: Props) {
-  const isArabic = locale === "ar"
+  const t = useScopedI18n("teamManagement")
 
   return (
     <div className="space-y-6">
@@ -48,7 +47,7 @@ export function TeamMembers({
         >
           <input type="hidden" name="teamId" value={teamId} />
           <label className="sr-only" htmlFor="team-member-user">
-            {isArabic ? "حساب عضو الفريق" : "Team member account"}
+            {t("memberAccount")}
           </label>
           <Select
             name="userId"
@@ -62,13 +61,7 @@ export function TeamMembers({
               id="team-member-user"
               className="h-10 min-w-0 flex-1 bg-background text-sm"
             >
-              <SelectValue
-                placeholder={
-                  isArabic
-                    ? "اختر حسابًا مسجلًا"
-                    : "Select an existing account"
-                }
-              />
+              <SelectValue placeholder={t("selectAccount")} />
             </SelectTrigger>
             <SelectContent align="start">
               {availableUsers.map((user) => (
@@ -78,15 +71,13 @@ export function TeamMembers({
               ))}
             </SelectContent>
           </Select>
-          <Button type="submit">{isArabic ? "إضافة عضو" : "Add member"}</Button>
+          <Button type="submit">{t("addMember")}</Button>
         </form>
       )}
 
       {members.length === 0 ? (
         <p className="py-8 text-center text-sm text-muted-foreground">
-          {isArabic
-            ? "لا يوجد أعضاء في هذا الفريق."
-            : "This team has no members."}
+          {t("noMembers")}
         </p>
       ) : (
         <div className="divide-y divide-border border-y border-border">
@@ -105,20 +96,14 @@ export function TeamMembers({
               </div>
               <div className="flex items-center gap-3">
                 <span className="text-xs text-muted-foreground">
-                  {member.role === "lead"
-                    ? isArabic
-                      ? "قائد الفريق"
-                      : "Team lead"
-                    : isArabic
-                      ? "عضو"
-                      : "Member"}
+                  {member.role === "lead" ? t("teamLead") : t("member")}
                 </span>
                 {canManage && member.role !== "lead" && (
                   <form action={removeTeamMemberAction}>
                     <input type="hidden" name="teamId" value={teamId} />
                     <input type="hidden" name="userId" value={member.userId} />
                     <Button type="submit" variant="outline" size="sm">
-                      {isArabic ? "إزالة" : "Remove"}
+                      {t("removeMember")}
                     </Button>
                   </form>
                 )}

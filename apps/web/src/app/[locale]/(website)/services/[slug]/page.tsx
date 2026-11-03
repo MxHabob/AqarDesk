@@ -15,13 +15,14 @@ type Props = { params: Promise<{ locale: string; slug: string }> }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
+  setStaticParamsLocale(locale)
   const service = getMarketingService(slug)
   if (!service) notFound()
 
-  const language = locale === "ar" ? "ar" : "en"
+  const t = await getScopedI18n("site")
   return createPageMetadata({
-    title: service.title[language],
-    description: service.description[language],
+    title: t(`serviceCopy.${service.copyKey}.title`),
+    description: t(`serviceCopy.${service.copyKey}.description`),
     locale,
     path: `/services/${service.slug}`,
   })
@@ -33,7 +34,6 @@ export default async function ServiceDetailPage({ params }: Props) {
   const service = getMarketingService(slug)
   if (!service) notFound()
 
-  const language = locale === "ar" ? "ar" : "en"
   const t = await getScopedI18n("site")
   const filters = {
     q: "",
@@ -74,10 +74,10 @@ export default async function ServiceDetailPage({ params }: Props) {
             {t("servicesEyebrow")}
           </Link>
           <h1 className="mt-5 font-serif text-4xl leading-tight tracking-tight text-foreground sm:text-5xl lg:text-6xl">
-            {service.title[language]}
+            {t(`serviceCopy.${service.copyKey}.title`)}
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-8 text-muted-foreground sm:text-lg">
-            {service.details[language]}
+            {t(`serviceCopy.${service.copyKey}.details`)}
           </p>
           <Link
             className="mt-8 inline-flex min-h-11 items-center gap-2 bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90"
@@ -96,7 +96,9 @@ export default async function ServiceDetailPage({ params }: Props) {
         </div>
 
         <Link
-          aria-label={featuredListing?.title ?? service.title[language]}
+          aria-label={
+            featuredListing?.title ?? t(`serviceCopy.${service.copyKey}.title`)
+          }
           className="group relative block aspect-[4/3] overflow-hidden border border-border bg-secondary"
           href={
             featuredListing ? `/listings/${featuredListing.id}` : "/listings"
@@ -107,7 +109,7 @@ export default async function ServiceDetailPage({ params }: Props) {
               alt={
                 photo.altText ||
                 featuredListing?.title ||
-                service.title[language]
+                t(`serviceCopy.${service.copyKey}.title`)
               }
               className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
               fill
@@ -118,7 +120,7 @@ export default async function ServiceDetailPage({ params }: Props) {
           ) : (
             <div className="flex h-full items-center justify-center bg-[radial-gradient(circle,var(--border)_1px,transparent_1px)] bg-[size:16px_16px]">
               <span className="font-serif text-2xl text-muted-foreground">
-                {service.title[language]}
+                {t(`serviceCopy.${service.copyKey}.title`)}
               </span>
             </div>
           )}
@@ -146,22 +148,26 @@ export default async function ServiceDetailPage({ params }: Props) {
             {t("serviceDetails")}
           </p>
           <h2 className="mt-3 font-serif text-2xl text-foreground sm:text-3xl">
-            {service.title[language]}
+            {t(`serviceCopy.${service.copyKey}.title`)}
           </h2>
         </div>
         <ul className="divide-y divide-border border-y border-border">
-          {service.points[language].map((point) => (
-            <li
-              className="flex items-start gap-3 py-4 text-sm leading-7 text-muted-foreground sm:text-base"
-              key={point}
-            >
-              <Check
-                aria-hidden
-                className="mt-1 size-4 shrink-0 text-foreground"
-              />
-              {point}
-            </li>
-          ))}
+          {(["point1", "point2", "point3"] as const).map((pointKey) => {
+            const point = t(`serviceCopy.${service.copyKey}.${pointKey}`)
+
+            return (
+              <li
+                className="flex items-start gap-3 py-4 text-sm leading-7 text-muted-foreground sm:text-base"
+                key={point}
+              >
+                <Check
+                  aria-hidden
+                  className="mt-1 size-4 shrink-0 text-foreground"
+                />
+                {point}
+              </li>
+            )
+          })}
         </ul>
       </section>
     </article>

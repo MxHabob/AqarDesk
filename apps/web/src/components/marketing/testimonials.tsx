@@ -36,7 +36,6 @@ function renderStructuredContent(content: string) {
 export function Testimonials() {
   const locale = useCurrentLocale()
   const t = useScopedI18n("site")
-  const isArabic = locale === "ar"
   const testimonials = defaultTestimonials.map((testimonial) =>
     localizeTestimonial(testimonial, locale)
   )
@@ -106,7 +105,7 @@ export function Testimonials() {
 
                   <blockquote
                     className="font-sans text-lg leading-normal text-foreground sm:text-xl sm:leading-relaxed lg:text-2xl"
-                    dir={isArabic ? "rtl" : "ltr"}
+                    dir={locale === "ar" ? "rtl" : "ltr"}
                   >
                     &ldquo;{testimonial.content}&rdquo;
                   </blockquote>
@@ -127,9 +126,7 @@ export function Testimonials() {
                     >
                       <source src={testimonial.video} />
                       <track kind="captions" />
-                      {isArabic
-                        ? "متصفحك لا يدعم تشغيل الفيديو."
-                        : "Your browser does not support video playback."}
+                      {t("videoUnsupported")}
                     </video>
                   </div>
                 )}

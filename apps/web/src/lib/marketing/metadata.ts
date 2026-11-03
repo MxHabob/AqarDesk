@@ -1,5 +1,6 @@
 import type { Metadata } from "next"
 import { type AppLocale, locales } from "@/locales/config"
+import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
 const deploymentHost =
   process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL
@@ -16,90 +17,90 @@ export function getSiteUrl(path = "") {
 const pageCopy = {
   ar: {
     home: {
-      title: "إدارة العقارات والمكاتب العقارية",
+      title: "مكتب علي شوبان | عقارات للبيع والإيجار",
       description:
-        "عقار دِسك منصة لإدارة العقارات والعروض والملاك والعملاء، تساعد المكاتب العقارية على تنظيم أعمالها ومتابعة تفاصيل كل عقار.",
+        "مكتب علي شوبان في اليمن يقدّم خدمات بيع وتأجير العقارات، ويستخدم نظام AqarDesk لتنظيم العروض ومتابعة تفاصيل كل عقار.",
       keywords: [
         "إدارة العقارات",
         "برنامج إدارة مكاتب عقارية",
         "إدارة عروض عقارية",
         "عقارات للبيع والإيجار",
-        "عقار دِسك",
+        "مكتب علي شوبان",
       ],
     },
     about: {
-      title: "عن عقار دِسك",
+      title: "عن مكتب علي شوبان",
       description:
-        "تعرّف على عقار دِسك، منصة تساعد المكاتب العقارية على إدارة العقارات والعروض والملاك والعملاء من مكان واحد.",
+        "تعرّف على مكتب علي شوبان وخدماته العقارية في اليمن، وكيف نستخدم نظام AqarDesk لتنظيم العروض وخدمة عملائنا.",
     },
     services: {
       title: "خدماتنا العقارية",
       description:
-        "اكتشف خدمات مكتب عقار دِسك في البيع والشراء والتأجير والفرص الاستثمارية، وتواصل مع فريقنا لمتابعة العقارات المتاحة.",
+        "اكتشف خدمات مكتب علي شوبان في بيع العقارات وشرائها وتأجيرها والفرص الاستثمارية، وتواصل معنا لمتابعة العقارات المتاحة.",
     },
     testimonials: {
       title: "آراء وتجارب العملاء",
       description:
-        "اطّلع على تجارب العملاء مع عقار دِسك في تنظيم إدارة العقارات والعروض والتواصل مع العملاء.",
+        "اطّلع على تجارب العملاء مع مكتب علي شوبان وخدماتنا في بيع العقارات وتأجيرها ومتابعة العروض.",
     },
     support: {
       title: "الدعم والمساعدة",
       description:
-        "تواصل مع فريق عقار دِسك للحصول على المساعدة بشأن العقارات والعروض وإدارة مكتبك.",
+        "تواصل مع مكتب علي شوبان للحصول على المساعدة بشأن العقارات المعروضة وخدمات البيع والتأجير.",
     },
     terms: {
       title: "شروط الاستخدام",
       description:
-        "راجع شروط وأحكام استخدام منصة عقار دِسك والخدمات المتاحة عبر الموقع.",
+        "راجع شروط وأحكام استخدام موقع مكتب علي شوبان والخدمات العقارية المتاحة.",
     },
     privacy: {
       title: "سياسة الخصوصية",
       description:
-        "اقرأ عن كيفية تعامل عقار دِسك مع المعلومات والبيانات الشخصية عند استخدام الموقع.",
+        "اقرأ عن كيفية تعامل مكتب علي شوبان مع المعلومات والبيانات الشخصية عند استخدام الموقع.",
     },
   },
   en: {
     home: {
-      title: "Real Estate and Property Management",
+      title: "Ali Shoban's Office | Real Estate in Yemen",
       description:
-        "AqarDesk helps real estate offices organize properties, listings, owners, and customers in one place.",
+        "Ali Shoban's Office provides property sales and rental services in Yemen, using AqarDesk to organize listings and serve clients.",
       keywords: [
         "real estate management",
         "property management software",
         "real estate office software",
         "property listings",
-        "AqarDesk",
+        "Ali Shoban's Office",
       ],
     },
     about: {
-      title: "About AqarDesk",
+      title: "About Ali Shoban's Office",
       description:
-        "Learn how AqarDesk helps real estate offices manage properties, listings, owners, and customer relationships.",
+        "Learn about Ali Shoban's Office, our real estate services in Yemen, and how we use AqarDesk to organize listings and serve clients.",
     },
     services: {
       title: "Real Estate Services",
       description:
-        "Explore AqarDesk office services for buying, selling, rentals, and investment opportunities, with support from our team.",
+        "Explore Ali Shoban's Office services for buying, selling, rentals, and investment opportunities in Yemen.",
     },
     testimonials: {
       title: "Customer Stories",
       description:
-        "Read customer stories about organizing property management, listings, and real estate customer service with AqarDesk.",
+        "Read customer stories about buying and renting properties with Ali Shoban's Office.",
     },
     support: {
-      title: "AqarDesk Support",
+      title: "Ali Shoban's Office Support",
       description:
-        "Contact the AqarDesk team for help with property listings, real estate workflows, and your account.",
+        "Contact Ali Shoban's Office for help with available properties, sales, and rentals.",
     },
     terms: {
       title: "Terms of Use",
       description:
-        "Review the terms and conditions for using the AqarDesk website and services.",
+        "Review the terms and conditions for using the Ali Shoban's Office website and real estate services.",
     },
     privacy: {
       title: "Privacy Policy",
       description:
-        "Learn how AqarDesk handles personal information when you use the website and services.",
+        "Learn how Ali Shoban's Office handles personal information when you use the website and services.",
     },
   },
 } satisfies Record<
@@ -143,8 +144,12 @@ type PageMetadataOptions = {
   noindex?: boolean
 }
 
-export function createPageMetadata(opts: PageMetadataOptions): Metadata {
+export async function createPageMetadata(
+  opts: PageMetadataOptions
+): Promise<Metadata> {
   const locale = requireLocale(opts.locale)
+  setStaticParamsLocale(locale)
+  const t = await getScopedI18n("site")
   const path = opts.path.startsWith("/") ? opts.path : `/${opts.path}`
   const localizedPath = `/${locale}${path === "/" ? "" : path}`
   const url = getSiteUrl(localizedPath)
@@ -176,7 +181,7 @@ export function createPageMetadata(opts: PageMetadataOptions): Metadata {
       title: ogTitle,
       description: ogDesc,
       type: opts.type ?? "website",
-      siteName: "AqarDesk",
+      siteName: t("officeName"),
       locale: locale === "ar" ? "ar_SA" : "en_US",
       url,
       images,

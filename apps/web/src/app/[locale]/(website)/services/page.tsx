@@ -47,7 +47,6 @@ export default async function ServicesPage({ params }: Props) {
   const { locale } = await params
   setStaticParamsLocale(locale)
   const t = await getScopedI18n("site")
-  const language = locale === "ar" ? "ar" : "en"
   const listings = (
     await getFilteredPublicListings({
       q: "",
@@ -204,7 +203,7 @@ export default async function ServicesPage({ params }: Props) {
                       alt={
                         photo.altText ||
                         listing?.title ||
-                        service.title[language]
+                        t(`serviceCopy.${service.copyKey}.title`)
                       }
                       className="object-cover transition-transform duration-500 group-hover:scale-[1.03]"
                       fill
@@ -233,10 +232,10 @@ export default async function ServicesPage({ params }: Props) {
                     {t("servicesEyebrow")}
                   </span>
                   <span className="mt-4 font-serif text-2xl text-foreground">
-                    {service.title[language]}
+                    {t(`serviceCopy.${service.copyKey}.title`)}
                   </span>
                   <span className="mt-3 flex-1 text-sm leading-7 text-muted-foreground">
-                    {service.description[language]}
+                    {t(`serviceCopy.${service.copyKey}.description`)}
                   </span>
                   <span className="mt-6 inline-flex items-center gap-2 border-t border-border pt-4 text-sm font-medium text-foreground">
                     {t("serviceDetails")}

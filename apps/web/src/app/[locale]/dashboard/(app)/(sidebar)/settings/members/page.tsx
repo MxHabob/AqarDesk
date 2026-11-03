@@ -8,9 +8,18 @@ import { getUserTeamsAction } from "@/actions/teams"
 import { TeamMembers } from "@/components/team-members"
 import { CreateTeamForm } from "@/components/teams/create-team-form"
 import { hasPermission } from "@/lib/auth/permissions"
+import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
-export const metadata: Metadata = {
-  title: "Members | AqarDesk",
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  setStaticParamsLocale(locale)
+  const t = await getScopedI18n("teamManagement")
+
+  return { title: t("membersPageTitle") }
 }
 
 export default async function Members({
@@ -24,6 +33,8 @@ export default async function Members({
     params,
     searchParams,
   ])
+  setStaticParamsLocale(locale)
+  const t = await getScopedI18n("teamManagement")
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect(`/${locale}/login`)
 
@@ -38,9 +49,7 @@ export default async function Members({
         role="alert"
         className="py-12 text-center text-sm text-muted-foreground"
       >
-        {locale === "ar"
-          ? "ليس لديك صلاحية عرض أعضاء الفرق."
-          : "You don't have permission to view team members."}
+        {t("membersAccessDenied")}
       </p>
     )
   }
@@ -52,23 +61,19 @@ export default async function Members({
     return (
       <section className="space-y-5">
         <div>
-          <h1 className="text-lg font-medium">
-            {locale === "ar" ? "أعضاء الفريق" : "Team members"}
-          </h1>
+          <h1 className="text-lg font-medium">{t("membersTitle")}</h1>
           <p className="mt-1 text-sm text-muted-foreground">
-            {locale === "ar"
-              ? "لا يوجد فريق مرتبط بحسابك حاليًا."
-              : "Your account is not part of a team yet."}
+            {t("membersDescription")}
           </p>
         </div>
         {canManage ? (
-          <CreateTeamForm locale={locale} />
+          <CreateTeamForm />
         ) : (
           <Link
             className="text-sm underline underline-offset-4"
             href={`/${locale}/dashboard`}
           >
-            {locale === "ar" ? "العودة للوحة التحكم" : "Back to dashboard"}
+            {t("backToDashboard")}
           </Link>
         )}
       </section>
@@ -92,9 +97,7 @@ export default async function Members({
   return (
     <section className="space-y-6">
       <div>
-        <h1 className="text-lg font-medium">
-          {locale === "ar" ? "أعضاء الفريق" : "Team members"}
-        </h1>
+        <h1 className="text-lg font-medium">{t("membersTitle")}</h1>
         <p className="mt-1 text-sm text-muted-foreground">{team.name}</p>
       </div>
       <TeamMembers
@@ -102,7 +105,6 @@ export default async function Members({
         members={members}
         availableUsers={availableUsers}
         canManage={canManage}
-        locale={locale}
       />
     </section>
   )
