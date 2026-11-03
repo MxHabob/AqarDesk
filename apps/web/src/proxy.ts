@@ -2,6 +2,11 @@ import { type NextRequest, NextResponse } from "next/server"
 import { locales } from "./locales/config"
 
 const defaultLocale = "ar"
+const localeCookieOptions = {
+  path: "/",
+  maxAge: 31_536_000,
+  sameSite: "strict" as const,
+}
 const dashboardRoutePrefixes = new Set([
   "apps",
   "customers",
@@ -96,7 +101,7 @@ function rewriteWithLocale(
     request: { headers: requestHeaders },
   })
 
-  response.cookies.set("Next-Locale", locale, { sameSite: "strict" })
+  response.cookies.set("Next-Locale", locale, localeCookieOptions)
 
   return response
 }
@@ -109,7 +114,7 @@ function redirectWithoutLocale(
   const url = request.nextUrl.clone()
   url.pathname = pathname
   const response = NextResponse.redirect(url)
-  response.cookies.set("Next-Locale", locale, { sameSite: "strict" })
+  response.cookies.set("Next-Locale", locale, localeCookieOptions)
   return response
 }
 

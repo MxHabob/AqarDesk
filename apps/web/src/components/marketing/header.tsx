@@ -8,11 +8,13 @@ import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { marketingServices } from "@/lib/marketing/services"
 import { MarketingAccountMenu } from "./account-menu"
+import { HeaderPreferences } from "./header-preferences"
 
 interface HeaderProps {
   transparent?: boolean
   hideMenuItems?: boolean
   locale: string
+  countryCode: string
   listingPreviews: Array<{
     id: string
     title: string
@@ -32,6 +34,7 @@ export function Header({
   transparent = false,
   hideMenuItems = false,
   locale,
+  countryCode,
   listingPreviews,
   user = null,
   roleDestination = null,
@@ -246,6 +249,11 @@ export function Header({
                 {portfolioLabel}
               </Link>
 
+              <HeaderPreferences
+                countryCode={countryCode}
+                idPrefix="desktop"
+                locale={locale}
+              />
               <div className="border-s border-border ps-4">
                 {user ? (
                   <MarketingAccountMenu
@@ -265,7 +273,7 @@ export function Header({
           )}
 
           {!hideMenuItems && (
-            <div className="flex items-center xl:hidden">
+            <div className="flex items-center gap-2 xl:hidden">
               <button
                 aria-expanded={isMenuOpen}
                 aria-label={
@@ -305,6 +313,24 @@ export function Header({
                   />
                 </span>
               </button>
+              <HeaderPreferences
+                countryCode={countryCode}
+                idPrefix="mobile"
+                locale={locale}
+              />
+              {user ? (
+                <MarketingAccountMenu
+                  roleDestination={roleDestination}
+                  user={user}
+                />
+              ) : (
+                <Link
+                  className="text-sm text-primary transition-colors hover:text-primary/80"
+                  href="/login"
+                >
+                  {signInLabel}
+                </Link>
+              )}
             </div>
           )}
         </div>
@@ -369,23 +395,6 @@ export function Header({
               {portfolioLabel}
             </Link>
 
-            <div className="mt-8 border-t border-border pt-8">
-              {user ? (
-                <MarketingAccountMenu
-                  onNavigate={() => setIsMenuOpen(false)}
-                  roleDestination={roleDestination}
-                  user={user}
-                />
-              ) : (
-                <Link
-                  className="text-2xl text-primary"
-                  href="/login"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  {signInLabel}
-                </Link>
-              )}
-            </div>
           </div>
         </div>
       )}

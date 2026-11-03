@@ -1,10 +1,8 @@
-import {
-  getPublicListingById,
-  resolveShortLink,
-} from "@aqardesk/database/queries"
+import { resolveShortLink } from "@aqardesk/database/queries"
 import type { Metadata } from "next"
 import { notFound, redirect } from "next/navigation"
 import { z } from "zod"
+import { getPublicListingById } from "@/lib/listings/public-queries"
 import { createPageMetadata } from "@/lib/marketing/metadata"
 
 type Props = {

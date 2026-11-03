@@ -1,7 +1,11 @@
 "use server"
 
 import { getDatabase } from "@aqardesk/database"
-import { createListing, createProperty } from "@aqardesk/database/queries"
+import {
+  createListing,
+  createProperty,
+  getOfficeSettings,
+} from "@aqardesk/database/queries"
 import { authActionClient } from "@/actions/safe-action"
 import { listingFormSchema } from "@/components/forms/listing-form-schema"
 import { assertPermission } from "@/lib/auth/permissions"
@@ -13,11 +17,13 @@ export const createListingAction = authActionClient
     await assertPermission(ctx.user.id, "properties.create")
 
     const database = getDatabase()
+    const { countryCode } = await getOfficeSettings(database)
     const result = await database.transaction(async (transaction) => {
       const property = await createProperty(
         {
           type: parsedInput.propertyType,
           title: parsedInput.title,
+          countryCode,
           city: parsedInput.city || null,
           district: parsedInput.district || null,
           lotAreaM2: !parsedInput.area?.trim()

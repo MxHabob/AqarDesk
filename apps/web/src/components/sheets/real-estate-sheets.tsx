@@ -13,6 +13,7 @@ import { useEffect, useState } from "react"
 import {
   getListingFormData,
   getOwnerFormData,
+  getPropertyDefaultCountryCode,
   getPropertyFormData,
   getPropertyOptions,
   getPropertyOwnerOptions,
@@ -49,6 +50,9 @@ export function PropertySheet() {
     Awaited<ReturnType<typeof getPropertyOwnerOptions>>
   >([])
   const [error, setError] = useState<string>()
+  const [defaultCountryCode, setDefaultCountryCode] = useState<string | null>(
+    null
+  )
   const isOpen = Boolean(createProperty || propertyId)
   const readOnly = propertyMode === "details"
 
@@ -75,6 +79,22 @@ export function PropertySheet() {
         })
     } else {
       setData(null)
+      setDefaultCountryCode(null)
+      if (createProperty) {
+        getPropertyDefaultCountryCode()
+          .then((countryCode) => {
+            if (active) setDefaultCountryCode(countryCode)
+          })
+          .catch((loadError) => {
+            if (active) {
+              setError(
+                loadError instanceof Error
+                  ? loadError.message
+                  : "تعذر تحميل دولة المكتب."
+              )
+            }
+          })
+      }
     }
 
     if (isOpen) {
@@ -95,7 +115,7 @@ export function PropertySheet() {
     return () => {
       active = false
     }
-  }, [isOpen, propertyId])
+  }, [createProperty, isOpen, propertyId])
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
@@ -126,12 +146,17 @@ export function PropertySheet() {
           </p>
         ) : propertyId && !data ? (
           <p className="text-sm text-muted-foreground">جارٍ تحميل العقار...</p>
+        ) : createProperty && !defaultCountryCode ? (
+          <p className="text-sm text-muted-foreground">
+            جارٍ تحميل بيانات المكتب...
+          </p>
         ) : (
           <div className="min-h-0 flex-1">
             <PropertyForm
               key={data?.property.id ?? "new-property"}
               data={data ?? undefined}
               ownerOptions={owners}
+              defaultCountryCode={defaultCountryCode ?? "SA"}
               readOnly={readOnly}
               onSaved={close}
             />

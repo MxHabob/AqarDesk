@@ -12,25 +12,7 @@ import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover"
 import { Check, ChevronsUpDown } from "lucide-react"
 import * as React from "react"
 import { useEffect } from "react"
-
-const countries = [
-  { code: "SA", name: "Saudi Arabia" },
-  { code: "AE", name: "United Arab Emirates" },
-  { code: "BH", name: "Bahrain" },
-  { code: "KW", name: "Kuwait" },
-  { code: "OM", name: "Oman" },
-  { code: "QA", name: "Qatar" },
-  { code: "EG", name: "Egypt" },
-  { code: "JO", name: "Jordan" },
-  { code: "IQ", name: "Iraq" },
-  { code: "LB", name: "Lebanon" },
-  { code: "US", name: "United States" },
-  { code: "GB", name: "United Kingdom" },
-  { code: "CA", name: "Canada" },
-  { code: "AU", name: "Australia" },
-  { code: "IN", name: "India" },
-  { code: "PK", name: "Pakistan" },
-] as const
+import { countries } from "@/lib/countries"
 
 type Props = {
   defaultValue: string

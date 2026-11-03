@@ -22,6 +22,7 @@ export const properties = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
     type: propertyTypeEnum("type").notNull(),
     title: text("title").notNull(),
+    countryCode: text("country_code").notNull().default("SA"),
     description: text("description"),
     city: text("city"),
     district: text("district"),
@@ -51,8 +52,13 @@ export const properties = pgTable(
   },
   (table) => [
     index("property_type_idx").on(table.type),
+    index("property_country_code_idx").on(table.countryCode),
     index("property_city_district_idx").on(table.city, table.district),
     index("property_neighborhood_idx").on(table.neighborhood),
+    check(
+      "property_country_code_format",
+      sql`${table.countryCode} ~ '^[A-Z]{2}$'`
+    ),
     check(
       "property_lot_area_nonnegative",
       sql`${table.lotAreaM2} is null or ${table.lotAreaM2} >= 0`

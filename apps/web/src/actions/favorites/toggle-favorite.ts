@@ -1,11 +1,9 @@
 "use server"
 
-import {
-  getPublicListingById,
-  toggleListingFavorite,
-} from "@aqardesk/database/queries"
+import { toggleListingFavorite } from "@aqardesk/database/queries"
 import { z } from "zod"
 import { authActionClient } from "@/actions/safe-action"
+import { getPublicListingById } from "@/lib/listings/public-queries"
 
 export const toggleFavoriteAction = authActionClient
   .schema(z.object({ listingId: z.uuid() }))

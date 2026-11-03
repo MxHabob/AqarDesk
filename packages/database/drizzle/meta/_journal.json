@@ -64,6 +64,13 @@
       "when": 1793716419357,
       "tag": "0008_square_amazoness",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1793746975595,
+      "tag": "0009_left_madame_masque",
+      "breakpoints": true
     }
   ]
 }

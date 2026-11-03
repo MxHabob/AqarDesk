@@ -39,6 +39,7 @@ export type PublicListingSearch = {
   maxPrice?: number | null
   minArea?: number | null
   maxArea?: number | null
+  countryCode?: string
   sort?: "newest" | "price_asc" | "price_desc"
   page?: number
   pageSize?: number
@@ -252,7 +253,8 @@ export async function updateListing(
 
 export async function getPublicListingById(
   id: string,
-  database = getDatabase()
+  database = getDatabase(),
+  countryCode?: string
 ) {
   const [listing] = await database
     .select({
@@ -290,6 +292,9 @@ export async function getPublicListingById(
     .where(
       and(
         eq(schema.listings.id, id),
+        countryCode
+          ? eq(schema.properties.countryCode, countryCode)
+          : undefined,
         eq(schema.listings.status, "active"),
         isNull(schema.properties.archivedAt),
         or(
@@ -350,6 +355,9 @@ export async function searchPublicListings(
   })
   const query = filters.q?.trim().slice(0, 200)
   const conditions = [
+    filters.countryCode
+      ? eq(schema.properties.countryCode, filters.countryCode)
+      : undefined,
     eq(schema.listings.status, "active"),
     isNull(schema.properties.archivedAt),
     or(

@@ -10,6 +10,7 @@ import { getRoleDestination, getUserRoleKeys } from "@/lib/auth/roles"
 import {
   getFilteredPublicListings,
   getPublicListingCoverPhotos,
+  getSelectedPublicCountryCode,
 } from "@/lib/listings/public-queries"
 import {
   createSafeJsonLd,
@@ -83,6 +84,7 @@ export default async function Layout({
     params,
     auth.api.getSession({ headers: await headers() }),
   ])
+  const countryCode = await getSelectedPublicCountryCode()
   const roleKeys = session ? await getUserRoleKeys(session.user.id) : []
   const roleDestination = session ? getRoleDestination(roleKeys, locale) : null
   const latestListings = await getFilteredPublicListings({
@@ -149,6 +151,7 @@ export default async function Layout({
       />
       <SunsetBanner />
       <Header
+        countryCode={countryCode}
         listingPreviews={listingPreviews}
         locale={locale}
         user={

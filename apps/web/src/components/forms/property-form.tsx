@@ -20,6 +20,7 @@ import {
   RealEstateFormError,
   RealEstateSubmitButton,
 } from "@/components/forms/real-estate-fields"
+import { countries } from "@/lib/countries"
 
 type PropertyData = NonNullable<Awaited<ReturnType<typeof getPropertyFormData>>>
 
@@ -181,11 +182,13 @@ function getDetailValue(details: object | undefined, name: string) {
 
 export function PropertyForm({
   data,
+  defaultCountryCode = "SA",
   ownerOptions = [],
   readOnly = false,
   onSaved,
 }: {
   data?: PropertyData
+  defaultCountryCode?: string
   ownerOptions?: Awaited<ReturnType<typeof getPropertyOwnerOptions>>
   readOnly?: boolean
   onSaved?: () => void
@@ -213,6 +216,18 @@ export function PropertyForm({
       {isEditing && <input type="hidden" name="type" value={propertyType} />}
       <div className="scrollbar-hide min-h-0 flex-1 space-y-6 overflow-y-auto">
         <div className="grid gap-4 sm:grid-cols-2">
+          <RealEstateField
+            label="الدولة"
+            name="countryCode"
+            type="select"
+            defaultValue={data?.property.countryCode ?? defaultCountryCode}
+            disabled={readOnly}
+            options={countries.map((country) => ({
+              value: country.code,
+              label: country.nameAr,
+            }))}
+            required
+          />
           <RealEstateField
             label="نوع العقار"
             name="type"

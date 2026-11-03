@@ -8,6 +8,7 @@ import {
 import { headers } from "next/headers"
 import { z } from "zod"
 import { assertPermission } from "@/lib/auth/permissions"
+import { isCountryCode } from "@/lib/countries"
 
 const officeSettingsSchema = z.object({
   name: z.string().trim().min(2).max(100).optional(),
@@ -19,10 +20,7 @@ const officeSettingsSchema = z.object({
   city: z.string().trim().max(100).nullable().optional(),
   region: z.string().trim().max(100).nullable().optional(),
   postalCode: z.string().trim().max(20).nullable().optional(),
-  countryCode: z
-    .string()
-    .regex(/^[A-Z]{2}$/)
-    .optional(),
+  countryCode: z.string().refine(isCountryCode).optional(),
   defaultCurrency: z
     .string()
     .regex(/^[A-Z]{3}$/)

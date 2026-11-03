@@ -14,6 +14,7 @@ import {
   createShortLink,
   deleteListingMedia,
   getListingById,
+  getOfficeSettings,
   getOwnerById,
   getPropertyById,
   getPropertyDetails,
@@ -39,6 +40,7 @@ import { and, eq, gt, isNull, or } from "drizzle-orm"
 import { headers } from "next/headers"
 import { z } from "zod"
 import { assertPermission } from "@/lib/auth/permissions"
+import { isCountryCode } from "@/lib/countries"
 
 export type FormActionState = {
   error?: string
@@ -122,6 +124,12 @@ export async function getPropertyFormData(id: string) {
   return { property, details, ownerRows, shareableListings }
 }
 
+export async function getPropertyDefaultCountryCode() {
+  const actor = await getActor()
+  await assertPermission(actor.id, "properties.create")
+  return (await getOfficeSettings()).countryCode
+}
+
 export async function getPropertyOwnerOptions() {
   const actor = await getActor()
   await assertPermission(actor.id, "owners.read")
@@ -191,6 +199,7 @@ export async function savePropertyAction(
     .min(2)
     .max(200)
     .safeParse(readText(formData, "title"))
+  const countryCode = readText(formData, "countryCode")
   const latitude = readOptionalNumber(formData, "latitude")
   const longitude = readOptionalNumber(formData, "longitude")
   const parsedValues = z
@@ -213,6 +222,7 @@ export async function savePropertyAction(
 
   if (!type.success) return { error: "نوع العقار غير صالح." }
   if (!title.success) return { error: "يرجى إدخال عنوان صحيح للعقار." }
+  if (!isCountryCode(countryCode)) return { error: "الدولة غير صالحة." }
   if (!parsedValues.success)
     return { error: "تحقق من قيم المساحات والإحداثيات." }
 
@@ -233,6 +243,7 @@ export async function savePropertyAction(
   const propertyValues = {
     type: type.data,
     title: title.data,
+    countryCode,
     description: nullableText(readText(formData, "description")),
     city: nullableText(readText(formData, "city")),
     district: nullableText(readText(formData, "district")),

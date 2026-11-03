@@ -1,15 +1,40 @@
 import { getDatabase, schema } from "@aqardesk/database"
 import {
-  getPublicListingById,
-  listPublicListings,
+  getPublicListingById as getPublicListingByIdQuery,
   type PublicListingSearch,
   searchPublicListings,
 } from "@aqardesk/database/queries"
 import { createReadUrl } from "@aqardesk/storage/server"
 import { and, asc, desc, eq, gt, inArray, isNull, or } from "drizzle-orm"
+import { cookies } from "next/headers"
+import { cache } from "react"
+import { isWebsiteCountryCode } from "@/lib/countries"
 import type { PublicListingSearchParams } from "./public-search-loader"
 
-export { getPublicListingById, listPublicListings as getPublicListings }
+const countryCookieName = "Next-Country"
+
+export const getSelectedPublicCountryCode = cache(async () => {
+  const cookieStore = await cookies()
+  const selectedCountry = cookieStore.get(countryCookieName)?.value
+  if (isWebsiteCountryCode(selectedCountry)) return selectedCountry
+
+  return "YE"
+})
+
+export async function getPublicListingById(id: string) {
+  const countryCode = await getSelectedPublicCountryCode()
+  return getPublicListingByIdQuery(id, undefined, countryCode)
+}
+
+export async function getPublicListings(limit = 30) {
+  const countryCode = await getSelectedPublicCountryCode()
+  const { rows } = await searchPublicListings({
+    page: 1,
+    pageSize: limit,
+    countryCode,
+  })
+  return rows
+}
 
 export async function getPublicListingCoverPhotos(listingIds: string[]) {
   if (listingIds.length === 0) return {}
@@ -121,14 +146,18 @@ export async function getPublicListingMedia(listingId: string) {
   )
 }
 
-export function getFilteredPublicListings(filters: PublicListingSearchParams) {
+export async function getFilteredPublicListings(
+  filters: PublicListingSearchParams
+) {
   const pageSize = [12, 24, 48].includes(filters.pageSize)
     ? filters.pageSize
     : 12
 
+  const countryCode = await getSelectedPublicCountryCode()
   return searchPublicListings({
     ...toPublicListingSearch(filters),
     pageSize,
+    countryCode,
   })
 }
 
@@ -139,11 +168,13 @@ export async function getSimilarPublicListings(listing: {
 }) {
   if (!listing.propertyType) return []
 
+  const countryCode = await getSelectedPublicCountryCode()
   const matchingListings = await searchPublicListings({
     propertyType: listing.propertyType,
     listingType: listing.listingType,
     page: 1,
     pageSize: 8,
+    countryCode,
   })
   const matches = matchingListings.rows.filter(
     (candidate) => candidate.id !== listing.id
@@ -155,6 +186,7 @@ export async function getSimilarPublicListings(listing: {
     propertyType: listing.propertyType,
     page: 1,
     pageSize: 8,
+    countryCode,
   })
   const seenIds = new Set(matches.map((candidate) => candidate.id))
   const samePropertyType = otherListings.rows.filter(
@@ -168,6 +200,7 @@ export async function getSimilarPublicListings(listing: {
     listingType: listing.listingType,
     page: 1,
     pageSize: 8,
+    countryCode,
   })
   const includedIds = new Set(recommendations.map((candidate) => candidate.id))
 
