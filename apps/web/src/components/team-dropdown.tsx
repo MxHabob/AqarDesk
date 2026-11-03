@@ -1,6 +1,6 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@aqardesk/ui/avatar";
 import { Button } from "@aqardesk/ui/button";
 import { Icons } from "@aqardesk/ui/icons";
 import { Skeleton } from "@aqardesk/ui/skeleton";
@@ -137,6 +137,8 @@ export function TeamDropdown({ isExpanded = false }: Props) {
               )}
               {sortedTeams.map((team, index) => {
                 const isSelected = team.id === selectedId;
+                const teamInitial = team.name.trim().charAt(0).toUpperCase();
+
                 return (
                   <motion.div
                     key={team.id}
@@ -178,18 +180,15 @@ export function TeamDropdown({ isExpanded = false }: Props) {
                                 }
                               }}
                             >
-                              <AvatarImageNext
-                                src={team?.logoUrl ?? ""}
-                                alt={team?.name ?? ""}
-                                width={20}
-                                height={20}
-                                quality={100}
-                              />
+                              {team.logoUrl && (
+                                <AvatarImage
+                                  src={team.logoUrl}
+                                  alt={team.name}
+                                  className="rounded-none"
+                                />
+                              )}
                               <AvatarFallback className="rounded-none w-[32px] h-[32px]">
-                                <span className="text-xs">
-                                  {team?.name?.charAt(0)?.toUpperCase()}
-                                  {team?.name?.charAt(1)?.toUpperCase()}
-                                </span>
+                                <span className="text-xs">{teamInitial}</span>
                               </AvatarFallback>
                             </Avatar>
                           }
@@ -213,18 +212,15 @@ export function TeamDropdown({ isExpanded = false }: Props) {
                           }
                         }}
                       >
-                        <AvatarImageNext
-                          src={team?.logoUrl ?? ""}
-                          alt={team?.name ?? ""}
-                          width={20}
-                          height={20}
-                          quality={100}
-                        />
+                        {team.logoUrl && (
+                          <AvatarImage
+                            src={team.logoUrl}
+                            alt={team.name}
+                            className="rounded-none"
+                          />
+                        )}
                         <AvatarFallback className="rounded-none w-[32px] h-[32px]">
-                          <span className="text-xs">
-                            {team?.name?.charAt(0)?.toUpperCase()}
-                            {team?.name?.charAt(1)?.toUpperCase()}
-                          </span>
+                          <span className="text-xs">{teamInitial}</span>
                         </AvatarFallback>
                       </Avatar>
                     )}
