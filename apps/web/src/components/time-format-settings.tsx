@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Card,
@@ -6,19 +6,19 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
+} from "@aqardesk/ui/card"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@aqardesk/ui/select";
-import { useUserMutation, useUserQuery } from "@/hooks/use-user";
+} from "@aqardesk/ui/select"
+import { useUserMutation, useUserQuery } from "@/hooks/use-user"
 
 export function TimeFormatSettings() {
-  const updateUserMutation = useUserMutation();
-  const { data: user } = useUserQuery();
+  const updateUserMutation = useUserMutation()
+  const { data: user } = useUserQuery()
 
   return (
     <Card className="flex justify-between items-center">
@@ -31,9 +31,9 @@ export function TimeFormatSettings() {
 
       <CardContent>
         <Select
-          defaultValue={user?.timeFormat?.toString() ?? undefined}
+          value={user?.timeFormat?.toString() ?? undefined}
           onValueChange={(value) => {
-            updateUserMutation.mutate({ timeFormat: +value });
+            updateUserMutation.mutate({ timeFormat: +value })
           }}
         >
           <SelectTrigger className="w-[180px]">
@@ -46,5 +46,5 @@ export function TimeFormatSettings() {
         </Select>
       </CardContent>
     </Card>
-  );
+  )
 }

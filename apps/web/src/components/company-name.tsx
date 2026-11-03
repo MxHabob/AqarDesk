@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Card,
@@ -7,37 +7,40 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
+} from "@aqardesk/ui/card"
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@aqardesk/ui/form";
-import { Input } from "@aqardesk/ui/input";
-import { SubmitButton } from "@aqardesk/ui/submit-button";
-import { z } from "zod/v3";
-import { useTeamMutation, useTeamQuery } from "@/hooks/use-team";
-import { useZodForm } from "@/hooks/use-zod-form";
+} from "@aqardesk/ui/form"
+import { Input } from "@aqardesk/ui/input"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
+import { z } from "zod/v3"
+import {
+  useOfficeSettingsMutation,
+  useOfficeSettingsQuery,
+} from "@/hooks/use-office-settings"
+import { useZodForm } from "@/hooks/use-zod-form"
 
 const formSchema = z.object({
   name: z.string().min(2).max(32),
-});
+})
 
 export function CompanyName() {
-  const { data } = useTeamQuery();
-  const updateTeamMutation = useTeamMutation();
+  const { data } = useOfficeSettingsQuery()
+  const updateTeamMutation = useOfficeSettingsMutation()
 
   const form = useZodForm(formSchema, {
     defaultValues: {
       name: data?.name ?? "",
     },
-  });
+  })
 
   const onSubmit = form.handleSubmit((data) => {
-    updateTeamMutation.mutate(data);
-  });
+    updateTeamMutation.mutate(data)
+  })
 
   return (
     <Form {...form}>
@@ -86,5 +89,5 @@ export function CompanyName() {
         </Card>
       </form>
     </Form>
-  );
+  )
 }

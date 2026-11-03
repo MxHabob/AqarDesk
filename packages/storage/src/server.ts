@@ -19,6 +19,15 @@ const maximumBytesByType = new Map([
   ["image/png", 20 * MiB],
   ["image/webp", 20 * MiB],
   ["application/pdf", 25 * MiB],
+  ["application/json", 25 * MiB],
+  ["application/zip", 100 * MiB],
+  ["text/csv", 25 * MiB],
+  ["text/plain", 10 * MiB],
+  [
+    "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    25 * MiB,
+  ],
+  ["application/vnd.ms-excel", 25 * MiB],
   ["video/mp4", 250 * MiB],
   ["video/quicktime", 250 * MiB],
 ])
@@ -37,8 +46,17 @@ type UploadContentType =
   | "image/png"
   | "image/webp"
   | "application/pdf"
+  | "application/json"
+  | "application/zip"
+  | "text/csv"
+  | "text/plain"
+  | "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+  | "application/vnd.ms-excel"
   | "video/mp4"
   | "video/quicktime"
+
+export type StorageUploadContentType = UploadContentType
+export type StoragePresignedUpload = PresignedUpload
 
 type ListingMediaKind = "photo" | "floor-plan" | "video" | "document"
 
@@ -252,20 +270,57 @@ export async function verifyUploadedObject(input: {
   }
 }
 
-export async function createReadUrl(objectKey: string) {
+export async function createReadUrl(
+  objectKey: string,
+  options?: { downloadFilename?: string }
+) {
   validateObjectKey(objectKey)
 
   const { bucket } = getStorageConfig()
+  const downloadFilename = options?.downloadFilename
+    ?.replace(/["\\\r\n]/g, "_")
+    .slice(0, 255)
   const url = await getSignedUrl(
     getS3Client(),
     new GetObjectCommand({
       Bucket: bucket,
       Key: objectKey,
+      ...(downloadFilename
+        ? {
+            ResponseContentDisposition: `attachment; filename="${downloadFilename}"; filename*=UTF-8''${encodeURIComponent(downloadFilename)}`,
+          }
+        : {}),
     }),
     { expiresIn: readUrlLifetimeSeconds }
   )
 
   return { url, expiresInSeconds: readUrlLifetimeSeconds }
+}
+
+export async function uploadStorageObject(input: {
+  objectKey: string
+  contentType: UploadContentType
+  body: Uint8Array
+}) {
+  validateObjectKey(input.objectKey)
+  const maximumBytes = getMaximumUploadBytes(input.contentType)
+
+  if (input.body.byteLength < 1 || input.body.byteLength > maximumBytes) {
+    throw new Error("The object size is outside the allowed limit.")
+  }
+
+  const { bucket } = getStorageConfig()
+  await getS3Client().send(
+    new PutObjectCommand({
+      Bucket: bucket,
+      Key: input.objectKey,
+      Body: input.body,
+      ContentType: input.contentType,
+      CacheControl: "private, no-store",
+    })
+  )
+
+  return { objectKey: input.objectKey, sizeBytes: input.body.byteLength }
 }
 
 export async function deleteStorageObject(objectKey: string) {

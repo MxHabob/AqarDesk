@@ -36,9 +36,13 @@ export function ChangeEmail() {
   });
 
   const onSubmit = form.handleSubmit((data) => {
-    updateUserMutation.mutate({
-      email: data.email,
-    });
+    updateUserMutation.mutate(
+      { email: data.email },
+      {
+        onError: (error) =>
+          form.setError("email", { message: error.message }),
+      }
+    )
   });
 
   return (

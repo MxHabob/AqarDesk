@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   AlertDialog,
@@ -10,58 +10,44 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@aqardesk/ui/alert-dialog";
-import { Button } from "@aqardesk/ui/button";
+} from "@aqardesk/ui/alert-dialog"
+import { Button } from "@aqardesk/ui/button"
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
-import { Input } from "@aqardesk/ui/input";
-import { Label } from "@aqardesk/ui/label";
-import { useMutation } from "@tanstack/react-query";
-import { AlertTriangle, ExternalLink, Loader2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useState } from "react";
-import { useUserQuery } from "@/hooks/use-user";
-import { useTRPC } from "@/trpc/client";
+} from "@aqardesk/ui/card"
+import { Input } from "@aqardesk/ui/input"
+import { Label } from "@aqardesk/ui/label"
+import { useToast } from "@aqardesk/ui/use-toast"
+import { useMutation } from "@tanstack/react-query"
+import { Loader2 } from "lucide-react"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { archiveActiveTeamAction } from "@/actions/teams"
 
 export function DeleteTeam() {
-  const [value, setValue] = useState("");
-  const trpc = useTRPC();
-  const { data: user } = useUserQuery();
-  const router = useRouter();
+  const [value, setValue] = useState("")
+  const router = useRouter()
+  const { toast } = useToast()
 
-  const hasPaidPlan =
-    user?.team?.plan === "starter" || user?.team?.plan === "pro";
-
-  const deleteTeamMutation = useMutation(
-    trpc.team.delete.mutationOptions({
-      onSuccess: async () => {
-        // Revalidate server state and redirect
-        router.push("/teams");
-      },
-    }),
-  );
-
-  const getPortalUrlMutation = useMutation(
-    trpc.billing.getPortalUrl.mutationOptions({
-      onSuccess: ({ url }) => {
-        window.open(url, "_blank");
-      },
-    }),
-  );
+  const deleteTeamMutation = useMutation({
+    mutationFn: archiveActiveTeamAction,
+    onSuccess: async () => {
+      router.push("/teams")
+    },
+    onError: (error) => toast({ variant: "error", title: error.message }),
+  })
 
   return (
     <Card className="border-destructive">
       <CardHeader>
-        <CardTitle>Delete team</CardTitle>
+        <CardTitle>Archive team</CardTitle>
         <CardDescription>
-          Permanently remove your Team and all of its contents from the AqarDesk
-          platform. This action is not reversible — please continue with
-          caution.
+          Archive this team so it no longer appears in your active team list.
+          Existing property and listing records are not deleted.
         </CardDescription>
       </CardHeader>
       <CardFooter className="flex justify-between">
@@ -73,7 +59,7 @@ export function DeleteTeam() {
               variant="destructive"
               className="hover:bg-destructive text-muted"
             >
-              Delete
+              Archive
             </Button>
           </AlertDialogTrigger>
           <AlertDialogContent>
@@ -82,39 +68,9 @@ export function DeleteTeam() {
               <AlertDialogDescription asChild>
                 <div>
                   <p>
-                    This action cannot be undone. This will permanently delete
-                    your team and remove your data from our servers.
+                    The team will be archived. Existing property and listing
+                    records will remain available.
                   </p>
-
-                  {hasPaidPlan && (
-                    <div className="my-4 px-3 py-3 bg-amber-50 border border-amber-200 dark:bg-amber-900/10 dark:border-amber-800/30">
-                      <div className="flex items-start gap-2">
-                        <AlertTriangle className="size-4 text-amber-600 dark:text-amber-400 flex-shrink-0 mt-0.5" />
-                        <div className="text-sm">
-                          <p className="font-medium text-amber-700 dark:text-amber-300 mb-1">
-                            You have an active subscription
-                          </p>
-                          <p className="text-amber-700 dark:text-amber-300 mb-2">
-                            Cancel your subscription first to avoid further
-                            charges.
-                          </p>
-                          <button
-                            type="button"
-                            onClick={() => getPortalUrlMutation.mutate()}
-                            disabled={getPortalUrlMutation.isPending}
-                            className="inline-flex items-center gap-1 text-amber-700 dark:text-amber-300 underline underline-offset-2 hover:text-amber-800 dark:hover:text-amber-200"
-                          >
-                            {getPortalUrlMutation.isPending ? (
-                              <Loader2 className="size-3 animate-spin" />
-                            ) : (
-                              <ExternalLink className="size-3" />
-                            )}
-                            Manage subscription
-                          </button>
-                        </div>
-                      </div>
-                    </div>
-                  )}
                 </div>
               </AlertDialogDescription>
             </AlertDialogHeader>
@@ -134,10 +90,9 @@ export function DeleteTeam() {
               <AlertDialogCancel>Cancel</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => {
-                  if (!user?.teamId) return;
-                  deleteTeamMutation.mutate({ teamId: user.teamId });
+                  deleteTeamMutation.mutate()
                 }}
-                disabled={value !== "DELETE" || !user?.teamId}
+                disabled={value !== "DELETE" || deleteTeamMutation.isPending}
               >
                 {deleteTeamMutation.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
@@ -150,5 +105,5 @@ export function DeleteTeam() {
         </AlertDialog>
       </CardFooter>
     </Card>
-  );
+  )
 }

@@ -4,11 +4,11 @@ import { Avatar, AvatarFallback, AvatarImage } from "@aqardesk/ui/avatar"
 import { cn } from "@aqardesk/ui/cn"
 import { Icons } from "@aqardesk/ui/icons"
 import { stripSpecialCharacters } from "@aqardesk/utils"
-import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { forwardRef, useRef, useState } from "react"
 import { useUpload } from "@/hooks/use-upload"
-import { useTRPC } from "@/trpc/client"
+import { useUserMutation } from "@/hooks/use-user"
+import { useFileUrl } from "@/hooks/use-file-url"
 
 type Props = {
   userId: string
@@ -25,17 +25,9 @@ export const AvatarUpload = forwardRef<HTMLInputElement, Props>(
   ) => {
     const [avatar, setAvatar] = useState(initialAvatarUrl)
     const inputRef = useRef<HTMLInputElement>(null)
-    const trpc = useTRPC()
-    const queryClient = useQueryClient()
-
-    const updateUserMutation = useMutation(
-      trpc.user.update.mutationOptions({
-        onSuccess: () => {
-          queryClient.invalidateQueries({
-            queryKey: trpc.user.me.queryKey(),
-          })
-        },
-      })
+    const updateUserMutation = useUserMutation()
+    const { url: avatarUrl } = useFileUrl(
+      avatar ? { type: "url", url: avatar } : null
     )
 
     const { isLoading, uploadFile } = useUpload()
@@ -78,7 +70,7 @@ export const AvatarUpload = forwardRef<HTMLInputElement, Props>(
           <Loader2 className="size-4 animate-spin" />
         ) : (
           <>
-            <AvatarImage src={avatar ?? undefined} />
+            <AvatarImage src={avatarUrl ?? undefined} />
             <AvatarFallback>
               <Icons.AccountCircle className="size-5" />
             </AvatarFallback>

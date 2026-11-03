@@ -1,31 +1,28 @@
 "use client"
 
-import { queryOptions, useQuery } from "@tanstack/react-query"
-import { authClient } from "@aqardesk/auth/client"
-
-const userQueryOptions = queryOptions({
-  queryKey: ["auth", "session"],
-  queryFn: async () => {
-    const { data, error } = await authClient.getSession()
-
-    if (error) {
-      throw new Error(error.message)
-    }
-
-    const user = data?.user
-
-    return user
-      ? {
-          id: user.id,
-          fullName: user.name,
-          email: user.email,
-          avatarUrl: user.image,
-        }
-      : null
-  },
-  staleTime: 5 * 60 * 1000,
-})
+import { useToast } from "@aqardesk/ui/use-toast"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { updateCurrentUserSettingsAction } from "@/actions/user-settings"
+import {
+  userSettingsQueryKey,
+  userSettingsQueryOptions,
+} from "@/queries/user-settings"
 
 export function useUserQuery() {
-  return useQuery(userQueryOptions)
+  return useQuery(userSettingsQueryOptions())
+}
+
+export function useUserMutation() {
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
+
+  return useMutation({
+    mutationFn: updateCurrentUserSettingsAction,
+    onSuccess: (user) => {
+      queryClient.setQueryData(userSettingsQueryKey, user)
+    },
+    onError: (error) => {
+      toast({ variant: "error", title: error.message })
+    },
+  })
 }

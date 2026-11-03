@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Card,
@@ -6,19 +6,19 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
+} from "@aqardesk/ui/card"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@aqardesk/ui/select";
-import { useUserMutation, useUserQuery } from "@/hooks/use-user";
+} from "@aqardesk/ui/select"
+import { useUserMutation, useUserQuery } from "@/hooks/use-user"
 
 export function DateFormatSettings() {
-  const { data: user } = useUserQuery();
-  const updateUserMutation = useUserMutation();
+  const { data: user } = useUserQuery()
+  const updateUserMutation = useUserMutation()
 
   return (
     <Card className="flex justify-between items-center">
@@ -31,7 +31,7 @@ export function DateFormatSettings() {
 
       <CardContent>
         <Select
-          defaultValue={user?.dateFormat ?? undefined}
+          value={user?.dateFormat ?? undefined}
           onValueChange={(value) => {
             updateUserMutation.mutate({
               dateFormat: value as
@@ -39,7 +39,7 @@ export function DateFormatSettings() {
                 | "MM/dd/yyyy"
                 | "yyyy-MM-dd"
                 | "dd.MM.yyyy",
-            });
+            })
           }}
         >
           <SelectTrigger className="w-[180px]">
@@ -54,5 +54,5 @@ export function DateFormatSettings() {
         </Select>
       </CardContent>
     </Card>
-  );
+  )
 }

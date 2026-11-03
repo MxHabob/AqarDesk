@@ -1,7 +1,7 @@
 "use client"
 
+import { authClient } from "@aqardesk/auth/client"
 import { LogEvents } from "@aqardesk/events/events"
-import { createClient } from "@aqardesk/supabase/client"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -23,27 +23,27 @@ import {
 } from "@aqardesk/ui/card"
 import { Input } from "@aqardesk/ui/input"
 import { Label } from "@aqardesk/ui/label"
+import { useToast } from "@aqardesk/ui/use-toast"
 import { useOpenPanel } from "@openpanel/nextjs"
 import { useMutation } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useState } from "react"
+import { deleteCurrentAccountAction } from "@/actions/delete-account"
 import { redirectAfterAccountDeletion } from "@/actions/revalidate-action"
-import { useTRPC } from "@/trpc/client"
 
 export function DeleteAccount() {
-  const supabase = createClient()
-  const trpc = useTRPC()
   const { track } = useOpenPanel()
+  const { toast } = useToast()
 
-  const deleteUserMutation = useMutation(
-    trpc.user.delete.mutationOptions({
-      onSuccess: async () => {
-        track(LogEvents.AccountDeleted.name)
-        await supabase.auth.signOut()
-        await redirectAfterAccountDeletion()
-      },
-    })
-  )
+  const deleteUserMutation = useMutation({
+    mutationFn: deleteCurrentAccountAction,
+    onSuccess: async () => {
+      track(LogEvents.AccountDeleted.name)
+      await authClient.signOut()
+      await redirectAfterAccountDeletion()
+    },
+    onError: (error) => toast({ variant: "error", title: error.message }),
+  })
 
   const [value, setValue] = useState("")
 
@@ -52,9 +52,8 @@ export function DeleteAccount() {
       <CardHeader>
         <CardTitle>Delete account</CardTitle>
         <CardDescription>
-          Permanently remove your Personal Account and all of its contents from
-          the AqarDesk platform. This action is not reversible, so please continue
-          with caution.
+          Permanently remove your AqarDesk account and sign-in data. This action
+          cannot be undone.
         </CardDescription>
       </CardHeader>
       <CardFooter className="flex justify-between">

@@ -16,6 +16,7 @@ import {
   DropdownMenuTrigger,
 } from "@aqardesk/ui/dropdown-menu";
 import { useState } from "react";
+import { useFileUrl } from "@/hooks/use-file-url";
 import { useUserQuery } from "@/hooks/use-user";
 import { SignOut } from "../sign-out";
 import { SupportForm } from "../support-form";
@@ -24,15 +25,18 @@ import { ThemeSwitch } from "../theme-switch";
 export function OnboardingUserMenu() {
   const { data: user } = useUserQuery();
   const [supportOpen, setSupportOpen] = useState(false);
+  const { url: avatarUrl } = useFileUrl(
+    user?.avatarUrl ? { type: "url", url: user.avatarUrl } : null
+  )
 
   return (
     <>
       <DropdownMenu>
         <DropdownMenuTrigger asChild>
           <Avatar className="rounded-full w-8 h-8 cursor-pointer bg-accent">
-            {user?.avatarUrl && (
+            {avatarUrl && (
               <AvatarImageNext
-                src={user?.avatarUrl}
+                src={avatarUrl}
                 alt={user?.fullName ?? ""}
                 width={32}
                 height={32}

@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Card,
@@ -7,37 +7,42 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
+} from "@aqardesk/ui/card"
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@aqardesk/ui/form";
-import { SubmitButton } from "@aqardesk/ui/submit-button";
-import { z } from "zod/v3";
-import { useTeamMutation, useTeamQuery } from "@/hooks/use-team";
-import { useZodForm } from "@/hooks/use-zod-form";
-import { SelectFiscalMonth } from "./select-fiscal-month";
+} from "@aqardesk/ui/form"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
+import { z } from "zod/v3"
+import {
+  useOfficeSettingsMutation,
+  useOfficeSettingsQuery,
+} from "@/hooks/use-office-settings"
+import { useZodForm } from "@/hooks/use-zod-form"
+import { SelectFiscalMonth } from "./select-fiscal-month"
 
 const formSchema = z.object({
   fiscalYearStartMonth: z.number().int().min(1).max(12).nullable(),
-});
+})
 
 export function CompanyFiscalYear() {
-  const { data } = useTeamQuery();
-  const updateTeamMutation = useTeamMutation();
+  const { data } = useOfficeSettingsQuery()
+  const updateTeamMutation = useOfficeSettingsMutation()
 
   const form = useZodForm(formSchema, {
     defaultValues: {
       fiscalYearStartMonth: data?.fiscalYearStartMonth ?? null,
     },
-  });
+  })
 
   const onSubmit = form.handleSubmit((data) => {
-    updateTeamMutation.mutate(data);
-  });
+    updateTeamMutation.mutate({
+      fiscalYearStartMonth: data.fiscalYearStartMonth ?? 1,
+    })
+  })
 
   return (
     <Form {...form}>
@@ -77,5 +82,5 @@ export function CompanyFiscalYear() {
         </Card>
       </form>
     </Form>
-  );
+  )
 }

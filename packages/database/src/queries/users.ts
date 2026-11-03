@@ -17,6 +17,12 @@ export async function getUserById(
       email: schema.users.email,
       emailVerified: schema.users.emailVerified,
       image: schema.users.image,
+      locale: schema.users.locale,
+      timezone: schema.users.timezone,
+      timezoneAutoSync: schema.users.timezoneAutoSync,
+      dateFormat: schema.users.dateFormat,
+      timeFormat: schema.users.timeFormat,
+      weekStartsOnMonday: schema.users.weekStartsOnMonday,
       createdAt: schema.users.createdAt,
       updatedAt: schema.users.updatedAt,
     })
@@ -38,6 +44,12 @@ export async function getUserByEmail(
       email: schema.users.email,
       emailVerified: schema.users.emailVerified,
       image: schema.users.image,
+      locale: schema.users.locale,
+      timezone: schema.users.timezone,
+      timezoneAutoSync: schema.users.timezoneAutoSync,
+      dateFormat: schema.users.dateFormat,
+      timeFormat: schema.users.timeFormat,
+      weekStartsOnMonday: schema.users.weekStartsOnMonday,
       createdAt: schema.users.createdAt,
       updatedAt: schema.users.updatedAt,
     })
@@ -125,7 +137,16 @@ export async function updateUser(
   values: Partial<
     Pick<
       typeof schema.users.$inferInsert,
-      "name" | "email" | "emailVerified" | "image"
+      | "name"
+      | "email"
+      | "emailVerified"
+      | "image"
+      | "locale"
+      | "timezone"
+      | "timezoneAutoSync"
+      | "dateFormat"
+      | "timeFormat"
+      | "weekStartsOnMonday"
     >
   >,
   actor: { id: string; name?: string | null; email?: string | null },
@@ -138,6 +159,12 @@ export async function updateUser(
         email: schema.users.email,
         emailVerified: schema.users.emailVerified,
         image: schema.users.image,
+        locale: schema.users.locale,
+        timezone: schema.users.timezone,
+        timezoneAutoSync: schema.users.timezoneAutoSync,
+        dateFormat: schema.users.dateFormat,
+        timeFormat: schema.users.timeFormat,
+        weekStartsOnMonday: schema.users.weekStartsOnMonday,
       })
       .from(schema.users)
       .where(eq(schema.users.id, id))
@@ -154,6 +181,12 @@ export async function updateUser(
         email: schema.users.email,
         emailVerified: schema.users.emailVerified,
         image: schema.users.image,
+        locale: schema.users.locale,
+        timezone: schema.users.timezone,
+        timezoneAutoSync: schema.users.timezoneAutoSync,
+        dateFormat: schema.users.dateFormat,
+        timeFormat: schema.users.timeFormat,
+        weekStartsOnMonday: schema.users.weekStartsOnMonday,
         updatedAt: schema.users.updatedAt,
       })
 
@@ -172,6 +205,12 @@ export async function updateUser(
             email: user.email,
             emailVerified: user.emailVerified,
             image: user.image,
+            locale: user.locale,
+            timezone: user.timezone,
+            timezoneAutoSync: user.timezoneAutoSync,
+            dateFormat: user.dateFormat,
+            timeFormat: user.timeFormat,
+            weekStartsOnMonday: user.weekStartsOnMonday,
           },
         },
         transaction

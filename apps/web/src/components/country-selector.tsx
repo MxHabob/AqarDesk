@@ -1,4 +1,3 @@
-import countries from "@aqardesk/location/country-flags"
 import { Button } from "@aqardesk/ui/button"
 import { cn } from "@aqardesk/ui/cn"
 import {
@@ -13,6 +12,25 @@ import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover"
 import { Check, ChevronsUpDown } from "lucide-react"
 import * as React from "react"
 import { useEffect } from "react"
+
+const countries = [
+  { code: "SA", name: "Saudi Arabia" },
+  { code: "AE", name: "United Arab Emirates" },
+  { code: "BH", name: "Bahrain" },
+  { code: "KW", name: "Kuwait" },
+  { code: "OM", name: "Oman" },
+  { code: "QA", name: "Qatar" },
+  { code: "EG", name: "Egypt" },
+  { code: "JO", name: "Jordan" },
+  { code: "IQ", name: "Iraq" },
+  { code: "LB", name: "Lebanon" },
+  { code: "US", name: "United States" },
+  { code: "GB", name: "United Kingdom" },
+  { code: "CA", name: "Canada" },
+  { code: "AU", name: "Australia" },
+  { code: "IN", name: "India" },
+  { code: "PK", name: "Pakistan" },
+] as const
 
 type Props = {
   defaultValue: string
@@ -30,7 +48,7 @@ export function CountrySelector({ defaultValue, onSelect, className }: Props) {
     }
   }, [defaultValue, value])
 
-  const selected = Object.values(countries).find(
+  const selected = countries.find(
     (country) => country.code === value || country.name === value
   )
 
@@ -63,7 +81,7 @@ export function CountrySelector({ defaultValue, onSelect, className }: Props) {
           <CommandEmpty>No country found.</CommandEmpty>
           <CommandGroup>
             <CommandList className="overflow-y-auto max-h-[230px] pt-2">
-              {Object.values(countries).map((country) => (
+              {countries.map((country) => (
                 <CommandItem
                   key={country.code}
                   value={country.name}

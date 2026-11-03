@@ -15,6 +15,12 @@ export const users = pgTable("user", {
   emailVerified: boolean("email_verified").notNull().default(false),
   image: text("image"),
   twoFactorEnabled: boolean("two_factor_enabled").notNull().default(false),
+  locale: text("locale").notNull().default("ar"),
+  timezone: text("timezone").notNull().default("Asia/Riyadh"),
+  timezoneAutoSync: boolean("timezone_auto_sync").notNull().default(true),
+  dateFormat: text("date_format").notNull().default("dd/MM/yyyy"),
+  timeFormat: integer("time_format").notNull().default(24),
+  weekStartsOnMonday: boolean("week_starts_on_monday").notNull().default(true),
   createdAt: timestamp("created_at").notNull().defaultNow(),
   updatedAt: timestamp("updated_at").notNull().defaultNow(),
 })

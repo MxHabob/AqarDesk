@@ -1,41 +1,48 @@
-"use client";
+"use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@aqardesk/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@aqardesk/ui/avatar"
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
-import { Spinner } from "@aqardesk/ui/spinner";
-import { stripSpecialCharacters } from "@aqardesk/utils";
-import { useRef } from "react";
-import { useTeamMutation, useTeamQuery } from "@/hooks/use-team";
-import { useUpload } from "@/hooks/use-upload";
+} from "@aqardesk/ui/card"
+import { Spinner } from "@aqardesk/ui/spinner"
+import { stripSpecialCharacters } from "@aqardesk/utils"
+import { useRef } from "react"
+import {
+  useOfficeSettingsMutation,
+  useOfficeSettingsQuery,
+} from "@/hooks/use-office-settings"
+import { useFileUrl } from "@/hooks/use-file-url"
+import { useUpload } from "@/hooks/use-upload"
 
 export function CompanyLogo() {
-  const inputRef = useRef<HTMLInputElement>(null);
-  const { isLoading, uploadFile } = useUpload();
-  const { data } = useTeamQuery();
-  const { mutate: updateTeam } = useTeamMutation();
+  const inputRef = useRef<HTMLInputElement>(null)
+  const { isLoading, uploadFile } = useUpload()
+  const { data } = useOfficeSettingsQuery()
+  const { mutate: updateTeam } = useOfficeSettingsMutation()
+  const { url: logoUrl } = useFileUrl(
+    data?.logoUrl ? { type: "url", url: data.logoUrl } : null
+  )
 
   const handleUpload = async (evt: React.ChangeEvent<HTMLInputElement>) => {
-    const { files } = evt.target;
-    const selectedFile = files as FileList;
+    const { files } = evt.target
+    const selectedFile = files as FileList
 
-    const filename = stripSpecialCharacters(selectedFile[0]?.name ?? "");
+    const filename = stripSpecialCharacters(selectedFile[0]?.name ?? "")
 
     const { url } = await uploadFile({
       bucket: "avatars",
-      path: [data?.id ?? "", filename],
+      path: ["office", filename],
       file: selectedFile[0] as File,
-    });
+    })
 
     if (url) {
-      updateTeam({ logoUrl: url });
+      updateTeam({ logoUrl: url })
     }
-  };
+  }
 
   return (
     <Card>
@@ -57,7 +64,7 @@ export function CompanyLogo() {
           ) : (
             <>
               <AvatarImage
-                src={data?.logoUrl ?? undefined}
+                src={logoUrl ?? undefined}
                 alt={data?.name ?? undefined}
                 width={64}
                 height={64}
@@ -79,5 +86,5 @@ export function CompanyLogo() {
       </div>
       <CardFooter>An avatar is optional but strongly recommended.</CardFooter>
     </Card>
-  );
+  )
 }

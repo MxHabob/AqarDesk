@@ -1,6 +1,5 @@
 "use client"
 
-import { getTimezones } from "@aqardesk/location/timezones"
 import {
   Card,
   CardContent,
@@ -15,12 +14,33 @@ import { useEffect, useState } from "react"
 import { useUserMutation, useUserQuery } from "@/hooks/use-user"
 import { useI18n } from "@/locales/client"
 
+const timezoneOptions = [
+  "Asia/Riyadh",
+  "Asia/Dubai",
+  "Asia/Kuwait",
+  "Asia/Qatar",
+  "Asia/Bahrain",
+  "Asia/Muscat",
+  "Asia/Amman",
+  "Asia/Baghdad",
+  "Africa/Cairo",
+  "Europe/London",
+  "Europe/Paris",
+  "Europe/Berlin",
+  "America/New_York",
+  "America/Chicago",
+  "America/Denver",
+  "America/Los_Angeles",
+  "Asia/Kolkata",
+  "Asia/Karachi",
+  "Australia/Sydney",
+] as const
+
 export function ChangeTimezone() {
   const t = useI18n()
   const { data: user } = useUserQuery()
   const updateUserMutation = useUserMutation()
 
-  const timezones = getTimezones()
   const [currentBrowserTimezone, setCurrentBrowserTimezone] =
     useState<string>("")
 
@@ -34,10 +54,10 @@ export function ChangeTimezone() {
     }
   }, [])
 
-  const timezoneItems = timezones.map((tz, id) => ({
-    id: id.toString(),
-    label: tz.name,
-    value: tz.tzCode,
+  const timezoneItems = timezoneOptions.map((timezone) => ({
+    id: timezone,
+    label: timezone.replaceAll("_", " "),
+    value: timezone,
   }))
 
   const isAutoSyncEnabled = user?.timezoneAutoSync !== false

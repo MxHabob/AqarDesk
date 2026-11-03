@@ -4,6 +4,7 @@ import { Avatar, AvatarImage } from "@aqardesk/ui/avatar"
 import { Spinner } from "@aqardesk/ui/spinner"
 import { nanoid } from "nanoid"
 import { useRef, useState } from "react"
+import { useFileUrl } from "@/hooks/use-file-url"
 import { useUpload } from "@/hooks/use-upload"
 
 type Props = {
@@ -17,6 +18,9 @@ export const LogoUpload = ({ logoUrl: initialLogoUrl, onUpload }: Props) => {
   const inputRef = useRef<HTMLInputElement>(null)
 
   const { isLoading, uploadFile } = useUpload()
+  const { url: logoUrl } = useFileUrl(
+    logo ? { type: "url", url: logo } : null
+  )
 
   const handleUpload = async (evt: React.ChangeEvent<HTMLInputElement>) => {
     const { files } = evt.target
@@ -49,7 +53,7 @@ export const LogoUpload = ({ logoUrl: initialLogoUrl, onUpload }: Props) => {
         <Spinner className="h-4 w-4" />
       ) : (
         <AvatarImage
-          src={logo ?? undefined}
+          src={logoUrl ?? undefined}
           alt="Logo"
           width={64}
           height={64}

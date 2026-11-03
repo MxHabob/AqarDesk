@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Card,
@@ -7,37 +7,40 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
+} from "@aqardesk/ui/card"
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@aqardesk/ui/form";
-import { SubmitButton } from "@aqardesk/ui/submit-button";
-import { z } from "zod/v3";
-import { useTeamMutation, useTeamQuery } from "@/hooks/use-team";
-import { useZodForm } from "@/hooks/use-zod-form";
-import { CountrySelector } from "./country-selector";
+} from "@aqardesk/ui/form"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
+import { z } from "zod/v3"
+import {
+  useOfficeSettingsMutation,
+  useOfficeSettingsQuery,
+} from "@/hooks/use-office-settings"
+import { useZodForm } from "@/hooks/use-zod-form"
+import { CountrySelector } from "./country-selector"
 
 const formSchema = z.object({
   countryCode: z.string().min(2).max(32),
-});
+})
 
 export function CompanyCountry() {
-  const { data } = useTeamQuery();
-  const updateTeamMutation = useTeamMutation();
+  const { data } = useOfficeSettingsQuery()
+  const updateTeamMutation = useOfficeSettingsMutation()
 
   const form = useZodForm(formSchema, {
     defaultValues: {
       countryCode: data?.countryCode ?? "",
     },
-  });
+  })
 
   const onSubmit = form.handleSubmit((data) => {
-    updateTeamMutation.mutate(data);
-  });
+    updateTeamMutation.mutate(data)
+  })
 
   return (
     <Form {...form}>
@@ -60,8 +63,8 @@ export function CompanyCountry() {
                     <CountrySelector
                       defaultValue={field.value ?? ""}
                       onSelect={(code, name) => {
-                        field.onChange(name);
-                        form.setValue("countryCode", code);
+                        field.onChange(name)
+                        form.setValue("countryCode", code)
                       }}
                     />
                   </FormControl>
@@ -82,5 +85,5 @@ export function CompanyCountry() {
         </Card>
       </form>
     </Form>
-  );
+  )
 }

@@ -20,6 +20,7 @@ import {
 } from "@aqardesk/ui/dropdown-menu"
 import Link from "next/link"
 import { useCurrentLocale } from "@/locales/client"
+import { useFileUrl } from "@/hooks/use-file-url"
 import { useUserQuery } from "@/hooks/use-user"
 import { SignOut } from "./sign-out"
 import { ThemeSwitch } from "./theme-switch"
@@ -31,15 +32,18 @@ type Props = {
 export function UserMenu({ onlySignOut }: Props) {
   const { data: user } = useUserQuery()
   const locale = useCurrentLocale()
+  const { url: avatarUrl } = useFileUrl(
+    user?.avatarUrl ? { type: "url", url: user.avatarUrl } : null
+  )
 
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Avatar className="rounded-full w-8 h-8 cursor-pointer bg-accent">
-          {user?.avatarUrl && (
+          {avatarUrl && (
             <AvatarImageNext
-              src={user.avatarUrl}
-              alt={user.fullName}
+              src={avatarUrl}
+              alt={user.fullName ?? ""}
               width={32}
               height={32}
               quality={100}

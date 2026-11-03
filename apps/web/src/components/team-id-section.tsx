@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Card,
@@ -7,15 +7,20 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
-import { CopyInput } from "@/components/copy-input";
-import { useTeamQuery } from "@/hooks/use-team";
+} from "@aqardesk/ui/card"
+import { useQuery } from "@tanstack/react-query"
+import { getUserTeamsAction } from "@/actions/teams"
+import { CopyInput } from "@/components/copy-input"
 
 export function TeamIdSection() {
-  const { data: team } = useTeamQuery();
+  const { data } = useQuery({
+    queryKey: ["user-teams"],
+    queryFn: getUserTeamsAction,
+  })
+  const team = data?.teams.find((item) => item.id === data.selectedTeamId)
 
   if (!team?.id) {
-    return null;
+    return null
   }
 
   return (
@@ -37,5 +42,5 @@ export function TeamIdSection() {
         </p>
       </CardFooter>
     </Card>
-  );
+  )
 }

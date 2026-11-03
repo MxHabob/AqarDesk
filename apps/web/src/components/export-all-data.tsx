@@ -8,33 +8,47 @@ import {
   CardHeader,
   CardTitle,
 } from "@aqardesk/ui/card"
+import { useToast } from "@aqardesk/ui/use-toast"
 import { useMutation } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
+import { exportOfficeDataAction } from "@/actions/office-export"
+import { downloadFile } from "@/lib/download"
 import { useExportStore } from "@/store/export"
-import { useTRPC } from "@/trpc/client"
 
 export function ExportAllData() {
-  const trpc = useTRPC()
-  const { exportData, setExportData } = useExportStore()
+  const { toast } = useToast()
+  const { isExporting, setExportData, setIsExporting } = useExportStore()
+  const mutation = useMutation({
+    mutationFn: async () => {
+      setExportData({ exportType: "team-data" })
+      setIsExporting(true)
+      try {
+        const data = await exportOfficeDataAction()
+        await downloadFile(data.url, data.fileName)
+        return data
+      } finally {
+        setExportData(undefined)
+        setIsExporting(false)
+      }
+    },
+    onSuccess: ({ totalItems }) => {
+      toast({
+        variant: "success",
+        title: `Export completed (${totalItems} records).`,
+      })
+    },
+    onError: (error) => toast({ variant: "error", title: error.message }),
+  })
 
-  const mutation = useMutation(
-    trpc.team.exportAllData.mutationOptions({
-      onSuccess: (data) => {
-        setExportData({ runId: data.id, exportType: "team-data" })
-      },
-    })
-  )
-
-  const busy = mutation.isPending || !!exportData?.runId
+  const busy = mutation.isPending || isExporting
 
   return (
     <Card>
       <CardHeader>
         <CardTitle>Export all data</CardTitle>
         <CardDescription>
-          Download a ZIP containing every transaction, invoice, customer,
-          document, and tracker entry for your team. The file will appear in
-          your vault under Exports when it&apos;s ready.
+          Download a JSON export of the properties, listings, and owner records
+          you are permitted to view.
         </CardDescription>
       </CardHeader>
       <CardFooter>

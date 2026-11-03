@@ -1,5 +1,7 @@
-import { useMemo } from "react"
-import { useUserQuery } from "@/hooks/use-user"
+"use client"
+
+import { useQuery } from "@tanstack/react-query"
+import { getStorageReadUrlAction } from "@/actions/storage"
 
 type FileUrlOptions =
   | {
@@ -17,102 +19,37 @@ type FileUrlOptions =
       url: string
     }
 
-/**
- * Hook to get an authenticated file URL with fileKey.
- * Handles both constructing URLs from file paths and adding fileKey to existing URLs.
- *
- * @param options - Either file path options or an existing URL
- * @returns Object with `url` (authenticated URL), `isLoading`, and `hasFileKey` state
- */
+function isDirectUrl(value: string) {
+  return /^(https?:|data:|blob:)/i.test(value) || value.startsWith("/")
+}
+
+function getObjectKey(options: FileUrlOptions | null) {
+  if (!options) return null
+  if (options.type === "url") {
+    return isDirectUrl(options.url) ? null : options.url
+  }
+  if (options.type === "invoice") return null
+  return options.filePath.replace(/^vault\//, "")
+}
+
 export function useFileUrl(options: FileUrlOptions | null) {
-  const { data: user, isLoading } = useUserQuery()
+  const objectKey = getObjectKey(options)
+  const downloadFilename =
+    options?.type === "download" ? options.filename : undefined
+  const directUrl =
+    options?.type === "url" && isDirectUrl(options.url) ? options.url : null
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["storage", "read-url", objectKey, downloadFilename],
+    queryFn: () =>
+      getStorageReadUrlAction({ objectKey: objectKey!, downloadFilename }),
+    enabled: Boolean(objectKey),
+    staleTime: 3 * 60 * 1000,
+  })
 
-  const result = useMemo(() => {
-    if (!options) {
-      return {
-        url: null as string | null,
-        isLoading,
-        hasFileKey: !!user?.fileKey,
-      }
-    }
-
-    if (options.type === "url") {
-      // Handle relative URLs (starting with /) differently from absolute URLs
-      if (options.url.startsWith("/")) {
-        const [pathname, search] = options.url.split("?")
-        const params = new URLSearchParams(search)
-        if (user?.fileKey) {
-          params.set("fk", user.fileKey)
-        }
-        const queryString = params.toString()
-        return {
-          url: queryString ? `${pathname}?${queryString}` : pathname,
-          isLoading: false,
-          hasFileKey: !!user?.fileKey,
-        }
-      }
-
-      // Absolute URL - use full URL construction
-      const url = new URL(options.url)
-      // Add fileKey to all URLs that need authentication
-      if (user?.fileKey) {
-        url.searchParams.set("fk", user.fileKey)
-      }
-      return {
-        url: url.toString(),
-        isLoading: false,
-        hasFileKey: !!user?.fileKey,
-      }
-    }
-
-    // For other types, we need fileKey
-    if (!user?.fileKey) {
-      return {
-        url: null as string | null,
-        isLoading,
-        hasFileKey: false,
-      }
-    }
-
-    if (options.type === "invoice") {
-      // Build invoice download URL
-      const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/files/download/invoice`
-      const url = new URL(baseUrl)
-      url.searchParams.set("id", options.invoiceId)
-      url.searchParams.set("fk", user.fileKey)
-      if (options.isReceipt) {
-        url.searchParams.set("type", "receipt")
-      }
-      return {
-        url: url.toString(),
-        isLoading: false,
-        hasFileKey: true,
-      }
-    }
-
-    // Build URL from file path
-    const { type, filePath, filename } = options
-    const endpointPath = type === "download" ? `${type}/file` : type
-    const baseUrl = `${process.env.NEXT_PUBLIC_API_URL}/files/${endpointPath}`
-    const url = new URL(baseUrl)
-
-    if (type === "download") {
-      url.searchParams.set("path", filePath)
-      if (filename) {
-        url.searchParams.set("filename", filename)
-      }
-    } else {
-      url.searchParams.set("filePath", filePath)
-    }
-
-    url.searchParams.set("fk", user.fileKey)
-
-    return {
-      url: url.toString(),
-      isLoading: false,
-      hasFileKey: true,
-    }
-  }, [options, user?.fileKey, isLoading])
-
-  return result
+  return {
+    url: directUrl ?? data?.url ?? null,
+    isLoading: isLoading && !directUrl,
+    hasFileKey: Boolean(directUrl ?? data?.url),
+    error,
+  }
 }
