@@ -45,7 +45,7 @@ export function Header({
   const servicesLabel = isArabic ? "خدماتنا" : "Services"
   const aboutLabel = isArabic ? "من نحن" : "About us"
   const portfolioLabel = isArabic ? "ملف الأعمال" : "Portfolio"
-  const signInLabel = isArabic ? "دخول الموظفين" : "Staff sign in"
+  const signInLabel = isArabic ? "تسجيل الدخول" : "Sign in"
 
   useEffect(() => {
     const header = headerRef.current

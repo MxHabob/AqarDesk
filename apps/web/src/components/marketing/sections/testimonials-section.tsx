@@ -1,13 +1,14 @@
-"use client";
+"use client"
 
-import { Icons } from "@aqardesk/ui/icons";
-import type Hls from "hls.js";
-import Image from "next/image";
-import Link from "next/link";
-import type { ReactNode } from "react";
-import { useEffect, useRef, useState } from "react";
-import { createPortal } from "react-dom";
-import { MaterialIcon } from "../homepage/icon-mapping";
+import { Icons } from "@aqardesk/ui/icons"
+import type Hls from "hls.js"
+import Image from "next/image"
+import Link from "next/link"
+import type { ReactNode } from "react"
+import { useEffect, useRef, useState } from "react"
+import { createPortal } from "react-dom"
+import { useCurrentLocale, useScopedI18n } from "@/locales/client"
+import { MaterialIcon } from "../homepage/icon-mapping"
 import {
   MorphingDialog,
   MorphingDialogClose,
@@ -17,56 +18,58 @@ import {
   MorphingDialogSubtitle,
   MorphingDialogTitle,
   MorphingDialogTrigger,
-} from "../motion-primitives/morphing-dialog";
+} from "../motion-primitives/morphing-dialog"
 import {
   defaultTestimonials,
+  type LocalizedTestimonial,
+  localizeTestimonial,
   type Testimonial,
-} from "./testimonials-data";
+} from "./testimonials-data"
 
-export { defaultTestimonials, type Testimonial } from "./testimonials-data";
+export { defaultTestimonials, type Testimonial } from "./testimonials-data"
 
 interface TestimonialsSectionProps {
-  testimonials?: Testimonial[];
-  title?: string;
-  subtitle?: string;
-  showStars?: boolean;
-  customHeader?: ReactNode;
+  testimonials?: Testimonial[]
+  title?: string
+  subtitle?: string
+  showStars?: boolean
+  customHeader?: ReactNode
 }
 
 function renderStructuredContent(content: string) {
-  const sections = content.split("\n\n");
-  const structured: { label: string; text: string }[] = [];
+  const sections = content.split("\n\n")
+  const structured: { label: string; text: string }[] = []
 
   for (let i = 0; i < sections.length; i++) {
-    const section = sections[i]?.trim();
-    if (!section) continue;
+    const section = sections[i]?.trim()
+    if (!section) continue
 
     // Check if this section starts with a label (like "Company", "Challenge", etc.)
     // Labels are typically single words or short phrases followed by a newline
-    const lines = section.split("\n");
-    const firstLine = lines[0]?.trim();
+    const lines = section.split("\n")
+    const firstLine = lines[0]?.trim()
 
-    if (!firstLine) continue;
+    if (!firstLine) continue
 
     // Check if first line looks like a label (capitalized, no punctuation, short)
     if (
       firstLine.length < 30 &&
-      /^[A-Z][a-z\s]+$/.test(firstLine) &&
+      /^[\p{L}][\p{L}\s&]+$/u.test(firstLine) &&
       lines.length > 1
     ) {
       structured.push({
         label: firstLine,
         text: lines.slice(1).join("\n").trim(),
-      });
+      })
     } else {
       // If no label, treat as continuation of previous section
       if (structured.length > 0) {
-        const lastSection = structured[structured.length - 1];
+        const lastSection = structured[structured.length - 1]
         if (lastSection) {
-          lastSection.text = `${lastSection.text}\n\n${section}`;
+          lastSection.text = `${lastSection.text}\n\n${section}`
         }
       } else {
-        structured.push({ label: "", text: section });
+        structured.push({ label: "", text: section })
       }
     }
   }
@@ -87,49 +90,49 @@ function renderStructuredContent(content: string) {
         </div>
       ))}
     </div>
-  );
+  )
 }
 
 function HLSVideo({
   src,
   poster,
 }: {
-  src: string | undefined;
-  poster?: string;
+  src: string | undefined
+  poster?: string
 }) {
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const hlsRef = useRef<Hls | null>(null);
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const hlsRef = useRef<Hls | null>(null)
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video || !src) return;
+    const video = videoRef.current
+    if (!video || !src) return
 
     // Check for native HLS support first (Safari)
     if (video.canPlayType("application/vnd.apple.mpegurl")) {
-      video.src = src;
-      return;
+      video.src = src
+      return
     }
 
     // Dynamically import hls.js only when needed
-    let mounted = true;
+    let mounted = true
     import("hls.js").then(({ default: HlsModule }) => {
-      if (!mounted || !video) return;
+      if (!mounted || !video) return
 
       if (HlsModule.isSupported()) {
-        const hls = new HlsModule();
-        hlsRef.current = hls;
-        hls.loadSource(src);
-        hls.attachMedia(video);
+        const hls = new HlsModule()
+        hlsRef.current = hls
+        hls.loadSource(src)
+        hls.attachMedia(video)
       }
-    });
+    })
 
     return () => {
-      mounted = false;
+      mounted = false
       if (hlsRef.current) {
-        hlsRef.current.destroy();
+        hlsRef.current.destroy()
       }
-    };
-  }, [src]);
+    }
+  }, [src])
 
   return (
     <video
@@ -144,19 +147,17 @@ function HLSVideo({
       <track kind="captions" />
       Your browser does not support the video tag.
     </video>
-  );
+  )
 }
 
 function VideoTestimonialCard({
   testimonial,
-  index,
   rotation,
 }: {
-  testimonial: Testimonial;
-  index: number;
-  rotation: number;
+  testimonial: LocalizedTestimonial
+  rotation: number
 }) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <>
@@ -260,24 +261,22 @@ function VideoTestimonialCard({
         </div>
       )}
     </>
-  );
+  )
 }
 
 function VideoTestimonialCardMobile({
   testimonial,
-  index,
   rotation,
 }: {
-  testimonial: Testimonial;
-  index: number;
-  rotation: number;
+  testimonial: LocalizedTestimonial
+  rotation: number
 }) {
-  const [isOpen, setIsOpen] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(false)
+  const [mounted, setMounted] = useState(false)
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
 
   const modalContent = isOpen ? (
     <div
@@ -344,11 +343,11 @@ function VideoTestimonialCardMobile({
         </div>
       </div>
     </div>
-  ) : null;
+  ) : null
 
   return (
     <div
-      key={`testimonial-mobile-${testimonial.name}-${index}`}
+      key={`testimonial-mobile-${testimonial.name}`}
       className="w-[280px] flex-shrink-0 snap-start"
     >
       <button
@@ -404,30 +403,37 @@ function VideoTestimonialCardMobile({
         typeof document !== "undefined" &&
         createPortal(modalContent, document.body)}
     </div>
-  );
+  )
 }
 
 export function TestimonialsSection({
-  testimonials = defaultTestimonials,
-  title = "Built alongside our users",
-  subtitle = "Every feature is shaped by the people who use it every day.",
-  showStars = true,
+  testimonials: sourceTestimonials = defaultTestimonials,
+  title,
+  subtitle,
+  showStars = false,
   customHeader,
 }: TestimonialsSectionProps) {
-  const scrollContainerRef = useRef<HTMLDivElement>(null);
-  const lastDragDistance = useRef(0);
-  const pointerDownRef = useRef<{ time: number; x: number } | null>(null);
-  const [shouldBlockClick, setShouldBlockClick] = useState(false);
+  const locale = useCurrentLocale()
+  const t = useScopedI18n("site")
+  const testimonials = sourceTestimonials.map((testimonial) =>
+    localizeTestimonial(testimonial, locale)
+  )
+  const sectionTitle = title ?? t("testimonialsTitle")
+  const sectionSubtitle = subtitle ?? t("testimonialsDescription")
+  const scrollContainerRef = useRef<HTMLDivElement>(null)
+  const lastDragDistance = useRef(0)
+  const pointerDownRef = useRef<{ time: number; x: number } | null>(null)
+  const [shouldBlockClick, setShouldBlockClick] = useState(false)
 
   // Scroll to center card on mount
   useEffect(() => {
     if (scrollContainerRef.current) {
-      const centerIndex = Math.floor(testimonials.length / 2);
+      const centerIndex = Math.floor(testimonials.length / 2)
       const cardWidth =
-        scrollContainerRef.current.scrollWidth / testimonials.length;
-      scrollContainerRef.current.scrollLeft = centerIndex * cardWidth;
+        scrollContainerRef.current.scrollWidth / testimonials.length
+      scrollContainerRef.current.scrollLeft = centerIndex * cardWidth
     }
-  }, [testimonials.length]);
+  }, [testimonials.length])
 
   return (
     <section className="bg-background">
@@ -438,10 +444,10 @@ export function TestimonialsSection({
           <div className="flex flex-col gap-4 items-center">
             <div className="flex flex-col gap-4 items-center text-center max-w-3xl">
               <h2 className="font-serif text-2xl sm:text-2xl text-foreground">
-                {title}
+                {sectionTitle}
               </h2>
               <p className="hidden sm:block font-sans text-base text-muted-foreground leading-normal">
-                {subtitle}
+                {sectionSubtitle}
               </p>
             </div>
 
@@ -479,32 +485,38 @@ export function TestimonialsSection({
           </div>
         )}
 
+        <p
+          className="mx-auto mb-6 max-w-5xl text-center text-xs leading-6 text-muted-foreground sm:mb-8"
+          role="note"
+        >
+          {t("testimonialsDemoNotice")}
+        </p>
+
         {/* Desktop Testimonials Grid */}
         <div className="hidden lg:flex gap-3 w-full max-w-5xl mx-auto justify-center">
           {testimonials.map((testimonial, index) => {
             const getRotation = () => {
-              if (index === 0) return -1;
-              if (index === 1) return 1;
-              if (index === 2) return 2;
-              if (index === 3) return -2;
-              return 0;
-            };
+              if (index === 0) return -1
+              if (index === 1) return 1
+              if (index === 2) return 2
+              if (index === 3) return -2
+              return 0
+            }
 
             // Simple modal for video testimonials (no morphing)
             if (testimonial.video) {
               return (
                 <VideoTestimonialCard
-                  key={`testimonial-${testimonial.name}-${index}`}
+                  key={`testimonial-${testimonial.name}`}
                   testimonial={testimonial}
-                  index={index}
                   rotation={getRotation()}
                 />
-              );
+              )
             }
 
             // Morphing dialog for regular testimonials
             return (
-              <MorphingDialog key={`testimonial-${testimonial.name}-${index}`}>
+              <MorphingDialog key={`testimonial-${testimonial.name}`}>
                 <MorphingDialogTrigger
                   className="flex-shrink-0 group"
                   style={{
@@ -593,7 +605,7 @@ export function TestimonialsSection({
                   </MorphingDialogContent>
                 </MorphingDialogContainer>
               </MorphingDialog>
-            );
+            )
           })}
         </div>
 
@@ -609,15 +621,15 @@ export function TestimonialsSection({
             onScroll={(e) => {
               // Block clicks if scrolling
               const scrollDistance = Math.abs(
-                e.currentTarget.scrollLeft - (lastDragDistance.current || 0),
-              );
+                e.currentTarget.scrollLeft - (lastDragDistance.current || 0)
+              )
               if (scrollDistance > 15) {
-                setShouldBlockClick(true);
+                setShouldBlockClick(true)
                 setTimeout(() => {
-                  setShouldBlockClick(false);
-                }, 300);
+                  setShouldBlockClick(false)
+                }, 300)
               }
-              lastDragDistance.current = e.currentTarget.scrollLeft;
+              lastDragDistance.current = e.currentTarget.scrollLeft
             }}
           >
             <div
@@ -626,31 +638,30 @@ export function TestimonialsSection({
             >
               {testimonials.map((testimonial, index) => {
                 // Calculate rotation based on position relative to center
-                const centerIndex = Math.floor(testimonials.length / 2);
-                const offset = index - centerIndex;
-                let rotation = 0;
+                const centerIndex = Math.floor(testimonials.length / 2)
+                const offset = index - centerIndex
+                let rotation = 0
                 if (index === 0)
-                  rotation = 0; // No rotation for first card
-                else if (offset === -1) rotation = -1;
-                else if (offset === 1) rotation = 1;
-                else if (offset === -2) rotation = -2;
-                else if (offset === 2) rotation = 2;
+                  rotation = 0 // No rotation for first card
+                else if (offset === -1) rotation = -1
+                else if (offset === 1) rotation = 1
+                else if (offset === -2) rotation = -2
+                else if (offset === 2) rotation = 2
 
                 // Simple modal for video testimonials (no morphing)
                 if (testimonial.video) {
                   return (
                     <VideoTestimonialCardMobile
-                      key={`testimonial-mobile-${testimonial.name}-${index}`}
+                      key={`testimonial-mobile-${testimonial.name}`}
                       testimonial={testimonial}
-                      index={index}
                       rotation={rotation}
                     />
-                  );
+                  )
                 }
 
                 return (
                   <div
-                    key={`testimonial-mobile-${testimonial.name}-${index}`}
+                    key={`testimonial-mobile-${testimonial.name}`}
                     className="w-[280px] flex-shrink-0 snap-start"
                   >
                     <MorphingDialog>
@@ -661,32 +672,32 @@ export function TestimonialsSection({
                             shouldBlockClick ||
                             lastDragDistance.current > 15
                           ) {
-                            e.preventDefault();
-                            e.stopPropagation();
+                            e.preventDefault()
+                            e.stopPropagation()
                           }
                         }}
                         onPointerDown={(e) => {
                           pointerDownRef.current = {
                             time: Date.now(),
                             x: e.clientX,
-                          };
+                          }
                         }}
                         onPointerUp={(e) => {
                           if (pointerDownRef.current) {
                             const timeDiff =
-                              Date.now() - pointerDownRef.current.time;
+                              Date.now() - pointerDownRef.current.time
                             const distance = Math.abs(
-                              e.clientX - pointerDownRef.current.x,
-                            );
+                              e.clientX - pointerDownRef.current.x
+                            )
 
                             // Block if it was a long press or significant movement
                             if (timeDiff > 200 || distance > 15) {
-                              setShouldBlockClick(true);
+                              setShouldBlockClick(true)
                               setTimeout(() => {
-                                setShouldBlockClick(false);
-                              }, 300);
+                                setShouldBlockClick(false)
+                              }, 300)
                             }
-                            pointerDownRef.current = null;
+                            pointerDownRef.current = null
                           }
                         }}
                       >
@@ -792,7 +803,7 @@ export function TestimonialsSection({
                                   className="font-sans text-sm text-muted-foreground"
                                 >
                                   {renderStructuredContent(
-                                    testimonial.fullContent,
+                                    testimonial.fullContent
                                   )}
                                 </MorphingDialogDescription>
                               )}
@@ -802,7 +813,7 @@ export function TestimonialsSection({
                       </MorphingDialogContainer>
                     </MorphingDialog>
                   </div>
-                );
+                )
               })}
             </div>
           </div>
@@ -817,5 +828,5 @@ export function TestimonialsSection({
         </div>
       </div>
     </section>
-  );
+  )
 }

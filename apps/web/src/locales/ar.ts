@@ -408,7 +408,7 @@ export default {
     about: "من نحن",
     services: "خدماتنا",
     browse: "تصفح العقارات",
-    login: "دخول الموظفين",
+    login: "تسجيل الدخول",
     customerAccount: "حسابي",
     language: "اللغة",
     languageError: "تعذر تغيير اللغة. حاول مجددًا.",
@@ -445,6 +445,11 @@ export default {
     servicesDescription:
       "نرافقك في البحث والبيع والتأجير، ونسهّل متابعة العروض والتواصل مع فريق المكتب.",
     serviceSelectionTitle: "خدمات متكاملة لاحتياجك العقاري",
+    testimonialsTitle: "تجارب عملاء عقارية",
+    testimonialsDescription:
+      "نماذج توضيحية لرحلات البحث عن العقارات والتعامل مع عروض المكتب.",
+    testimonialsDemoNotice:
+      "محتوى تجريبي توضيحي بأسماء وتجارب افتراضية، وليس شهادات حقيقية من عملاء.",
     saleServiceTitle: "بيع العقارات",
     saleServiceDescription:
       "نساعد الملاك في عرض عقاراتهم، ونساعد المشترين في استكشاف الخيارات المتاحة.",

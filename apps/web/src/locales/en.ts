@@ -68,6 +68,11 @@ export default {
     servicesDescription:
       "We help you explore properties for sale and rent, review investment opportunities, and get support from the office team.",
     serviceSelectionTitle: "Support for every step of your property journey",
+    testimonialsTitle: "Property client experiences",
+    testimonialsDescription:
+      "Illustrative examples of property searches and working with our office listings.",
+    testimonialsDemoNotice:
+      "Illustrative sample content with fictional names and experiences; these are not real customer testimonials.",
     saleServiceTitle: "Property sales",
     saleServiceDescription:
       "We help owners present their properties and buyers explore available options.",

@@ -1,61 +1,104 @@
+export type LocalizedTestimonialText = {
+  ar: string
+  en: string
+}
+
 export interface Testimonial {
+  name: LocalizedTestimonialText
+  title: LocalizedTestimonialText
+  company: LocalizedTestimonialText
+  country: LocalizedTestimonialText
+  content: LocalizedTestimonialText
+  fullContent: LocalizedTestimonialText
+  image?: string
+  video?: string
+  videoPoster?: string
+}
+
+export type LocalizedTestimonial = Omit<
+  Testimonial,
+  "name" | "title" | "company" | "country" | "content" | "fullContent"
+> & {
   name: string
   title: string
   company: string
   country: string
   content: string
   fullContent: string
-  image?: string
-  video?: string
-  videoPoster?: string
+}
+
+export function localizeTestimonial(
+  testimonial: Testimonial,
+  locale: string
+): LocalizedTestimonial {
+  const language = locale === "ar" ? "ar" : "en"
+
+  return {
+    ...testimonial,
+    name: testimonial.name[language],
+    title: testimonial.title[language],
+    company: testimonial.company[language],
+    country: testimonial.country[language],
+    content: testimonial.content[language],
+    fullContent: testimonial.fullContent[language],
+  }
 }
 
 export const defaultTestimonials: Testimonial[] = [
   {
-    name: "Paweł Michalski",
-    title: "",
-    company: "VC Leaders",
-    country: "Poland",
-    image: "/stories/pawel.jpeg",
-    content:
-      "Invoice reconciliation used to take a full day each month and was always stressful. With AqarDesk, that work is mostly gone and we finally have a clear financial overview.",
-    fullContent:
-      "Company\nVC Leaders is an educational platform helping venture capitalists build better VC firms.\n\nChallenge\nMonthly invoice reconciliation was slow and painful. Missing invoices, manual checks, and no time left to properly categorize or analyze spending. The process regularly took more than a full day.\n\nImpact\nAqarDesk reduced invoice reconciliation time by 1–2 man-days per month and made financial visibility much clearer through dashboards.\n\nFavorite features\nClear financial overview, accounts payable tracking, invoice reconciliation, and a clean, intuitive interface.",
+    name: { ar: "عبدالله الحكيمي", en: "Abdullah Al-Hakimi" },
+    title: { ar: "مالك عقار", en: "Property owner" },
+    company: { ar: "عميل عقاري", en: "Property client" },
+    country: { ar: "اليمن", en: "Yemen" },
+    content: {
+      ar: "كنت أدور على طريقة أرتّب بها عروض عقاري، والحين صارت التفاصيل واضحة وأسهل للمهتمين.",
+      en: "I was looking for a clearer way to organize my property listings. Now the details are easier for interested people to review.",
+    },
+    fullContent: {
+      ar: "التحدي\nكنت أتابع تفاصيل العقار واستفسارات المهتمين بطرق متفرقة.\n\nالتجربة\nعرض العقار بمعلوماته وصوره وموقعه خلّى الرجوع للتفاصيل أيسر.\n\nالأثر\nصار عندي ترتيب أوضح للعروض، والتواصل بخصوصها أسهل.",
+      en: "Challenge\nI was keeping track of property details and inquiries in different places.\n\nExperience\nHaving the property's information, photos, and location together made it easier to revisit the details.\n\nImpact\nMy listings feel more organized, and it is easier to follow up about them.",
+    },
   },
   {
-    name: "Facu Montanaro",
-    title: "",
-    company: "Kundo Studio",
-    country: "Argentina",
-    image: "/stories/facu.jpeg",
-    content:
-      "Managing invoicing, projects, and finances across tools slowed my daily work. AqarDesk brought everything into one place and made my workflow much simpler.",
-    fullContent:
-      "Company\nKundo Studio helps startups and founders with fundraising, product launches, and growth through design and meaningful experiences.\n\nChallenge\nManaging invoicing, projects, and finances across multiple tools made daily work slower and more complex. Existing tools felt fragmented and hard to use.\n\nImpact\nAqarDesk centralized invoicing, time tracking, and project information into one place, significantly simplifying day-to-day operations.\n\nFavorite features\nInvoicing and time tracking. Both became core parts of Facu's daily workflow and replaced multiple separate tools.",
+    name: { ar: "ياسر الصبري", en: "Yasser Al-Sabri" },
+    title: { ar: "باحث عن منزل", en: "Home seeker" },
+    company: { ar: "عميل عقاري", en: "Property client" },
+    country: { ar: "اليمن", en: "Yemen" },
+    content: {
+      ar: "أريح لي أشوف الخيارات ومواقعها من مكان واحد، بدل ما أتعب وأنا أدوّر وأسأل.",
+      en: "It is easier to review options and their locations in one place instead of searching and asking around.",
+    },
+    fullContent: {
+      ar: "التحدي\nكان صعب عليّ أقارن بين العقارات وأتذكر تفاصيل كل واحد.\n\nالتجربة\nالصور والموقع ومعلومات العرض تساعدني أراجع الخيارات بهدوء.\n\nالأثر\nأقدر أضيّق اختياراتي وأتواصل مع المكتب لما أحتاج أسأل عن عقار.",
+      en: "Challenge\nIt was hard to compare properties and remember the details of each one.\n\nExperience\nPhotos, locations, and listing details help me review the options at my own pace.\n\nImpact\nI can narrow down my choices and contact the office when I have questions about a property.",
+    },
   },
   {
-    name: "Richard Poelderl",
-    title: "",
-    company: "Conduct",
-    country: "Germany",
-    image: "/stories/richard.jpeg",
-    content:
-      "My previous accounting setup was fragmented and didn't support my bank. AqarDesk made invoicing easier and sharing clean data with my tax advisor straightforward.",
-    fullContent:
-      "Company\nRichard works with companies that want to focus product development on building great products while outsourcing growth and marketing execution.\n\nChallenge\nHis accounting tool didn't support his bank, required manual formatting of exports, and forced him to juggle multiple financial tools.\n\nImpact\nAqarDesk replaced bank invoicing and made it easier to work with his tax advisor by exporting clean CSV files that integrate with accounting software. This significantly reduced friction while keeping control in one system.\n\nFavorite features\nInvoicing, CSV exports for tax advisors, and bank sync to track subscriptions and expenses.",
+    name: { ar: "أمين الأهدل", en: "Amin Al-Ahdal" },
+    title: { ar: "مستأجر", en: "Tenant" },
+    company: { ar: "عميل عقاري", en: "Property client" },
+    country: { ar: "اليمن", en: "Yemen" },
+    content: {
+      ar: "كنت محتاج إيجار بمواصفات معيّنة، وتصفّح العروض خلّاني أعرف الموجود قبل ما أتواصل.",
+      en: "I needed a rental with specific requirements, and browsing the listings helped me see what was available before getting in touch.",
+    },
+    fullContent: {
+      ar: "التحدي\nكنت أبحث عن عقار للإيجار وما كانت تفاصيل الخيارات واضحة لي.\n\nالتجربة\nاستعراض عروض الإيجار ومواقعها سهّل عليّ أعرف الخيارات المنشورة.\n\nالأثر\nصرت أتواصل مع المكتب وأنا عارف أي عرض أبغى أستفسر عنه.",
+      en: "Challenge\nI was looking for a rental and did not have a clear view of the available options.\n\nExperience\nReviewing rental listings and their locations helped me understand what was published.\n\nImpact\nI can contact the office knowing which listing I want to ask about.",
+    },
   },
   {
-    name: "Guy Solan",
-    title: "",
-    company: "Thetis Medical",
-    country: "United Kingdom",
-    image: "/stories/guy.jpeg",
-    content:
-      "Without AqarDesk, I had no real visibility into our cash and relied entirely on my accountant. It gave me clarity without having to learn complex accounting tools.",
-    fullContent:
-      "Company\nThetis Medical is a medical device company.\n\nChallenge\nWithout AqarDesk, I had no real visibility into our cash and relied entirely on my accountant.\n\nImpact\nAqarDesk gave me clarity without having to learn complex accounting tools.\n\nFavorite features\nFinancial visibility and cash flow tracking.",
-    video:
-      "https://customer-oh6t55xltlgrfayh.cloudflarestream.com/5b86803383964d52ee6834fd289f4f4e/manifest/video.m3u8",
-    videoPoster: "https://cdn.midday.ai/guy-cover.png",
+    name: { ar: "نبيل اليافعي", en: "Nabil Al-Yafei" },
+    title: { ar: "مستثمر عقاري", en: "Property investor" },
+    company: { ar: "عميل عقاري", en: "Property client" },
+    country: { ar: "اليمن", en: "Yemen" },
+    content: {
+      ar: "لما تكون معلومات العقار وموقعه قدامي، المقارنة تصير أوضح وأقدر أناقش الخيارات بشكل أفضل.",
+      en: "When a property's information and location are easy to review, I can compare options more clearly and discuss them better.",
+    },
+    fullContent: {
+      ar: "التحدي\nكنت أحتاج أجمع معلومات أكثر من عرض قبل ما أقرر أيها يستحق المتابعة.\n\nالتجربة\nتفاصيل العقار وموقعه وصوره تساعدني أراجع كل خيار.\n\nالأثر\nصار عندي أساس أوضح للمقارنة، وأعرف إيش أسأل عنه لما أتواصل مع المكتب.",
+      en: "Challenge\nI needed to gather details from several listings before deciding which ones to follow up on.\n\nExperience\nProperty details, location, and photos help me review each option.\n\nImpact\nI have a clearer basis for comparing options and know what to ask when I contact the office.",
+    },
   },
 ]
