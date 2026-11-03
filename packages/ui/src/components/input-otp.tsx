@@ -8,6 +8,8 @@ import { MinusIcon } from "lucide-react"
 function InputOTP({
   className,
   containerClassName,
+  render,
+  children,
   ...props
 }: React.ComponentProps<typeof OTPInput> & {
   containerClassName?: string
@@ -21,6 +23,15 @@ function InputOTP({
       )}
       spellCheck={false}
       className={cn("disabled:cursor-not-allowed", className)}
+      {...(render
+        ? {
+            render: (renderProps) => (
+              <OTPInputContext.Provider value={renderProps}>
+                {render(renderProps)}
+              </OTPInputContext.Provider>
+            ),
+          }
+        : { children })}
       {...props}
     />
   )
@@ -77,8 +88,7 @@ function InputOTPSeparator({ ...props }: React.ComponentProps<"div">) {
       role="separator"
       {...props}
     >
-      <MinusIcon
-      />
+      <MinusIcon />
     </div>
   )
 }

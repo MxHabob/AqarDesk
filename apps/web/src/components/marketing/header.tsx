@@ -7,6 +7,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
+import { MarketingAccountMenu } from "./account-menu";
 import { HeaderIntegrationsPreview } from "./header-integrations-preview";
 import type { Testimonial } from "./sections/testimonials-section";
 import { defaultTestimonials } from "./sections/testimonials-section";
@@ -72,6 +73,12 @@ const headerTestimonials: Testimonial[] = [
 interface HeaderProps {
   transparent?: boolean;
   hideMenuItems?: boolean;
+  user?: {
+    name: string;
+    email: string;
+    image: string | null;
+  } | null;
+  roleDestination?: string | null;
 }
 
 // Feature pages to prefetch on hover
@@ -100,6 +107,8 @@ const APP_ROUTES = [
 export function Header({
   transparent = false,
   hideMenuItems = false,
+  user = null,
+  roleDestination = null,
 }: HeaderProps) {
   const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -811,12 +820,19 @@ export function Header({
 
               {/* Sign in */}
               <div className="border-l border-border pl-4">
-                <Link
-                  href="/login"
-                  className="text-sm transition-colors text-primary hover:text-primary/80"
-                >
-                  Sign in
-                </Link>
+                {user ? (
+                  <MarketingAccountMenu
+                    user={user}
+                    roleDestination={roleDestination}
+                  />
+                ) : (
+                  <Link
+                    href="/login"
+                    className="text-sm transition-colors text-primary hover:text-primary/80"
+                  >
+                    Sign in
+                  </Link>
+                )}
               </div>
             </div>
           )}
@@ -1087,27 +1103,35 @@ export function Header({
 
               {/* Sign in */}
               <div className="border-t border-border pt-8 mt-8">
-                <Link
-                  href="/login"
-                  onTouchEnd={(e) => {
-                    const target = e.currentTarget;
-                    if (target) {
-                      target.blur();
-                      setTimeout(() => {
-                        if (target) {
-                          target.blur();
-                        }
-                      }, 100);
-                    }
-                  }}
-                  className="text-2xl font-sans transition-colors py-2 text-primary hover:text-primary xl:active:text-primary focus:outline-none focus-visible:outline-none touch-manipulation"
-                  onClick={() => {
-                    setIsMenuOpen(false);
-                  }}
-                  style={{ WebkitTapHighlightColor: "transparent" }}
-                >
-                  Sign in
-                </Link>
+                {user ? (
+                  <MarketingAccountMenu
+                    user={user}
+                    roleDestination={roleDestination}
+                    onNavigate={() => setIsMenuOpen(false)}
+                  />
+                ) : (
+                  <Link
+                    href="/login"
+                    onTouchEnd={(e) => {
+                      const target = e.currentTarget;
+                      if (target) {
+                        target.blur();
+                        setTimeout(() => {
+                          if (target) {
+                            target.blur();
+                          }
+                        }, 100);
+                      }
+                    }}
+                    className="text-2xl font-sans transition-colors py-2 text-primary hover:text-primary xl:active:text-primary focus:outline-none focus-visible:outline-none touch-manipulation"
+                    onClick={() => {
+                      setIsMenuOpen(false);
+                    }}
+                    style={{ WebkitTapHighlightColor: "transparent" }}
+                  >
+                    Sign in
+                  </Link>
+                )}
               </div>
             </div>
           </div>

@@ -16,11 +16,10 @@ export default async function LoginCallback({
   }
 
   const roleKeys = await getUserRoleKeys(session.user.id)
-  const destination = getRoleDestination(roleKeys, locale)
 
-  if (!destination) {
+  if (!getRoleDestination(roleKeys, locale)) {
     redirect(`/${locale}/login?error=role`)
   }
 
-  redirect(destination)
+  redirect(`/${locale}`)
 }

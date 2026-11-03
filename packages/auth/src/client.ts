@@ -1,10 +1,11 @@
 "use client"
 
+import { emailOTPClient, twoFactorClient } from "better-auth/client/plugins"
 import { createAuthClient } from "better-auth/react"
-import { twoFactorClient } from "better-auth/client/plugins"
 
 export const authClient = createAuthClient({
   plugins: [
+    emailOTPClient(),
     twoFactorClient({
       onTwoFactorRedirect: ({ twoFactorMethods }) => {
         const locale =
@@ -17,7 +18,7 @@ export const authClient = createAuthClient({
 
         const queryString = query.toString()
         window.location.assign(
-          `/${locale}/mfa/verify${queryString ? `?${queryString}` : ""}`,
+          `/${locale}/mfa/verify${queryString ? `?${queryString}` : ""}`
         )
       },
     }),

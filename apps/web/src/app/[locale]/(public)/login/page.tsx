@@ -1,4 +1,8 @@
-import { auth, isGoogleAuthConfigured } from "@aqardesk/auth/server"
+import {
+  auth,
+  isEmailOtpConfigured,
+  isGoogleAuthConfigured,
+} from "@aqardesk/auth/server"
 import { Icons } from "@aqardesk/ui/components/icons"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
@@ -35,33 +39,33 @@ export default async function Page({ params, searchParams }: Props) {
   const copy = locale === "ar" ? ar.auth : en.auth
 
   return (
-    <div className="min-h-screen bg-background flex relative">
-      <div className="fixed top-0 left-0 right-0 z-50 w-full">
-        <nav className="w-full pointer-events-none">
-          <div className="relative py-3 xl:py-4 px-4 sm:px-4 md:px-4 lg:px-4 xl:px-6 2xl:px-8 flex items-center">
-            <Link
-              href={`/${locale}`}
-              aria-label="AqarDesk"
-              className="flex items-center gap-2 hover:opacity-80 active:opacity-80 transition-opacity duration-200 pointer-events-auto"
-            >
-              <div className="w-6 h-6">
-                <Icons.LogoSmall className="w-full h-full text-foreground lg:text-white" />
-              </div>
-            </Link>
-          </div>
-        </nav>
-      </div>
+    <main
+      dir="ltr"
+      className="dark relative flex min-h-svh bg-background text-foreground"
+    >
+      <header className="fixed inset-x-0 top-0 z-50 px-4 py-3 sm:px-6 xl:px-8">
+        <Link
+          href={`/${locale}`}
+          aria-label="AqarDesk"
+          className="inline-flex items-center transition-opacity hover:opacity-75"
+        >
+          <Icons.LogoSmall className="size-6 text-white" />
+        </Link>
+      </header>
 
       <LoginVideoBackground />
 
-      <div className="w-full lg:w-1/2 flex flex-col justify-center items-center p-8 lg:p-12 pb-2">
-        <div className="w-full max-w-md flex flex-col h-full">
-          <div className="space-y-8 flex-1 flex flex-col justify-center">
-            <div className="text-center space-y-2">
-              <h1 className="text-lg lg:text-xl mb-4 font-serif">
+      <section
+        dir={locale === "ar" ? "rtl" : "ltr"}
+        className="flex min-h-svh w-full flex-col items-center justify-center p-8 pb-2 lg:w-1/2 lg:p-12 lg:pb-2"
+      >
+        <div className="flex min-h-[calc(100svh-4rem)] w-full max-w-md flex-col lg:min-h-[calc(100svh-6rem)]">
+          <div className="flex flex-1 flex-col justify-center space-y-8">
+            <div className="space-y-2 text-center">
+              <h1 className="mb-4 font-serif text-lg lg:text-xl">
                 {copy.loginTitle}
               </h1>
-              <p className="font-sans text-sm text-[#878787]">
+              <p className="font-sans text-sm text-muted-foreground">
                 {copy.loginDescription}
               </p>
             </div>
@@ -72,29 +76,32 @@ export default async function Page({ params, searchParams }: Props) {
               </p>
             )}
 
-            <LoginForm googleEnabled={isGoogleAuthConfigured} />
+            <LoginForm
+              googleEnabled={isGoogleAuthConfigured}
+              emailOtpEnabled={isEmailOtpConfigured}
+            />
           </div>
 
-          <div className="text-center mt-auto">
-            <p className="font-sans text-xs text-[#878787]">
+          <footer className="mt-auto text-center">
+            <p className="font-sans text-xs text-muted-foreground">
               {copy.signInTerms}{" "}
               <Link
                 href={`/${locale}/terms`}
-                className="text-[#878787] hover:text-foreground transition-colors underline"
+                className="underline transition-colors hover:text-foreground"
               >
                 {copy.termsOfService}
               </Link>{" "}
               {copy.and}{" "}
               <Link
                 href={`/${locale}/policy`}
-                className="text-[#878787] hover:text-foreground transition-colors underline"
+                className="underline transition-colors hover:text-foreground"
               >
                 {copy.privacyPolicy}
               </Link>
             </p>
-          </div>
+          </footer>
         </div>
-      </div>
-    </div>
+      </section>
+    </main>
   )
 }

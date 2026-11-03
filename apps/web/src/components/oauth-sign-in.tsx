@@ -3,8 +3,8 @@
 import { authClient } from "@aqardesk/auth/client"
 import { Button } from "@aqardesk/ui/components/button"
 import { Icons } from "@aqardesk/ui/components/icons"
-import { useCurrentLocale, useI18n } from "@/locales/client"
 import { useState } from "react"
+import { useCurrentLocale, useI18n } from "@/locales/client"
 
 export function OAuthSignIn({ enabled }: { enabled: boolean }) {
   const locale = useCurrentLocale()
@@ -39,6 +39,7 @@ export function OAuthSignIn({ enabled }: { enabled: boolean }) {
       <Button
         type="button"
         variant="outline"
+        dir="ltr"
         className="w-full"
         disabled={isLoading}
         onClick={handleSignIn}
