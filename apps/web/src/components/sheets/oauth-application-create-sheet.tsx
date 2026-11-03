@@ -3,7 +3,12 @@
 import { Button } from "@aqardesk/ui/button"
 import { Icons } from "@aqardesk/ui/icons"
 import { ScrollArea } from "@aqardesk/ui/scroll-area"
-import { Sheet, SheetContent, SheetHeader } from "@aqardesk/ui/sheet"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@aqardesk/ui/sheet"
 import { OAuthApplicationForm } from "@/components/forms/oauth-application-form"
 import { useOAuthApplicationParams } from "@/hooks/use-oauth-application-params"
 
@@ -14,14 +19,17 @@ export function OAuthApplicationCreateSheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={() => setParams(null)}>
-      <SheetContent stack>
-        <SheetHeader className="mb-6 flex justify-between items-center flex-row">
-          <h2 className="text-xl">Create OAuth Application</h2>
+      <SheetContent showCloseButton={false}>
+        <SheetHeader className="mb-6 flex-row items-center justify-between">
+          <SheetTitle className="text-xl font-normal">
+            Create OAuth Application
+          </SheetTitle>
           <Button
-            size="icon"
+            size="icon-sm"
             variant="ghost"
+            aria-label="إغلاق"
             onClick={() => setParams(null)}
-            className="p-0 m-0 size-auto hover:bg-transparent"
+            className="hover:bg-transparent"
           >
             <Icons.Close className="size-5" />
           </Button>

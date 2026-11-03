@@ -73,7 +73,7 @@
     content: "";
     position: absolute;
     inset: 0;
-    background-color: hsl(var(--background));
+    background-color: var(--background);
     opacity: 0.8;
     z-index: -1;
     pointer-events: none;
@@ -83,10 +83,10 @@
 .marketing-inline-end-gradient {
   background: linear-gradient(
     to left,
-    hsl(var(--background)) 0%,
-    hsl(var(--background)) 30%,
-    hsla(var(--background), 0.8) 50%,
-    hsla(var(--background), 0.4) 70%,
+    var(--background) 0%,
+    var(--background) 30%,
+    color-mix(in oklch, var(--background) 80%, transparent) 50%,
+    color-mix(in oklch, var(--background) 40%, transparent) 70%,
     transparent 100%
   );
 }
@@ -94,10 +94,10 @@
 [dir="rtl"] .marketing-inline-end-gradient {
   background: linear-gradient(
     to right,
-    hsl(var(--background)) 0%,
-    hsl(var(--background)) 30%,
-    hsla(var(--background), 0.8) 50%,
-    hsla(var(--background), 0.4) 70%,
+    var(--background) 0%,
+    var(--background) 30%,
+    color-mix(in oklch, var(--background) 80%, transparent) 50%,
+    color-mix(in oklch, var(--background) 40%, transparent) 70%,
     transparent 100%
   );
 }
@@ -195,7 +195,7 @@ pre code div,
   margin: 7px 2px;
   padding-inline: 14px;
   border-inline-start: 3px solid;
-  color: hsl(var(--foreground));
+  color: var(--foreground);
 }
 
 .updates b,
@@ -208,7 +208,7 @@ pre code div,
   display: block;
   padding-top: 1.5em;
   padding-bottom: 0.5em;
-  color: hsl(var(--foreground));
+  color: var(--foreground);
 }
 
 .app-description strong:first-child {

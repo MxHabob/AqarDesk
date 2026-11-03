@@ -129,7 +129,7 @@ function FormDescription({ className, ...props }: React.ComponentProps<"p">) {
     <p
       data-slot="form-description"
       id={itemContext ? `${itemContext.id}-form-description` : undefined}
-      className={cn("text-sm text-muted-foreground", className)}
+      className={cn("text-[0.8rem] text-muted-foreground", className)}
       {...props}
     />
   )
@@ -152,7 +152,7 @@ function FormMessage({
       data-slot="form-message"
       id={formMessageId}
       role={message ? "alert" : undefined}
-      className={cn("text-sm font-medium text-destructive", className)}
+      className={cn("text-[0.8rem] font-medium text-destructive", className)}
       {...props}
     >
       {message ? String(message) : children}

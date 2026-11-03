@@ -10,7 +10,7 @@ export function HeaderIntegrationsPreview() {
         className="w-full h-full border border-border relative"
         style={{
           backgroundImage:
-            "radial-gradient(circle at 1px 1px, hsl(var(--border)) 0.5px, transparent 0)",
+            "radial-gradient(circle at 1px 1px, var(--border) 0.5px, transparent 0)",
           backgroundSize: "6px 6px",
         }}
       >
@@ -21,12 +21,12 @@ export function HeaderIntegrationsPreview() {
               "font-sans leading-none select-none",
               "text-secondary",
               "text-3xl sm:text-4xl md:text-4xl lg:text-2xl xl:text-5xl 2xl:text-6xl",
-              "[WebkitTextStroke:1px_hsl(var(--muted-foreground))]",
-              "[textStroke:1px_hsl(var(--muted-foreground))]",
+              "[WebkitTextStroke:1px_var(--muted-foreground)]",
+              "[textStroke:1px_var(--muted-foreground)]",
             )}
             style={{
-              WebkitTextStroke: "1px hsl(var(--muted-foreground))",
-              color: "hsl(var(--secondary))",
+              WebkitTextStroke: "1px var(--muted-foreground)",
+              color: "var(--secondary)",
             }}
           >
             Integrations

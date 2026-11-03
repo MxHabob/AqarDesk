@@ -3,7 +3,7 @@
 import { useQueryStates } from "nuqs"
 import { parseAsString } from "nuqs/server"
 import { useEffect, useMemo } from "react"
-import { useOfficeSettingsQuery } from "@/hooks/use-office-settings"
+import { useOfficeMetricsSettingsQuery } from "@/hooks/use-office-settings"
 import { useMetricsFilterStore } from "@/store/metrics-filter"
 import {
   getPeriodDateRange,
@@ -38,7 +38,7 @@ function isPeriodOption(
 }
 
 export function useMetricsFilter() {
-  const { data: officeSettings } = useOfficeSettingsQuery()
+  const { data: officeSettings } = useOfficeMetricsSettingsQuery()
   const fiscalYearStartMonth = officeSettings.fiscalYearStartMonth
   const store = useMetricsFilterStore()
   const [params, setParams] = useQueryStates(metricsFilterSchema, {

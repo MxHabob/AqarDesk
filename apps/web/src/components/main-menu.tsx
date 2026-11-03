@@ -2,6 +2,7 @@
 
 import { Icons } from "@aqardesk/ui/components/icons"
 import { cn } from "@aqardesk/ui/lib/utils"
+import { Building2, Tag, UsersRound } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
@@ -9,7 +10,10 @@ import { useCurrentLocale, useI18n } from "@/locales/client"
 
 const icons = {
   "/": () => <Icons.Overview size={20} />,
-  "/transactions": () => <Icons.Overview size={20} />,
+  "/properties": () => <Building2 size={20} />,
+  "/listings": () => <Tag size={20} />,
+  "/owners": () => <UsersRound size={20} />,
+  "/reports": () => <Icons.Monitoring size={20} />,
   "/settings": () => <Icons.Settings size={20} />,
 } as const
 
@@ -202,22 +206,15 @@ export function MainMenu({ onSelect, isExpanded = false }: Props) {
   const dashboardPath = `/${locale}/dashboard`
   const items = [
     { path: "/", name: t("navigation.overview") },
-    {
-      path: "/transactions",
-      name: t("common.properties"),
-      children: [
-        { path: "/transactions", name: t("common.properties") },
-        { path: "/invoices", name: t("common.listings") },
-        { path: "/customers", name: t("common.owners") },
-      ],
-    },
+    { path: "/reports", name: t("navigation.reports") },
+    { path: "/properties", name: t("common.properties") },
+    { path: "/listings", name: t("common.listings") },
+    { path: "/owners", name: t("common.owners") },
     {
       path: "/settings",
       name: t("common.settings"),
       children: [
         { path: "/settings", name: t("navigation.general") },
-        { path: "/settings/billing", name: t("navigation.billing") },
-        { path: "/settings/accounts", name: t("navigation.accounts") },
         { path: "/settings/members", name: t("navigation.members") },
         {
           path: "/settings/notifications",

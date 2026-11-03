@@ -176,7 +176,7 @@ export function Search() {
     void setParams(params)
       .then(() => {
         setNavigationError(undefined)
-        setOpen()
+        setOpen(false)
       })
       .catch((navigationFailure: unknown) => {
         console.error(

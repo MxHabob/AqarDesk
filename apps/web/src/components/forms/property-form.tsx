@@ -199,177 +199,182 @@ export function PropertyForm({
   }, [onSaved, router, state.saved])
 
   return (
-    <form action={formAction} className="flex h-full flex-col gap-5">
+    <form action={formAction} className="flex h-full min-h-0 flex-col">
       {data?.property.id && (
         <input type="hidden" name="id" value={data.property.id} />
       )}
       {isEditing && <input type="hidden" name="type" value={propertyType} />}
-      <div className="grid gap-4 sm:grid-cols-2">
-        <RealEstateField
-          label="نوع العقار"
-          name="type"
-          type="select"
-          defaultValue={propertyType}
-          disabled={readOnly || isEditing}
-          options={propertyCategories.map((category) => ({
-            value: category.type,
-            label: category.nameAr,
-          }))}
-          onChange={(value) => {
-            const category = propertyCategories.find(
-              (option) => option.type === value
-            )
-            if (category) setPropertyType(category.type)
-          }}
-          required
-        />
-        <RealEstateField
-          label="اسم العقار"
-          name="title"
-          defaultValue={data?.property.title}
-          required
-          disabled={readOnly}
-          placeholder="مثال: فيلا في حي..."
-        />
-      </div>
-      <RealEstateField
-        label="الوصف"
-        name="description"
-        type="textarea"
-        defaultValue={data?.property.description}
-        disabled={readOnly}
-      />
-      <div className="grid gap-4 sm:grid-cols-2">
-        <RealEstateField
-          label="المدينة"
-          name="city"
-          defaultValue={data?.property.city}
-          disabled={readOnly}
-        />
-        <RealEstateField
-          label="الحي"
-          name="district"
-          defaultValue={data?.property.district}
-          disabled={readOnly}
-        />
-        <RealEstateField
-          label="المنطقة / الحي الفرعي"
-          name="neighborhood"
-          defaultValue={data?.property.neighborhood}
-          disabled={readOnly}
-        />
-        <RealEstateField
-          label="العنوان"
-          name="address"
-          defaultValue={data?.property.address}
-          disabled={readOnly}
-        />
-        <RealEstateField
-          label="الشارع الرئيسي"
-          name="primaryStreet"
-          defaultValue={data?.property.primaryStreet}
-          disabled={readOnly}
-        />
-        <RealEstateField
-          label="الشارع الفرعي"
-          name="secondaryStreet"
-          defaultValue={data?.property.secondaryStreet}
-          disabled={readOnly}
-        />
-        <RealEstateField
-          label="مساحة الأرض (م²)"
-          name="lotAreaM2"
-          type="number"
-          min={0}
-          step={0.01}
-          defaultValue={data?.property.lotAreaM2}
-          disabled={readOnly}
-        />
-        <RealEstateField
-          label="مساحة البناء (م²)"
-          name="buildingAreaM2"
-          type="number"
-          min={0}
-          step={0.01}
-          defaultValue={data?.property.buildingAreaM2}
-          disabled={readOnly}
-        />
-        <RealEstateField
-          label="الواجهة (م)"
-          name="frontageM"
-          type="number"
-          min={0}
-          step={0.01}
-          defaultValue={data?.property.frontageM}
-          disabled={readOnly}
-        />
-        <RealEstateField
-          label="العمق (م)"
-          name="depthM"
-          type="number"
-          min={0}
-          step={0.01}
-          defaultValue={data?.property.depthM}
-          disabled={readOnly}
-        />
-        <RealEstateField
-          label="خط العرض"
-          name="latitude"
-          type="number"
-          min={-90}
-          max={90}
-          step={0.000001}
-          defaultValue={data?.property.latitude}
-          disabled={readOnly}
-        />
-        <RealEstateField
-          label="خط الطول"
-          name="longitude"
-          type="number"
-          min={-180}
-          max={180}
-          step={0.000001}
-          defaultValue={data?.property.longitude}
-          disabled={readOnly}
-        />
-      </div>
-
-      <label className="flex flex-col gap-2 text-xs text-muted-foreground">
-        الملاك
-        <select
-          className="min-h-24 w-full border-0 border-b border-input bg-transparent px-0 py-2 text-sm outline-none focus:border-ring disabled:opacity-50"
-          name="ownerIds"
-          multiple
-          defaultValue={data?.ownerRows.map(({ ownerId }) => ownerId) ?? []}
-          disabled={readOnly}
-        >
-          {ownerOptions.map((owner) => (
-            <option key={owner.id} value={owner.id}>
-              {owner.name}
-            </option>
-          ))}
-        </select>
-        <span>يمكن اختيار أكثر من مالك. أضف المالك أولًا من صفحة الملاك.</span>
-      </label>
-
-      <h3 className="border-b pb-2 text-sm font-medium">مواصفات العقار</h3>
-      <div className="grid gap-4 sm:grid-cols-2">
-        {(detailsFields[propertyType] ?? []).map((field) => (
+      <div className="scrollbar-hide min-h-0 flex-1 space-y-6 overflow-y-auto">
+        <div className="grid gap-4 sm:grid-cols-2">
           <RealEstateField
-            key={field.name}
-            {...field}
-            defaultValue={getDetailValue(details, field.name)}
-            disabled={readOnly}
-            min={field.type === "number" ? 0 : undefined}
-            step={field.type === "number" ? 1 : undefined}
+            label="نوع العقار"
+            name="type"
+            type="select"
+            defaultValue={propertyType}
+            disabled={readOnly || isEditing}
+            options={propertyCategories.map((category) => ({
+              value: category.type,
+              label: category.nameAr,
+            }))}
+            onChange={(value) => {
+              const category = propertyCategories.find(
+                (option) => option.type === value
+              )
+              if (category) setPropertyType(category.type)
+            }}
+            required
           />
-        ))}
+          <RealEstateField
+            label="اسم العقار"
+            name="title"
+            defaultValue={data?.property.title}
+            required
+            disabled={readOnly}
+            placeholder="مثال: فيلا في حي..."
+          />
+        </div>
+        <RealEstateField
+          label="الوصف"
+          name="description"
+          type="textarea"
+          defaultValue={data?.property.description}
+          disabled={readOnly}
+        />
+        <div className="grid gap-4 sm:grid-cols-2">
+          <RealEstateField
+            label="المدينة"
+            name="city"
+            defaultValue={data?.property.city}
+            disabled={readOnly}
+          />
+          <RealEstateField
+            label="الحي"
+            name="district"
+            defaultValue={data?.property.district}
+            disabled={readOnly}
+          />
+          <RealEstateField
+            label="المنطقة / الحي الفرعي"
+            name="neighborhood"
+            defaultValue={data?.property.neighborhood}
+            disabled={readOnly}
+          />
+          <RealEstateField
+            label="العنوان"
+            name="address"
+            defaultValue={data?.property.address}
+            disabled={readOnly}
+          />
+          <RealEstateField
+            label="الشارع الرئيسي"
+            name="primaryStreet"
+            defaultValue={data?.property.primaryStreet}
+            disabled={readOnly}
+          />
+          <RealEstateField
+            label="الشارع الفرعي"
+            name="secondaryStreet"
+            defaultValue={data?.property.secondaryStreet}
+            disabled={readOnly}
+          />
+          <RealEstateField
+            label="مساحة الأرض (م²)"
+            name="lotAreaM2"
+            type="number"
+            min={0}
+            step={0.01}
+            defaultValue={data?.property.lotAreaM2}
+            disabled={readOnly}
+          />
+          <RealEstateField
+            label="مساحة البناء (م²)"
+            name="buildingAreaM2"
+            type="number"
+            min={0}
+            step={0.01}
+            defaultValue={data?.property.buildingAreaM2}
+            disabled={readOnly}
+          />
+          <RealEstateField
+            label="الواجهة (م)"
+            name="frontageM"
+            type="number"
+            min={0}
+            step={0.01}
+            defaultValue={data?.property.frontageM}
+            disabled={readOnly}
+          />
+          <RealEstateField
+            label="العمق (م)"
+            name="depthM"
+            type="number"
+            min={0}
+            step={0.01}
+            defaultValue={data?.property.depthM}
+            disabled={readOnly}
+          />
+          <RealEstateField
+            label="خط العرض"
+            name="latitude"
+            type="number"
+            min={-90}
+            max={90}
+            step={0.000001}
+            defaultValue={data?.property.latitude}
+            disabled={readOnly}
+          />
+          <RealEstateField
+            label="خط الطول"
+            name="longitude"
+            type="number"
+            min={-180}
+            max={180}
+            step={0.000001}
+            defaultValue={data?.property.longitude}
+            disabled={readOnly}
+          />
+        </div>
+
+        <label className="flex flex-col gap-2 text-sm font-medium">
+          الملاك
+          <select
+            className="min-h-24 w-full border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+            name="ownerIds"
+            multiple
+            defaultValue={data?.ownerRows.map(({ ownerId }) => ownerId) ?? []}
+            disabled={readOnly}
+          >
+            {ownerOptions.map((owner) => (
+              <option key={owner.id} value={owner.id}>
+                {owner.name}
+              </option>
+            ))}
+          </select>
+          <span className="text-xs font-normal text-muted-foreground">
+            يمكن اختيار أكثر من مالك. أضف المالك أولًا من صفحة الملاك.
+          </span>
+        </label>
+
+        <h3 className="border-b pb-2 text-sm font-medium">مواصفات العقار</h3>
+        <div className="grid gap-4 sm:grid-cols-2">
+          {(detailsFields[propertyType] ?? []).map((field) => (
+            <RealEstateField
+              key={field.name}
+              {...field}
+              defaultValue={getDetailValue(details, field.name)}
+              disabled={readOnly}
+              min={field.type === "number" ? 0 : undefined}
+              step={field.type === "number" ? 1 : undefined}
+            />
+          ))}
+        </div>
+        {state.error && <RealEstateFormError message={state.error} />}
       </div>
-      {state.error && <RealEstateFormError message={state.error} />}
       {!readOnly && (
-        <div className="mt-auto flex justify-end border-t pt-4">
+        <div className="-mx-6 mt-4 border-t bg-[#fafaf9] px-6 pb-2 pt-4 dark:bg-[#0c0c0c]">
           <RealEstateSubmitButton
             label={isEditing ? "حفظ التعديلات" : "إضافة العقار"}
+            className="w-full"
           />
         </div>
       )}

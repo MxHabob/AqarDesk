@@ -1,5 +1,6 @@
 "use client"
 
+import { SearchModal } from "@/components/search/search-modal"
 import {
   ListingSheet,
   OwnerSheet,
@@ -9,6 +10,7 @@ import {
 export function GlobalSheets() {
   return (
     <>
+      <SearchModal />
       <PropertySheet />
       <ListingSheet />
       <OwnerSheet />

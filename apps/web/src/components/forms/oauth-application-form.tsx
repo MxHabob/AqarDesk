@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import type { RouterOutputs } from "@api/trpc/routers/_app";
+import type { RouterOutputs } from "@api/trpc/routers/_app"
 import {
   SCOPES,
   type Scope,
   type ScopePreset,
   scopePresets,
   scopesToName,
-} from "@api/utils/scopes";
+} from "@api/utils/scopes"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@aqardesk/ui/accordion";
-import { Button } from "@aqardesk/ui/button";
-import { cn } from "@aqardesk/ui/cn";
+} from "@aqardesk/ui/accordion"
+import { Button } from "@aqardesk/ui/button"
+import { cn } from "@aqardesk/ui/cn"
 import {
   Form,
   FormControl,
@@ -24,28 +24,28 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@aqardesk/ui/form";
-import { Input } from "@aqardesk/ui/input";
-import { SubmitButton } from "@aqardesk/ui/submit-button";
-import { Switch } from "@aqardesk/ui/switch";
-import { Tabs, TabsList, TabsTrigger } from "@aqardesk/ui/tabs";
-import { Textarea } from "@aqardesk/ui/textarea";
-import { useToast } from "@aqardesk/ui/use-toast";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { nanoid } from "nanoid";
-import { useEffect, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import { useFieldArray } from "react-hook-form";
-import { z } from "zod/v3";
-import { useOAuthApplicationParams } from "@/hooks/use-oauth-application-params";
-import { useUpload } from "@/hooks/use-upload";
-import { useUserQuery } from "@/hooks/use-user";
-import { useZodForm } from "@/hooks/use-zod-form";
-import { useOAuthSecretModalStore } from "@/store/oauth-secret-modal";
-import { useTRPC } from "@/trpc/client";
-import { RESOURCES } from "@/utils/scopes";
-import { LogoUpload } from "../logo-upload";
-import { ScopeSelector } from "../scope-selector";
+} from "@aqardesk/ui/form"
+import { Input } from "@aqardesk/ui/input"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
+import { Switch } from "@aqardesk/ui/switch"
+import { Tabs, TabsList, TabsTrigger } from "@aqardesk/ui/tabs"
+import { Textarea } from "@aqardesk/ui/textarea"
+import { useToast } from "@aqardesk/ui/use-toast"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { nanoid } from "nanoid"
+import { useEffect, useState } from "react"
+import { useDropzone } from "react-dropzone"
+import { useFieldArray } from "react-hook-form"
+import { z } from "zod/v3"
+import { useOAuthApplicationParams } from "@/hooks/use-oauth-application-params"
+import { useUpload } from "@/hooks/use-upload"
+import { useUserQuery } from "@/hooks/use-user"
+import { useZodForm } from "@/hooks/use-zod-form"
+import { useOAuthSecretModalStore } from "@/store/oauth-secret-modal"
+import { useTRPC } from "@/trpc/client"
+import { RESOURCES } from "@/utils/scopes"
+import { LogoUpload } from "../logo-upload"
+import { ScopeSelector } from "../scope-selector"
 
 const formSchema = z.object({
   id: z.string().uuid().optional(),
@@ -77,24 +77,24 @@ const formSchema = z.object({
           .refine(
             (url) => {
               try {
-                const urlObj = new URL(url);
+                const urlObj = new URL(url)
                 // Allow localhost with HTTP, all others must use HTTPS
                 if (
                   urlObj.hostname === "localhost" ||
                   urlObj.hostname === "127.0.0.1"
                 ) {
-                  return true;
+                  return true
                 }
-                return urlObj.protocol === "https:";
+                return urlObj.protocol === "https:"
               } catch {
-                return false;
+                return false
               }
             },
             {
               message: "All URLs must use HTTPS, except for localhost.",
-            },
+            }
           ),
-      }),
+      })
     )
     .min(1, {
       message: "At least one redirect URI is required.",
@@ -107,25 +107,25 @@ const formSchema = z.object({
     .default(["apis.all"]),
   isPublic: z.boolean().default(false),
   active: z.boolean().default(true),
-});
+})
 
 type Props = {
-  data?: RouterOutputs["oauthApplications"]["get"];
-};
+  data?: RouterOutputs["oauthApplications"]["get"]
+}
 
 export function OAuthApplicationForm({ data }: Props) {
-  const { setParams } = useOAuthApplicationParams();
-  const { setSecret } = useOAuthSecretModalStore();
+  const { setParams } = useOAuthApplicationParams()
+  const { setSecret } = useOAuthSecretModalStore()
   const [preset, setPreset] = useState<ScopePreset>(() =>
     data?.scopes
       ? (scopesToName(data.scopes).preset as ScopePreset)
-      : "all_access",
-  );
-  const { toast } = useToast();
-  const { uploadFile } = useUpload();
-  const { data: user } = useUserQuery();
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
+      : "all_access"
+  )
+  const { toast } = useToast()
+  const { uploadFile } = useUpload()
+  const { data: user } = useUserQuery()
+  const trpc = useTRPC()
+  const queryClient = useQueryClient()
 
   const form = useZodForm(formSchema, {
     defaultValues: {
@@ -145,12 +145,12 @@ export function OAuthApplicationForm({ data }: Props) {
       isPublic: data?.isPublic || false,
       active: data?.active ?? true,
     },
-  });
+  })
 
   const { fields, append, remove } = useFieldArray({
     control: form.control,
     name: "redirectUris",
-  });
+  })
 
   // Effect to reset form and ensure proper initialization when editing existing OAuth application
   useEffect(() => {
@@ -171,53 +171,53 @@ export function OAuthApplicationForm({ data }: Props) {
         scopes: (data.scopes as Scope[]) || ["apis.all"],
         isPublic: data.isPublic || false,
         active: data.active ?? true,
-      });
+      })
 
       // Update preset state based on the scopes
-      const detectedPreset = scopesToName(data.scopes).preset as ScopePreset;
-      setPreset(detectedPreset);
+      const detectedPreset = scopesToName(data.scopes).preset as ScopePreset
+      setPreset(detectedPreset)
 
       // If it's restricted, make sure the form has the correct scopes with dirty flag
       if (detectedPreset === "restricted") {
-        form.setValue("scopes", data.scopes as Scope[], { shouldDirty: true });
+        form.setValue("scopes", data.scopes as Scope[], { shouldDirty: true })
       }
     }
-  }, [data, form]);
+  }, [data, form])
 
   const createMutation = useMutation(
     trpc.oauthApplications.create.mutationOptions({
       onSuccess: (result) => {
         queryClient.invalidateQueries({
           queryKey: trpc.oauthApplications.list.queryKey(),
-        });
+        })
 
         queryClient.invalidateQueries({
           queryKey: trpc.oauthApplications.get.queryKey(),
-        });
+        })
 
-        setParams(null);
+        setParams(null)
         if (result.clientSecret && result.name) {
-          setSecret(result.clientSecret, result.name);
+          setSecret(result.clientSecret, result.name)
         }
       },
-    }),
-  );
+    })
+  )
 
   const updateMutation = useMutation(
     trpc.oauthApplications.update.mutationOptions({
       onSuccess: () => {
         queryClient.invalidateQueries({
           queryKey: trpc.oauthApplications.list.queryKey(),
-        });
+        })
 
         queryClient.invalidateQueries({
           queryKey: trpc.oauthApplications.get.queryKey(),
-        });
+        })
 
-        setParams(null);
+        setParams(null)
       },
-    }),
-  );
+    })
+  )
 
   const handleSubmit = (values: z.infer<typeof formSchema>) => {
     // Convert redirect URIs from object array to string array for API
@@ -226,129 +226,129 @@ export function OAuthApplicationForm({ data }: Props) {
       redirectUris: values.redirectUris
         .map((uri) => uri.url)
         .filter((url) => url.trim() !== ""),
-    };
+    }
 
     if (data?.id) {
       updateMutation.mutate({
         id: data.id,
         ...formattedValues,
-      });
+      })
     } else {
-      createMutation.mutate(formattedValues);
+      createMutation.mutate(formattedValues)
     }
-  };
+  }
 
   const handleResourceScopeChange = (resourceKey: string, scope: string) => {
-    if (preset !== "restricted") return;
+    if (preset !== "restricted") return
 
-    const currentScopes = form.getValues("scopes");
-    const resource = RESOURCES.find((r) => r.key === resourceKey);
-    if (!resource) return;
+    const currentScopes = form.getValues("scopes")
+    const resource = RESOURCES.find((r) => r.key === resourceKey)
+    if (!resource) return
 
     // Remove any existing scopes for this resource
     const filteredScopes = currentScopes.filter(
       (currentScope: string) =>
-        !resource.scopes.some((s) => s.scope === currentScope),
-    );
+        !resource.scopes.some((s) => s.scope === currentScope)
+    )
 
     // Add the new scope if it's not empty
     const newScopes = scope
       ? [...filteredScopes, scope as Scope]
-      : filteredScopes;
+      : filteredScopes
 
-    form.setValue("scopes", newScopes, { shouldDirty: true });
-  };
+    form.setValue("scopes", newScopes, { shouldDirty: true })
+  }
 
   // Update form scopes based on preset
   const updateScopesFromPreset = (newPreset: ScopePreset) => {
-    let newScopes: Scope[] = [];
+    let newScopes: Scope[] = []
 
     switch (newPreset) {
       case "all_access":
-        newScopes = ["apis.all"];
-        break;
+        newScopes = ["apis.all"]
+        break
       case "read_only":
-        newScopes = ["apis.read"];
-        break;
+        newScopes = ["apis.read"]
+        break
       case "restricted": {
         // Keep existing scopes when switching to restricted mode
-        const currentScopes = form.getValues("scopes");
+        const currentScopes = form.getValues("scopes")
         // Get all valid scopes from RESOURCES
         const validScopes = RESOURCES.flatMap((resource) =>
-          resource.scopes.map((scope) => scope.scope),
-        );
+          resource.scopes.map((scope) => scope.scope)
+        )
         // Only keep scopes that are defined in RESOURCES
         newScopes = currentScopes.filter((scope: string): scope is Scope =>
-          validScopes.some((validScope: string) => validScope === scope),
-        );
-        break;
+          validScopes.some((validScope: string) => validScope === scope)
+        )
+        break
       }
     }
 
-    form.setValue("scopes", newScopes, { shouldDirty: true });
-  };
+    form.setValue("scopes", newScopes, { shouldDirty: true })
+  }
 
   const handlePresetChange = (value: string) => {
-    const scopePreset = value as ScopePreset;
-    setPreset(scopePreset);
-    updateScopesFromPreset(scopePreset);
-  };
+    const scopePreset = value as ScopePreset
+    setPreset(scopePreset)
+    updateScopesFromPreset(scopePreset)
+  }
 
   const onScreenshotDrop = async (acceptedFiles: File[]) => {
-    if (!user?.teamId) return;
+    if (!user?.teamId) return
 
     // Filter for image files only
     const imageFiles = acceptedFiles.filter((file) =>
-      file.type.startsWith("image/"),
-    );
+      file.type.startsWith("image/")
+    )
 
     if (imageFiles.length === 0) {
       toast({
         title: "Invalid file type",
         description: "Please upload only image files",
-      });
-      return;
+      })
+      return
     }
 
-    const currentScreenshots = form.getValues("screenshots");
+    const currentScreenshots = form.getValues("screenshots")
 
     // Check if adding these files would exceed the limit
     if (currentScreenshots.length + imageFiles.length > 4) {
       toast({
         title: "Too many screenshots",
         description: "You can only upload up to 4 screenshots",
-      });
-      return;
+      })
+      return
     }
 
     try {
       const uploadedUrls = await Promise.all(
         imageFiles.map(async (file) => {
-          const originalFilename = file.name ?? "";
-          const extension = originalFilename.split(".").pop() || "";
-          const filename = extension ? `${nanoid()}.${extension}` : nanoid();
+          const originalFilename = file.name ?? ""
+          const extension = originalFilename.split(".").pop() || ""
+          const filename = extension ? `${nanoid()}.${extension}` : nanoid()
 
           const { url } = await uploadFile({
             bucket: "apps",
             path: ["screenshots", filename],
             file,
-          });
+          })
 
-          return url;
-        }),
-      );
+          return url
+        })
+      )
 
       // Add uploaded URLs to the form
       form.setValue("screenshots", [...currentScreenshots, ...uploadedUrls], {
         shouldDirty: true,
-      });
+      })
     } catch (_error) {
       toast({
         title: "Upload failed",
         description: "Failed to upload screenshots. Please try again.",
-      });
+      })
     }
-  };
+  }
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop: onScreenshotDrop,
@@ -358,13 +358,13 @@ export function OAuthApplicationForm({ data }: Props) {
           toast({
             title: "File too large",
             description: "Screenshots must be smaller than 3MB",
-          });
+          })
         }
         if (rejection.errors.find(({ code }) => code === "file-invalid-type")) {
           toast({
             title: "Invalid file type",
             description: "Please upload only image files",
-          });
+          })
         }
       }
     },
@@ -383,24 +383,24 @@ export function OAuthApplicationForm({ data }: Props) {
         ".bmp",
       ],
     },
-  });
+  })
 
   const removeScreenshot = (index: number) => {
-    const currentScreenshots = form.getValues("screenshots");
-    const newScreenshots = currentScreenshots.filter((_, i) => i !== index);
-    form.setValue("screenshots", newScreenshots, { shouldDirty: true });
-  };
+    const currentScreenshots = form.getValues("screenshots")
+    const newScreenshots = currentScreenshots.filter((_, i) => i !== index)
+    form.setValue("screenshots", newScreenshots, { shouldDirty: true })
+  }
 
-  const isPending = createMutation.isPending || updateMutation.isPending;
+  const isPending = createMutation.isPending || updateMutation.isPending
 
   // Helper function to check if an accordion section has errors
   const hasErrors = (fields: string[]) => {
     return fields.some((field) => {
       const fieldError =
-        form.formState.errors[field as keyof typeof form.formState.errors];
-      return fieldError !== undefined;
-    });
-  };
+        form.formState.errors[field as keyof typeof form.formState.errors]
+      return fieldError !== undefined
+    })
+  }
 
   const generalErrors = hasErrors([
     "name",
@@ -410,11 +410,11 @@ export function OAuthApplicationForm({ data }: Props) {
     "logoUrl",
     "website",
     "installUrl",
-  ]);
-  const redirectErrors = hasErrors(["redirectUris"]);
-  const permissionErrors = hasErrors(["scopes"]);
-  const screenshotErrors = hasErrors(["screenshots"]);
-  const settingsErrors = hasErrors(["isPublic", "active"]);
+  ])
+  const redirectErrors = hasErrors(["redirectUris"])
+  const permissionErrors = hasErrors(["scopes"])
+  const screenshotErrors = hasErrors(["screenshots"])
+  const settingsErrors = hasErrors(["isPublic", "active"])
 
   return (
     <Form {...form}>
@@ -715,7 +715,7 @@ export function OAuthApplicationForm({ data }: Props) {
                   <div
                     className={cn(
                       "w-full h-[120px] border-dotted border-2 border-border text-center flex flex-col justify-center space-y-1 transition-colors text-[#606060]",
-                      isDragActive && "bg-secondary text-primary",
+                      isDragActive && "bg-secondary text-primary"
                     )}
                     {...getRootProps()}
                   >
@@ -744,10 +744,7 @@ export function OAuthApplicationForm({ data }: Props) {
                     <div className="space-y-2">
                       <div className="grid grid-cols-2 gap-4">
                         {form.watch("screenshots").map((screenshot, index) => (
-                          <div
-                            key={`screenshot-${index}-${screenshot}`}
-                            className="relative group"
-                          >
+                          <div key={screenshot} className="relative group">
                             <div className="aspect-video bg-muted overflow-hidden">
                               <img
                                 src={screenshot}
@@ -839,7 +836,7 @@ export function OAuthApplicationForm({ data }: Props) {
           </Accordion>
         </div>
 
-        <div className="sticky bottom-0 bg-[#FAFAF9] dark:bg-[#0C0C0C] border-t pt-3 mt-4">
+        <div className="-mx-6 mt-4 border-t bg-[#fafaf9] px-6 pb-2 pt-3 dark:bg-[#0c0c0c]">
           <SubmitButton
             type="submit"
             className="w-full"
@@ -851,5 +848,5 @@ export function OAuthApplicationForm({ data }: Props) {
         </div>
       </form>
     </Form>
-  );
+  )
 }

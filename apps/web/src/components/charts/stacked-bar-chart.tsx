@@ -216,7 +216,7 @@ export function StackedBarChart({
               type="monotone"
               dataKey="recurring"
               strokeWidth={2.5}
-              stroke="hsl(var(--border))"
+              stroke="var(--border)"
               dot={false}
             />
           </ComposedChart>

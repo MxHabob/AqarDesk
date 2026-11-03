@@ -28,7 +28,7 @@ export function ListingsTableHeader({
         </div>
         <div className="flex flex-wrap items-center gap-2">
           <Link
-            href={`/${locale}/dashboard/transactions?createProperty=true`}
+            href={`/${locale}/dashboard/properties?createProperty=true`}
             className="inline-flex h-9 items-center border border-border px-3 text-xs font-semibold tracking-widest uppercase transition-colors hover:bg-muted"
           >
             {t("realEstateTables.createProperty")}

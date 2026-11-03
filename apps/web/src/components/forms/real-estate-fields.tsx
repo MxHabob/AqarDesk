@@ -1,5 +1,6 @@
 "use client"
 
+import { Button } from "@aqardesk/ui/components/button"
 import { useFormStatus } from "react-dom"
 
 type Option = { value: string; label: string }
@@ -34,19 +35,22 @@ export function RealEstateField({
   onChange?: (value: string) => void
 }) {
   const controlClass =
-    "h-10 w-full border-0 border-b border-input bg-transparent px-0 text-sm outline-none focus:border-ring disabled:opacity-50"
+    "h-9 w-full border bg-transparent px-3 py-1 text-sm outline-none transition-colors placeholder:text-muted-foreground focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
   const value = defaultValue ?? ""
   const controlId = `real-estate-${name}`
 
   return (
-    <div className="flex min-w-0 flex-col gap-1.5 text-xs text-muted-foreground">
-      <label htmlFor={controlId}>
+    <div className="flex min-w-0 flex-col gap-1.5">
+      <label
+        htmlFor={controlId}
+        className="text-sm font-medium leading-none text-foreground"
+      >
         <span>{label}</span>
       </label>
       {type === "textarea" ? (
         <textarea
           id={controlId}
-          className={`${controlClass} h-auto min-h-20 resize-y py-2`}
+          className={`${controlClass} h-auto min-h-[60px] resize-y py-2`}
           name={name}
           defaultValue={String(value)}
           required={required}
@@ -93,20 +97,28 @@ export function RealEstateField({
 export function RealEstateSubmitButton({
   label,
   disabled,
+  className,
+  form,
+  pending,
 }: {
   label: string
   disabled?: boolean
+  className?: string
+  form?: string
+  pending?: boolean
 }) {
-  const { pending } = useFormStatus()
+  const { pending: formPending } = useFormStatus()
+  const isPending = pending ?? formPending
 
   return (
-    <button
-      className="h-10 bg-primary px-6 text-xs font-semibold uppercase tracking-widest text-primary-foreground disabled:cursor-not-allowed disabled:opacity-50"
+    <Button
       type="submit"
-      disabled={disabled || pending}
+      form={form}
+      disabled={disabled || isPending}
+      className={className}
     >
-      {pending ? "جارٍ الحفظ..." : label}
-    </button>
+      {isPending ? "جارٍ الحفظ..." : label}
+    </Button>
   )
 }
 

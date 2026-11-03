@@ -1,5 +1,6 @@
 "use client"
 
+import { Button } from "@aqardesk/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -8,7 +9,12 @@ import {
 } from "@aqardesk/ui/dropdown-menu"
 import { Icons } from "@aqardesk/ui/icons"
 import { ScrollArea } from "@aqardesk/ui/scroll-area"
-import { Sheet, SheetContent, SheetHeader } from "@aqardesk/ui/sheet"
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+} from "@aqardesk/ui/sheet"
 import { useToast } from "@aqardesk/ui/use-toast"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
@@ -119,9 +125,11 @@ export function OAuthApplicationEditSheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={() => setParams(null)}>
-      <SheetContent stack>
-        <SheetHeader className="mb-6 flex justify-between items-center flex-row">
-          <h2 className="text-xl">Edit OAuth Application</h2>
+      <SheetContent showCloseButton={false}>
+        <SheetHeader className="mb-6 flex-row items-center justify-between">
+          <SheetTitle className="text-xl font-normal">
+            Edit OAuth Application
+          </SheetTitle>
 
           <div className="flex items-center gap-2">
             {application?.status && (
@@ -168,6 +176,15 @@ export function OAuthApplicationEditSheet() {
                 </DropdownMenuContent>
               </DropdownMenu>
             )}
+            <Button
+              type="button"
+              size="icon-sm"
+              variant="ghost"
+              aria-label="إغلاق"
+              onClick={() => setParams(null)}
+            >
+              <Icons.Close className="size-5" />
+            </Button>
           </div>
         </SheetHeader>
 

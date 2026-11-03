@@ -4,6 +4,7 @@ import { Button } from "@aqardesk/ui/components/button"
 import {
   Sheet,
   SheetContent,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
 } from "@aqardesk/ui/components/sheet"
@@ -20,6 +21,7 @@ import { ListingForm } from "@/components/forms/listing-form"
 import { ListingMediaForm } from "@/components/forms/listing-media-form"
 import { OwnerForm } from "@/components/forms/owner-form"
 import { PropertyForm } from "@/components/forms/property-form"
+import { RealEstateSubmitButton } from "@/components/forms/real-estate-fields"
 import { useRealEstateParams } from "@/hooks/use-real-estate-params"
 
 function CloseButton({ onClose }: { onClose: () => void }) {
@@ -95,9 +97,14 @@ export function PropertySheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
-      <SheetContent side="end" className="sm:max-w-2xl">
-        <SheetHeader className="flex-row items-center justify-between border-b pb-4">
-          <SheetTitle>
+      <SheetContent
+        side="end"
+        className="sm:max-w-2xl"
+        panelClassName="flex flex-col overflow-hidden"
+        showCloseButton={false}
+      >
+        <SheetHeader className="mb-6 flex-row items-center justify-between">
+          <SheetTitle className="text-xl font-normal">
             {readOnly
               ? "تفاصيل العقار"
               : propertyId
@@ -113,13 +120,15 @@ export function PropertySheet() {
         ) : propertyId && !data ? (
           <p className="text-sm text-muted-foreground">جارٍ تحميل العقار...</p>
         ) : (
-          <PropertyForm
-            key={data?.property.id ?? "new-property"}
-            data={data ?? undefined}
-            ownerOptions={owners}
-            readOnly={readOnly}
-            onSaved={close}
-          />
+          <div className="min-h-0 flex-1">
+            <PropertyForm
+              key={data?.property.id ?? "new-property"}
+              data={data ?? undefined}
+              ownerOptions={owners}
+              readOnly={readOnly}
+              onSaved={close}
+            />
+          </div>
         )}
       </SheetContent>
     </Sheet>
@@ -136,6 +145,7 @@ export function ListingSheet() {
     Awaited<ReturnType<typeof getPropertyOptions>>
   >([])
   const [error, setError] = useState<string>()
+  const [isSaving, setIsSaving] = useState(false)
   const isOpen = Boolean(createListing || listingId)
   const readOnly = listingMode === "details"
   const close = () =>
@@ -183,9 +193,14 @@ export function ListingSheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
-      <SheetContent side="end" className="sm:max-w-2xl">
-        <SheetHeader className="flex-row items-center justify-between border-b pb-4">
-          <SheetTitle>
+      <SheetContent
+        side="end"
+        className="sm:max-w-2xl"
+        panelClassName="flex flex-col overflow-hidden"
+        showCloseButton={false}
+      >
+        <SheetHeader className="mb-6 flex-row items-center justify-between">
+          <SheetTitle className="text-xl font-normal">
             {readOnly
               ? "تفاصيل الإعلان"
               : listingId
@@ -201,13 +216,15 @@ export function ListingSheet() {
         ) : listingId && !data ? (
           <p className="text-sm text-muted-foreground">جارٍ تحميل الإعلان...</p>
         ) : (
-          <div className="space-y-8">
+          <div className="scrollbar-hide min-h-0 flex-1 space-y-8 overflow-y-auto">
             <ListingForm
               key={data?.listing.id ?? "new-listing"}
               data={data ?? undefined}
               properties={properties}
               readOnly={readOnly}
               onSaved={close}
+              showSubmitButton={false}
+              onPendingChange={setIsSaving}
             />
             {data?.listing.id && (
               <ListingMediaForm
@@ -216,6 +233,16 @@ export function ListingSheet() {
               />
             )}
           </div>
+        )}
+        {!readOnly && !(listingId && !data) && !error && (
+          <SheetFooter className="-mx-6 mt-4 border-t bg-[#fafaf9] px-6 pb-2 pt-4 dark:bg-[#0c0c0c]">
+            <RealEstateSubmitButton
+              label={listingId ? "حفظ الإعلان" : "إنشاء الإعلان"}
+              form="listing-form"
+              className="w-full"
+              pending={isSaving}
+            />
+          </SheetFooter>
         )}
       </SheetContent>
     </Sheet>
@@ -260,9 +287,14 @@ export function OwnerSheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
-      <SheetContent side="end" className="sm:max-w-xl">
-        <SheetHeader className="flex-row items-center justify-between border-b pb-4">
-          <SheetTitle>
+      <SheetContent
+        side="end"
+        className="sm:max-w-xl"
+        panelClassName="flex flex-col overflow-hidden"
+        showCloseButton={false}
+      >
+        <SheetHeader className="mb-6 flex-row items-center justify-between">
+          <SheetTitle className="text-xl font-normal">
             {readOnly
               ? "تفاصيل المالك"
               : ownerId
@@ -280,12 +312,14 @@ export function OwnerSheet() {
             جارٍ تحميل بيانات المالك...
           </p>
         ) : (
-          <OwnerForm
-            key={data?.owner.id ?? "new-owner"}
-            data={data ?? undefined}
-            readOnly={readOnly}
-            onSaved={close}
-          />
+          <div className="min-h-0 flex-1">
+            <OwnerForm
+              key={data?.owner.id ?? "new-owner"}
+              data={data ?? undefined}
+              readOnly={readOnly}
+              onSaved={close}
+            />
+          </div>
         )}
       </SheetContent>
     </Sheet>

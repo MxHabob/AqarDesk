@@ -56,6 +56,7 @@ export default {
   },
   navigation: {
     overview: "نظرة عامة",
+    reports: "التقارير",
     general: "عام",
     billing: "الفوترة",
     accounts: "الحسابات",

@@ -7,10 +7,16 @@ import {
   useSuspenseQuery,
 } from "@tanstack/react-query"
 import {
+  officeMetricsSettingsQueryKey,
+  officeMetricsSettingsQueryOptions,
   officeSettingsQueryKey,
   officeSettingsQueryOptions,
   updateOfficeSettingsAction,
 } from "@/queries/office-settings"
+
+export function useOfficeMetricsSettingsQuery() {
+  return useSuspenseQuery(officeMetricsSettingsQueryOptions())
+}
 
 export function useOfficeSettingsQuery() {
   return useSuspenseQuery(officeSettingsQueryOptions())
@@ -24,6 +30,10 @@ export function useOfficeSettingsMutation() {
     mutationFn: updateOfficeSettingsAction,
     onSuccess: (settings) => {
       queryClient.setQueryData(officeSettingsQueryKey, settings)
+      queryClient.setQueryData(officeMetricsSettingsQueryKey, {
+        id: settings.id,
+        fiscalYearStartMonth: settings.fiscalYearStartMonth,
+      })
     },
     onError: (error) => {
       toast({ variant: "error", title: error.message })

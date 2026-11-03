@@ -1,56 +1,56 @@
-"use client";
+"use client"
 
-import { LogEvents } from "@aqardesk/events/events";
-import { Button } from "@aqardesk/ui/button";
-import { Form, FormControl, FormField, FormItem } from "@aqardesk/ui/form";
-import { Input } from "@aqardesk/ui/input";
+import { LogEvents } from "@aqardesk/events/events"
+import { Button } from "@aqardesk/ui/button"
+import { Form, FormControl, FormField, FormItem } from "@aqardesk/ui/form"
+import { Input } from "@aqardesk/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@aqardesk/ui/select";
-import { SubmitButton } from "@aqardesk/ui/submit-button";
-import { useToast } from "@aqardesk/ui/use-toast";
-import { useOpenPanel } from "@openpanel/nextjs";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import Link from "next/link";
-import { useFieldArray } from "react-hook-form";
-import { z } from "zod/v3";
-import { useZodForm } from "@/hooks/use-zod-form";
-import { useTRPC } from "@/trpc/client";
+} from "@aqardesk/ui/select"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
+import { useToast } from "@aqardesk/ui/use-toast"
+import { useOpenPanel } from "@openpanel/nextjs"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import Link from "next/link"
+import { useFieldArray } from "react-hook-form"
+import { z } from "zod/v3"
+import { useZodForm } from "@/hooks/use-zod-form"
+import { useTRPC } from "@/trpc/client"
 
 const formSchema = z.object({
   invites: z.array(
     z.object({
       email: z.string().email(),
       role: z.enum(["owner", "member"]),
-    }),
+    })
   ),
-});
+})
 
 type InviteFormProps = {
-  onSuccess?: () => void;
-  skippable?: boolean;
-};
+  onSuccess?: () => void
+  skippable?: boolean
+}
 
 export function InviteForm({ onSuccess, skippable = true }: InviteFormProps) {
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-  const { toast } = useToast();
-  const { track } = useOpenPanel();
+  const trpc = useTRPC()
+  const queryClient = useQueryClient()
+  const { toast } = useToast()
+  const { track } = useOpenPanel()
 
   const inviteMutation = useMutation(
     trpc.team.invite.mutationOptions({
       onSuccess: (data) => {
         if (data.sent > 0) {
-          track(LogEvents.MemberInvited.name, { count: data.sent });
+          track(LogEvents.MemberInvited.name, { count: data.sent })
         }
 
         queryClient.invalidateQueries({
           queryKey: trpc.team.teamInvites.queryKey(),
-        });
+        })
 
         // Show appropriate feedback based on results
         if (data.sent > 0 && data.skipped === 0) {
@@ -58,23 +58,23 @@ export function InviteForm({ onSuccess, skippable = true }: InviteFormProps) {
             title: "Invites sent",
             description: `${data.sent} invite${data.sent > 1 ? "s" : ""} sent successfully`,
             variant: "success",
-          });
+          })
         } else if (data.sent > 0 && data.skipped > 0) {
           toast({
             title: "Invites partially sent",
             description: `${data.sent} invite${data.sent > 1 ? "s" : ""} sent, ${data.skipped} skipped (already members or invited)`,
-          });
+          })
         } else if (data.sent === 0 && data.skipped > 0) {
           toast({
             title: "No invites sent",
             description: `All ${data.skipped} invite${data.skipped > 1 ? "s" : ""} were skipped (already members or invited)`,
-          });
+          })
         }
 
-        onSuccess?.();
+        onSuccess?.()
       },
-    }),
-  );
+    })
+  )
 
   const form = useZodForm(formSchema, {
     defaultValues: {
@@ -85,24 +85,24 @@ export function InviteForm({ onSuccess, skippable = true }: InviteFormProps) {
         },
       ],
     },
-  });
+  })
 
   const onSubmit = form.handleSubmit((data) => {
-    inviteMutation.mutate(data.invites.filter((invite) => invite.email !== ""));
-  });
+    inviteMutation.mutate(data.invites.filter((invite) => invite.email !== ""))
+  })
 
   const { fields, append } = useFieldArray({
     name: "invites",
     control: form.control,
-  });
+  })
 
   return (
     <Form {...form}>
       <form onSubmit={onSubmit}>
         {fields.map((field, index) => (
           <div
-            className="flex items-center justify-between mt-3 gap-x-4"
-            key={index.toString()}
+            className="mt-3 flex items-center justify-between gap-x-4"
+            key={field.id}
           >
             <FormField
               control={form.control}
@@ -159,7 +159,7 @@ export function InviteForm({ onSuccess, skippable = true }: InviteFormProps) {
           Add more
         </Button>
 
-        <div className="border-t-[1px] pt-4 mt-8 items-center justify-between">
+        <div className="mt-8 flex flex-col items-start justify-between gap-3 border-t pt-4 sm:flex-row sm:items-center">
           <div>
             {Object.values(form.formState.errors).length > 0 && (
               <span className="text-sm text-destructive">
@@ -168,7 +168,7 @@ export function InviteForm({ onSuccess, skippable = true }: InviteFormProps) {
             )}
           </div>
 
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between gap-3">
             {skippable ? (
               <Link href="/">
                 <Button
@@ -193,5 +193,5 @@ export function InviteForm({ onSuccess, skippable = true }: InviteFormProps) {
         </div>
       </form>
     </Form>
-  );
+  )
 }

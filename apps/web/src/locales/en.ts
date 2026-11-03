@@ -235,6 +235,7 @@ export default {
   },
   navigation: {
     overview: "Overview",
+    reports: "Reports",
     general: "General",
     billing: "Billing",
     accounts: "Accounts",

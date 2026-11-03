@@ -21,7 +21,7 @@ export function MobileMenu() {
           <Icons.Menu size={16} />
         </Button>
       </div>
-      <SheetContent side="start" className="border-none rounded-none -ms-4">
+      <SheetContent side="start" panelClassName="border-none -ms-4">
         <div className="ms-2 mb-8">
           <Icons.LogoSmall />
         </div>

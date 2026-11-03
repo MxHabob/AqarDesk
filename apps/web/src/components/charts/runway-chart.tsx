@@ -119,7 +119,7 @@ export function RunwayChart({
                     ? "Listings"
                     : "Cash Remaining",
               type: "solid" as const,
-              color: "hsl(var(--foreground))",
+              color: "var(--foreground)",
             },
             ...(isSingleSeriesMode
               ? []
@@ -156,12 +156,12 @@ export function RunwayChart({
                 >
                   <stop
                     offset="0%"
-                    stopColor="hsl(var(--foreground))"
+                    stopColor="var(--foreground)"
                     stopOpacity={0.3}
                   />
                   <stop
                     offset="100%"
-                    stopColor="hsl(var(--foreground))"
+                    stopColor="var(--foreground)"
                     stopOpacity={0.05}
                   />
                 </linearGradient>
@@ -215,17 +215,17 @@ export function RunwayChart({
                 type="monotone"
                 dataKey="runwayMonths"
                 fill="url(#runwayMonthsGradient)"
-                stroke="hsl(var(--foreground))"
+                stroke="var(--foreground)"
                 strokeWidth={2}
                 dot={{
-                  fill: "hsl(var(--foreground))",
+                  fill: "var(--foreground)",
                   strokeWidth: 0,
                   r: 3,
                 }}
                 activeDot={{
                   r: 5,
-                  fill: "hsl(var(--foreground))",
-                  stroke: "hsl(var(--foreground))",
+                  fill: "var(--foreground)",
+                  stroke: "var(--foreground)",
                   strokeWidth: 2,
                 }}
                 isAnimationActive={false}

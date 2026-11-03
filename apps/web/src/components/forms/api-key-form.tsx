@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   SCOPES,
@@ -6,9 +6,9 @@ import {
   type ScopePreset,
   scopePresets,
   scopesToName,
-} from "@api/utils/scopes";
-import { LogEvents } from "@aqardesk/events/events";
-import { AnimatedSizeContainer } from "@aqardesk/ui/animated-size-container";
+} from "@api/utils/scopes"
+import { LogEvents } from "@aqardesk/events/events"
+import { AnimatedSizeContainer } from "@aqardesk/ui/animated-size-container"
 import {
   Form,
   FormControl,
@@ -16,19 +16,19 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@aqardesk/ui/form";
-import { Input } from "@aqardesk/ui/input";
-import { SubmitButton } from "@aqardesk/ui/submit-button";
-import { Tabs, TabsList, TabsTrigger } from "@aqardesk/ui/tabs";
-import { useOpenPanel } from "@openpanel/nextjs";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
-import { z } from "zod/v3";
-import { useZodForm } from "@/hooks/use-zod-form";
-import { useTokenModalStore } from "@/store/token-modal";
-import { useTRPC } from "@/trpc/client";
-import { RESOURCES } from "@/utils/scopes";
-import { ScopeSelector } from "../scope-selector";
+} from "@aqardesk/ui/form"
+import { Input } from "@aqardesk/ui/input"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
+import { Tabs, TabsList, TabsTrigger } from "@aqardesk/ui/tabs"
+import { useOpenPanel } from "@openpanel/nextjs"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { useEffect, useState } from "react"
+import { z } from "zod/v3"
+import { useZodForm } from "@/hooks/use-zod-form"
+import { useTokenModalStore } from "@/store/token-modal"
+import { useTRPC } from "@/trpc/client"
+import { RESOURCES } from "@/utils/scopes"
+import { ScopeSelector } from "../scope-selector"
 
 const formSchema = z.object({
   id: z.string().optional(),
@@ -36,37 +36,37 @@ const formSchema = z.object({
     message: "Team name must be at least 2 characters.",
   }),
   scopes: z.array(z.enum(SCOPES)).default(["apis.all"]),
-});
+})
 
 type Props = {
-  onSuccess: (key: string | null) => void;
-};
+  onSuccess: (key: string | null) => void
+}
 
 export function ApiKeyForm({ onSuccess }: Props) {
-  const { data } = useTokenModalStore();
+  const { data } = useTokenModalStore()
   const [preset, setPreset] = useState<ScopePreset>(() =>
     data?.scopes
       ? (scopesToName(data.scopes).preset as ScopePreset)
-      : "all_access",
-  );
+      : "all_access"
+  )
 
-  const trpc = useTRPC();
-  const queryClient = useQueryClient();
-  const { track } = useOpenPanel();
+  const trpc = useTRPC()
+  const queryClient = useQueryClient()
+  const { track } = useOpenPanel()
 
   const upsertApiKeyMutation = useMutation(
     trpc.apiKeys.upsert.mutationOptions({
       onSuccess: (result) => {
-        track(LogEvents.ApiKeyCreated.name);
+        track(LogEvents.ApiKeyCreated.name)
 
         queryClient.invalidateQueries({
           queryKey: trpc.apiKeys.get.queryKey(),
-        });
+        })
 
-        onSuccess(result.key);
+        onSuccess(result.key)
       },
-    }),
-  );
+    })
+  )
 
   const form = useZodForm(formSchema, {
     defaultValues: {
@@ -74,82 +74,82 @@ export function ApiKeyForm({ onSuccess }: Props) {
       name: data?.name ?? "",
       scopes: (data?.scopes as Scope[]) ?? ["apis.all"],
     },
-  });
+  })
 
   // Effect to ensure proper initialization when editing existing API key
   useEffect(() => {
     if (data?.scopes) {
-      const detectedPreset = scopesToName(data.scopes).preset as ScopePreset;
-      setPreset(detectedPreset);
+      const detectedPreset = scopesToName(data.scopes).preset as ScopePreset
+      setPreset(detectedPreset)
 
       // If it's restricted, make sure the form has the correct scopes
       if (detectedPreset === "restricted") {
-        form.setValue("scopes", data.scopes as Scope[], { shouldDirty: true });
+        form.setValue("scopes", data.scopes as Scope[], { shouldDirty: true })
       }
     }
-  }, [data?.scopes, form]);
+  }, [data?.scopes, form])
 
   // Update form scopes based on preset
   const updateScopesFromPreset = (newPreset: ScopePreset) => {
-    let newScopes: Scope[] = [];
+    let newScopes: Scope[] = []
 
     switch (newPreset) {
       case "all_access":
-        newScopes = ["apis.all"];
-        break;
+        newScopes = ["apis.all"]
+        break
       case "read_only":
-        newScopes = ["apis.read"];
-        break;
+        newScopes = ["apis.read"]
+        break
       case "restricted": {
         // Keep existing scopes when switching to restricted mode
-        const currentScopes = form.getValues("scopes");
+        const currentScopes = form.getValues("scopes")
         // Get all valid scopes from RESOURCES
         const validScopes = RESOURCES.flatMap((resource) =>
-          resource.scopes.map((scope) => scope.scope),
-        );
+          resource.scopes.map((scope) => scope.scope)
+        )
         // Only keep scopes that are defined in RESOURCES
         newScopes = currentScopes.filter((scope): scope is Scope =>
-          validScopes.some((validScope) => validScope === scope),
-        );
-        break;
+          validScopes.some((validScope) => validScope === scope)
+        )
+        break
       }
     }
 
-    form.setValue("scopes", newScopes, { shouldDirty: true });
-  };
+    form.setValue("scopes", newScopes, { shouldDirty: true })
+  }
 
   const handlePresetChange = (value: string) => {
-    const scopePreset = value as ScopePreset;
-    setPreset(scopePreset);
-    updateScopesFromPreset(scopePreset);
-  };
+    const scopePreset = value as ScopePreset
+    setPreset(scopePreset)
+    updateScopesFromPreset(scopePreset)
+  }
 
   const handleResourceScopeChange = (resourceKey: string, scope: string) => {
-    if (preset !== "restricted") return;
+    if (preset !== "restricted") return
 
-    const currentScopes = form.getValues("scopes");
-    const resource = RESOURCES.find((r) => r.key === resourceKey);
-    if (!resource) return;
+    const currentScopes = form.getValues("scopes")
+    const resource = RESOURCES.find((r) => r.key === resourceKey)
+    if (!resource) return
 
     // Remove any existing scopes for this resource
     const filteredScopes = currentScopes.filter(
-      (currentScope) => !resource.scopes.some((s) => s.scope === currentScope),
-    );
+      (currentScope) => !resource.scopes.some((s) => s.scope === currentScope)
+    )
 
     // Add the new scope if it's not empty
     const newScopes = scope
       ? [...filteredScopes, scope as Scope]
-      : filteredScopes;
+      : filteredScopes
 
-    form.setValue("scopes", newScopes, { shouldDirty: true });
-  };
+    form.setValue("scopes", newScopes, { shouldDirty: true })
+  }
 
   function onSubmit(values: z.infer<typeof formSchema>) {
     upsertApiKeyMutation.mutate({
       id: values.id,
       name: values.name,
       scopes: values.scopes,
-    });
+    })
   }
 
   return (
@@ -225,5 +225,5 @@ export function ApiKeyForm({ onSuccess }: Props) {
         </SubmitButton>
       </form>
     </Form>
-  );
+  )
 }

@@ -1,5 +1,6 @@
 "use client"
 
+import { Input } from "@aqardesk/ui/components/input"
 import { useEffect, useState, useTransition } from "react"
 import {
   deleteListingMediaAction,
@@ -162,14 +163,20 @@ export function ListingMediaForm({
             name="altText"
             placeholder="وصف يظهر مع الصورة"
           />
-          <label className="flex flex-col gap-2 text-xs text-muted-foreground">
+          <label
+            htmlFor={`listing-media-file-${listingId}`}
+            className="flex flex-col gap-2 text-sm font-medium"
+          >
             الملف
-            <input
+            <Input
               id={`listing-media-file-${listingId}`}
               type="file"
               accept="image/avif,image/heic,image/jpeg,image/png,image/webp,application/pdf,video/mp4,video/quicktime"
               onChange={(event) => setFile(event.target.files?.[0] ?? null)}
             />
+            <span className="text-xs font-normal text-muted-foreground">
+              اختر صورة أو مخططًا أو فيديو أو مستندًا لهذا الإعلان.
+            </span>
           </label>
           {file && (
             <p className="text-xs text-muted-foreground">

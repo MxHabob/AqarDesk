@@ -9,7 +9,7 @@ import { SearchFooter } from "./search-footer"
 export function SearchModal() {
   const { isOpen, setOpen } = useSearchStore()
 
-  useHotkeys("meta+k, ctrl+k", setOpen, {
+  useHotkeys("meta+k, ctrl+k", () => setOpen(), {
     enableOnFormTags: true,
   })
 

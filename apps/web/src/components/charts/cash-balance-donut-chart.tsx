@@ -36,7 +36,7 @@ const donutTooltipFormatter = ({ active, payload, currency, locale }: any) => {
 }
 
 export const grayShades = [
-  "hsl(var(--foreground))",
+  "var(--foreground)",
   "#707070",
   "#A0A0A0",
   "#606060",
@@ -90,7 +90,7 @@ export function CashBalanceDonutChart({
               cy="50%"
               innerRadius={80}
               outerRadius={120}
-              fill="hsl(var(--foreground))"
+              fill="var(--foreground)"
               dataKey="value"
               paddingAngle={1}
               stroke="none"

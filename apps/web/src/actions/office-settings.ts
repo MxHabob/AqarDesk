@@ -42,6 +42,12 @@ export async function getOfficeSettingsAction() {
   return getOfficeSettings()
 }
 
+export async function getOfficeMetricsSettingsAction() {
+  await getActor()
+  const { id, fiscalYearStartMonth } = await getOfficeSettings()
+  return { id, fiscalYearStartMonth }
+}
+
 export async function updateOfficeSettingsAction(input: unknown) {
   const values = officeSettingsSchema.parse(input)
   const actor = await getActor()
