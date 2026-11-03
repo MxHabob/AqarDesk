@@ -73,6 +73,7 @@ export function CompanyFiscalYear() {
 
           <CardFooter className="flex justify-end">
             <SubmitButton
+              type="submit"
               disabled={updateTeamMutation.isPending || !form.formState.isDirty}
               isSubmitting={updateTeamMutation.isPending}
             >

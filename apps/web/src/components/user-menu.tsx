@@ -31,25 +31,26 @@ export function UserMenu({ onlySignOut }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
-        render={
-          <Avatar className="rounded-full w-8 h-8 cursor-pointer bg-accent">
-            {avatarUrl && (
-              <AvatarImageNext
-                src={avatarUrl}
-                alt={user?.fullName ?? ""}
-                width={32}
-                height={32}
-                quality={100}
-              />
-            )}
-            <AvatarFallback>
-              <span className="text-xs">
-                {user?.fullName?.charAt(0).toUpperCase()}
-              </span>
-            </AvatarFallback>
-          </Avatar>
-        }
-      />
+        aria-label="Open user menu"
+        className="flex rounded-full border-0 bg-transparent p-0 outline-none focus-visible:ring-2 focus-visible:ring-ring"
+      >
+        <Avatar className="rounded-full w-8 h-8 cursor-pointer bg-accent">
+          {avatarUrl && (
+            <AvatarImageNext
+              src={avatarUrl}
+              alt={user?.fullName ?? ""}
+              width={32}
+              height={32}
+              quality={100}
+            />
+          )}
+          <AvatarFallback>
+            <span className="text-xs">
+              {user?.fullName?.charAt(0).toUpperCase()}
+            </span>
+          </AvatarFallback>
+        </Avatar>
+      </DropdownMenuTrigger>
       <DropdownMenuContent className="w-[240px]" sideOffset={10} align="end">
         {!onlySignOut && (
           <>

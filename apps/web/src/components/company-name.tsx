@@ -80,6 +80,7 @@ export function CompanyName() {
           <CardFooter className="flex justify-between">
             <div>Please use 32 characters at maximum.</div>
             <SubmitButton
+              type="submit"
               isSubmitting={updateTeamMutation.isPending}
               disabled={updateTeamMutation.isPending}
             >

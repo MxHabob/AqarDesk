@@ -76,6 +76,7 @@ export function CompanyCountry() {
 
           <CardFooter className="flex justify-end">
             <SubmitButton
+              type="submit"
               isSubmitting={updateTeamMutation.isPending}
               disabled={updateTeamMutation.isPending}
             >
