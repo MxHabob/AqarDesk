@@ -1,4 +1,4 @@
-import { createPageMetadata } from "@/website/lib/metadata";
+import { createPageMetadata } from "@/lib/metadata";
 
 export const metadata = createPageMetadata({
   title: "About",

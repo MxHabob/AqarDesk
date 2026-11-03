@@ -39,7 +39,7 @@ export const isGoogleAuthConfigured = Boolean(
   googleClientId && googleClientSecret
 )
 
-const authOptions = {
+const authOptions: BetterAuthOptions = {
   appName: "AqarDesk",
   baseURL,
   secret,
@@ -55,7 +55,8 @@ const authOptions = {
   }),
   emailAndPassword: {
     enabled: true,
-    disableSignUp: true,
+    disableSignUp: false,
+    minPasswordLength: 8,
   },
   socialProviders,
   plugins: [
@@ -90,6 +91,6 @@ const authOptions = {
       },
     },
   },
-} satisfies BetterAuthOptions
+}
 
 export const auth: Auth<typeof authOptions> = betterAuth(authOptions)

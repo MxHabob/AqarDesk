@@ -1,7 +1,5 @@
 "use client";
 
-import { track } from "@aqardesk/events/client";
-import { LogEvents } from "@aqardesk/events/events";
 import Link from "next/link";
 
 export function TimeSavingsSection() {
@@ -109,15 +107,7 @@ export function TimeSavingsSection() {
             </article>
 
             <a
-              href="https://app.midday.ai/"
-              onClick={() =>
-                track({
-                  event: LogEvents.CTA.name,
-                  channel: LogEvents.CTA.channel,
-                  label: "Time savings",
-                  position: "time_savings",
-                })
-              }
+              href="/login"
               className="relative overflow-hidden bg-secondary border border-border p-4 sm:p-5 md:p-5 lg:p-6 transition-all duration-200 group hidden xl:block xl:col-span-7 hover:border-muted-foreground touch-manipulation"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
@@ -160,15 +150,7 @@ export function TimeSavingsSection() {
 
           <div className="grid grid-cols-1 gap-3 sm:gap-4 xl:hidden">
             <a
-              href="https://app.midday.ai/"
-              onClick={() =>
-                track({
-                  event: LogEvents.CTA.name,
-                  channel: LogEvents.CTA.channel,
-                  label: "Time savings",
-                  position: "time_savings",
-                })
-              }
+              href="/login"
               className="relative overflow-hidden bg-secondary border border-border p-4 sm:p-5 md:p-5 lg:p-6 transition-all duration-200 hover:border-muted-foreground touch-manipulation"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >

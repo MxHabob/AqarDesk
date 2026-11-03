@@ -1,21 +1,21 @@
-import { createClient } from "@aqardesk/supabase/server";
-import { redirect } from "next/navigation";
-import { isBlockedNewUser } from "@/utils/new-user-gate";
+import { auth } from "@aqardesk/auth/server"
+import { headers } from "next/headers"
+import { redirect } from "next/navigation"
+import type { ReactNode } from "react"
 
 export default async function AppLayout({
   children,
+  params,
 }: {
-  children: React.ReactNode;
+  children: ReactNode
+  params: Promise<{ locale: string }>
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user: authUser },
-  } = await supabase.auth.getUser();
+  const { locale } = await params
+  const session = await auth.api.getSession({ headers: await headers() })
 
-  if (authUser && isBlockedNewUser(authUser.created_at)) {
-    await supabase.auth.signOut();
-    redirect("/login?waitlist=1");
+  if (!session) {
+    redirect(`/${locale}/login`)
   }
 
-  return children;
+  return children
 }

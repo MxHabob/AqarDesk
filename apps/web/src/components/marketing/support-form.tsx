@@ -24,8 +24,8 @@ import { Loader2 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";
 import { useForm } from "react-hook-form";
 import type { z } from "zod";
-import { sendSupportSchema } from "@/website/actions/schema";
-import { sendSupportAction } from "@/website/actions/send-support-action";
+import { sendSupportSchema } from "@/actions/support/schema";
+import { sendSupportAction } from "@/actions/support/send-support-action";
 
 export function SupportForm() {
   const { toast } = useToast();

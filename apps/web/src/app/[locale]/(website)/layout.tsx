@@ -1,57 +1,31 @@
-import "@/website/styles/globals.css"
+import "@/styles/marketing.css"
 import type { Metadata } from "next"
 import type { ReactNode } from "react"
-import { Footer } from "@/website/components/footer"
-import { Header } from "@/website/components/header"
-import { SunsetBanner } from "@/website/components/sunset-banner"
+import { Footer } from "@/components/marketing/footer"
+import { Header } from "@/components/marketing/header"
+import { SunsetBanner } from "@/components/sunset-banner"
 
 const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
 
 export const metadata: Metadata = {
   metadataBase: new URL(baseUrl),
   title: {
-    default: "AqarDesk — The business stack for modern founders",
+    default: "AqarDesk — Real Estate Management",
     template: "%s | AqarDesk",
   },
   description:
-    "Invoicing, automatic reconciliation, time tracking, documents, and financial exports in one place. The business stack that replaces the tools you've outgrown.",
+    "Manage real estate properties, listings, and owners with AqarDesk.",
   openGraph: {
-    title: "AqarDesk — The business stack for modern founders",
-    description:
-      "Invoicing, automatic reconciliation, time tracking, documents, and financial exports in one place. The business stack that replaces the tools you've outgrown.",
+    title: "AqarDesk — Real Estate Management",
+    description: "Manage real estate properties, listings, and owners with AqarDesk.",
     url: baseUrl,
     siteName: "AqarDesk",
     locale: "en_US",
     type: "website",
-    images: [
-      {
-        url: "https://cdn.midday.ai/opengraph-image-v1.jpg",
-        width: 800,
-        height: 600,
-      },
-      {
-        url: "https://cdn.midday.ai/opengraph-image-v1.jpg",
-        width: 1800,
-        height: 1600,
-      },
-    ],
   },
   twitter: {
-    title: "AqarDesk — The business stack for modern founders",
-    description:
-      "Invoicing, automatic reconciliation, time tracking, documents, and financial exports in one place. The business stack that replaces the tools you've outgrown.",
-    images: [
-      {
-        url: "https://cdn.midday.ai/opengraph-image-v1.jpg",
-        width: 800,
-        height: 600,
-      },
-      {
-        url: "https://cdn.midday.ai/opengraph-image-v1.jpg",
-        width: 1800,
-        height: 1600,
-      },
-    ],
+    title: "AqarDesk — Real Estate Management",
+    description: "Manage real estate properties, listings, and owners with AqarDesk.",
   },
   robots: {
     index: true,
@@ -70,15 +44,9 @@ const jsonLd = {
   "@context": "https://schema.org",
   "@type": "Organization",
   name: "AqarDesk",
-  url: "https://midday.ai",
-  logo: "https://cdn.midday.ai/logo.png",
-  sameAs: [
-    "https://x.com/middayai",
-    "https://github.com/midday-ai/midday",
-    "https://linkedin.com/company/midday-ai",
-  ],
+  url: baseUrl,
   description:
-    "Invoicing, automatic reconciliation, time tracking, documents, and financial exports in one place. The business stack that replaces the tools you've outgrown.",
+    "Manage real estate properties, listings, and owners with AqarDesk.",
 }
 
 export default function Layout({
@@ -87,7 +55,7 @@ export default function Layout({
   children: ReactNode
 }) {
   return (
-    <div className="bg-background overflow-x-hidden font-sans antialiased">
+    <div className="bg-background overflow-x-clip font-sans antialiased">
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{

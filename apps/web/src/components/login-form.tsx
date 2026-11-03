@@ -14,6 +14,8 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
   const t = useI18n()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
+  const [name, setName] = useState("")
+  const [isSigningUp, setIsSigningUp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(false)
 
@@ -23,18 +25,29 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
     setIsLoading(true)
 
     try {
-      const { error: signInError } = await authClient.signIn.email({
-        email,
-        password,
-        callbackURL: `/${locale}/login/callback`,
-      })
+      const callbackURL = `/${locale}/login/callback`
+      const result = isSigningUp
+        ? await authClient.signUp.email({
+            name,
+            email,
+            password,
+            callbackURL,
+          })
+        : await authClient.signIn.email({ email, password, callbackURL })
 
-      if (signInError) {
+      if (result.error) {
         setError(true)
         return
       }
 
-      router.replace(`/${locale}/login/callback`)
+      if (
+        "twoFactorRedirect" in result.data &&
+        result.data.twoFactorRedirect
+      ) {
+        return
+      }
+
+      router.replace(callbackURL)
     } catch {
       setError(true)
     } finally {
@@ -45,6 +58,21 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
   return (
     <div className="w-full space-y-6">
       <form className="space-y-4" onSubmit={handleSubmit}>
+        {isSigningUp && (
+          <div className="space-y-2">
+            <label htmlFor="name" className="text-sm font-medium">
+              {t("auth.name")}
+            </label>
+            <Input
+              id="name"
+              autoComplete="name"
+              required
+              value={name}
+              onChange={(event) => setName(event.target.value)}
+              disabled={isLoading}
+            />
+          </div>
+        )}
         <div className="space-y-2">
           <label htmlFor="email" className="text-sm font-medium">
             {t("auth.email")}
@@ -67,6 +95,7 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
             id="password"
             autoComplete="current-password"
             type="password"
+            minLength={isSigningUp ? 8 : undefined}
             required
             value={password}
             onChange={(event) => setPassword(event.target.value)}
@@ -75,13 +104,34 @@ export function LoginForm({ googleEnabled }: { googleEnabled: boolean }) {
         </div>
         {error && (
           <p role="alert" className="text-sm text-destructive">
-            {t("auth.loginError")}
+            {isSigningUp ? t("auth.registerError") : t("auth.loginError")}
           </p>
         )}
         <Button type="submit" className="w-full" disabled={isLoading}>
-          {isLoading ? t("auth.loggingIn") : t("auth.login")}
+          {isLoading
+            ? isSigningUp
+              ? t("auth.registering")
+              : t("auth.loggingIn")
+            : isSigningUp
+              ? t("auth.register")
+              : t("auth.login")}
         </Button>
       </form>
+
+      <p className="text-center text-sm text-muted-foreground">
+        {isSigningUp ? t("auth.haveAccount") : t("auth.noAccount")}{" "}
+        <button
+          type="button"
+          className="text-foreground underline underline-offset-4"
+          onClick={() => {
+            setError(false)
+            setIsSigningUp((current) => !current)
+          }}
+          disabled={isLoading}
+        >
+          {isSigningUp ? t("auth.signIn") : t("auth.signUp")}
+        </button>
+      </p>
 
       {googleEnabled && (
         <>

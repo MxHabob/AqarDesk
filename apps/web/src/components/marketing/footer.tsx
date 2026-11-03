@@ -82,16 +82,6 @@ export function Footer() {
                 {[
                   { href: "/story", label: "Story", external: false },
                   { href: "/updates", label: "Updates", external: false },
-                  {
-                    href: "https://x.com/middayai",
-                    label: "X / Twitter",
-                    external: true,
-                  },
-                  {
-                    href: "https://www.linkedin.com/company/midday-ai",
-                    label: "LinkedIn",
-                    external: true,
-                  },
                 ].map((item) => (
                   <Link
                     key={item.href}
@@ -117,11 +107,6 @@ export function Footer() {
                   { href: "/docs", label: "Documentation", external: false },
                   { href: "/agents", label: "CLI", external: false },
                   { href: "/computer", label: "Computer", external: false },
-                  {
-                    href: "https://api.midday.ai",
-                    label: "API",
-                    external: true,
-                  },
                   { href: "/sdks", label: "SDKs", external: false },
                   { href: "/support", label: "Support", external: false },
                   {
@@ -229,32 +214,13 @@ export function Footer() {
 
         {/* Bottom Section */}
         <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
-          <Link
-            href="https://midday.openstatus.dev/"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hidden md:flex items-center gap-2 hover:opacity-80 transition-opacity"
-          >
+          <div className="hidden md:flex items-center gap-2">
             <span className="font-sans text-sm text-muted-foreground">
-              System status:
+              AqarDesk
             </span>
-            <span className="font-sans text-sm text-foreground">
-              Operational
-            </span>
-            <div className="relative flex items-center justify-center">
-              <div className="w-2 h-2 bg-green-500 rounded-full relative z-10" />
-              <div
-                className="absolute w-2 h-2 bg-green-500 rounded-full"
-                style={{
-                  animation:
-                    "pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-                  willChange: "transform, opacity, box-shadow",
-                }}
-              />
-            </div>
-          </Link>
+          </div>
           <p className="font-sans text-sm text-muted-foreground">
-            © {new Date().getFullYear()} Midday Labs AB. All rights reserved.
+            © {new Date().getFullYear()} AqarDesk. All rights reserved.
           </p>
         </div>
       </div>
@@ -273,7 +239,7 @@ export function Footer() {
             color: "hsl(var(--secondary))",
           }}
         >
-          midday
+          AqarDesk
         </h1>
       </div>
     </footer>

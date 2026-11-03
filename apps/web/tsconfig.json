@@ -5,7 +5,12 @@
     "declarationMap": false,
     "paths": {
       "@/*": ["./src/*"],
-      "@aqardesk/ui/*": ["../../packages/ui/src/*"]
+      "@aqardesk/ui/cn": ["../../packages/ui/src/lib/utils.ts"],
+      "@aqardesk/ui/globals.css": ["../../packages/ui/src/styles/globals.css"],
+      "@aqardesk/ui/components/*": ["../../packages/ui/src/components/*"],
+      "@aqardesk/ui/hooks/*": ["../../packages/ui/src/hooks/*"],
+      "@aqardesk/ui/lib/*": ["../../packages/ui/src/lib/*"],
+      "@aqardesk/ui/*": ["../../packages/ui/src/components/*"]
     },
     "plugins": [
       {

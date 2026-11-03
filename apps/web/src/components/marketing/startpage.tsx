@@ -1,30 +1,12 @@
 "use client";
 
-import { track } from "@aqardesk/events/client";
-import { LogEvents } from "@aqardesk/events/events";
 import { Button } from "@aqardesk/ui/button";
 import { Icons } from "@aqardesk/ui/icons";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 
-// Dynamic imports for animations (5,500+ lines - loaded after hero)
-const InboxMatchAnimation = dynamic(() =>
-  import("@aqardesk/ui/animations/inbox-match").then(
-    (m) => m.InboxMatchAnimation,
-  ),
-);
-const InvoicePaymentAnimation = dynamic(() =>
-  import("@aqardesk/ui/animations/invoice-payment").then(
-    (m) => m.InvoicePaymentAnimation,
-  ),
-);
-const TransactionFlowAnimation = dynamic(() =>
-  import("@aqardesk/ui/animations/transaction-flow").then(
-    (m) => m.TransactionFlowAnimation,
-  ),
-);
+
 
 // Dynamic imports for below-the-fold sections (still SSR for SEO)
 const FeaturesGridSection = dynamic(() =>
@@ -45,10 +27,6 @@ const TestimonialsSection = dynamic(
     ),
   { ssr: false }, // MorphingDialog generates dynamic IDs that cause hydration mismatch
 );
-const IntegrationsSection = dynamic(() =>
-  import("./sections/integrations-section").then((m) => m.IntegrationsSection),
-);
-
 // Static features data - moved outside component to avoid recreation on each render
 const features = [
   {
@@ -56,7 +34,6 @@ const features = [
     subtitle:
       "Every payment in and out of the business is automatically synced from your connected accounts.",
     mobileSubtitle: "Every payment in and out is pulled in automatically.",
-    illustration: "animation",
   },
   {
     title: "Invoices get paid",
@@ -64,15 +41,6 @@ const features = [
       "Customers can pay invoices online, with payments tracked automatically.",
     mobileSubtitle:
       "Customers can pay invoices online with payments tracked automatically.",
-    illustration: "animation",
-  },
-  {
-    title: "Automatic reconciliation",
-    subtitle:
-      "Payments, receipts, and transactions are automatically matched so records stay accurate.",
-    mobileSubtitle:
-      "Transactions are categorized and reconciled automatically.",
-    illustration: "animation",
   },
 ];
 
@@ -265,14 +233,6 @@ export function StartPage() {
           <div className="flex-1 lg:flex-none flex flex-col justify-center md:justify-start md:pt-16 lg:pt-48 items-center space-y-8 lg:space-y-0 z-20 px-3 sm:px-4 lg:px-0 lg:max-w-[1400px] lg:mx-auto lg:w-full lg:mb-12 xl:mb-12 2xl:mb-12 3xl:mb-16">
             <div className="flex flex-col items-center w-full text-center space-y-6 lg:space-y-8">
               <div className="space-y-5 lg:space-y-6 max-w-3xl 3xl:max-w-5xl mx-auto px-2 lg:px-0">
-                <Link
-                  href="/updates/joining-ramp"
-                  className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-border text-xs font-sans text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
-                >
-                  AqarDesk is joining Ramp
-                  <span aria-hidden="true">&rarr;</span>
-                </Link>
-
                 <h1 className="font-serif text-3xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl 2xl:text-7xl 3xl:text-8xl leading-[1.1] tracking-tight text-foreground">
                   The business stack for{" "}
                   <em className="not-italic text-muted-foreground/80">
@@ -294,15 +254,7 @@ export function StartPage() {
                   className="btn-inverse h-11 px-6 transition-colors"
                 >
                   <a
-                    href="https://app.midday.ai/"
-                    onClick={() =>
-                      track({
-                        event: LogEvents.CTA.name,
-                        channel: LogEvents.CTA.channel,
-                        label: "Start your trial",
-                        position: "hero",
-                      })
-                    }
+                    href="/login"
                   >
                     <span className="text-inherit text-sm">
                       Start your trial
@@ -728,22 +680,7 @@ export function StartPage() {
                 <div className="w-full border border-border overflow-hidden p-1 sm:p-3 relative">
                   <div className="w-full h-[520px] sm:h-[620px] relative overflow-hidden flex items-center justify-center z-10">
                     <div className="w-full h-full origin-center scale-[0.85] sm:scale-[0.90] lg:scale-[0.95]">
-                      {index === 0 ? (
-                        <TransactionFlowAnimation onComplete={undefined} />
-                      ) : index === 1 ? (
-                        <InvoicePaymentAnimation onComplete={undefined} />
-                      ) : index === 2 ? (
-                        <InboxMatchAnimation onComplete={undefined} />
-                      ) : (
-                        <Image
-                          src={feature.illustration}
-                          alt={feature.title}
-                          width={600}
-                          height={450}
-                          className="w-full h-full object-contain"
-                          loading="lazy"
-                        />
-                      )}
+
                     </div>
                   </div>
                 </div>
@@ -845,34 +782,19 @@ export function StartPage() {
                 style={{ transformOrigin: "center" }}
               >
                 <div className="w-full h-full origin-center scale-[0.85] sm:scale-[0.90] lg:scale-[0.95]">
-                  {activeFeature === 0 ? (
+                  {/* {activeFeature === 0 ? (
                     <TransactionFlowAnimation
                       onComplete={() =>
                         setActiveFeature((prev) => (prev + 1) % features.length)
                       }
                     />
-                  ) : activeFeature === 1 ? (
+                  ) : (
                     <InvoicePaymentAnimation
                       onComplete={() =>
                         setActiveFeature((prev) => (prev + 1) % features.length)
                       }
                     />
-                  ) : activeFeature === 2 ? (
-                    <InboxMatchAnimation
-                      onComplete={() =>
-                        setActiveFeature((prev) => (prev + 1) % features.length)
-                      }
-                    />
-                  ) : (
-                    <Image
-                      src={features[activeFeature]?.illustration ?? ""}
-                      alt={features[activeFeature]?.title ?? "Feature"}
-                      width={600}
-                      height={450}
-                      className="w-full h-full object-contain"
-                      loading="lazy"
-                    />
-                  )}
+                  )} */}
                 </div>
               </div>
             </div>
@@ -917,8 +839,6 @@ export function StartPage() {
         <div className="h-px w-full border-t border-border" />
       </div>
 
-      {/* Integrations Section */}
-      <IntegrationsSection />
     </div>
   );
 }

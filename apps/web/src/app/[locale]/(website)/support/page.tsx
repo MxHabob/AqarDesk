@@ -1,5 +1,5 @@
-import { SupportForm } from "@/website/components/support-form";
-import { createPageMetadata } from "@/website/lib/metadata";
+import { SupportForm } from "@/components/marketing/support-form";
+import { createPageMetadata } from "@/lib/metadata";
 
 export const metadata = createPageMetadata({
   title: "Support",

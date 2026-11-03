@@ -1,7 +1,5 @@
 "use client";
 
-import { track } from "@aqardesk/events/client";
-import { LogEvents } from "@aqardesk/events/events";
 import { cn } from "@aqardesk/ui/cn";
 import { Icons } from "@aqardesk/ui/icons";
 import { motion } from "motion/react";
@@ -127,6 +125,8 @@ export function Header({
   const featuresPrefetched = useRef(false);
   const appsPrefetched = useRef(false);
   const [currentTestimonialIndex, setCurrentTestimonialIndex] = useState(0);
+  const dropdownTop = headerRef.current?.getBoundingClientRect().bottom ?? 72;
+  const dropdownOffset = headerRef.current?.getBoundingClientRect().height ?? 72;
 
   // Prefetch feature pages on hover (only once)
   const prefetchFeatures = useCallback(() => {
@@ -244,11 +244,11 @@ export function Header({
             ? "opacity-100 visible bg-black/40"
             : "opacity-0 invisible pointer-events-none"
         }`}
-        style={{ top: "108px" }}
+        style={{ top: dropdownTop }}
       />
 
       {/* Navigation Bar */}
-      <nav className="fixed top-9 left-0 right-0 z-50 w-full">
+      <nav className="sticky top-0 left-0 right-0 z-50 w-full">
         <div
           ref={headerRef}
           className={cn(
@@ -272,7 +272,7 @@ export function Header({
               <Icons.LogoSmall className="w-full h-full text-foreground" />
             </div>
             <span className="font-sans text-base xl:hidden text-foreground">
-              midday
+              AqarDesk
             </span>
           </Link>
 
@@ -320,8 +320,8 @@ export function Header({
                 {isFeaturesOpen && (
                   <div
                     data-features-dropdown
-                    className="fixed left-0 right-0 bg-background border-t border-b border-border shadow-lg z-50 overflow-hidden opacity-0 animate-dropdown-fade"
-                    style={{ top: "100%" }}
+                    className="fixed left-0 right-0 bg-background border-t border-b border-border shadow-lg z-50 overflow-hidden"
+                    style={{ top: dropdownOffset }}
                   >
                     <div className="p-6 xl:p-8 2xl:p-10">
                       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 items-start">
@@ -354,12 +354,8 @@ export function Header({
                                   title: "Time tracking",
                                   desc: "See where time goes",
                                 },
-                              ].map((item, index) => (
-                                <div
-                                  key={item.href}
-                                  className="opacity-0 animate-dropdown-slide"
-                                  style={{ animationDelay: `${index * 30}ms` }}
-                                >
+                              ].map((item) => (
+                                <div key={item.href}>
                                   <Link
                                     href={item.href}
                                     className="flex items-center py-3 group hover:bg-secondary transition-colors duration-200"
@@ -400,14 +396,8 @@ export function Header({
                                   title: "Assistant",
                                   desc: "Ask anything, get things done",
                                 },
-                              ].map((item, index) => (
-                                <div
-                                  key={item.href}
-                                  className="opacity-0 animate-dropdown-slide"
-                                  style={{
-                                    animationDelay: `${(index + 4) * 30}ms`,
-                                  }}
-                                >
+                              ].map((item) => (
+                                <div key={item.href}>
                                   <Link
                                     href={item.href}
                                     className="flex items-center py-3 group hover:bg-secondary transition-colors duration-200"
@@ -611,9 +601,9 @@ export function Header({
                 {/* Resources Dropdown - Full Width */}
                 {isAppsOpen && (
                   <div
-                    className="fixed left-0 right-0 bg-background border-t border-b border-border shadow-lg z-50 overflow-hidden opacity-0 animate-dropdown-fade"
+                    className="fixed left-0 right-0 bg-background border-t border-b border-border shadow-lg z-50 overflow-hidden"
                     style={{
-                      top: "100%",
+                      top: dropdownOffset,
                       height:
                         featuresDropdownHeight !== null
                           ? `${featuresDropdownHeight}px`
@@ -655,12 +645,8 @@ export function Header({
                                   desc: "Connect AI tools to your business data.",
                                   external: false,
                                 },
-                              ].map((item, index) => (
-                                <div
-                                  key={item.href}
-                                  className="opacity-0 animate-dropdown-slide"
-                                  style={{ animationDelay: `${index * 30}ms` }}
-                                >
+                              ].map((item) => (
+                                <div key={item.href}>
                                   <Link
                                     href={item.href}
                                     className="flex items-center py-3 group hover:bg-secondary transition-colors duration-200"
@@ -682,10 +668,10 @@ export function Header({
                             <div>
                               {[
                                 {
-                                  href: "https://api.midday.ai",
+                                  href: "/dashboard/settings/developer",
                                   title: "Developer & API",
                                   desc: "Programmatic access to AqarDesk.",
-                                  external: true,
+                                  external: false,
                                 },
                                 {
                                   href: "/sdks",
@@ -705,14 +691,8 @@ export function Header({
                                   desc: "Autonomous agents for your business.",
                                   external: false,
                                 },
-                              ].map((item, index) => (
-                                <div
-                                  key={`${item.href}-${item.title}`}
-                                  className="opacity-0 animate-dropdown-slide"
-                                  style={{
-                                    animationDelay: `${(index + 2) * 30}ms`,
-                                  }}
-                                >
+                              ].map((item) => (
+                                <div key={`${item.href}-${item.title}`}>
                                   {item.external ? (
                                     <a
                                       href={item.href}
@@ -832,16 +812,8 @@ export function Header({
               {/* Sign in */}
               <div className="border-l border-border pl-4">
                 <Link
-                  href="https://app.midday.ai/"
+                  href="/login"
                   className="text-sm transition-colors text-primary hover:text-primary/80"
-                  onClick={() =>
-                    track({
-                      event: LogEvents.CTA.name,
-                      channel: LogEvents.CTA.channel,
-                      label: "Sign in",
-                      position: "header",
-                    })
-                  }
                 >
                   Sign in
                 </Link>
@@ -1075,7 +1047,7 @@ export function Header({
                           AI Integrations
                         </Link>
                         <a
-                          href="https://api.midday.ai"
+                          href="/dashboard/settings/developer"
                           onClick={() => {
                             setIsMenuOpen(false);
                             setIsMobileAppsOpen(false);
@@ -1116,7 +1088,7 @@ export function Header({
               {/* Sign in */}
               <div className="border-t border-border pt-8 mt-8">
                 <Link
-                  href="https://app.midday.ai/"
+                  href="/login"
                   onTouchEnd={(e) => {
                     const target = e.currentTarget;
                     if (target) {
@@ -1131,12 +1103,6 @@ export function Header({
                   className="text-2xl font-sans transition-colors py-2 text-primary hover:text-primary xl:active:text-primary focus:outline-none focus-visible:outline-none touch-manipulation"
                   onClick={() => {
                     setIsMenuOpen(false);
-                    track({
-                      event: LogEvents.CTA.name,
-                      channel: LogEvents.CTA.channel,
-                      label: "Sign in",
-                      position: "header_mobile",
-                    });
                   }}
                   style={{ WebkitTapHighlightColor: "transparent" }}
                 >
