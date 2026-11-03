@@ -1,6 +1,5 @@
 import { auth } from "@aqardesk/auth/server"
-import { getDatabase, schema } from "@aqardesk/database"
-import { and, desc, eq, gt, isNull, or } from "drizzle-orm"
+import { listUserFavorites } from "@aqardesk/database/queries"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
@@ -23,35 +22,7 @@ export default async function AccountFavoritesPage({
     redirect(`/${locale}/login`)
   }
 
-  const listings = await getDatabase()
-    .select({
-      id: schema.listings.id,
-      title: schema.properties.title,
-      propertyType: schema.properties.type,
-      city: schema.properties.city,
-      district: schema.properties.district,
-    })
-    .from(schema.favorites)
-    .innerJoin(
-      schema.listings,
-      eq(schema.favorites.listingId, schema.listings.id)
-    )
-    .innerJoin(
-      schema.properties,
-      eq(schema.listings.propertyId, schema.properties.id)
-    )
-    .where(
-      and(
-        eq(schema.favorites.userId, session.user.id),
-        eq(schema.listings.status, "active"),
-        isNull(schema.properties.archivedAt),
-        or(
-          isNull(schema.listings.expiresAt),
-          gt(schema.listings.expiresAt, new Date())
-        )
-      )
-    )
-    .orderBy(desc(schema.favorites.createdAt))
+  const listings = await listUserFavorites(session.user.id)
 
   return (
     <section className="space-y-5">
@@ -74,7 +45,10 @@ export default async function AccountFavoritesPage({
       ) : (
         <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {listings.map((listing) => (
-            <li className="space-y-2 rounded-lg border p-4" key={listing.id}>
+            <li
+              className="space-y-2 rounded-lg border p-4"
+              key={listing.listingId}
+            >
               <h2 className="font-medium">{listing.title}</h2>
               <p className="text-sm text-muted-foreground">
                 {[listing.district, listing.city].filter(Boolean).join("، ")}

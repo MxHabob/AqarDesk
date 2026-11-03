@@ -51,5 +51,7 @@ export async function closeDatabase() {
   delete globalForDatabase.database
 }
 
+export * from "./queries"
 export * from "./schema"
 export * as schema from "./schema"
+export * from "./utils"

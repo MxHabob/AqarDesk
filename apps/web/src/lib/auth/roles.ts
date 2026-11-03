@@ -1,15 +1,9 @@
-import { getDatabase, schema } from "@aqardesk/database"
-import { eq } from "drizzle-orm"
+import { getUserRoleKeys as queryUserRoleKeys } from "@aqardesk/database/queries"
 
 const employeeRoles = new Set(["admin", "manager", "staff", "viewer"])
 
 export async function getUserRoleKeys(userId: string) {
-  return getDatabase()
-    .select({ key: schema.roles.key })
-    .from(schema.userRoles)
-    .innerJoin(schema.roles, eq(schema.userRoles.roleId, schema.roles.id))
-    .where(eq(schema.userRoles.userId, userId))
-    .then((roles) => roles.map(({ key }) => key))
+  return queryUserRoleKeys(userId)
 }
 
 export function getRoleDestination(roleKeys: string[], locale: string) {

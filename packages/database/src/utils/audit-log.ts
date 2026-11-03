@@ -19,16 +19,19 @@ export function writeAuditLog(
   input: AuditLogInput,
   database: DatabaseOrTransaction = getDatabase()
 ) {
-  return database.insert(schema.auditLogs).values({
-    ...input,
-    actorId: input.actorId ?? null,
-    actorName: input.actorName ?? null,
-    actorEmail: input.actorEmail ?? null,
-    entityId: input.entityId ?? null,
-    before: input.before ?? null,
-    after: input.after ?? null,
-    metadata: input.metadata ?? null,
-    ipAddress: input.ipAddress ?? null,
-    userAgent: input.userAgent ?? null,
-  })
+  return database
+    .insert(schema.auditLogs)
+    .values({
+      ...input,
+      actorId: input.actorId ?? null,
+      actorName: input.actorName ?? null,
+      actorEmail: input.actorEmail ?? null,
+      entityId: input.entityId ?? null,
+      before: input.before ?? null,
+      after: input.after ?? null,
+      metadata: input.metadata ?? null,
+      ipAddress: input.ipAddress ?? null,
+      userAgent: input.userAgent ?? null,
+    })
+    .returning()
 }

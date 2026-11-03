@@ -20,6 +20,19 @@ account is deleted. Every application mutation that changes business data
 must insert its audit record in the same database transaction. The schema
 provides storage and indexes, but does not automatically audit writes.
 
+Database operations are grouped under `src/queries` by domain and exported
+from `@aqardesk/database/queries`; shared transaction, pagination, audit-log,
+and short-link helpers are under `src/utils` and exported from
+`@aqardesk/database/utils`. Query functions accept an optional database or
+transaction so callers can compose operations atomically. Mutations that write
+audit history keep the change and its audit row in the same transaction.
+
+Short links store only a SHA-256 token hash. The raw, cryptographically random
+token is returned once at creation time; consumers must not persist it in logs.
+The short-link table is resource-type agnostic, while each public route must
+explicitly allowlist resource types and return a public projection that omits
+internal notes, owner records, and assignment details.
+
 The app service layer must validate that a property type matches its detail
 record and write price/status history in the same transaction as listing
 updates.
