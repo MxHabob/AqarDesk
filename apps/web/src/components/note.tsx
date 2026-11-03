@@ -1,4 +1,4 @@
-import { Textarea } from "@midday/ui/textarea"
+import { Textarea } from "@aqardesk/ui/textarea"
 import { useEffect, useState } from "react"
 import { useDebounceValue } from "usehooks-ts"
 

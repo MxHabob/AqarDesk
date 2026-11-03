@@ -1,20 +1,20 @@
 "use client";
 
-import { track } from "@midday/events/client";
-import { LogEvents } from "@midday/events/events";
-import { getPlanPricing } from "@midday/plans";
-import { AnimatedSizeContainer } from "@midday/ui/animated-size-container";
-import { Button } from "@midday/ui/button";
-import { cn } from "@midday/ui/cn";
+import { track } from "@aqardesk/events/client";
+import { LogEvents } from "@aqardesk/events/events";
+import { getPlanPricing } from "@aqardesk/plans";
+import { AnimatedSizeContainer } from "@aqardesk/ui/animated-size-container";
+import { Button } from "@aqardesk/ui/button";
+import { cn } from "@aqardesk/ui/cn";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@midday/ui/dialog";
-import { SubmitButton } from "@midday/ui/submit-button";
-import { Textarea } from "@midday/ui/textarea";
+} from "@aqardesk/ui/dialog";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
+import { Textarea } from "@aqardesk/ui/textarea";
 import { PolarEmbedCheckout } from "@polar-sh/checkout/embed";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";

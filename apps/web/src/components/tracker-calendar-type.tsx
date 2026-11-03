@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@midday/ui/cn";
-import { Tabs, TabsList, TabsTrigger } from "@midday/ui/tabs";
+import { cn } from "@aqardesk/ui/cn";
+import { Tabs, TabsList, TabsTrigger } from "@aqardesk/ui/tabs";
 import { useAction } from "next-safe-action/hooks";
 import { setWeeklyCalendarAction } from "@/actions/set-weekly-calendar-action";
 import { useTrackerParams } from "@/hooks/use-tracker-params";

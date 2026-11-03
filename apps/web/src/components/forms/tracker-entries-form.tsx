@@ -2,10 +2,10 @@
 
 import { TZDate } from "@date-fns/tz";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem } from "@midday/ui/form";
-import { SubmitButton } from "@midday/ui/submit-button";
-import { Textarea } from "@midday/ui/textarea";
-import { TimeRangeInput } from "@midday/ui/time-range-input";
+import { Form, FormControl, FormField, FormItem } from "@aqardesk/ui/form";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
+import { Textarea } from "@aqardesk/ui/textarea";
+import { TimeRangeInput } from "@aqardesk/ui/time-range-input";
 import { startOfDay } from "date-fns";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";

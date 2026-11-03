@@ -1,7 +1,7 @@
 import {
   OAUTH_ERROR_CODES,
   type OAuthErrorCode,
-} from "@midday/app-store/oauth-errors"
+} from "@aqardesk/app-store/oauth-errors"
 
 export const OAUTH_CHANNEL_NAME = "midday_oauth_complete"
 

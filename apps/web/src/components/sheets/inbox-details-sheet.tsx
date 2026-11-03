@@ -1,6 +1,6 @@
 "use client"
 
-import { Sheet, SheetContent } from "@midday/ui/sheet"
+import { Sheet, SheetContent } from "@aqardesk/ui/sheet"
 import { InboxSheetDetails } from "@/components/inbox-sheet-details"
 import { useInboxParams } from "@/hooks/use-inbox-params"
 

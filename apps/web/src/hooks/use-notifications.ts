@@ -1,6 +1,6 @@
 "use client"
 
-import type { AppRouter } from "@midday/api/trpc/routers/_app"
+import type { AppRouter } from "@aqardesk/api/trpc/routers/_app"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import type { inferRouterInputs, inferRouterOutputs } from "@trpc/server"
 import { useCallback, useMemo } from "react"

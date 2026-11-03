@@ -1,18 +1,18 @@
 "use client";
 
-import { LogEvents } from "@midday/events/events";
-import { Button } from "@midday/ui/button";
-import { Form, FormControl, FormField, FormItem } from "@midday/ui/form";
-import { Input } from "@midday/ui/input";
+import { LogEvents } from "@aqardesk/events/events";
+import { Button } from "@aqardesk/ui/button";
+import { Form, FormControl, FormField, FormItem } from "@aqardesk/ui/form";
+import { Input } from "@aqardesk/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@midday/ui/select";
-import { SubmitButton } from "@midday/ui/submit-button";
-import { useToast } from "@midday/ui/use-toast";
+} from "@aqardesk/ui/select";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
+import { useToast } from "@aqardesk/ui/use-toast";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import Link from "next/link";

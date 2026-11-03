@@ -1,6 +1,6 @@
 "use client";
 
-import { SheetHeader } from "@midday/ui/sheet";
+import { SheetHeader } from "@aqardesk/ui/sheet";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { DocumentActions } from "@/components/document-actions";
 import { DocumentDetailsSkeleton } from "@/components/document-details-skeleton";

@@ -1,13 +1,13 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
+import { Button } from "@aqardesk/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
-import { Icons } from "@midday/ui/icons"
+} from "@aqardesk/ui/dropdown-menu"
+import { Icons } from "@aqardesk/ui/icons"
 import { useState } from "react"
 import type { ReportType } from "../utils/chart-types"
 import { ShareMetricModal } from "./share-metric-modal"

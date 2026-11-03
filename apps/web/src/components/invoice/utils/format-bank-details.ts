@@ -1,4 +1,4 @@
-import type { BankAccountWithPaymentInfo } from "@midday/db/queries";
+import type { BankAccountWithPaymentInfo } from "@aqardesk/db/queries";
 
 /**
  * Format IBAN with spaces every 4 characters for readability

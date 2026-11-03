@@ -1,14 +1,14 @@
 "use client";
 
-import { formatAmountValue, formatDate } from "@midday/import";
+import { formatAmountValue, formatDate } from "@aqardesk/import";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@midday/ui/accordion";
-import { Icons } from "@midday/ui/icons";
-import { Label } from "@midday/ui/label";
+} from "@aqardesk/ui/accordion";
+import { Icons } from "@aqardesk/ui/icons";
+import { Label } from "@aqardesk/ui/label";
 import {
   Select,
   SelectContent,
@@ -17,15 +17,15 @@ import {
   SelectLabel,
   SelectTrigger,
   SelectValue,
-} from "@midday/ui/select";
-import { Spinner } from "@midday/ui/spinner";
-import { Switch } from "@midday/ui/switch";
+} from "@aqardesk/ui/select";
+import { Spinner } from "@aqardesk/ui/spinner";
+import { Switch } from "@aqardesk/ui/switch";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip";
+} from "@aqardesk/ui/tooltip";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { capitalCase } from "change-case";
 import { useEffect, useRef, useState } from "react";

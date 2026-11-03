@@ -1,16 +1,16 @@
 "use client"
 
-import { getTimezones } from "@midday/location/timezones"
+import { getTimezones } from "@aqardesk/location/timezones"
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@midday/ui/card"
-import { ComboboxDropdown } from "@midday/ui/combobox-dropdown"
-import { Label } from "@midday/ui/label"
-import { Switch } from "@midday/ui/switch"
+} from "@aqardesk/ui/card"
+import { ComboboxDropdown } from "@aqardesk/ui/combobox-dropdown"
+import { Label } from "@aqardesk/ui/label"
+import { Switch } from "@aqardesk/ui/switch"
 import { useEffect, useState } from "react"
 import { useUserMutation, useUserQuery } from "@/hooks/use-user"
 import { useI18n } from "@/locales/client"

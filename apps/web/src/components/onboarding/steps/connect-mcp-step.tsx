@@ -7,14 +7,14 @@ import {
   CursorMcpLogo,
   ManusMcpLogo,
   PerplexityMcpLogo,
-} from "@midday/app-store/logos";
+} from "@aqardesk/app-store/logos";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@midday/ui/accordion";
-import { Button } from "@midday/ui/button";
+} from "@aqardesk/ui/accordion";
+import { Button } from "@aqardesk/ui/button";
 import { motion } from "framer-motion";
 import { parseAsString, useQueryStates } from "nuqs";
 import type { ComponentType } from "react";

@@ -2,22 +2,22 @@
 
 import type { RouterOutputs } from "@api/trpc/routers/_app";
 import { utc } from "@date-fns/utc";
-import { uniqueCurrencies } from "@midday/location/currencies";
+import { uniqueCurrencies } from "@aqardesk/location/currencies";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@midday/ui/accordion";
-import { Button } from "@midday/ui/button";
-import { Calendar } from "@midday/ui/calendar";
-import { cn } from "@midday/ui/cn";
-import { CurrencyInput } from "@midday/ui/currency-input";
-import { Input } from "@midday/ui/input";
-import { Label } from "@midday/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@midday/ui/popover";
-import { Switch } from "@midday/ui/switch";
-import { Textarea } from "@midday/ui/textarea";
+} from "@aqardesk/ui/accordion";
+import { Button } from "@aqardesk/ui/button";
+import { Calendar } from "@aqardesk/ui/calendar";
+import { cn } from "@aqardesk/ui/cn";
+import { CurrencyInput } from "@aqardesk/ui/currency-input";
+import { Input } from "@aqardesk/ui/input";
+import { Label } from "@aqardesk/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover";
+import { Switch } from "@aqardesk/ui/switch";
+import { Textarea } from "@aqardesk/ui/textarea";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, formatISO } from "date-fns";
 import { useEffect, useMemo, useState } from "react";

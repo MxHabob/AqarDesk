@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
+import { Button } from "@aqardesk/ui/button"
 import { motion } from "framer-motion"
 import type { ReactNode } from "react"
 import { Portal } from "@/components/portal"

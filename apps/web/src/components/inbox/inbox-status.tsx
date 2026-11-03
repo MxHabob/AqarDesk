@@ -1,14 +1,14 @@
 "use client";
 
 import type { RouterOutputs } from "@api/trpc/routers/_app";
-import { Icons } from "@midday/ui/icons";
-import { Spinner } from "@midday/ui/spinner";
+import { Icons } from "@aqardesk/ui/icons";
+import { Spinner } from "@aqardesk/ui/spinner";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip";
+} from "@aqardesk/ui/tooltip";
 
 type Props = {
   item: RouterOutputs["inbox"]["get"]["data"][number];

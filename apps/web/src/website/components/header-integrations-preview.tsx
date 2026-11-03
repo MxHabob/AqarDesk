@@ -1,6 +1,6 @@
 "use client";
 
-import { cn } from "@midday/ui/cn";
+import { cn } from "@aqardesk/ui/cn";
 
 export function HeaderIntegrationsPreview() {
   return (

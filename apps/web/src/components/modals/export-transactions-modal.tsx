@@ -1,33 +1,33 @@
 "use client";
 
-import { LogEvents } from "@midday/events/events";
+import { LogEvents } from "@aqardesk/events/events";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@midday/ui/accordion";
-import { Button } from "@midday/ui/button";
+} from "@aqardesk/ui/accordion";
+import { Button } from "@aqardesk/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@midday/ui/dialog";
+} from "@aqardesk/ui/dialog";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from "@midday/ui/form";
-import { Input } from "@midday/ui/input";
-import { Label } from "@midday/ui/label";
-import { RadioGroup, RadioGroupItem } from "@midday/ui/radio-group";
-import { Separator } from "@midday/ui/separator";
-import { Spinner } from "@midday/ui/spinner";
-import { Switch } from "@midday/ui/switch";
+} from "@aqardesk/ui/form";
+import { Input } from "@aqardesk/ui/input";
+import { Label } from "@aqardesk/ui/label";
+import { RadioGroup, RadioGroupItem } from "@aqardesk/ui/radio-group";
+import { Separator } from "@aqardesk/ui/separator";
+import { Spinner } from "@aqardesk/ui/spinner";
+import { Switch } from "@aqardesk/ui/switch";
 import NumberFlow from "@number-flow/react";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";

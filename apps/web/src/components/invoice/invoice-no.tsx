@@ -1,12 +1,12 @@
 "use client";
 
-import { cn } from "@midday/ui/cn";
+import { cn } from "@aqardesk/ui/cn";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip";
+} from "@aqardesk/ui/tooltip";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";

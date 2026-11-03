@@ -1,9 +1,9 @@
 "use client";
 
-import { track } from "@midday/events/client";
-import { LogEvents } from "@midday/events/events";
-import { cn } from "@midday/ui/cn";
-import { Icons } from "@midday/ui/icons";
+import { track } from "@aqardesk/events/client";
+import { LogEvents } from "@aqardesk/events/events";
+import { cn } from "@aqardesk/ui/cn";
+import { Icons } from "@aqardesk/ui/icons";
 import { motion } from "motion/react";
 import Image from "next/image";
 import Link from "next/link";

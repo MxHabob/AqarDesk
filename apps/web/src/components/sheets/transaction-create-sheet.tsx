@@ -1,7 +1,7 @@
 "use client"
 
-import { ScrollArea } from "@midday/ui/scroll-area"
-import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@midday/ui/sheet"
+import { ScrollArea } from "@aqardesk/ui/scroll-area"
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@aqardesk/ui/sheet"
 import { useTransactionParams } from "@/hooks/use-transaction-params"
 import { TransactionCreateForm } from "../forms/transaction-create-form"
 

@@ -1,5 +1,5 @@
-import { Avatar, AvatarFallback, AvatarImage } from "@midday/ui/avatar";
-import { cn } from "@midday/ui/cn";
+import { Avatar, AvatarFallback, AvatarImage } from "@aqardesk/ui/avatar";
+import { cn } from "@aqardesk/ui/cn";
 import { useState } from "react";
 
 type Props = {

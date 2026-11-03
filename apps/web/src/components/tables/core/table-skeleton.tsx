@@ -1,7 +1,7 @@
 "use client"
 
-import { cn } from "@midday/ui/cn"
-import { Skeleton } from "@midday/ui/skeleton"
+import { cn } from "@aqardesk/ui/cn"
+import { Skeleton } from "@aqardesk/ui/skeleton"
 import {
   Table,
   TableBody,
@@ -9,7 +9,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@midday/ui/table"
+} from "@aqardesk/ui/table"
 import type {
   ColumnDef,
   ColumnSizingState,

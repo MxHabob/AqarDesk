@@ -1,8 +1,8 @@
-import { apps as appStoreApps } from "@midday/app-store";
+import { apps as appStoreApps } from "@aqardesk/app-store";
 import {
   connectorApps as connectorAppDefs,
   getConnectorLogoUrl,
-} from "@midday/connectors";
+} from "@aqardesk/connectors";
 
 export interface WebsiteApp {
   id: string;

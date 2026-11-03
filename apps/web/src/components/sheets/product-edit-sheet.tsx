@@ -10,15 +10,15 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@midday/ui/alert-dialog"
+} from "@aqardesk/ui/alert-dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
-import { Icons } from "@midday/ui/icons"
-import { Sheet, SheetContent, SheetHeader } from "@midday/ui/sheet"
+} from "@aqardesk/ui/dropdown-menu"
+import { Icons } from "@aqardesk/ui/icons"
+import { Sheet, SheetContent, SheetHeader } from "@aqardesk/ui/sheet"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useProductParams } from "@/hooks/use-product-params"
 import { useTeamQuery } from "@/hooks/use-team"

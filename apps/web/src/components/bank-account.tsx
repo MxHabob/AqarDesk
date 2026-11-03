@@ -10,21 +10,21 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@midday/ui/alert-dialog";
-import { Button } from "@midday/ui/button";
-import { cn } from "@midday/ui/cn";
+} from "@aqardesk/ui/alert-dialog";
+import { Button } from "@aqardesk/ui/button";
+import { cn } from "@aqardesk/ui/cn";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu";
-import { Icons } from "@midday/ui/icons";
-import { Input } from "@midday/ui/input";
-import { Label } from "@midday/ui/label";
-import { Switch } from "@midday/ui/switch";
-import { useToast } from "@midday/ui/use-toast";
+} from "@aqardesk/ui/dropdown-menu";
+import { Icons } from "@aqardesk/ui/icons";
+import { Input } from "@aqardesk/ui/input";
+import { Label } from "@aqardesk/ui/label";
+import { Switch } from "@aqardesk/ui/switch";
+import { useToast } from "@aqardesk/ui/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   AlertTriangle,

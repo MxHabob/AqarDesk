@@ -5,7 +5,7 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@midday/ui/accordion";
+} from "@aqardesk/ui/accordion";
 import { motion } from "framer-motion";
 import { ConnectIMessage } from "@/components/inbox/connect-imessage";
 import { ConnectSlack } from "@/components/inbox/connect-slack";

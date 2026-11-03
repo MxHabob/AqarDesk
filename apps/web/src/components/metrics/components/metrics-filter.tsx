@@ -1,8 +1,8 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { Calendar, CalendarDayButton } from "@midday/ui/calendar"
-import { cn } from "@midday/ui/cn"
+import { Button } from "@aqardesk/ui/button"
+import { Calendar, CalendarDayButton } from "@aqardesk/ui/calendar"
+import { cn } from "@aqardesk/ui/cn"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -16,8 +16,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
-import { Icons } from "@midday/ui/icons"
+} from "@aqardesk/ui/dropdown-menu"
+import { Icons } from "@aqardesk/ui/icons"
 import { Check } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import { format, formatISO, parseISO } from "date-fns"

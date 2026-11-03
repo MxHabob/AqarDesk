@@ -1,6 +1,6 @@
 "use client"
 
-import { useToast } from "@midday/ui/use-toast"
+import { useToast } from "@aqardesk/ui/use-toast"
 import { useQueryClient } from "@tanstack/react-query"
 import { useAction } from "next-safe-action/hooks"
 import { parseAsString, useQueryStates } from "nuqs"

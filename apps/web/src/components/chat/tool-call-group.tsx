@@ -1,13 +1,13 @@
 "use client";
 
-import { cn } from "@midday/ui/cn";
+import { cn } from "@aqardesk/ui/cn";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
-} from "@midday/ui/collapsible";
-import { Icons } from "@midday/ui/icons";
-import { TextShimmer } from "@midday/ui/text-shimmer";
+} from "@aqardesk/ui/collapsible";
+import { Icons } from "@aqardesk/ui/icons";
+import { TextShimmer } from "@aqardesk/ui/text-shimmer";
 import type { ReactNode } from "react";
 import { useState } from "react";
 import {

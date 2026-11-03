@@ -1,4 +1,4 @@
-import { isValidLogoUrl } from "@midday/invoice";
+import { isValidLogoUrl } from "@aqardesk/invoice";
 import { format, parseISO } from "date-fns";
 import { notFound } from "next/navigation";
 import { ImageResponse } from "next/og";

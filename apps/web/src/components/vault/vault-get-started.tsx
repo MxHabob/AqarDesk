@@ -1,4 +1,4 @@
-import { Button } from "@midday/ui/button";
+import { Button } from "@aqardesk/ui/button";
 
 export function VaultGetStarted() {
   return (

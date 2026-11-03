@@ -1,5 +1,5 @@
-import { apps as officialApps } from "@midday/app-store";
-import { connectorApps } from "@midday/connectors";
+import { apps as officialApps } from "@aqardesk/app-store";
+import { connectorApps } from "@aqardesk/connectors";
 import { AppsTabs } from "./apps-tabs";
 import { SearchField } from "./search-field";
 

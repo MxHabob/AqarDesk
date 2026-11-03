@@ -1,7 +1,7 @@
 "use client"
 
-import { Badge } from "@midday/ui/badge"
-import { cn } from "@midday/ui/cn"
+import { Badge } from "@aqardesk/ui/badge"
+import { cn } from "@aqardesk/ui/cn"
 import {
   Command,
   CommandEmpty,
@@ -9,8 +9,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@midday/ui/command"
-import { Popover, PopoverContent, PopoverTrigger } from "@midday/ui/popover"
+} from "@aqardesk/ui/command"
+import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { Check } from "lucide-react"
 import { useState } from "react"

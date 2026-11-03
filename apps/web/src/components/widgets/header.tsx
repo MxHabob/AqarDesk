@@ -1,7 +1,7 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { Icons } from "@midday/ui/icons"
+import { Button } from "@aqardesk/ui/button"
+import { Icons } from "@aqardesk/ui/icons"
 import { Check } from "lucide-react"
 import { MetricsFilter } from "@/components/metrics/components/metrics-filter"
 

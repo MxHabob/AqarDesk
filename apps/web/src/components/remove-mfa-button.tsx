@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@midday/ui/button";
-import { useToast } from "@midday/ui/use-toast";
+import { Button } from "@aqardesk/ui/button";
+import { useToast } from "@aqardesk/ui/use-toast";
 import { useAction } from "next-safe-action/hooks";
 import { unenrollMfaAction } from "@/actions/unenroll-mfa-action";
 

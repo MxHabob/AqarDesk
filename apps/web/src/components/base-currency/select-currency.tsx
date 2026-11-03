@@ -1,8 +1,8 @@
 "use client";
 
-import { uniqueCurrencies } from "@midday/location/currencies";
-import { Button } from "@midday/ui/button";
-import { useToast } from "@midday/ui/use-toast";
+import { uniqueCurrencies } from "@aqardesk/location/currencies";
+import { Button } from "@aqardesk/ui/button";
+import { useToast } from "@aqardesk/ui/use-toast";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import { SelectCurrency as SelectCurrencyBase } from "@/components/select-currency";

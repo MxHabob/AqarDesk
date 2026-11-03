@@ -1,6 +1,6 @@
 "use client";
 
-import { LogEvents } from "@midday/events/events";
+import { LogEvents } from "@aqardesk/events/events";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { useQuery } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";

@@ -1,10 +1,10 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { cn } from "@midday/ui/cn"
-import { Dialog } from "@midday/ui/dialog"
-import { Input } from "@midday/ui/input"
-import { Table, TableBody, TableCell, TableRow } from "@midday/ui/table"
+import { Button } from "@aqardesk/ui/button"
+import { cn } from "@aqardesk/ui/cn"
+import { Dialog } from "@aqardesk/ui/dialog"
+import { Input } from "@aqardesk/ui/input"
+import { Table, TableBody, TableCell, TableRow } from "@aqardesk/ui/table"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import {
   type ColumnFiltersState,

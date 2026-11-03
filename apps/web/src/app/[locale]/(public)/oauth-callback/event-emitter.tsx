@@ -1,6 +1,6 @@
 "use client";
 
-import type { OAuthErrorCode } from "@midday/app-store/oauth-errors";
+import type { OAuthErrorCode } from "@aqardesk/app-store/oauth-errors";
 import { useEffect } from "react";
 import { OAUTH_CHANNEL_NAME, type OAuthMessage } from "@/utils/oauth-message";
 import type { OAuthStatus } from "./schema";

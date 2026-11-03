@@ -1,30 +1,30 @@
 "use client";
 
-import { Button } from "@midday/ui/button";
+import { Button } from "@aqardesk/ui/button";
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@midday/ui/card";
+} from "@aqardesk/ui/card";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@midday/ui/form";
-import { Icons } from "@midday/ui/icons";
-import { Input } from "@midday/ui/input";
+} from "@aqardesk/ui/form";
+import { Icons } from "@aqardesk/ui/icons";
+import { Input } from "@aqardesk/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@midday/ui/select";
-import { SubmitButton } from "@midday/ui/submit-button";
+} from "@aqardesk/ui/select";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
 import {
   useMutation,
   useQueryClient,

@@ -1,5 +1,5 @@
-import { Card } from "@midday/ui/card";
-import { Skeleton } from "@midday/ui/skeleton";
+import { Card } from "@aqardesk/ui/card";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 
 export function AppsSkeleton() {
   return (

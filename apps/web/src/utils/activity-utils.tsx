@@ -1,4 +1,4 @@
-import { Icons } from "@midday/ui/icons"
+import { Icons } from "@aqardesk/ui/icons"
 
 export function getActivityIcon(activityType: string, className = "size-4") {
   switch (activityType) {

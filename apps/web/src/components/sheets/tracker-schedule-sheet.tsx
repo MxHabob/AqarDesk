@@ -1,6 +1,6 @@
 "use client"
 
-import { Sheet, SheetContent } from "@midday/ui/sheet"
+import { Sheet, SheetContent } from "@aqardesk/ui/sheet"
 import { useTrackerParams } from "@/hooks/use-tracker-params"
 import { TrackerSchedule } from "../tracker-schedule"
 

@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
+import { Button } from "@aqardesk/ui/button"
 import { useTrackerFilterParams } from "@/hooks/use-tracker-filter-params"
 import { useTrackerParams } from "@/hooks/use-tracker-params"
 

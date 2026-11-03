@@ -1,24 +1,24 @@
 "use client";
 
 import type { RouterOutputs } from "@api/trpc/routers/_app";
-import { Avatar, AvatarFallback } from "@midday/ui/avatar";
-import { Badge } from "@midday/ui/badge";
-import { Button } from "@midday/ui/button";
+import { Avatar, AvatarFallback } from "@aqardesk/ui/avatar";
+import { Badge } from "@aqardesk/ui/badge";
+import { Button } from "@aqardesk/ui/button";
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@midday/ui/card";
-import { Icons } from "@midday/ui/icons";
+} from "@aqardesk/ui/card";
+import { Icons } from "@aqardesk/ui/icons";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip";
-import { useToast } from "@midday/ui/use-toast";
+} from "@aqardesk/ui/tooltip";
+import { useToast } from "@aqardesk/ui/use-toast";
 import {
   useMutation,
   useQueryClient,

@@ -1,9 +1,9 @@
 "use client";
 
-import { createClient } from "@midday/supabase/client";
-import { cn } from "@midday/ui/cn";
-import { useToast } from "@midday/ui/use-toast";
-import { stripSpecialCharacters } from "@midday/utils";
+import { createClient } from "@aqardesk/supabase/client";
+import { cn } from "@aqardesk/ui/cn";
+import { useToast } from "@aqardesk/ui/use-toast";
+import { stripSpecialCharacters } from "@aqardesk/utils";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { type ReactNode, useEffect, useRef, useState } from "react";
 import { useDropzone } from "react-dropzone";

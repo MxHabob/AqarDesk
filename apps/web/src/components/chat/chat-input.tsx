@@ -7,11 +7,11 @@ import {
   CursorMcpLogo,
   ManusMcpLogo,
   PerplexityMcpLogo,
-} from "@midday/app-store/logos";
-import { LogEvents } from "@midday/events/events";
-import { cn } from "@midday/ui/cn";
-import { Icons } from "@midday/ui/icons";
-import { Popover, PopoverContent, PopoverTrigger } from "@midday/ui/popover";
+} from "@aqardesk/app-store/logos";
+import { LogEvents } from "@aqardesk/events/events";
+import { cn } from "@aqardesk/ui/cn";
+import { Icons } from "@aqardesk/ui/icons";
+import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";

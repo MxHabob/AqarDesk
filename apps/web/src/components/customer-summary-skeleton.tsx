@@ -1,7 +1,7 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@midday/ui/card";
-import { Skeleton } from "@midday/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@aqardesk/ui/card";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 
 export function CustomerSummarySkeleton() {
   return (

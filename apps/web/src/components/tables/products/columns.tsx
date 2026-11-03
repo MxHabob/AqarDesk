@@ -1,15 +1,15 @@
 "use client"
 
 import type { RouterOutputs } from "@api/trpc/routers/_app"
-import { Badge } from "@midday/ui/badge"
-import { Button } from "@midday/ui/button"
+import { Badge } from "@aqardesk/ui/badge"
+import { Button } from "@aqardesk/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
+} from "@aqardesk/ui/dropdown-menu"
 import type { ColumnDef } from "@tanstack/react-table"
 import { formatDistanceToNow } from "date-fns"
 import { MoreHorizontal } from "lucide-react"

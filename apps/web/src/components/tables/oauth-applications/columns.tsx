@@ -1,24 +1,24 @@
 import type { RouterOutputs } from "@api/trpc/routers/_app"
-import { Button } from "@midday/ui/button"
+import { Button } from "@aqardesk/ui/button"
 import type { ColumnDef } from "@tanstack/react-table"
 import * as React from "react"
 import "@tanstack/react-table"
 import { scopesToName } from "@api/utils/scopes"
-import { Badge } from "@midday/ui/badge"
+import { Badge } from "@aqardesk/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
-import { Icons } from "@midday/ui/icons"
+} from "@aqardesk/ui/dropdown-menu"
+import { Icons } from "@aqardesk/ui/icons"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip"
+} from "@aqardesk/ui/tooltip"
 import { format } from "date-fns"
 import { useCopyToClipboard } from "usehooks-ts"
 import { useOAuthApplicationParams } from "@/hooks/use-oauth-application-params"

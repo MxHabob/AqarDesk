@@ -1,5 +1,5 @@
 import type { RouterOutputs } from "@api/trpc/routers/_app"
-import { LogEvents } from "@midday/events/events"
+import { LogEvents } from "@aqardesk/events/events"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,23 +10,23 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@midday/ui/alert-dialog"
-import { Avatar, AvatarFallback, AvatarImageNext } from "@midday/ui/avatar"
-import { Button } from "@midday/ui/button"
+} from "@aqardesk/ui/alert-dialog"
+import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar"
+import { Button } from "@aqardesk/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
+} from "@aqardesk/ui/dropdown-menu"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@midday/ui/select"
-import { useToast } from "@midday/ui/use-toast"
+} from "@aqardesk/ui/select"
+import { useToast } from "@aqardesk/ui/use-toast"
 import type { ColumnDef, FilterFn, Row } from "@tanstack/react-table"
 import { Loader2, MoreHorizontal } from "lucide-react"
 import { useI18n } from "@/locales/client"

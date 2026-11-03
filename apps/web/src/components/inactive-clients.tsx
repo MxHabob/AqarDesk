@@ -1,6 +1,6 @@
 "use client"
 
-import { Card, CardContent, CardHeader, CardTitle } from "@midday/ui/card"
+import { Card, CardContent, CardHeader, CardTitle } from "@aqardesk/ui/card"
 import NumberFlow from "@number-flow/react"
 import { useSuspenseQuery } from "@tanstack/react-query"
 import { useTRPC } from "@/trpc/client"

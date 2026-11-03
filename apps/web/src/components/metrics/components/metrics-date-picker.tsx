@@ -1,16 +1,16 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { Calendar } from "@midday/ui/calendar"
-import { Icons } from "@midday/ui/icons"
-import { Popover, PopoverContent, PopoverTrigger } from "@midday/ui/popover"
+import { Button } from "@aqardesk/ui/button"
+import { Calendar } from "@aqardesk/ui/calendar"
+import { Icons } from "@aqardesk/ui/icons"
+import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@midday/ui/select"
+} from "@aqardesk/ui/select"
 import { format, formatISO, parseISO } from "date-fns"
 import { useEffect, useMemo, useState } from "react"
 import type { DateRange } from "react-day-picker"

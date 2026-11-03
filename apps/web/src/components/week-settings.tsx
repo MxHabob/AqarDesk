@@ -6,8 +6,8 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@midday/ui/card";
-import { Switch } from "@midday/ui/switch";
+} from "@aqardesk/ui/card";
+import { Switch } from "@aqardesk/ui/switch";
 import { useUserMutation, useUserQuery } from "@/hooks/use-user";
 
 export function WeekSettings() {

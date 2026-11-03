@@ -1,4 +1,4 @@
-import { cn } from "@midday/ui/cn";
+import { cn } from "@aqardesk/ui/cn";
 import { BankLogo } from "@/components/bank-logo";
 
 type Props = {

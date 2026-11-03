@@ -7,8 +7,8 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@midday/ui/form";
-import { Input } from "@midday/ui/input";
+} from "@aqardesk/ui/form";
+import { Input } from "@aqardesk/ui/input";
 import { motion } from "framer-motion";
 import { useEffect, useRef, useState } from "react";
 import { z } from "zod/v3";

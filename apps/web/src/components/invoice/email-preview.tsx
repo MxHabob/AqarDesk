@@ -5,10 +5,10 @@ import {
   defaultEmailBody,
   defaultEmailHeading,
   defaultEmailSubject,
-} from "@midday/email/defaults";
-import { Button } from "@midday/ui/button";
-import { Icons } from "@midday/ui/icons";
-import { Sheet, SheetContent } from "@midday/ui/sheet";
+} from "@aqardesk/email/defaults";
+import { Button } from "@aqardesk/ui/button";
+import { Icons } from "@aqardesk/ui/icons";
+import { Sheet, SheetContent } from "@aqardesk/ui/sheet";
 import { format } from "date-fns";
 import { useCallback, useEffect, useRef } from "react";
 import { useFormContext } from "react-hook-form";
@@ -173,7 +173,7 @@ export function EmailPreview() {
   }
 
   // Display values — plain text, no template variable resolution.
-  // Defaults are imported from @midday/email/defaults so they stay in sync
+  // Defaults are imported from @aqardesk/email/defaults so they stay in sync
   // with the actual email template the customer receives.
   const displaySubject = emailSubject || defaultEmailSubject(teamName);
   const displayHeading = emailHeading || defaultEmailHeading(teamName);

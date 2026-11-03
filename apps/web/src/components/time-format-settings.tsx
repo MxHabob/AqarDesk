@@ -6,14 +6,14 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@midday/ui/card";
+} from "@aqardesk/ui/card";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@midday/ui/select";
+} from "@aqardesk/ui/select";
 import { useUserMutation, useUserQuery } from "@/hooks/use-user";
 
 export function TimeFormatSettings() {

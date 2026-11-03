@@ -1,13 +1,13 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
+import { Button } from "@aqardesk/ui/button"
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@midday/ui/card"
+} from "@aqardesk/ui/card"
 import { useMutation } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useExportStore } from "@/store/export"

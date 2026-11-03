@@ -1,4 +1,4 @@
-import { CurrencyInput } from "@midday/ui/currency-input";
+import { CurrencyInput } from "@aqardesk/ui/currency-input";
 import { useState } from "react";
 import { TaxRateAssistant } from "./tax-rate-assistant";
 

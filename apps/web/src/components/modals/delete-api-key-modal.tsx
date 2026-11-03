@@ -1,14 +1,14 @@
 "use client";
 
-import { LogEvents } from "@midday/events/events";
+import { LogEvents } from "@aqardesk/events/events";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@midday/ui/dialog";
-import { SubmitButton } from "@midday/ui/submit-button";
+} from "@aqardesk/ui/dialog";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTokenModalStore } from "@/store/token-modal";

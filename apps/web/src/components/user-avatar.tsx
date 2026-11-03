@@ -6,7 +6,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@midday/ui/card";
+} from "@aqardesk/ui/card";
 import { useUserQuery } from "@/hooks/use-user";
 import { AvatarUpload } from "./avatar-upload";
 

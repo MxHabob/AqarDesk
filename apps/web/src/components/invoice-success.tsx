@@ -1,9 +1,9 @@
 "use client";
 
 import { TZDate } from "@date-fns/tz";
-import { formatEditorContent } from "@midday/invoice/format-to-html";
-import { Button } from "@midday/ui/button";
-import { Icons } from "@midday/ui/icons";
+import { formatEditorContent } from "@aqardesk/invoice/format-to-html";
+import { Button } from "@aqardesk/ui/button";
+import { Icons } from "@aqardesk/ui/icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { motion } from "framer-motion";

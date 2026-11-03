@@ -9,24 +9,24 @@ import {
   localDateToUTCMidnight,
   type RecurringConfig,
   validateRecurringConfig,
-} from "@midday/invoice/recurring"
-import { Button } from "@midday/ui/button"
-import { Calendar } from "@midday/ui/calendar"
-import { Icons } from "@midday/ui/icons"
-import { Input } from "@midday/ui/input"
-import { Label } from "@midday/ui/label"
-import { Popover, PopoverContent, PopoverTrigger } from "@midday/ui/popover"
-import { RadioGroup, RadioGroupItem } from "@midday/ui/radio-group"
-import { ScrollArea } from "@midday/ui/scroll-area"
+} from "@aqardesk/invoice/recurring"
+import { Button } from "@aqardesk/ui/button"
+import { Calendar } from "@aqardesk/ui/calendar"
+import { Icons } from "@aqardesk/ui/icons"
+import { Input } from "@aqardesk/ui/input"
+import { Label } from "@aqardesk/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover"
+import { RadioGroup, RadioGroupItem } from "@aqardesk/ui/radio-group"
+import { ScrollArea } from "@aqardesk/ui/scroll-area"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@midday/ui/select"
-import { Sheet, SheetContent } from "@midday/ui/sheet"
-import { SubmitButton } from "@midday/ui/submit-button"
+} from "@aqardesk/ui/select"
+import { Sheet, SheetContent } from "@aqardesk/ui/sheet"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { format, getDate, getDay } from "date-fns"
 import * as React from "react"

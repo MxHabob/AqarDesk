@@ -1,6 +1,6 @@
 "use client";
 
-import { Icons } from "@midday/ui/icons";
+import { Icons } from "@aqardesk/ui/icons";
 import type Hls from "hls.js";
 import Image from "next/image";
 import Link from "next/link";

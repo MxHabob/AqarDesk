@@ -1,4 +1,4 @@
-import { isDesktopApp } from "@midday/desktop-client/platform";
+import { isDesktopApp } from "@aqardesk/desktop-client/platform";
 import { saveAs } from "file-saver";
 
 export async function saveFile(blob: Blob, filename: string) {
@@ -8,7 +8,7 @@ export async function saveFile(blob: Blob, filename: string) {
   }
 
   // Desktop mode - write blob bytes to ~/Downloads via Tauri fs plugin
-  const { nativeSaveFile } = await import("@midday/desktop-client/core");
+  const { nativeSaveFile } = await import("@aqardesk/desktop-client/core");
   try {
     await nativeSaveFile(blob, filename);
     console.log("[saveFile] File saved successfully:", filename);

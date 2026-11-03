@@ -5,11 +5,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@midday/ui/dialog"
-import { Input } from "@midday/ui/input"
-import { Label } from "@midday/ui/label"
-import MultipleSelector from "@midday/ui/multiple-selector"
-import { SubmitButton } from "@midday/ui/submit-button"
+} from "@aqardesk/ui/dialog"
+import { Input } from "@aqardesk/ui/input"
+import { Label } from "@aqardesk/ui/label"
+import MultipleSelector from "@aqardesk/ui/multiple-selector"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useTRPC } from "@/trpc/client"

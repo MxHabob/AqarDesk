@@ -1,7 +1,7 @@
 "use client";
 
-import { track } from "@midday/events/client";
-import { LogEvents } from "@midday/events/events";
+import { track } from "@aqardesk/events/client";
+import { LogEvents } from "@aqardesk/events/events";
 import Link from "next/link";
 
 export function TimeSavingsSection() {

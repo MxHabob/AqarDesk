@@ -1,6 +1,6 @@
 "use client";
 
-import { ComboboxDropdown } from "@midday/ui/combobox-dropdown";
+import { ComboboxDropdown } from "@aqardesk/ui/combobox-dropdown";
 import { useQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 

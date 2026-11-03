@@ -1,21 +1,21 @@
 "use client";
 
-import { connectorApps } from "@midday/connectors";
-import type { ConnectorApp } from "@midday/connectors/types";
-import { LogEvents } from "@midday/events/events";
-import { Badge } from "@midday/ui/badge";
-import { Button } from "@midday/ui/button";
+import { connectorApps } from "@aqardesk/connectors";
+import type { ConnectorApp } from "@aqardesk/connectors/types";
+import { LogEvents } from "@aqardesk/events/events";
+import { Badge } from "@aqardesk/ui/badge";
+import { Button } from "@aqardesk/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from "@midday/ui/dialog";
-import { Icons } from "@midday/ui/icons";
-import { Input } from "@midday/ui/input";
-import { ScrollArea } from "@midday/ui/scroll-area";
-import { Skeleton } from "@midday/ui/skeleton";
+} from "@aqardesk/ui/dialog";
+import { Icons } from "@aqardesk/ui/icons";
+import { Input } from "@aqardesk/ui/input";
+import { ScrollArea } from "@aqardesk/ui/scroll-area";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import { useOpenPanel } from "@openpanel/nextjs";
 import {
   useMutation,

@@ -1,9 +1,9 @@
 "use client";
 
-import type { ChatDemoScenario } from "@midday/ui/animations/chat-demo";
-import { ChatIMessageAnimation } from "@midday/ui/animations/chat-demo";
-import { DEMO_STORIES } from "@midday/ui/chat-demo-rail";
-import { IPhoneMock } from "@midday/ui/iphone-mock";
+import type { ChatDemoScenario } from "@aqardesk/ui/animations/chat-demo";
+import { ChatIMessageAnimation } from "@aqardesk/ui/animations/chat-demo";
+import { DEMO_STORIES } from "@aqardesk/ui/chat-demo-rail";
+import { IPhoneMock } from "@aqardesk/ui/iphone-mock";
 import { AnimatePresence, motion } from "framer-motion";
 import { useCallback, useEffect, useRef, useState } from "react";
 

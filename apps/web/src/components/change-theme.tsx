@@ -4,7 +4,7 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@midday/ui/card"
+} from "@aqardesk/ui/card"
 import { ThemeSwitch } from "@/components/theme-switch"
 
 export function ChangeTheme() {

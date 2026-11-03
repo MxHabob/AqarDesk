@@ -1,12 +1,12 @@
 "use client";
 
-import { getInboxEmail } from "@midday/inbox";
+import { getInboxEmail } from "@aqardesk/inbox";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@midday/ui/accordion";
+} from "@aqardesk/ui/accordion";
 import { motion } from "framer-motion";
 import { CopyInput } from "@/components/copy-input";
 import { ConnectGmail } from "@/components/inbox/connect-gmail";

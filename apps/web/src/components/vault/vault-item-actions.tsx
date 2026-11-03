@@ -1,8 +1,8 @@
 "use client";
 
-import { LogEvents } from "@midday/events/events";
-import { Button } from "@midday/ui/button";
-import { Icons } from "@midday/ui/icons";
+import { LogEvents } from "@aqardesk/events/events";
+import { Button } from "@aqardesk/ui/button";
+import { Icons } from "@aqardesk/ui/icons";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";

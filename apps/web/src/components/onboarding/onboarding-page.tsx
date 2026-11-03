@@ -13,13 +13,13 @@ import {
   RaycastMcpLogo,
   WindsurfMcpLogo,
   ZapierMcpLogo,
-} from "@midday/app-store/logos";
-import { LogEvents } from "@midday/events/events";
-import { BulkReconciliationAnimation } from "@midday/ui/animations/bulk-reconciliation";
-import { ReceiptAttachmentAnimation } from "@midday/ui/animations/receipt-attachment";
-import { WidgetsAnimation } from "@midday/ui/animations/widgets";
-import { Icons } from "@midday/ui/icons";
-import { SubmitButton } from "@midday/ui/submit-button";
+} from "@aqardesk/app-store/logos";
+import { LogEvents } from "@aqardesk/events/events";
+import { BulkReconciliationAnimation } from "@aqardesk/ui/animations/bulk-reconciliation";
+import { ReceiptAttachmentAnimation } from "@aqardesk/ui/animations/receipt-attachment";
+import { WidgetsAnimation } from "@aqardesk/ui/animations/widgets";
+import { Icons } from "@aqardesk/ui/icons";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
 import { useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import Image from "next/image";

@@ -4,9 +4,9 @@ import {
   horizontalListSortingStrategy,
   SortableContext,
 } from "@dnd-kit/sortable"
-import { Button } from "@midday/ui/button"
-import { Checkbox } from "@midday/ui/checkbox"
-import { TableHead, TableHeader, TableRow } from "@midday/ui/table"
+import { Button } from "@aqardesk/ui/button"
+import { Checkbox } from "@aqardesk/ui/checkbox"
+import { TableHead, TableHeader, TableRow } from "@aqardesk/ui/table"
 import type { Header, Table } from "@tanstack/react-table"
 import { ArrowDown, ArrowUp } from "lucide-react"
 import { useMemo } from "react"

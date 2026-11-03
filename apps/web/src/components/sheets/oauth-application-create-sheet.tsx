@@ -1,9 +1,9 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { Icons } from "@midday/ui/icons"
-import { ScrollArea } from "@midday/ui/scroll-area"
-import { Sheet, SheetContent, SheetHeader } from "@midday/ui/sheet"
+import { Button } from "@aqardesk/ui/button"
+import { Icons } from "@aqardesk/ui/icons"
+import { ScrollArea } from "@aqardesk/ui/scroll-area"
+import { Sheet, SheetContent, SheetHeader } from "@aqardesk/ui/sheet"
 import { OAuthApplicationForm } from "@/components/forms/oauth-application-form"
 import { useOAuthApplicationParams } from "@/hooks/use-oauth-application-params"
 

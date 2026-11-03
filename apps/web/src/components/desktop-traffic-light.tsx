@@ -1,6 +1,6 @@
 "use client";
 
-import { Window } from "@midday/desktop-client/core";
+import { Window } from "@aqardesk/desktop-client/core";
 
 export function DesktopTrafficLight() {
   const getMainWindow = async () => {

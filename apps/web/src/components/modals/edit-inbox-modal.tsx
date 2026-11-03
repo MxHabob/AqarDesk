@@ -1,12 +1,12 @@
 "use client";
 
-import { CurrencyInput } from "@midday/ui/currency-input";
+import { CurrencyInput } from "@aqardesk/ui/currency-input";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-} from "@midday/ui/dialog";
+} from "@aqardesk/ui/dialog";
 import {
   Form,
   FormControl,
@@ -14,9 +14,9 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@midday/ui/form";
-import { Input } from "@midday/ui/input";
-import { SubmitButton } from "@midday/ui/submit-button";
+} from "@aqardesk/ui/form";
+import { Input } from "@aqardesk/ui/input";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { z } from "zod/v3";

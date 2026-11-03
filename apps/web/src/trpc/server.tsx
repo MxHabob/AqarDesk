@@ -1,6 +1,6 @@
 import "server-only";
 
-import type { AppRouter } from "@midday/api/trpc/routers/_app";
+import type { AppRouter } from "@aqardesk/api/trpc/routers/_app";
 import { dehydrate, HydrationBoundary } from "@tanstack/react-query";
 import { createTRPCClient, httpLink, loggerLink } from "@trpc/client";
 import {

@@ -1,10 +1,10 @@
 "use client";
 
-import { Avatar, AvatarFallback, AvatarImageNext } from "@midday/ui/avatar";
-import { Separator } from "@midday/ui/separator";
-import { SheetHeader } from "@midday/ui/sheet";
-import { Skeleton } from "@midday/ui/skeleton";
-import { formatDate, getInitials } from "@midday/utils/format";
+import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar";
+import { Separator } from "@aqardesk/ui/separator";
+import { SheetHeader } from "@aqardesk/ui/sheet";
+import { Skeleton } from "@aqardesk/ui/skeleton";
+import { formatDate, getInitials } from "@aqardesk/utils/format";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { FileViewer } from "@/components/file-viewer";
 import { FormatAmount } from "@/components/format-amount";

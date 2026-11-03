@@ -1,6 +1,6 @@
 "use client"
 
-import { Sheet, SheetContent } from "@midday/ui/sheet"
+import { Sheet, SheetContent } from "@aqardesk/ui/sheet"
 import { useTransactionParams } from "@/hooks/use-transaction-params"
 import { TransactionDetails } from "../transaction-details"
 

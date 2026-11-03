@@ -1,15 +1,15 @@
 "use client";
 
 import type { RouterOutputs } from "@api/trpc/routers/_app";
-import { Card, CardContent, CardHeader, CardTitle } from "@midday/ui/card";
-import { Icons } from "@midday/ui/icons";
-import { Skeleton } from "@midday/ui/skeleton";
+import { Card, CardContent, CardHeader, CardTitle } from "@aqardesk/ui/card";
+import { Icons } from "@aqardesk/ui/icons";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip";
+} from "@aqardesk/ui/tooltip";
 import { useTeamQuery } from "@/hooks/use-team";
 import { useI18n } from "@/locales/client";
 import { AnimatedNumber } from "./animated-number";

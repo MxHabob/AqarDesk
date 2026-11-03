@@ -1,4 +1,4 @@
-import { Icons } from "@midday/ui/icons"
+import { Icons } from "@aqardesk/ui/icons"
 
 interface EmptyStateProps {
   description: string

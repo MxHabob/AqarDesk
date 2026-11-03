@@ -1,4 +1,4 @@
-import { cn } from "@midday/ui/cn"
+import { cn } from "@aqardesk/ui/cn"
 import type { VisibilityState } from "@tanstack/react-table"
 import { useCallback, useMemo } from "react"
 import type { StickyColumnConfig } from "@/components/tables/core"

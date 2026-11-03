@@ -1,19 +1,19 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createClient } from "@midday/supabase/client";
-import { cn } from "@midday/ui/cn";
+import { createClient } from "@aqardesk/supabase/client";
+import { cn } from "@aqardesk/ui/cn";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@midday/ui/form";
-import { Input } from "@midday/ui/input";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@midday/ui/input-otp";
-import { Spinner } from "@midday/ui/spinner";
-import { SubmitButton } from "@midday/ui/submit-button";
+} from "@aqardesk/ui/form";
+import { Input } from "@aqardesk/ui/input";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@aqardesk/ui/input-otp";
+import { Spinner } from "@aqardesk/ui/spinner";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
 import { useSearchParams } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";
 import { useState } from "react";

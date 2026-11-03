@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@midday/ui/button";
-import { Icons } from "@midday/ui/icons";
+import { Button } from "@aqardesk/ui/button";
+import { Icons } from "@aqardesk/ui/icons";
 import { InboxOrdering } from "@/components/inbox/inbox-ordering";
 import { InboxSearch } from "@/components/inbox/inbox-search";
 import { InboxTabs } from "@/components/inbox/inbox-tabs";

@@ -1,5 +1,5 @@
-import { Button } from "@midday/ui/button";
-import { Icons } from "@midday/ui/icons";
+import { Button } from "@aqardesk/ui/button";
+import { Icons } from "@aqardesk/ui/icons";
 import { format, parseISO } from "date-fns";
 import type { Metadata } from "next";
 import Link from "next/link";

@@ -1,6 +1,6 @@
 "use client";
 
-import { SheetHeader } from "@midday/ui/sheet";
+import { SheetHeader } from "@aqardesk/ui/sheet";
 import { useQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 

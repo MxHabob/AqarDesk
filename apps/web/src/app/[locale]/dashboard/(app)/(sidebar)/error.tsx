@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@midday/ui/button";
+import { Button } from "@aqardesk/ui/button";
 import { useEffect } from "react";
 import { CopyInput } from "@/components/copy-input";
 import { SUPPORT_EMAIL } from "@/utils/constants";

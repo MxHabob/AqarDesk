@@ -1,4 +1,4 @@
-import { TextShimmer } from "@midday/ui/text-shimmer";
+import { TextShimmer } from "@aqardesk/ui/text-shimmer";
 import { STATUS_ROW } from "./chat-utils";
 
 export function ThinkingIndicator() {

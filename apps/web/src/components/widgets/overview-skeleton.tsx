@@ -1,4 +1,4 @@
-import { Skeleton } from "@midday/ui/skeleton"
+import { Skeleton } from "@aqardesk/ui/skeleton"
 
 export function SummarySkeleton() {
   return (

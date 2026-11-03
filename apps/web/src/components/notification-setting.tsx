@@ -1,7 +1,7 @@
 "use client";
 
-import { Checkbox } from "@midday/ui/checkbox";
-import { Label } from "@midday/ui/label";
+import { Checkbox } from "@aqardesk/ui/checkbox";
+import { Label } from "@aqardesk/ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@midday/ui/cn";
-import { Skeleton } from "@midday/ui/skeleton";
+import { cn } from "@aqardesk/ui/cn";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 
 export function OrderStatus({
   status,

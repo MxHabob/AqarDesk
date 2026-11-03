@@ -1,5 +1,5 @@
-import { getFrequencyShortLabel } from "@midday/invoice/recurring"
-import { formatAmount } from "@midday/utils/format"
+import { getFrequencyShortLabel } from "@aqardesk/invoice/recurring"
+import { formatAmount } from "@aqardesk/utils/format"
 import { format } from "date-fns"
 import type { useI18n } from "@/locales/client"
 

@@ -1,8 +1,8 @@
 "use client";
 
-import { calculateLineItemTotal } from "@midday/invoice/calculate";
-import { Button } from "@midday/ui/button";
-import { Icons } from "@midday/ui/icons";
+import { calculateLineItemTotal } from "@aqardesk/invoice/calculate";
+import { Button } from "@aqardesk/ui/button";
+import { Icons } from "@aqardesk/ui/icons";
 import { Reorder, useDragControls } from "framer-motion";
 import { useFieldArray, useFormContext, useWatch } from "react-hook-form";
 import { useTemplateUpdate } from "@/hooks/use-template-update";

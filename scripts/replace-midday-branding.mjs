@@ -24,6 +24,7 @@ const excludedFileNames = new Set([
   "sunset-banner.tsx",
 ])
 const brandingPattern = /Midday/g
+const packageNamespacePattern = /@midday\//g
 
 function isExcluded(filePath) {
   const relativePath = path.relative(root, filePath)
@@ -49,10 +50,7 @@ function getSourceFiles(directory) {
       continue
     }
 
-    if (
-      sourceExtensions.has(path.extname(entry.name)) &&
-      !isExcluded(entryPath)
-    ) {
+    if (sourceExtensions.has(path.extname(entry.name))) {
       files.push(entryPath)
     }
   }
@@ -60,7 +58,7 @@ function getSourceFiles(directory) {
   return files
 }
 
-function isImportOrExportSpecifier(node) {
+function isModuleSpecifier(node) {
   const parent = node.parent
 
   if (
@@ -72,7 +70,9 @@ function isImportOrExportSpecifier(node) {
 
   return (
     ts.isCallExpression(parent) &&
-    parent.expression.kind === ts.SyntaxKind.ImportKeyword &&
+    (parent.expression.kind === ts.SyntaxKind.ImportKeyword ||
+      (ts.isIdentifier(parent.expression) &&
+        parent.expression.text === "require")) &&
     parent.arguments.includes(node)
   )
 }
@@ -92,39 +92,57 @@ function isPropertyName(node) {
 function collectTextRanges(sourceFile) {
   const ranges = []
 
-  function addRange(start, end) {
+  function addBrandingRange(start, end) {
+    if (isExcluded(sourceFile.fileName)) {
+      return
+    }
+
     const text = sourceFile.text.slice(start, end)
 
     if (
       !text.includes("Midday") ||
       text.includes("Midday Labs AB") ||
-      text.includes("@midday") ||
       text.includes("midday.ai")
     ) {
       return
     }
 
-    ranges.push({ start, end })
+    ranges.push({ start, end, type: "branding" })
+  }
+
+  function addPackageNamespaceRange(node) {
+    if (!isModuleSpecifier(node) || !node.text.includes("@midday/")) {
+      return
+    }
+
+    ranges.push({
+      start: node.getStart(sourceFile) + 1,
+      end: node.end - 1,
+      type: "packageNamespace",
+    })
   }
 
   function visit(node) {
-    if (
-      ts.isStringLiteralLike(node) &&
-      !isImportOrExportSpecifier(node) &&
-      !isPropertyName(node)
-    ) {
+    if (ts.isStringLiteralLike(node)) {
+      addPackageNamespaceRange(node)
+
+      if (isModuleSpecifier(node) || isPropertyName(node)) {
+        ts.forEachChild(node, visit)
+        return
+      }
+
       const start = node.getStart(sourceFile)
-      addRange(start + 1, node.end - 1)
+      addBrandingRange(start + 1, node.end - 1)
     } else if (ts.isJsxText(node)) {
-      addRange(node.getStart(sourceFile), node.end)
+      addBrandingRange(node.getStart(sourceFile), node.end)
     } else if (ts.isTemplateExpression(node)) {
       const head = node.head
-      addRange(head.getStart(sourceFile) + 1, head.end)
+      addBrandingRange(head.getStart(sourceFile) + 1, head.end)
 
       for (const span of node.templateSpans) {
         const literal = span.literal
         const hasClosingTick = literal.kind === ts.SyntaxKind.TemplateTail
-        addRange(
+        addBrandingRange(
           literal.getStart(sourceFile),
           literal.end - Number(hasClosingTick)
         )
@@ -152,21 +170,28 @@ function updateFile(filePath) {
     scriptKind
   )
   const ranges = collectTextRanges(sourceFile)
-
-  if (ranges.length === 0) {
-    return 0
-  }
-
   let updated = original
 
-  for (const { start, end } of ranges.sort(
+  for (const { start, end, type } of ranges.sort(
     (left, right) => right.start - left.start
   )) {
     const text = updated.slice(start, end)
+    const replacement =
+      type === "packageNamespace"
+        ? text.replace(packageNamespacePattern, "@aqardesk/")
+        : text.replace(brandingPattern, "AqarDesk")
     updated =
       updated.slice(0, start) +
-      text.replace(brandingPattern, "AqarDesk") +
+      replacement +
       updated.slice(end)
+  }
+
+  const remainingPackageReferences =
+    updated.match(packageNamespacePattern)?.length ?? 0
+  updated = updated.replace(packageNamespacePattern, "@aqardesk/")
+
+  if (updated === original) {
+    return 0
   }
 
   if (writeChanges) {
@@ -175,7 +200,7 @@ function updateFile(filePath) {
 
   const relativePath = path.relative(root, filePath)
   console.log(`${writeChanges ? "Updated" : "Would update"} ${relativePath}`)
-  return ranges.length
+  return ranges.length + remainingPackageReferences
 }
 
 let changedFiles = 0
@@ -191,7 +216,7 @@ for (const filePath of getSourceFiles(root)) {
 }
 
 console.log(
-  `${writeChanges ? "Applied" : "Preview"}: ${replacements} branding replacement(s) in ${changedFiles} file(s).`
+  `${writeChanges ? "Applied" : "Preview"}: ${replacements} replacement(s) in ${changedFiles} file(s).`
 )
 if (!writeChanges) {
   console.log("Run with --write to apply these changes.")

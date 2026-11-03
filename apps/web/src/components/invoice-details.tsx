@@ -1,17 +1,17 @@
 "use client";
 
 import { TZDate } from "@date-fns/tz";
-import { getFrequencyShortLabel } from "@midday/invoice/recurring";
+import { getFrequencyShortLabel } from "@aqardesk/invoice/recurring";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@midday/ui/accordion";
-import { Avatar, AvatarFallback, AvatarImageNext } from "@midday/ui/avatar";
-import { Button } from "@midday/ui/button";
-import { cn } from "@midday/ui/cn";
-import { Icons } from "@midday/ui/icons";
+} from "@aqardesk/ui/accordion";
+import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar";
+import { Button } from "@aqardesk/ui/button";
+import { cn } from "@aqardesk/ui/cn";
+import { Icons } from "@aqardesk/ui/icons";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useFileUrl } from "@/hooks/use-file-url";

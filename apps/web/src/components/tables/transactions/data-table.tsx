@@ -1,9 +1,9 @@
 "use client"
 
 import { closestCenter, DndContext } from "@dnd-kit/core"
-import { Table, TableBody } from "@midday/ui/table"
-import { Tooltip, TooltipProvider } from "@midday/ui/tooltip"
-import { toast } from "@midday/ui/use-toast"
+import { Table, TableBody } from "@aqardesk/ui/table"
+import { Tooltip, TooltipProvider } from "@aqardesk/ui/tooltip"
+import { toast } from "@aqardesk/ui/use-toast"
 import {
   useMutation,
   useQueryClient,

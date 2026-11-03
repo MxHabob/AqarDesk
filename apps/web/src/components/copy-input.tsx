@@ -1,7 +1,7 @@
 "use client"
 
-import { cn } from "@midday/ui/cn"
-import { Icons } from "@midday/ui/icons"
+import { cn } from "@aqardesk/ui/cn"
+import { Icons } from "@aqardesk/ui/icons"
 import { motion } from "framer-motion"
 import { useState } from "react"
 import { useCopyToClipboard } from "usehooks-ts"

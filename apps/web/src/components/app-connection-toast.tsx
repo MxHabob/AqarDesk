@@ -1,8 +1,8 @@
 "use client";
 
-import { track } from "@midday/events/client";
-import { LogEvents } from "@midday/events/events";
-import { useToast } from "@midday/ui/use-toast";
+import { track } from "@aqardesk/events/client";
+import { LogEvents } from "@aqardesk/events/events";
+import { useToast } from "@aqardesk/ui/use-toast";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useRef } from "react";
 import {

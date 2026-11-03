@@ -1,8 +1,8 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { Icons } from "@midday/ui/icons"
-import { SubmitButton } from "@midday/ui/submit-button"
+import { Button } from "@aqardesk/ui/button"
+import { Icons } from "@aqardesk/ui/icons"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
 import { motion } from "framer-motion"
 import { Portal } from "@/components/portal"
 import { useDownloadInvoicesZip } from "@/hooks/use-download-invoices-zip"

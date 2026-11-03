@@ -1,14 +1,14 @@
 "use client";
 
-import { LogEvents } from "@midday/events/events";
-import { Icons } from "@midday/ui/icons";
+import { LogEvents } from "@aqardesk/events/events";
+import { Icons } from "@aqardesk/ui/icons";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip";
-import { useToast } from "@midday/ui/use-toast";
+} from "@aqardesk/ui/tooltip";
+import { useToast } from "@aqardesk/ui/use-toast";
 import NumberFlow from "@number-flow/react";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";

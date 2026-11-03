@@ -1,25 +1,25 @@
 "use client";
 
 import { zodResolver } from "@hookform/resolvers/zod";
-import { track } from "@midday/events/client";
-import { LogEvents } from "@midday/events/events";
-import { Avatar, AvatarFallback } from "@midday/ui/avatar";
-import { Button } from "@midday/ui/button";
+import { track } from "@aqardesk/events/client";
+import { LogEvents } from "@aqardesk/events/events";
+import { Avatar, AvatarFallback } from "@aqardesk/ui/avatar";
+import { Button } from "@aqardesk/ui/button";
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
-} from "@midday/ui/form";
-import { Icons } from "@midday/ui/icons";
-import { Skeleton } from "@midday/ui/skeleton";
-import { SubmitButton } from "@midday/ui/submit-button";
-import { Switch } from "@midday/ui/switch";
-import { Tabs, TabsContent } from "@midday/ui/tabs";
-import { Textarea } from "@midday/ui/textarea";
-import { useToast } from "@midday/ui/use-toast";
-import { getInitials } from "@midday/utils/format";
+} from "@aqardesk/ui/form";
+import { Icons } from "@aqardesk/ui/icons";
+import { Skeleton } from "@aqardesk/ui/skeleton";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
+import { Switch } from "@aqardesk/ui/switch";
+import { Tabs, TabsContent } from "@aqardesk/ui/tabs";
+import { Textarea } from "@aqardesk/ui/textarea";
+import { useToast } from "@aqardesk/ui/use-toast";
+import { getInitials } from "@aqardesk/utils/format";
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useAction } from "next-safe-action/hooks";

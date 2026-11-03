@@ -1,11 +1,11 @@
 "use client";
 
 import type { RouterOutputs } from "@api/trpc/routers/_app";
-import { LogEvents } from "@midday/events/events";
-import { cn } from "@midday/ui/cn";
-import { useToast } from "@midday/ui/use-toast";
-import { stripSpecialCharacters } from "@midday/utils";
-import { getTaxTypeLabel } from "@midday/utils/tax";
+import { LogEvents } from "@aqardesk/events/events";
+import { cn } from "@aqardesk/ui/cn";
+import { useToast } from "@aqardesk/ui/use-toast";
+import { stripSpecialCharacters } from "@aqardesk/utils";
+import { getTaxTypeLabel } from "@aqardesk/utils/tax";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { parseISO } from "date-fns";

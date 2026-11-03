@@ -1,4 +1,4 @@
-import { Sheet, SheetContent } from "@midday/ui/sheet"
+import { Sheet, SheetContent } from "@aqardesk/ui/sheet"
 import { useInvoiceParams } from "@/hooks/use-invoice-params"
 import { InvoiceDetails } from "../invoice-details"
 

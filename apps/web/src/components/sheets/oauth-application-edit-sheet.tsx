@@ -5,11 +5,11 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
-import { Icons } from "@midday/ui/icons"
-import { ScrollArea } from "@midday/ui/scroll-area"
-import { Sheet, SheetContent, SheetHeader } from "@midday/ui/sheet"
-import { useToast } from "@midday/ui/use-toast"
+} from "@aqardesk/ui/dropdown-menu"
+import { Icons } from "@aqardesk/ui/icons"
+import { ScrollArea } from "@aqardesk/ui/scroll-area"
+import { Sheet, SheetContent, SheetHeader } from "@aqardesk/ui/sheet"
+import { useToast } from "@aqardesk/ui/use-toast"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
 import { useCopyToClipboard } from "usehooks-ts"

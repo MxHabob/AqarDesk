@@ -1,6 +1,6 @@
 "use client";
 
-import { transformCustomerToContent } from "@midday/invoice/utils";
+import { transformCustomerToContent } from "@aqardesk/invoice/utils";
 import { useQuery } from "@tanstack/react-query";
 import type { JSONContent } from "@tiptap/react";
 import { useEffect } from "react";

@@ -1,9 +1,9 @@
 "use client";
 
-import { Button } from "@midday/ui/button";
-import { Checkbox } from "@midday/ui/checkbox";
-import { Icons } from "@midday/ui/icons";
-import { Popover, PopoverContent, PopoverTrigger } from "@midday/ui/popover";
+import { Button } from "@aqardesk/ui/button";
+import { Checkbox } from "@aqardesk/ui/checkbox";
+import { Icons } from "@aqardesk/ui/icons";
+import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover";
 import { useCustomersStore } from "@/store/customers";
 
 export function CustomersColumnVisibility() {

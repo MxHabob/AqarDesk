@@ -1,8 +1,8 @@
 "use client"
 
-import { SubmitButton } from "@midday/ui/submit-button"
-import { useToast } from "@midday/ui/use-toast"
-import { formatDate } from "@midday/utils/format"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
+import { useToast } from "@aqardesk/ui/use-toast"
+import { formatDate } from "@aqardesk/utils/format"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { motion } from "framer-motion"
 import { useInboxParams } from "@/hooks/use-inbox-params"

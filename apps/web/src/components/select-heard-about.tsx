@@ -4,7 +4,7 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@midday/ui/select";
+} from "@aqardesk/ui/select";
 
 const heardAboutOptions = [
   { value: "twitter", label: "Twitter / X" },

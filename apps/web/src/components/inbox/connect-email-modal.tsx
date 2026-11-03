@@ -7,7 +7,7 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from "@midday/ui/dialog";
+} from "@aqardesk/ui/dialog";
 import { ConnectGmail } from "./connect-gmail";
 import { ConnectOutlook } from "./connect-outlook";
 

@@ -1,11 +1,11 @@
 "use client";
 
-import type { BillableHoursResult } from "@midday/db/queries";
+import type { BillableHoursResult } from "@aqardesk/db/queries";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@midday/ui/hover-card";
+} from "@aqardesk/ui/hover-card";
 import { secondsToHoursAndMinutes } from "@/utils/format";
 import { FormatAmount } from "./format-amount";
 

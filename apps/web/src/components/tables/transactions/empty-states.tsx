@@ -1,7 +1,7 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { Icons } from "@midday/ui/icons"
+import { Button } from "@aqardesk/ui/button"
+import { Icons } from "@aqardesk/ui/icons"
 import { AddAccountButton } from "@/components/add-account-button"
 import { useTransactionFilterParamsWithPersistence } from "@/hooks/use-transaction-filter-params-with-persistence"
 

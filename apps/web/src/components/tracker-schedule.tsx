@@ -3,16 +3,16 @@
 import type { RouterOutputs } from "@api/trpc/routers/_app";
 import { TZDate, tz } from "@date-fns/tz";
 import { UTCDate } from "@date-fns/utc";
-import { LogEvents } from "@midday/events/events";
-import { cn } from "@midday/ui/cn";
+import { LogEvents } from "@aqardesk/events/events";
+import { cn } from "@aqardesk/ui/cn";
 import {
   ContextMenu,
   ContextMenuContent,
   ContextMenuItem,
   ContextMenuShortcut,
   ContextMenuTrigger,
-} from "@midday/ui/context-menu";
-import { ScrollArea } from "@midday/ui/scroll-area";
+} from "@aqardesk/ui/context-menu";
+import { ScrollArea } from "@aqardesk/ui/scroll-area";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {

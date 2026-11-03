@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
+import { Button } from "@aqardesk/ui/button"
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,9 +11,9 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
-import { Icons } from "@midday/ui/icons"
-import { useToast } from "@midday/ui/use-toast"
+} from "@aqardesk/ui/dropdown-menu"
+import { Icons } from "@aqardesk/ui/icons"
+import { useToast } from "@aqardesk/ui/use-toast"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTransactionsStore } from "@/store/transactions"
 import { useTRPC } from "@/trpc/client"

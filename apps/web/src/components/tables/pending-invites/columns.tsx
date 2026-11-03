@@ -1,12 +1,12 @@
 import type { RouterOutputs } from "@api/trpc/routers/_app"
-import { Avatar, AvatarFallback } from "@midday/ui/avatar"
-import { Button } from "@midday/ui/button"
+import { Avatar, AvatarFallback } from "@aqardesk/ui/avatar"
+import { Button } from "@aqardesk/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
+} from "@aqardesk/ui/dropdown-menu"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import type { ColumnDef, FilterFn, Row } from "@tanstack/react-table"
 import { MoreHorizontal } from "lucide-react"

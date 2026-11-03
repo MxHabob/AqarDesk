@@ -1,4 +1,4 @@
-import { getCountryCode, getCurrency } from "@midday/location";
+import { getCountryCode, getCurrency } from "@aqardesk/location";
 import type { Metadata } from "next";
 import { redirect } from "next/navigation";
 import { OnboardingPage } from "@/components/onboarding/onboarding-page";

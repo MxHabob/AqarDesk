@@ -1,14 +1,14 @@
 "use client"
 
-import { apps as appStoreApps } from "@midday/app-store"
+import { apps as appStoreApps } from "@aqardesk/app-store"
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@midday/ui/accordion"
-import { ScrollArea } from "@midday/ui/scroll-area"
-import { Sheet, SheetContent, SheetHeader } from "@midday/ui/sheet"
+} from "@aqardesk/ui/accordion"
+import { ScrollArea } from "@aqardesk/ui/scroll-area"
+import { Sheet, SheetContent, SheetHeader } from "@aqardesk/ui/sheet"
 import { parseAsString, useQueryStates } from "nuqs"
 import { useMemo } from "react"
 import { MemoizedReactMarkdown } from "@/components/markdown"

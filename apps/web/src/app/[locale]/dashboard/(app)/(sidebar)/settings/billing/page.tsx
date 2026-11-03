@@ -1,4 +1,4 @@
-import { Card } from "@midday/ui/card";
+import { Card } from "@aqardesk/ui/card";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { ManageSubscription } from "@/components/manage-subscription";

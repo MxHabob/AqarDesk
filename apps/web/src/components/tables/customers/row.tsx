@@ -1,7 +1,7 @@
 "use client"
 
-import { cn } from "@midday/ui/cn"
-import { TableCell, TableRow } from "@midday/ui/table"
+import { cn } from "@aqardesk/ui/cn"
+import { TableCell, TableRow } from "@aqardesk/ui/table"
 import { flexRender, type Row } from "@tanstack/react-table"
 import type { Customer } from "./columns"
 

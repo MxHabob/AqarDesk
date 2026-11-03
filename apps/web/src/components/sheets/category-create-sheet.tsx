@@ -1,8 +1,8 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { Icons } from "@midday/ui/icons"
-import { Sheet, SheetContent, SheetHeader } from "@midday/ui/sheet"
+import { Button } from "@aqardesk/ui/button"
+import { Icons } from "@aqardesk/ui/icons"
+import { Sheet, SheetContent, SheetHeader } from "@aqardesk/ui/sheet"
 import { useCategoryParams } from "@/hooks/use-category-params"
 import { CategoryForm } from "../forms/category-form"
 

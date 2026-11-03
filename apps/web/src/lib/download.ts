@@ -1,4 +1,4 @@
-import { isDesktopApp } from "@midday/desktop-client/platform";
+import { isDesktopApp } from "@aqardesk/desktop-client/platform";
 
 export async function downloadFile(url: string, filename: string) {
   if (!isDesktopApp()) {
@@ -34,7 +34,7 @@ export async function downloadFile(url: string, filename: string) {
     filename,
   });
 
-  const { nativeSaveFile } = await import("@midday/desktop-client/core");
+  const { nativeSaveFile } = await import("@aqardesk/desktop-client/core");
 
   try {
     await nativeSaveFile(blob, filename);

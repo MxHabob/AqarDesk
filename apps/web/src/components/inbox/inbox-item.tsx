@@ -1,15 +1,15 @@
 import type { RouterOutputs } from "@api/trpc/routers/_app";
-import { Badge } from "@midday/ui/badge";
-import { cn } from "@midday/ui/cn";
-import { Skeleton } from "@midday/ui/skeleton";
+import { Badge } from "@aqardesk/ui/badge";
+import { cn } from "@aqardesk/ui/cn";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip";
-import { formatDate } from "@midday/utils/format";
-import { getTaxTypeLabel } from "@midday/utils/tax";
+} from "@aqardesk/ui/tooltip";
+import { formatDate } from "@aqardesk/utils/format";
+import { getTaxTypeLabel } from "@aqardesk/utils/tax";
 import { forwardRef } from "react";
 import { FormatAmount } from "@/components/format-amount";
 import { InboxStatus } from "@/components/inbox/inbox-status";

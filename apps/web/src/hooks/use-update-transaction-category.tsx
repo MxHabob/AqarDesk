@@ -1,7 +1,7 @@
 "use client"
 
-import { ToastAction } from "@midday/ui/toast"
-import { toast } from "@midday/ui/use-toast"
+import { ToastAction } from "@aqardesk/ui/toast"
+import { toast } from "@aqardesk/ui/use-toast"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { useInvalidateTransactionQueries } from "@/hooks/use-invalidate-transaction-queries"
 import { useTRPC } from "@/trpc/client"

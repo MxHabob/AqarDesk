@@ -7,8 +7,8 @@ import {
   scopePresets,
   scopesToName,
 } from "@api/utils/scopes";
-import { LogEvents } from "@midday/events/events";
-import { AnimatedSizeContainer } from "@midday/ui/animated-size-container";
+import { LogEvents } from "@aqardesk/events/events";
+import { AnimatedSizeContainer } from "@aqardesk/ui/animated-size-container";
 import {
   Form,
   FormControl,
@@ -16,10 +16,10 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@midday/ui/form";
-import { Input } from "@midday/ui/input";
-import { SubmitButton } from "@midday/ui/submit-button";
-import { Tabs, TabsList, TabsTrigger } from "@midday/ui/tabs";
+} from "@aqardesk/ui/form";
+import { Input } from "@aqardesk/ui/input";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
+import { Tabs, TabsList, TabsTrigger } from "@aqardesk/ui/tabs";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";

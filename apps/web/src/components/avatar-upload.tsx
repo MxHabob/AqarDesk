@@ -1,9 +1,9 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@midday/ui/avatar"
-import { cn } from "@midday/ui/cn"
-import { Icons } from "@midday/ui/icons"
-import { stripSpecialCharacters } from "@midday/utils"
+import { Avatar, AvatarFallback, AvatarImage } from "@aqardesk/ui/avatar"
+import { cn } from "@aqardesk/ui/cn"
+import { Icons } from "@aqardesk/ui/icons"
+import { stripSpecialCharacters } from "@aqardesk/utils"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { forwardRef, useRef, useState } from "react"

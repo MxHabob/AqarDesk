@@ -1,4 +1,4 @@
-import { calculateTotal } from "@midday/invoice/calculate";
+import { calculateTotal } from "@aqardesk/invoice/calculate";
 import { useCallback, useEffect } from "react";
 import { useFormContext, useWatch } from "react-hook-form";
 import { useTemplateUpdate } from "@/hooks/use-template-update";

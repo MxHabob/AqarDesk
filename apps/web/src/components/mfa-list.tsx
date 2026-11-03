@@ -1,5 +1,5 @@
-import { createClient } from "@midday/supabase/server";
-import { Skeleton } from "@midday/ui/skeleton";
+import { createClient } from "@aqardesk/supabase/server";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import { format } from "date-fns";
 import { getI18n } from "@/locales/server";
 import { RemoveMFAButton } from "./remove-mfa-button";

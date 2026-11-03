@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@midday/ui/skeleton";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import dynamic from "next/dynamic";
 import { useFileUrl } from "@/hooks/use-file-url";
 import { FilePreviewIcon } from "./file-preview-icon";

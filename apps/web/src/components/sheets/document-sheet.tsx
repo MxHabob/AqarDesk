@@ -1,6 +1,6 @@
 "use client"
 
-import { Sheet, SheetContent } from "@midday/ui/sheet"
+import { Sheet, SheetContent } from "@aqardesk/ui/sheet"
 import { DocumentDetails } from "@/components/document-details"
 import { useDocumentParams } from "@/hooks/use-document-params"
 

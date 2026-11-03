@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
+import { Button } from "@aqardesk/ui/button"
 import { useInvoiceFilterParams } from "@/hooks/use-invoice-filter-params"
 import { useInvoiceParams } from "@/hooks/use-invoice-params"
 

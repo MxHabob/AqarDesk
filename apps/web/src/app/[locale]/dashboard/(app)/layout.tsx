@@ -1,4 +1,4 @@
-import { createClient } from "@midday/supabase/server";
+import { createClient } from "@aqardesk/supabase/server";
 import { redirect } from "next/navigation";
 import { isBlockedNewUser } from "@/utils/new-user-gate";
 

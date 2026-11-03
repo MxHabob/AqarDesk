@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@midday/ui/button";
-import { Skeleton } from "@midday/ui/skeleton";
+import { Button } from "@aqardesk/ui/button";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import { X } from "lucide-react";
 import { useDocumentParams } from "@/hooks/use-document-params";
 import { formatSize } from "@/utils/format";

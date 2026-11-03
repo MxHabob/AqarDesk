@@ -1,4 +1,4 @@
-import type { OAuthErrorCode } from "@midday/app-store/oauth-errors"
+import type { OAuthErrorCode } from "@aqardesk/app-store/oauth-errors"
 
 /**
  * Re-export the shared OAuth error code type for dashboard use

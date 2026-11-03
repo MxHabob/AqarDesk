@@ -10,16 +10,16 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@midday/ui/alert-dialog"
+} from "@aqardesk/ui/alert-dialog"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
-import { Icons } from "@midday/ui/icons"
-import { ScrollArea } from "@midday/ui/scroll-area"
-import { Sheet, SheetContent, SheetHeader } from "@midday/ui/sheet"
+} from "@aqardesk/ui/dropdown-menu"
+import { Icons } from "@aqardesk/ui/icons"
+import { ScrollArea } from "@aqardesk/ui/scroll-area"
+import { Sheet, SheetContent, SheetHeader } from "@aqardesk/ui/sheet"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { TrackerProjectForm } from "@/components/forms/tracker-project-form"
 import { useLatestProjectId } from "@/hooks/use-latest-project-id"

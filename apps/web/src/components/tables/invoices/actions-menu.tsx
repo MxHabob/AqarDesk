@@ -1,6 +1,6 @@
 "use client"
 
-import { LogEvents } from "@midday/events/events"
+import { LogEvents } from "@aqardesk/events/events"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -10,9 +10,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@midday/ui/alert-dialog"
-import { Button } from "@midday/ui/button"
-import { Calendar } from "@midday/ui/calendar"
+} from "@aqardesk/ui/alert-dialog"
+import { Button } from "@aqardesk/ui/button"
+import { Calendar } from "@aqardesk/ui/calendar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -22,8 +22,8 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
-import { useToast } from "@midday/ui/use-toast"
+} from "@aqardesk/ui/dropdown-menu"
+import { useToast } from "@aqardesk/ui/use-toast"
 import { useOpenPanel } from "@openpanel/nextjs"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
 import { MoreHorizontal } from "lucide-react"

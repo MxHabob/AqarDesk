@@ -2,7 +2,7 @@
 
 import type { RouterOutputs } from "@api/trpc/routers/_app";
 import { TZDate } from "@date-fns/tz";
-import { cn } from "@midday/ui/cn";
+import { cn } from "@aqardesk/ui/cn";
 import { format } from "date-fns";
 import { memo, useEffect, useMemo, useState } from "react";
 import { useUserQuery } from "@/hooks/use-user";

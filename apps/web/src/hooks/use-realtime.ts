@@ -1,7 +1,7 @@
 "use client"
 
-import { createClient } from "@midday/supabase/client"
-import type { Database } from "@midday/supabase/types"
+import { createClient } from "@aqardesk/supabase/client"
+import type { Database } from "@aqardesk/supabase/types"
 import type {
   RealtimeChannel,
   RealtimePostgresChangesPayload,

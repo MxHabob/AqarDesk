@@ -1,12 +1,12 @@
 "use client";
 
-import { Button } from "@midday/ui/button";
+import { Button } from "@aqardesk/ui/button";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@midday/ui/hover-card";
-import { Icons } from "@midday/ui/icons";
+} from "@aqardesk/ui/hover-card";
+import { Icons } from "@aqardesk/ui/icons";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
 import { useEffect, useMemo, useState } from "react";

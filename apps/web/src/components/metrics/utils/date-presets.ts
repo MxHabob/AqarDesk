@@ -1,4 +1,4 @@
-import { getFiscalYearToDate } from "@midday/utils"
+import { getFiscalYearToDate } from "@aqardesk/utils"
 import {
   endOfMonth,
   endOfQuarter,

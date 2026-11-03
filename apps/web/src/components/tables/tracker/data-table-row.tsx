@@ -11,19 +11,19 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@midday/ui/alert-dialog"
-import { Avatar, AvatarFallback, AvatarImageNext } from "@midday/ui/avatar"
-import { Badge } from "@midday/ui/badge"
+} from "@aqardesk/ui/alert-dialog"
+import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar"
+import { Badge } from "@aqardesk/ui/badge"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
-import { Icons } from "@midday/ui/icons"
-import { ScrollArea, ScrollBar } from "@midday/ui/scroll-area"
-import { TableCell, TableRow } from "@midday/ui/table"
+} from "@aqardesk/ui/dropdown-menu"
+import { Icons } from "@aqardesk/ui/icons"
+import { ScrollArea, ScrollBar } from "@aqardesk/ui/scroll-area"
+import { TableCell, TableRow } from "@aqardesk/ui/table"
 import Link from "next/link"
 import { TrackerCreateInvoice } from "@/components/tracker-create-invoice"
 import { TrackerExportCSV } from "@/components/tracker-export-csv"

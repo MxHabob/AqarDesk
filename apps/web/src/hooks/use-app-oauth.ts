@@ -1,7 +1,7 @@
 "use client"
 
-import type { OAuthErrorCode } from "@midday/app-store/oauth-errors"
-import { createClient } from "@midday/supabase/client"
+import type { OAuthErrorCode } from "@aqardesk/app-store/oauth-errors"
+import { createClient } from "@aqardesk/supabase/client"
 import { useEffect, useRef, useState } from "react"
 import { isOAuthMessage, OAUTH_CHANNEL_NAME } from "@/utils/oauth-message"
 

@@ -1,7 +1,7 @@
 "use client";
 
-import { Icons } from "@midday/ui/icons";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@midday/ui/tabs";
+import { Icons } from "@aqardesk/ui/icons";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aqardesk/ui/tabs";
 import { useState } from "react";
 
 function CopyableUrl({ url }: { url: string }) {

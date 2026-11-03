@@ -1,6 +1,6 @@
 "use client"
 
-import { cn } from "@midday/ui/cn"
+import { cn } from "@aqardesk/ui/cn"
 import {
   Table,
   TableBody,
@@ -8,7 +8,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@midday/ui/table"
+} from "@aqardesk/ui/table"
 import {
   useMutation,
   useQueryClient,

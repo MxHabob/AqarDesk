@@ -1,9 +1,9 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { Spinner } from "@midday/ui/spinner"
-import { Table, TableBody, TableCell, TableRow } from "@midday/ui/table"
-import { formatDate } from "@midday/utils/format"
+import { Button } from "@aqardesk/ui/button"
+import { Spinner } from "@aqardesk/ui/spinner"
+import { Table, TableBody, TableCell, TableRow } from "@aqardesk/ui/table"
+import { formatDate } from "@aqardesk/utils/format"
 import { useSuspenseInfiniteQuery } from "@tanstack/react-query"
 import { useMemo } from "react"
 import { useUserQuery } from "@/hooks/use-user"

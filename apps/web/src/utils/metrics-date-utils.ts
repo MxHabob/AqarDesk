@@ -1,4 +1,4 @@
-import { getFiscalYearDates } from "@midday/utils"
+import { getFiscalYearDates } from "@aqardesk/utils"
 import {
   format,
   formatISO,

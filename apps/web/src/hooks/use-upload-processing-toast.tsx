@@ -1,6 +1,6 @@
 "use client"
 
-import { toast } from "@midday/ui/use-toast"
+import { toast } from "@aqardesk/ui/use-toast"
 import NumberFlow from "@number-flow/react"
 import { useCallback, useEffect, useRef } from "react"
 import { PROCESSING_TOAST_ID } from "@/components/transactions-upload-zone"

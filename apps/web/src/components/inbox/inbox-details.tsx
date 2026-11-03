@@ -1,7 +1,7 @@
-import { Avatar, AvatarFallback, AvatarImageNext } from "@midday/ui/avatar";
-import { Button } from "@midday/ui/button";
-import { cn } from "@midday/ui/cn";
-import { DialogTrigger } from "@midday/ui/dialog";
+import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar";
+import { Button } from "@aqardesk/ui/button";
+import { cn } from "@aqardesk/ui/cn";
+import { DialogTrigger } from "@aqardesk/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -10,19 +10,19 @@ import {
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu";
-import { Icons } from "@midday/ui/icons";
-import { Separator } from "@midday/ui/separator";
-import { Skeleton } from "@midday/ui/skeleton";
+} from "@aqardesk/ui/dropdown-menu";
+import { Icons } from "@aqardesk/ui/icons";
+import { Separator } from "@aqardesk/ui/separator";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip";
-import { useToast } from "@midday/ui/use-toast";
-import { formatDate, getInitials } from "@midday/utils/format";
-import { getTaxTypeLabel } from "@midday/utils/tax";
+} from "@aqardesk/ui/tooltip";
+import { useToast } from "@aqardesk/ui/use-toast";
+import { formatDate, getInitials } from "@aqardesk/utils/format";
+import { getTaxTypeLabel } from "@aqardesk/utils/tax";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { MoreVertical, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";

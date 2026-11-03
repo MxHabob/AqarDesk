@@ -1,10 +1,10 @@
 "use client";
 
-import { track } from "@midday/events/client";
-import { LogEvents } from "@midday/events/events";
-import { Button } from "@midday/ui/button";
-import { Input } from "@midday/ui/input";
-import { Skeleton } from "@midday/ui/skeleton";
+import { track } from "@aqardesk/events/client";
+import { LogEvents } from "@aqardesk/events/events";
+import { Button } from "@aqardesk/ui/button";
+import { Input } from "@aqardesk/ui/input";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";

@@ -1,4 +1,4 @@
-import type { BillableHoursResult } from "@midday/db/queries";
+import type { BillableHoursResult } from "@aqardesk/db/queries";
 import NumberFlow from "@number-flow/react";
 import { TotalEarnings } from "../total-earnings";
 import { TrackerCalendarType } from "../tracker-calendar-type";

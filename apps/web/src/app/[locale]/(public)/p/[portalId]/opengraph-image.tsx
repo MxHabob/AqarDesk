@@ -1,4 +1,4 @@
-import { formatAmount } from "@midday/utils/format";
+import { formatAmount } from "@aqardesk/utils/format";
 import { ImageResponse } from "next/og";
 import { getQueryClient, trpc } from "@/trpc/server";
 

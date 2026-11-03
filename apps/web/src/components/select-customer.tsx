@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@midday/ui/button";
+import { Button } from "@aqardesk/ui/button";
 import {
   Command,
   CommandEmpty,
@@ -8,8 +8,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@midday/ui/command";
-import { Popover, PopoverContent, PopoverTrigger } from "@midday/ui/popover";
+} from "@aqardesk/ui/command";
+import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover";
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { useCustomerParams } from "@/hooks/use-customer-params";

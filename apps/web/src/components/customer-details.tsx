@@ -6,20 +6,20 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@midday/ui/accordion";
-import { Badge } from "@midday/ui/badge";
-import { Button } from "@midday/ui/button";
-import { cn } from "@midday/ui/cn";
+} from "@aqardesk/ui/accordion";
+import { Badge } from "@aqardesk/ui/badge";
+import { Button } from "@aqardesk/ui/button";
+import { cn } from "@aqardesk/ui/cn";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu";
-import { Icons } from "@midday/ui/icons";
-import { SheetFooter, SheetHeader } from "@midday/ui/sheet";
-import { Skeleton } from "@midday/ui/skeleton";
-import { Switch } from "@midday/ui/switch";
+} from "@aqardesk/ui/dropdown-menu";
+import { Icons } from "@aqardesk/ui/icons";
+import { SheetFooter, SheetHeader } from "@aqardesk/ui/sheet";
+import { Skeleton } from "@aqardesk/ui/skeleton";
+import { Switch } from "@aqardesk/ui/switch";
 import {
   Table,
   TableBody,
@@ -27,8 +27,8 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from "@midday/ui/table";
-import { useToast } from "@midday/ui/use-toast";
+} from "@aqardesk/ui/table";
+import { useToast } from "@aqardesk/ui/use-toast";
 import {
   keepPreviousData,
   useInfiniteQuery,

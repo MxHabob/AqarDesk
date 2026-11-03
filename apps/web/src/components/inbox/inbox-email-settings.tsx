@@ -1,7 +1,7 @@
 "use client";
 
-import { getInboxEmail } from "@midday/inbox";
-import { Card, CardDescription, CardHeader, CardTitle } from "@midday/ui/card";
+import { getInboxEmail } from "@aqardesk/inbox";
+import { Card, CardDescription, CardHeader, CardTitle } from "@aqardesk/ui/card";
 import { CopyInput } from "@/components/copy-input";
 import { useUserQuery } from "@/hooks/use-user";
 

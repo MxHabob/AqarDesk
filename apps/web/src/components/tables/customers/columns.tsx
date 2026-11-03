@@ -1,22 +1,22 @@
 "use client"
 
 import type { RouterOutputs } from "@api/trpc/routers/_app"
-import { Avatar, AvatarFallback, AvatarImageNext } from "@midday/ui/avatar"
-import { Badge } from "@midday/ui/badge"
-import { Button } from "@midday/ui/button"
+import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar"
+import { Badge } from "@aqardesk/ui/badge"
+import { Button } from "@aqardesk/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
-import { Spinner } from "@midday/ui/spinner"
+} from "@aqardesk/ui/dropdown-menu"
+import { Spinner } from "@aqardesk/ui/spinner"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip"
+} from "@aqardesk/ui/tooltip"
 import type { ColumnDef } from "@tanstack/react-table"
 import { formatDistanceToNowStrict } from "date-fns"
 import { MoreHorizontal } from "lucide-react"

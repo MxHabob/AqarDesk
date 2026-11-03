@@ -1,9 +1,9 @@
 "use client";
 
-import { track } from "@midday/events/client";
-import { LogEvents } from "@midday/events/events";
-import { Button } from "@midday/ui/button";
-import { Icons } from "@midday/ui/icons";
+import { track } from "@aqardesk/events/client";
+import { LogEvents } from "@aqardesk/events/events";
+import { Button } from "@aqardesk/ui/button";
+import { Icons } from "@aqardesk/ui/icons";
 import dynamic from "next/dynamic";
 import Image from "next/image";
 import Link from "next/link";
@@ -11,17 +11,17 @@ import { useEffect, useRef, useState } from "react";
 
 // Dynamic imports for animations (5,500+ lines - loaded after hero)
 const InboxMatchAnimation = dynamic(() =>
-  import("@midday/ui/animations/inbox-match").then(
+  import("@aqardesk/ui/animations/inbox-match").then(
     (m) => m.InboxMatchAnimation,
   ),
 );
 const InvoicePaymentAnimation = dynamic(() =>
-  import("@midday/ui/animations/invoice-payment").then(
+  import("@aqardesk/ui/animations/invoice-payment").then(
     (m) => m.InvoicePaymentAnimation,
   ),
 );
 const TransactionFlowAnimation = dynamic(() =>
-  import("@midday/ui/animations/transaction-flow").then(
+  import("@aqardesk/ui/animations/transaction-flow").then(
     (m) => m.TransactionFlowAnimation,
   ),
 );

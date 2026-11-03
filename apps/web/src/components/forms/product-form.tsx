@@ -1,8 +1,8 @@
 "use client";
 
 import type { RouterOutputs } from "@api/trpc/routers/_app";
-import { uniqueCurrencies } from "@midday/location/currencies";
-import { CurrencyInput } from "@midday/ui/currency-input";
+import { uniqueCurrencies } from "@aqardesk/location/currencies";
+import { CurrencyInput } from "@aqardesk/ui/currency-input";
 import {
   Form,
   FormControl,
@@ -11,11 +11,11 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@midday/ui/form";
-import { Input } from "@midday/ui/input";
-import { SubmitButton } from "@midday/ui/submit-button";
-import { Switch } from "@midday/ui/switch";
-import { Textarea } from "@midday/ui/textarea";
+} from "@aqardesk/ui/form";
+import { Input } from "@aqardesk/ui/input";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
+import { Switch } from "@aqardesk/ui/switch";
+import { Textarea } from "@aqardesk/ui/textarea";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod/v3";
 import { SelectCurrency } from "@/components/select-currency";

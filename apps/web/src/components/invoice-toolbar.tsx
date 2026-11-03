@@ -1,15 +1,15 @@
 "use client";
 
-import { Button } from "@midday/ui/button";
-import { Icons } from "@midday/ui/icons";
-import { Spinner } from "@midday/ui/spinner";
+import { Button } from "@aqardesk/ui/button";
+import { Icons } from "@aqardesk/ui/icons";
+import { Spinner } from "@aqardesk/ui/spinner";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip";
-import { useToast } from "@midday/ui/use-toast";
+} from "@aqardesk/ui/tooltip";
+import { useToast } from "@aqardesk/ui/use-toast";
 import { motion } from "framer-motion";
 import JSZip from "jszip";
 import { useEffect, useRef, useState } from "react";

@@ -1,9 +1,9 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { CurrencyInput } from "@midday/ui/currency-input"
-import { Label } from "@midday/ui/label"
-import { RadioGroup, RadioGroupItem } from "@midday/ui/radio-group"
+import { Button } from "@aqardesk/ui/button"
+import { CurrencyInput } from "@aqardesk/ui/currency-input"
+import { Label } from "@aqardesk/ui/label"
+import { RadioGroup, RadioGroupItem } from "@aqardesk/ui/radio-group"
 import {
   parseAsArrayOf,
   parseAsInteger,

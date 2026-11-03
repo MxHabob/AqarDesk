@@ -6,9 +6,9 @@ import {
   CursorMcpLogo,
   GeminiMcpLogo,
   MiddayDesktopLogo,
-} from "@midday/app-store/logos";
-import { isDesktopApp } from "@midday/desktop-client/platform";
-import { Avatar, AvatarFallback, AvatarImageNext } from "@midday/ui/avatar";
+} from "@aqardesk/app-store/logos";
+import { isDesktopApp } from "@aqardesk/desktop-client/platform";
+import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,7 +17,7 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu";
+} from "@aqardesk/ui/dropdown-menu";
 import Link from "next/link";
 import { useUserQuery } from "@/hooks/use-user";
 import { SignOut } from "./sign-out";

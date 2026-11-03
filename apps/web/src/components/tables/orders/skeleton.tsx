@@ -1,5 +1,5 @@
-import { Skeleton } from "@midday/ui/skeleton"
-import { Table, TableBody, TableCell, TableRow } from "@midday/ui/table"
+import { Skeleton } from "@aqardesk/ui/skeleton"
+import { Table, TableBody, TableCell, TableRow } from "@aqardesk/ui/table"
 import { OrdersTableHeader } from "./table-header"
 
 export function OrdersSkeleton() {

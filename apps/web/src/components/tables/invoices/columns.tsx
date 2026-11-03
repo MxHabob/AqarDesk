@@ -2,18 +2,18 @@
 
 import type { RouterOutputs } from "@api/trpc/routers/_app"
 import { TZDate } from "@date-fns/tz"
-import { getFrequencyShortLabel } from "@midday/invoice/recurring"
-import { Avatar, AvatarFallback, AvatarImageNext } from "@midday/ui/avatar"
-import { Checkbox } from "@midday/ui/checkbox"
-import { cn } from "@midday/ui/cn"
-import { Icons } from "@midday/ui/icons"
+import { getFrequencyShortLabel } from "@aqardesk/invoice/recurring"
+import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar"
+import { Checkbox } from "@aqardesk/ui/checkbox"
+import { cn } from "@aqardesk/ui/cn"
+import { Icons } from "@aqardesk/ui/icons"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip"
-import { formatDate } from "@midday/utils/format"
+} from "@aqardesk/ui/tooltip"
+import { formatDate } from "@aqardesk/utils/format"
 import type { ColumnDef } from "@tanstack/react-table"
 import { format, formatDistanceToNow } from "date-fns"
 import type { MouseEvent } from "react"

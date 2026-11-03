@@ -1,7 +1,7 @@
 "use client"
 
-import { Avatar, AvatarFallback, AvatarImageNext } from "@midday/ui/avatar"
-import { SubmitButton } from "@midday/ui/submit-button"
+import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
 import {
   useMutation,
   useQueryClient,

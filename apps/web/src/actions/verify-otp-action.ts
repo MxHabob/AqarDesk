@@ -1,6 +1,6 @@
 "use server";
 
-import { createClient } from "@midday/supabase/server";
+import { createClient } from "@aqardesk/supabase/server";
 import { addSeconds, addYears } from "date-fns";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";

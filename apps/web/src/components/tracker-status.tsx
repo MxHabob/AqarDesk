@@ -1,7 +1,7 @@
 "use client";
 
 import type { RouterOutputs } from "@api/trpc/routers/_app";
-import { cn } from "@midday/ui/cn";
+import { cn } from "@aqardesk/ui/cn";
 import { useI18n } from "@/locales/client";
 
 type Props = {

@@ -5,8 +5,8 @@ import {
   ClaudeMcpLogo,
   ManusMcpLogo,
   PerplexityMcpLogo,
-} from "@midday/app-store/logos"
-import { Icons } from "@midday/ui/icons"
+} from "@aqardesk/app-store/logos"
+import { Icons } from "@aqardesk/ui/icons"
 import { AnimatePresence, motion } from "framer-motion"
 import Link from "next/link"
 import { parseAsString, useQueryStates } from "nuqs"

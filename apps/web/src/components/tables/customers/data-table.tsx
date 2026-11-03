@@ -1,8 +1,8 @@
 "use client"
 
 import { closestCenter, DndContext } from "@dnd-kit/core"
-import { LogEvents } from "@midday/events/events"
-import { Table, TableBody, TableCell, TableRow } from "@midday/ui/table"
+import { LogEvents } from "@aqardesk/events/events"
+import { Table, TableBody, TableCell, TableRow } from "@aqardesk/ui/table"
 import { useOpenPanel } from "@openpanel/nextjs"
 import { useMutation, useSuspenseInfiniteQuery } from "@tanstack/react-query"
 import { getCoreRowModel, useReactTable } from "@tanstack/react-table"

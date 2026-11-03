@@ -1,7 +1,7 @@
 "use client";
 
-import { Combobox } from "@midday/ui/combobox";
-import { useToast } from "@midday/ui/use-toast";
+import { Combobox } from "@aqardesk/ui/combobox";
+import { useToast } from "@aqardesk/ui/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { useLatestProjectId } from "@/hooks/use-latest-project-id";

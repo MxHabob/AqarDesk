@@ -1,7 +1,7 @@
 "use client"
 
-import { LogEvents } from "@midday/events/events"
-import { Table, TableBody } from "@midday/ui/table"
+import { LogEvents } from "@aqardesk/events/events"
+import { Table, TableBody } from "@aqardesk/ui/table"
 import { useOpenPanel } from "@openpanel/nextjs"
 import { useMutation, useSuspenseInfiniteQuery } from "@tanstack/react-query"
 import { useDeferredValue, useEffect } from "react"

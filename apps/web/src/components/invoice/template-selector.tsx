@@ -1,7 +1,7 @@
 "use client";
 
-import { localDateToUTCMidnight } from "@midday/invoice/recurring";
-import { cn } from "@midday/ui/cn";
+import { localDateToUTCMidnight } from "@aqardesk/invoice/recurring";
+import { cn } from "@aqardesk/ui/cn";
 import {
   DropdownMenu,
   DropdownMenuCheckboxItem,
@@ -11,8 +11,8 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu";
-import { Icons } from "@midday/ui/icons";
+} from "@aqardesk/ui/dropdown-menu";
+import { Icons } from "@aqardesk/ui/icons";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { addDays, parseISO } from "date-fns";
 import { useState } from "react";

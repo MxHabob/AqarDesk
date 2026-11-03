@@ -1,7 +1,7 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { Calendar } from "@midday/ui/calendar"
+import { Button } from "@aqardesk/ui/button"
+import { Calendar } from "@aqardesk/ui/calendar"
 import {
   Dialog,
   DialogContent,
@@ -9,11 +9,11 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@midday/ui/dialog"
-import { Icons } from "@midday/ui/icons"
-import { Label } from "@midday/ui/label"
-import { Popover, PopoverContent, PopoverTrigger } from "@midday/ui/popover"
-import { SubmitButton } from "@midday/ui/submit-button"
+} from "@aqardesk/ui/dialog"
+import { Icons } from "@aqardesk/ui/icons"
+import { Label } from "@aqardesk/ui/label"
+import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
 import { useMutation } from "@tanstack/react-query"
 import { addDays, format } from "date-fns"
 import { CalendarIcon } from "lucide-react"

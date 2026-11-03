@@ -1,14 +1,14 @@
 "use client";
 
-import { LogEvents } from "@midday/events/events";
+import { LogEvents } from "@aqardesk/events/events";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@midday/ui/accordion";
-import { cn } from "@midday/ui/cn";
-import { Label } from "@midday/ui/label";
+} from "@aqardesk/ui/accordion";
+import { cn } from "@aqardesk/ui/cn";
+import { Label } from "@aqardesk/ui/label";
 import {
   Select,
   SelectContent,
@@ -16,12 +16,12 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@midday/ui/select";
-import { Skeleton } from "@midday/ui/skeleton";
-import { Switch } from "@midday/ui/switch";
-import { ToastAction } from "@midday/ui/toast";
-import { toast } from "@midday/ui/use-toast";
-import { getTaxTypeLabel } from "@midday/utils/tax";
+} from "@aqardesk/ui/select";
+import { Skeleton } from "@aqardesk/ui/skeleton";
+import { Switch } from "@aqardesk/ui/switch";
+import { ToastAction } from "@aqardesk/ui/toast";
+import { toast } from "@aqardesk/ui/use-toast";
+import { getTaxTypeLabel } from "@aqardesk/utils/tax";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { format, parseISO } from "date-fns";

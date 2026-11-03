@@ -1,11 +1,11 @@
 "use client";
 
 import type { RouterOutputs } from "@api/trpc/routers/_app";
-import { isMimeTypeSupportedForProcessing } from "@midday/documents/utils";
-import { Button } from "@midday/ui/button";
-import { cn } from "@midday/ui/cn";
-import { Icons } from "@midday/ui/icons";
-import { Skeleton } from "@midday/ui/skeleton";
+import { isMimeTypeSupportedForProcessing } from "@aqardesk/documents/utils";
+import { Button } from "@aqardesk/ui/button";
+import { cn } from "@aqardesk/ui/cn";
+import { Icons } from "@aqardesk/ui/icons";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { memo, useEffect, useState } from "react";
 import { FilePreview } from "@/components/file-preview";

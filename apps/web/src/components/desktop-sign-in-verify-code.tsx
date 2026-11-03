@@ -1,6 +1,6 @@
 "use client";
 
-import { getDesktopSchemeUrl } from "@midday/desktop-client/platform";
+import { getDesktopSchemeUrl } from "@aqardesk/desktop-client/platform";
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 import appIcon from "../../public/appicon.png";

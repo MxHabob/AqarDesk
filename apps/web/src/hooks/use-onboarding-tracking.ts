@@ -1,7 +1,7 @@
 "use client"
 
-import { track } from "@midday/events/client"
-import { LogEvents } from "@midday/events/events"
+import { track } from "@aqardesk/events/client"
+import { LogEvents } from "@aqardesk/events/events"
 import { useCallback, useEffect, useRef } from "react"
 
 type EventConfig = { name: string; channel: string }

@@ -1,5 +1,5 @@
-import { Button } from "@midday/ui/button";
-import { Icons } from "@midday/ui/icons";
+import { Button } from "@aqardesk/ui/button";
+import { Icons } from "@aqardesk/ui/icons";
 import { format, parseISO } from "date-fns";
 import { formatDateRange } from "little-date";
 import { formatAccountName } from "@/utils/format";

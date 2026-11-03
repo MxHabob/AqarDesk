@@ -1,4 +1,4 @@
-import { TableHead, TableHeader, TableRow } from "@midday/ui/table"
+import { TableHead, TableHeader, TableRow } from "@aqardesk/ui/table"
 
 export function OrdersTableHeader() {
   return (

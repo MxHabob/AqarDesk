@@ -1,6 +1,6 @@
 "use client";
 
-import { SheetContent } from "@midday/ui/sheet";
+import { SheetContent } from "@aqardesk/ui/sheet";
 import { useFormContext } from "react-hook-form";
 import { Form } from "@/components/invoice/form";
 import { InvoiceSuccess } from "@/components/invoice-success";

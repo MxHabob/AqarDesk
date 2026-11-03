@@ -1,6 +1,6 @@
-import { ComboboxDropdown } from "@midday/ui/combobox-dropdown";
-import type { PopoverContent } from "@midday/ui/popover";
-import { getFiscalYearLabel } from "@midday/utils";
+import { ComboboxDropdown } from "@aqardesk/ui/combobox-dropdown";
+import type { PopoverContent } from "@aqardesk/ui/popover";
+import { getFiscalYearLabel } from "@aqardesk/utils";
 
 type Props = {
   value?: number | null;

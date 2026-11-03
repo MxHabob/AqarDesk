@@ -1,14 +1,14 @@
 "use client";
 
-import { fromStripeAmount } from "@midday/invoice/currency";
-import { Button } from "@midday/ui/button";
-import { cn } from "@midday/ui/cn";
-import { Drawer, DrawerContent } from "@midday/ui/drawer";
-import { useMediaQuery } from "@midday/ui/hooks";
-import { Icons } from "@midday/ui/icons";
-import { Skeleton } from "@midday/ui/skeleton";
-import { Spinner } from "@midday/ui/spinner";
-import { SubmitButton } from "@midday/ui/submit-button";
+import { fromStripeAmount } from "@aqardesk/invoice/currency";
+import { Button } from "@aqardesk/ui/button";
+import { cn } from "@aqardesk/ui/cn";
+import { Drawer, DrawerContent } from "@aqardesk/ui/drawer";
+import { useMediaQuery } from "@aqardesk/ui/hooks";
+import { Icons } from "@aqardesk/ui/icons";
+import { Skeleton } from "@aqardesk/ui/skeleton";
+import { Spinner } from "@aqardesk/ui/spinner";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
 import {
   Elements,
   PaymentElement,

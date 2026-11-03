@@ -1,8 +1,8 @@
 "use client"
 
-import { cn } from "@midday/ui/cn"
-import { Icons } from "@midday/ui/icons"
-import { Skeleton } from "@midday/ui/skeleton"
+import { cn } from "@aqardesk/ui/cn"
+import { Icons } from "@aqardesk/ui/icons"
+import { Skeleton } from "@aqardesk/ui/skeleton"
 import Link from "next/link"
 import { Suspense, useState } from "react"
 import { MainMenu } from "./main-menu"

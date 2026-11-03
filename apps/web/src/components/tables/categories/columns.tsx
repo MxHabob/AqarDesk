@@ -1,21 +1,21 @@
 "use client"
 
 import type { RouterOutputs } from "@api/trpc/routers/_app"
-import { Button } from "@midday/ui/button"
-import { cn } from "@midday/ui/cn"
+import { Button } from "@aqardesk/ui/button"
+import { cn } from "@aqardesk/ui/cn"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
+} from "@aqardesk/ui/dropdown-menu"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip"
-import { getTaxTypeLabel } from "@midday/utils/tax"
+} from "@aqardesk/ui/tooltip"
+import { getTaxTypeLabel } from "@aqardesk/utils/tax"
 import type { ColumnDef } from "@tanstack/react-table"
 import { ChevronDown, ChevronRight, MoreHorizontal } from "lucide-react"
 import type { Dispatch, SetStateAction } from "react"

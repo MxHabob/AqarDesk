@@ -7,7 +7,7 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@midday/ui/card";
+} from "@aqardesk/ui/card";
 import { CopyInput } from "@/components/copy-input";
 import { useTeamQuery } from "@/hooks/use-team";
 

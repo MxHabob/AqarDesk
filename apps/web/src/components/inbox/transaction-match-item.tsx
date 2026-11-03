@@ -1,14 +1,14 @@
 "use client";
 
-import { Badge } from "@midday/ui/badge";
-import { Icons } from "@midday/ui/icons";
+import { Badge } from "@aqardesk/ui/badge";
+import { Icons } from "@aqardesk/ui/icons";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip";
-import { formatDate } from "@midday/utils/format";
+} from "@aqardesk/ui/tooltip";
+import { formatDate } from "@aqardesk/utils/format";
 import { FormatAmount } from "../format-amount";
 
 type Props = {

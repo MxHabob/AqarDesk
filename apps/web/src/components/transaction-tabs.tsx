@@ -1,7 +1,7 @@
 "use client";
 
-import { cn } from "@midday/ui/cn";
-import { Tabs, TabsList, TabsTrigger } from "@midday/ui/tabs";
+import { cn } from "@aqardesk/ui/cn";
+import { Tabs, TabsList, TabsTrigger } from "@aqardesk/ui/tabs";
 import { useEffect, useState } from "react";
 import { useReviewTransactions } from "@/hooks/use-review-transactions";
 import { useTransactionTab } from "@/hooks/use-transaction-tab";

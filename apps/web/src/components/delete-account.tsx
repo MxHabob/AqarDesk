@@ -1,7 +1,7 @@
 "use client"
 
-import { LogEvents } from "@midday/events/events"
-import { createClient } from "@midday/supabase/client"
+import { LogEvents } from "@aqardesk/events/events"
+import { createClient } from "@aqardesk/supabase/client"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -12,17 +12,17 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from "@midday/ui/alert-dialog"
-import { Button } from "@midday/ui/button"
+} from "@aqardesk/ui/alert-dialog"
+import { Button } from "@aqardesk/ui/button"
 import {
   Card,
   CardDescription,
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@midday/ui/card"
-import { Input } from "@midday/ui/input"
-import { Label } from "@midday/ui/label"
+} from "@aqardesk/ui/card"
+import { Input } from "@aqardesk/ui/input"
+import { Label } from "@aqardesk/ui/label"
 import { useOpenPanel } from "@openpanel/nextjs"
 import { useMutation } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"

@@ -1,7 +1,7 @@
 "use client"
 
-import { isDesktopApp } from "@midday/desktop-client/platform"
-import { createClient } from "@midday/supabase/client"
+import { isDesktopApp } from "@aqardesk/desktop-client/platform"
+import { createClient } from "@aqardesk/supabase/client"
 import type { Provider } from "@supabase/supabase-js"
 import { useSearchParams } from "next/navigation"
 import { useState } from "react"

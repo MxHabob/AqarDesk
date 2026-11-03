@@ -1,7 +1,7 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
-import { Input } from "@midday/ui/input"
+import { Button } from "@aqardesk/ui/button"
+import { Input } from "@aqardesk/ui/input"
 import type { Table } from "@tanstack/react-table"
 import { useProductParams } from "@/hooks/use-product-params"
 import type { Product } from "./columns"

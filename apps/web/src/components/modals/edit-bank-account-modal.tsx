@@ -1,11 +1,11 @@
-import { CurrencyInput } from "@midday/ui/currency-input";
+import { CurrencyInput } from "@aqardesk/ui/currency-input";
 import {
   Dialog,
   DialogContent,
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@midday/ui/dialog";
+} from "@aqardesk/ui/dialog";
 import {
   Form,
   FormControl,
@@ -14,16 +14,16 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@midday/ui/form";
-import { Input } from "@midday/ui/input";
+} from "@aqardesk/ui/form";
+import { Input } from "@aqardesk/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@midday/ui/select";
-import { SubmitButton } from "@midday/ui/submit-button";
+} from "@aqardesk/ui/select";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { z } from "zod/v3";
 import { useZodForm } from "@/hooks/use-zod-form";

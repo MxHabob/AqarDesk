@@ -1,14 +1,14 @@
 "use client"
 
 import type { RouterOutputs } from "@api/trpc/routers/_app"
-import { Button } from "@midday/ui/button"
+import { Button } from "@aqardesk/ui/button"
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu"
-import { useToast } from "@midday/ui/use-toast"
+} from "@aqardesk/ui/dropdown-menu"
+import { useToast } from "@aqardesk/ui/use-toast"
 import { useMutation, useQuery } from "@tanstack/react-query"
 import { MoreHorizontal } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"

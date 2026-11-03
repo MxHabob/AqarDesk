@@ -1,6 +1,6 @@
 "use client";
 
-import { Card, CardContent, CardHeader, CardTitle } from "@midday/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@aqardesk/ui/card";
 import { useSuspenseQuery } from "@tanstack/react-query";
 import { useTeamQuery } from "@/hooks/use-team";
 import { useUserQuery } from "@/hooks/use-user";

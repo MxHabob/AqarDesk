@@ -1,16 +1,16 @@
 "use client";
 
-import { LogEvents } from "@midday/events/events";
-import { Button } from "@midday/ui/button";
-import { cn } from "@midday/ui/cn";
-import { Combobox } from "@midday/ui/combobox";
-import { Icons } from "@midday/ui/icons";
+import { LogEvents } from "@aqardesk/events/events";
+import { Button } from "@aqardesk/ui/button";
+import { cn } from "@aqardesk/ui/cn";
+import { Combobox } from "@aqardesk/ui/combobox";
+import { Icons } from "@aqardesk/ui/icons";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@midday/ui/tooltip";
+} from "@aqardesk/ui/tooltip";
 import { useOpenPanel } from "@openpanel/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { motion } from "framer-motion";

@@ -1,6 +1,6 @@
 "use client"
 
-import { Icons } from "@midday/ui/icons"
+import { Icons } from "@aqardesk/ui/icons"
 import { flushSync } from "react-dom"
 import { useChatState } from "@/components/chat/chat-context"
 import { useInboxUpload } from "@/hooks/use-inbox-upload"

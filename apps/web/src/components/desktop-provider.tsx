@@ -1,10 +1,10 @@
 "use client";
 
-import { getCurrentWindow, invoke } from "@midday/desktop-client/core";
+import { getCurrentWindow, invoke } from "@aqardesk/desktop-client/core";
 import {
   isDesktopApp,
   listenForDeepLinks,
-} from "@midday/desktop-client/platform";
+} from "@aqardesk/desktop-client/platform";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect } from "react";
 

@@ -11,19 +11,19 @@ import {
   type InvoiceRecurringFrequency,
   localDateToUTCMidnight,
   type RecurringConfig,
-} from "@midday/invoice/recurring";
-import { Calendar } from "@midday/ui/calendar";
-import { Input } from "@midday/ui/input";
-import { Label } from "@midday/ui/label";
-import { Popover, PopoverContent, PopoverTrigger } from "@midday/ui/popover";
-import { RadioGroup, RadioGroupItem } from "@midday/ui/radio-group";
+} from "@aqardesk/invoice/recurring";
+import { Calendar } from "@aqardesk/ui/calendar";
+import { Input } from "@aqardesk/ui/input";
+import { Label } from "@aqardesk/ui/label";
+import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover";
+import { RadioGroup, RadioGroupItem } from "@aqardesk/ui/radio-group";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@midday/ui/select";
+} from "@aqardesk/ui/select";
 import { format } from "date-fns";
 import { AnimatePresence, motion } from "framer-motion";
 import * as React from "react";

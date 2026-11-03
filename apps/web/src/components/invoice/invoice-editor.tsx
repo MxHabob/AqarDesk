@@ -1,13 +1,13 @@
 "use client";
 
-import { cn } from "@midday/ui/cn";
+import { cn } from "@aqardesk/ui/cn";
 import {
   SlashCommand,
   type SlashCommandItem,
   SlashMenu,
   type SlashMenuRef,
-} from "@midday/ui/editor/extentions/slash-command";
-import { formatAmount } from "@midday/utils/format";
+} from "@aqardesk/ui/editor/extentions/slash-command";
+import { formatAmount } from "@aqardesk/utils/format";
 import { useQuery } from "@tanstack/react-query";
 import Link from "@tiptap/extension-link";
 import Placeholder from "@tiptap/extension-placeholder";

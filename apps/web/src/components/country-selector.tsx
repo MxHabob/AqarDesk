@@ -1,6 +1,6 @@
-import countries from "@midday/location/country-flags"
-import { Button } from "@midday/ui/button"
-import { cn } from "@midday/ui/cn"
+import countries from "@aqardesk/location/country-flags"
+import { Button } from "@aqardesk/ui/button"
+import { cn } from "@aqardesk/ui/cn"
 import {
   Command,
   CommandEmpty,
@@ -8,8 +8,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@midday/ui/command"
-import { Popover, PopoverContent, PopoverTrigger } from "@midday/ui/popover"
+} from "@aqardesk/ui/command"
+import { Popover, PopoverContent, PopoverTrigger } from "@aqardesk/ui/popover"
 import { Check, ChevronsUpDown } from "lucide-react"
 import * as React from "react"
 import { useEffect } from "react"

@@ -1,6 +1,6 @@
 "use client";
 
-import { Skeleton } from "@midday/ui/skeleton";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 
 export function InvoiceDetailsSkeleton() {
   return (

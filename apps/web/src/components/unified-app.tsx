@@ -1,22 +1,22 @@
-import type { UnifiedApp } from "@midday/app-store/types";
-import { openUrl } from "@midday/desktop-client/core";
-import { isDesktopApp } from "@midday/desktop-client/platform";
-import { createClient } from "@midday/supabase/client";
+import type { UnifiedApp } from "@aqardesk/app-store/types";
+import { openUrl } from "@aqardesk/desktop-client/core";
+import { isDesktopApp } from "@aqardesk/desktop-client/platform";
+import { createClient } from "@aqardesk/supabase/client";
 import {
   Accordion,
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@midday/ui/accordion";
-import { Badge } from "@midday/ui/badge";
-import { Button } from "@midday/ui/button";
-import { Card, CardContent, CardHeader, CardTitle } from "@midday/ui/card";
-import { Icons } from "@midday/ui/icons";
-import { ScrollArea } from "@midday/ui/scroll-area";
-import { Sheet, SheetContent, SheetHeader } from "@midday/ui/sheet";
-import { Skeleton } from "@midday/ui/skeleton";
-import { SubmitButton } from "@midday/ui/submit-button";
-import { useToast } from "@midday/ui/use-toast";
+} from "@aqardesk/ui/accordion";
+import { Badge } from "@aqardesk/ui/badge";
+import { Button } from "@aqardesk/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@aqardesk/ui/card";
+import { Icons } from "@aqardesk/ui/icons";
+import { ScrollArea } from "@aqardesk/ui/scroll-area";
+import { Sheet, SheetContent, SheetHeader } from "@aqardesk/ui/sheet";
+import { Skeleton } from "@aqardesk/ui/skeleton";
+import { SubmitButton } from "@aqardesk/ui/submit-button";
+import { useToast } from "@aqardesk/ui/use-toast";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { parseAsBoolean, parseAsString, useQueryStates } from "nuqs";
 import { useState } from "react";

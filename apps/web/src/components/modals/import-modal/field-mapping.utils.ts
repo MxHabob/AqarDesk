@@ -1,4 +1,4 @@
-import { formatDate } from "@midday/import";
+import { formatDate } from "@aqardesk/import";
 
 import { mappableFields } from "./context";
 

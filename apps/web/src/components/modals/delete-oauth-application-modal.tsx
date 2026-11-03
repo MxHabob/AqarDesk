@@ -9,9 +9,9 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@midday/ui/alert-dialog";
-import { Input } from "@midday/ui/input";
-import { Label } from "@midday/ui/label";
+} from "@aqardesk/ui/alert-dialog";
+import { Input } from "@aqardesk/ui/input";
+import { Label } from "@aqardesk/ui/label";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { Loader2 } from "lucide-react";
 import { useState } from "react";

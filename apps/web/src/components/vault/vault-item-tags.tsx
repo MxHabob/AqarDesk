@@ -1,8 +1,8 @@
 "use client";
 
 import type { RouterOutputs } from "@api/trpc/routers/_app";
-import { Badge } from "@midday/ui/badge";
-import { Skeleton } from "@midday/ui/skeleton";
+import { Badge } from "@aqardesk/ui/badge";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import { useDocumentFilterParams } from "@/hooks/use-document-filter-params";
 
 type Props = {

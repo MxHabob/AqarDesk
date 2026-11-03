@@ -1,10 +1,10 @@
 "use client";
 
-import { createClient } from "@midday/supabase/client";
-import { Button } from "@midday/ui/button";
-import { Dialog, DialogContent } from "@midday/ui/dialog";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@midday/ui/input-otp";
-import { Spinner } from "@midday/ui/spinner";
+import { createClient } from "@aqardesk/supabase/client";
+import { Button } from "@aqardesk/ui/button";
+import { Dialog, DialogContent } from "@aqardesk/ui/dialog";
+import { InputOTP, InputOTPGroup, InputOTPSlot } from "@aqardesk/ui/input-otp";
+import { Spinner } from "@aqardesk/ui/spinner";
 import Image from "next/image";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
 import { useAction } from "next-safe-action/hooks";

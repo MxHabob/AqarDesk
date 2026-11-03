@@ -1,5 +1,5 @@
-import { setupAnalytics } from "@midday/events/server";
-import { createClient } from "@midday/supabase/server";
+import { setupAnalytics } from "@aqardesk/events/server";
+import { createClient } from "@aqardesk/supabase/server";
 import {
   createSafeActionClient,
   DEFAULT_SERVER_ERROR_MESSAGE,

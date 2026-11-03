@@ -1,6 +1,6 @@
 "use client"
 
-import { Button } from "@midday/ui/button"
+import { Button } from "@aqardesk/ui/button"
 import { useCustomerParams } from "@/hooks/use-customer-params"
 
 export function EmptyState() {

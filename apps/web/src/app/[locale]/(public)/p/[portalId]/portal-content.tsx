@@ -1,17 +1,17 @@
 "use client";
 
 import { TZDate } from "@date-fns/tz";
-import { Button } from "@midday/ui/button";
-import { Checkbox } from "@midday/ui/checkbox";
+import { Button } from "@aqardesk/ui/button";
+import { Checkbox } from "@aqardesk/ui/checkbox";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@midday/ui/dropdown-menu";
-import { Icons } from "@midday/ui/icons";
-import { Spinner } from "@midday/ui/spinner";
-import { formatAmount } from "@midday/utils/format";
+} from "@aqardesk/ui/dropdown-menu";
+import { Icons } from "@aqardesk/ui/icons";
+import { Spinner } from "@aqardesk/ui/spinner";
+import { formatAmount } from "@aqardesk/utils/format";
 import {
   useSuspenseInfiniteQuery,
   useSuspenseQuery,
