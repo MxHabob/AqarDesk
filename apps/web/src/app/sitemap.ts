@@ -5,14 +5,7 @@ import { locales } from "@/locales/config"
 
 export const revalidate = 3600
 
-const publicPaths = [
-  "",
-  "/about",
-  "/listings",
-  "/terms",
-  "/policy",
-  "/testimonials",
-] as const
+const publicPaths = ["", "/listings", "/about", "/services"] as const
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const listings = await listPublicListingSitemapEntries()

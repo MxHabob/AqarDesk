@@ -1,5 +1,5 @@
 import type { Metadata } from "next"
-import type { AppLocale } from "@/locales/config"
+import { type AppLocale, locales } from "@/locales/config"
 
 const deploymentHost =
   process.env.VERCEL_PROJECT_PRODUCTION_URL ?? process.env.VERCEL_URL
@@ -31,6 +31,11 @@ const pageCopy = {
       title: "عن عقار دِسك",
       description:
         "تعرّف على عقار دِسك، منصة تساعد المكاتب العقارية على إدارة العقارات والعروض والملاك والعملاء من مكان واحد.",
+    },
+    services: {
+      title: "خدماتنا العقارية",
+      description:
+        "اكتشف خدمات عقار دِسك في بيع العقارات وتأجيرها والفرص الاستثمارية، مع دعم فريق المكتب في رحلتك.",
     },
     testimonials: {
       title: "آراء وتجارب العملاء",
@@ -71,6 +76,11 @@ const pageCopy = {
       description:
         "Learn how AqarDesk helps real estate offices manage properties, listings, owners, and customer relationships.",
     },
+    services: {
+      title: "Real Estate Services",
+      description:
+        "Explore AqarDesk services for property sales, rentals, and investment opportunities, with support from our office team.",
+    },
     testimonials: {
       title: "Customer Stories",
       description:
@@ -95,25 +105,36 @@ const pageCopy = {
 } satisfies Record<
   AppLocale,
   Record<
-    "home" | "about" | "testimonials" | "support" | "terms" | "privacy",
+    | "home"
+    | "about"
+    | "services"
+    | "testimonials"
+    | "support"
+    | "terms"
+    | "privacy",
     { title: string; description: string; keywords?: string[] }
   >
 >
 
 export type MarketingPage = keyof (typeof pageCopy)["ar"]
 
-export function getMarketingPageCopy(
-  page: MarketingPage,
-  locale: AppLocale
-) {
-  return pageCopy[locale][page]
+function requireLocale(locale: string): AppLocale {
+  const supportedLocale = locales.find((candidate) => candidate === locale)
+  if (!supportedLocale) {
+    throw new Error(`Unsupported locale: ${locale}`)
+  }
+  return supportedLocale
+}
+
+export function getMarketingPageCopy(page: MarketingPage, locale: string) {
+  return pageCopy[requireLocale(locale)][page]
 }
 
 type PageMetadataOptions = {
   title: string
   description: string
   path: string
-  locale: AppLocale
+  locale: string
   ogImagePath?: string
   og?: { title: string; description: string }
   keywords?: string[]
@@ -123,28 +144,40 @@ type PageMetadataOptions = {
 }
 
 export function createPageMetadata(opts: PageMetadataOptions): Metadata {
+  const locale = requireLocale(opts.locale)
   const path = opts.path.startsWith("/") ? opts.path : `/${opts.path}`
-  const localizedPath = `/${opts.locale}${path === "/" ? "" : path}`
+  const localizedPath = `/${locale}${path === "/" ? "" : path}`
   const url = getSiteUrl(localizedPath)
-  const ogTitle = opts.og?.title ?? opts.title
-  const ogDesc = opts.og?.description ?? opts.description
+  const cleanText = (value: string) =>
+    value
+      .replace(/<[^>]*>/g, " ")
+      .replace(/\s+/g, " ")
+      .trim()
+  const title = cleanText(opts.title).slice(0, 70).trimEnd()
+  const description = cleanText(opts.description).slice(0, 160).trimEnd()
+  const ogTitle = cleanText(opts.og?.title ?? title)
+    .slice(0, 70)
+    .trimEnd()
+  const ogDesc = cleanText(opts.og?.description ?? description)
+    .slice(0, 160)
+    .trimEnd()
   const imageParams = new URLSearchParams({ title: ogTitle })
   if (ogDesc) imageParams.set("description", ogDesc)
   const imageUrl = opts.ogImagePath
-    ? getSiteUrl(`/${opts.locale}${opts.ogImagePath}`)
+    ? getSiteUrl(`/${locale}${opts.ogImagePath}`)
     : getSiteUrl(`/api/og?${imageParams.toString()}`)
   const images = [{ url: imageUrl, width: 1200, height: 630, alt: ogTitle }]
 
   return {
-    title: opts.title,
-    description: opts.description,
+    title,
+    description,
     ...(opts.keywords && { keywords: opts.keywords }),
     openGraph: {
       title: ogTitle,
       description: ogDesc,
       type: opts.type ?? "website",
       siteName: "AqarDesk",
-      locale: opts.locale === "ar" ? "ar_SA" : "en_US",
+      locale: locale === "ar" ? "ar_SA" : "en_US",
       url,
       images,
     },

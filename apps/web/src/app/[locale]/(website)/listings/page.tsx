@@ -8,19 +8,15 @@ import {
 } from "@aqardesk/ui/select"
 import Link from "next/link"
 import type { SearchParams } from "nuqs"
-import { ListingCard } from "@/components/marketing/listing-card"
 import { MaterialIcon } from "@/components/marketing/homepage/icon-mapping"
+import { ListingCard } from "@/components/marketing/listing-card"
 import {
   getFilteredPublicListings,
   getPublicListingCoverPhotos,
 } from "@/lib/listings/public-queries"
 import { loadPublicListingSearchParams } from "@/lib/listings/public-search-loader"
 import { createPageMetadata } from "@/lib/marketing/metadata"
-import {
-  getI18n,
-  getScopedI18n,
-  setStaticParamsLocale,
-} from "@/locales/server"
+import { getI18n, getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
 type Props = {
   params: Promise<{ locale: string }>
@@ -37,7 +33,7 @@ export async function generateMetadata({ params, searchParams }: Props) {
   return createPageMetadata({
     title: t("title"),
     description: t("description"),
-    locale: locale as "ar" | "en",
+    locale,
     path: "/listings",
     noindex: Object.keys(rawSearchParams).length > 0,
   })
@@ -111,10 +107,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
         </p>
       </header>
 
-      <form
-        method="get"
-        className="bg-secondary/30 p-3 sm:p-4"
-      >
+      <form method="get" className="bg-secondary/30 p-3 sm:p-4">
         <div className="grid grid-cols-1 gap-3 min-[480px]:grid-cols-2 lg:grid-cols-12 lg:gap-4">
           <label className="min-w-0 space-y-1 text-xs min-[480px]:col-span-2 lg:col-span-4">
             <span className="font-medium">{t("search")}</span>

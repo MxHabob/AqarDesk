@@ -15,11 +15,6 @@ const FeaturesGridSection = dynamic(() =>
 const TimeSavingsSection = dynamic(() =>
   import("./sections/time-savings-section").then((m) => m.TimeSavingsSection),
 );
-const PreAccountingSection = dynamic(() =>
-  import("./sections/pre-accounting-section").then(
-    (m) => m.PreAccountingSection,
-  ),
-);
 const TestimonialsSection = dynamic(
   () =>
     import("./sections/testimonials-section").then(
@@ -518,14 +513,6 @@ export function StartPage() {
 
       {/* Time Savings Bento Grid Section */}
       <TimeSavingsSection />
-
-      {/* Divider */}
-      <div className="max-w-[1400px] mx-auto">
-        <div className="h-px w-full border-t border-border" />
-      </div>
-
-      {/* Pre-accounting Features Section */}
-      <PreAccountingSection />
 
       {/* Divider */}
       <div className="max-w-[1400px] mx-auto">

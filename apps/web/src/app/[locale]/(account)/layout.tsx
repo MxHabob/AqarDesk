@@ -1,10 +1,16 @@
 import { auth } from "@aqardesk/auth/server"
+import type { Metadata } from "next"
 import { headers } from "next/headers"
 import Link from "next/link"
 import { redirect } from "next/navigation"
 import type { ReactNode } from "react"
 import { AccountNavigation } from "@/components/account/account-navigation"
 import { getRoleDestination, getUserRoleKeys } from "@/lib/auth/roles"
+
+export const metadata: Metadata = {
+  title: "Customer Account | AqarDesk",
+  robots: { index: false, follow: false },
+}
 
 export default async function AccountLayout({
   children,

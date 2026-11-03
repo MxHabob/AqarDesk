@@ -32,6 +32,7 @@ export function Footer() {
       title: t("marketingFooter.aboutAqarDesk"),
       items: [
         { href: "/about", label: t("marketingFooter.aboutUs") },
+        { href: "/services", label: t("marketingFooter.services") },
         { href: "/testimonials", label: t("marketingFooter.customerStories") },
       ],
     },

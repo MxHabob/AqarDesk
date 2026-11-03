@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next"
-import { getSiteUrl } from "@/lib/marketing/metadata"
+import { getSiteUrl, siteOrigin } from "@/lib/marketing/metadata"
 
 export default function robots(): MetadataRoute.Robots {
   return {
@@ -7,18 +7,34 @@ export default function robots(): MetadataRoute.Robots {
       userAgent: "*",
       allow: "/",
       disallow: [
-        "/ar/dashboard/",
-        "/en/dashboard/",
-        "/ar/account/",
-        "/en/account/",
+        "/dashboard",
+        "/ar/dashboard",
+        "/en/dashboard",
+        "/account",
+        "/ar/account",
+        "/en/account",
+        "/login",
         "/ar/login",
         "/en/login",
+        "/mfa",
+        "/ar/mfa",
+        "/en/mfa",
         "/ar/mfa/",
         "/en/mfa/",
-        "/api/",
+        "/properties",
+        "/owners",
+        "/customers",
+        "/invoices",
+        "/transactions",
+        "/reports",
+        "/settings",
+        "/teams",
+        "/apps",
+        "/tracker",
+        "/vault",
       ],
     },
     sitemap: getSiteUrl("/sitemap.xml"),
-    host: getSiteUrl(),
+    host: siteOrigin,
   }
 }

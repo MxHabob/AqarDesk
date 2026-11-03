@@ -39,6 +39,48 @@ export default {
     ctaHoverDescription: "Start exploring your next property.",
     ctaAction: "Browse now",
   },
+  site: {
+    browse: "Browse properties",
+    browseListings: "Browse listings",
+    viewListing: "View property details",
+    featuredTitle: "Available properties",
+    featuredDescription:
+      "Explore the latest properties available for sale and rent.",
+    aboutEyebrow: "About AqarDesk",
+    aboutTitle: "We know the market and care about the details",
+    aboutDescription:
+      "AqarDesk helps you find clear property options and organized information so you can make your next decision with confidence.",
+    aboutApproachTitle: "Service that starts with listening",
+    aboutApproachDescription:
+      "We understand what you are looking for and help you compare options and follow property details until you find the right fit.",
+    aboutHowTitle: "Clarity at every step",
+    aboutHowDescription:
+      "Explore property details in one place, compare your options, and get in touch with the office team when you need help.",
+    aboutStepsTitle: "Your property journey",
+    aboutStepBrowse:
+      "Explore available properties for sale and rent and find options that fit your needs.",
+    aboutStepDetails:
+      "Review property information, location, and photos before you decide.",
+    aboutStepContact:
+      "Contact the office team with questions or to arrange your next step.",
+    servicesEyebrow: "Our services",
+    servicesTitle: "Real estate services for your needs",
+    servicesDescription:
+      "We help you explore properties for sale and rent, review investment opportunities, and get support from the office team.",
+    saleServiceTitle: "Property sales",
+    saleServiceDescription:
+      "We help owners present their properties and buyers explore available options.",
+    rentalServiceTitle: "Property rentals",
+    rentalServiceDescription:
+      "Explore residential and commercial rentals and review the key details of each property.",
+    investmentServiceTitle: "Investment properties",
+    investmentServiceDescription:
+      "Explore land and building opportunities and connect with us to discuss your needs.",
+    contactServiceTitle: "Support from the office team",
+    contactServiceDescription:
+      "Our team is ready to answer your questions and help coordinate the next steps.",
+    exploreService: "Explore properties",
+  },
   sharing: {
     share: "Share",
     title: "Share this property",
@@ -213,6 +255,7 @@ export default {
     forRent: "For rent",
     aboutAqarDesk: "About AqarDesk",
     aboutUs: "About us",
+    services: "Our services",
     customerStories: "Customer stories",
     help: "Help",
     contactUs: "Contact us",

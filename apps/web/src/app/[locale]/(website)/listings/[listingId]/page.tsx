@@ -14,7 +14,11 @@ import {
   getPublicListingById,
   getPublicListingMedia,
 } from "@/lib/listings/public-queries"
-import { createPageMetadata } from "@/lib/marketing/metadata"
+import {
+  createPageMetadata,
+  createSafeJsonLd,
+  getSiteUrl,
+} from "@/lib/marketing/metadata"
 import { getI18n, getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
 type Props = {
@@ -61,7 +65,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     title: listing.title,
     description:
       listing.description ?? listing.publicNotes ?? t("metadataDescription"),
-    locale: locale as "ar" | "en",
+    locale,
     path: `/listings/${listing.id}`,
     ogImagePath: `/listings/${listing.id}/opengraph-image`,
     type: "article",
@@ -202,9 +206,68 @@ export default async function ListingDetailsPage({ params }: Props) {
       ? `https://www.google.com/maps?q=${listing.latitude},${listing.longitude}`
       : null
   const description = listing.description || listing.publicNotes
+  const listingUrl = getSiteUrl(`/${locale}/listings/${listing.id}`)
+  const listingStructuredData = {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    name: listing.title,
+    description: description ?? listing.title,
+    url: listingUrl,
+    inLanguage: locale,
+    breadcrumb: {
+      "@type": "BreadcrumbList",
+      itemListElement: [
+        {
+          "@type": "ListItem",
+          position: 1,
+          name: locale === "ar" ? "الرئيسية" : "Home",
+          item: getSiteUrl(`/${locale}`),
+        },
+        {
+          "@type": "ListItem",
+          position: 2,
+          name: locale === "ar" ? "العقارات" : "Properties",
+          item: getSiteUrl(`/${locale}/listings`),
+        },
+        {
+          "@type": "ListItem",
+          position: 3,
+          name: listing.title,
+          item: listingUrl,
+        },
+      ],
+    },
+    mainEntity: {
+      "@type": "Offer",
+      url: listingUrl,
+      name: listing.title,
+      availability: "https://schema.org/InStock",
+      ...(price !== null && {
+        price: Number(price),
+        priceCurrency: listing.currencyCode,
+      }),
+      itemOffered: {
+        "@type": "Place",
+        name: listing.title,
+        address: {
+          "@type": "PostalAddress",
+          ...(listing.neighborhood && { streetAddress: listing.neighborhood }),
+          ...(listing.district && { addressRegion: listing.district }),
+          ...(listing.city && { addressLocality: listing.city }),
+        },
+      },
+    },
+  }
 
   return (
     <div className="mx-auto max-w-[1400px] space-y-8 pt-0 pb-12 sm:pt-0 sm:pb-16">
+      <script
+        type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is escaped by createSafeJsonLd.
+        dangerouslySetInnerHTML={{
+          __html: createSafeJsonLd(listingStructuredData),
+        }}
+      />
       <nav aria-label={t("breadcrumb")} className="text-sm">
         <ol className="flex flex-wrap items-center gap-2">
           <li>

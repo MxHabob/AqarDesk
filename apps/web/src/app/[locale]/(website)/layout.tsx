@@ -1,57 +1,71 @@
 import "@/styles/marketing.css"
 import { auth } from "@aqardesk/auth/server"
-import { headers } from "next/headers"
 import type { Metadata } from "next"
+import { headers } from "next/headers"
 import type { ReactNode } from "react"
 import { Footer } from "@/components/marketing/footer"
 import { Header } from "@/components/marketing/header"
-import { getRoleDestination, getUserRoleKeys } from "@/lib/auth/roles"
 import { SunsetBanner } from "@/components/sunset-banner"
+import { getRoleDestination, getUserRoleKeys } from "@/lib/auth/roles"
+import {
+  createSafeJsonLd,
+  getMarketingPageCopy,
+  getSiteUrl,
+} from "@/lib/marketing/metadata"
+import { locales } from "@/locales/config"
 
-const baseUrl = process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  const copy = getMarketingPageCopy("home", locale)
+  const localizedUrl = getSiteUrl(`/${locale}`)
 
-export const metadata: Metadata = {
-  metadataBase: new URL(baseUrl),
-  title: {
-    default: "AqarDesk — Real Estate Management",
-    template: "%s | AqarDesk",
-  },
-  description:
-    "Manage real estate properties, listings, and owners with AqarDesk.",
-  openGraph: {
-    title: "AqarDesk — Real Estate Management",
-    description:
-      "Manage real estate properties, listings, and owners with AqarDesk.",
-    url: baseUrl,
-    siteName: "AqarDesk",
-    locale: "en_US",
-    type: "website",
-  },
-  twitter: {
-    title: "AqarDesk — Real Estate Management",
-    description:
-      "Manage real estate properties, listings, and owners with AqarDesk.",
-  },
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
+  return {
+    title: {
+      default: copy.title,
+      template: locale === "ar" ? "%s | عقار دِسك" : "%s | AqarDesk",
+    },
+    description: copy.description,
+    openGraph: {
+      title: copy.title,
+      description: copy.description,
+      url: localizedUrl,
+      siteName: "AqarDesk",
+      locale: locale === "ar" ? "ar_SA" : "en_US",
+      alternateLocale: locales
+        .filter((item) => item !== locale)
+        .map((item) => (item === "ar" ? "ar_SA" : "en_US")),
+      type: "website",
+      images: [
+        {
+          url: getSiteUrl("/api/og"),
+          width: 1200,
+          height: 630,
+          alt: copy.title,
+        },
+      ],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title: copy.title,
+      description: copy.description,
+      images: [getSiteUrl("/api/og")],
+    },
+    robots: {
       index: true,
       follow: true,
-      "max-video-preview": -1,
-      "max-image-preview": "large",
-      "max-snippet": -1,
+      googleBot: {
+        index: true,
+        follow: true,
+        "max-video-preview": -1,
+        "max-image-preview": "large",
+        "max-snippet": -1,
+      },
     },
-  },
-}
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  name: "AqarDesk",
-  url: baseUrl,
-  description:
-    "Manage real estate properties, listings, and owners with AqarDesk.",
+  }
 }
 
 export default async function Layout({
@@ -67,13 +81,44 @@ export default async function Layout({
   ])
   const roleKeys = session ? await getUserRoleKeys(session.user.id) : []
   const roleDestination = session ? getRoleDestination(roleKeys, locale) : null
+  const organizationJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    name: "AqarDesk",
+    url: getSiteUrl(),
+    logo: getSiteUrl("/appicon.png"),
+    description: getMarketingPageCopy("home", locale).description,
+  }
+  const websiteJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    name: "AqarDesk",
+    url: getSiteUrl(`/${locale}`),
+    inLanguage: locale,
+    potentialAction: {
+      "@type": "SearchAction",
+      target: {
+        "@type": "EntryPoint",
+        urlTemplate: getSiteUrl(`/${locale}/listings?q={search_term_string}`),
+      },
+      "query-input": "required name=search_term_string",
+    },
+  }
 
   return (
     <div className="bg-background overflow-x-clip font-sans antialiased">
       <script
         type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is escaped by createSafeJsonLd.
         dangerouslySetInnerHTML={{
-          __html: JSON.stringify(jsonLd).replace(/</g, "\\u003c"),
+          __html: createSafeJsonLd(organizationJsonLd),
+        }}
+      />
+      <script
+        type="application/ld+json"
+        // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is escaped by createSafeJsonLd.
+        dangerouslySetInnerHTML={{
+          __html: createSafeJsonLd(websiteJsonLd),
         }}
       />
       <SunsetBanner />

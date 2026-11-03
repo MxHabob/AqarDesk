@@ -424,12 +424,23 @@ export default {
     officeLogin: "دخول فريق المكتب",
     featuredTitle: "عقارات متاحة",
     featuredDescription: "اكتشف أحدث عروض البيع والإيجار لدى مكتبنا.",
+    aboutEyebrow: "عن عقار دِسك",
     aboutTitle: "نعرف السوق، ونهتم بتفاصيلك",
     aboutDescription:
       "عقار دِسك مكتب عقاري يساعدك على الوصول إلى خيارات واضحة ومعلومات منظمة لاتخاذ قرارك بثقة.",
     aboutApproachTitle: "خدمة تبدأ بالاستماع",
     aboutApproachDescription:
       "نفهم احتياجك ونساعدك في مقارنة الخيارات ومتابعة تفاصيل العقار حتى تجد ما يناسبك.",
+    aboutHowTitle: "خيارات أوضح في كل خطوة",
+    aboutHowDescription:
+      "نجمع تفاصيل العقارات المعروضة في مكان واحد، لتستكشف الخيارات وتقارن بينها وتتواصل مع فريق المكتب عند الحاجة.",
+    aboutStepsTitle: "رحلتك العقارية",
+    aboutStepBrowse:
+      "ابدأ باستكشاف العقارات المعروضة للبيع والإيجار واختر ما يناسب احتياجك.",
+    aboutStepDetails: "راجع معلومات العقار وموقعه وصوره قبل اتخاذ قرارك.",
+    aboutStepContact:
+      "تواصل مع فريق المكتب للاستفسار عن العقار أو ترتيب الخطوة التالية.",
+    servicesEyebrow: "خدماتنا",
     servicesTitle: "خدمات عقارية تناسب احتياجك",
     servicesDescription:
       "نرافقك في البحث والبيع والتأجير، ونسهّل متابعة العروض والتواصل مع فريق المكتب.",
@@ -445,6 +456,7 @@ export default {
     contactServiceTitle: "متابعة من فريق المكتب",
     contactServiceDescription:
       "فريقنا جاهز للإجابة عن استفساراتك وتنسيق الخطوات التالية.",
+    exploreService: "استكشف العقارات",
     footerDescription: "اكتشف العقارات وتابع عروض مكتبك في مكان واحد.",
     copyright: "جميع الحقوق محفوظة.",
     notFoundTitle: "لم نعثر على هذه الصفحة",
@@ -582,6 +594,7 @@ export default {
     forRent: "عقارات للإيجار",
     aboutAqarDesk: "عن عقار دِسك",
     aboutUs: "من نحن",
+    services: "خدماتنا",
     customerStories: "آراء العملاء",
     help: "المساعدة",
     contactUs: "تواصل معنا",

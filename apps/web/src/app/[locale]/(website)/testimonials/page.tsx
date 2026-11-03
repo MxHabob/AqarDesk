@@ -1,14 +1,13 @@
-import { Testimonials } from "@/components/marketing/testimonials";
+import { Testimonials } from "@/components/marketing/testimonials"
 import {
   createPageMetadata,
   getMarketingPageCopy,
 } from "@/lib/marketing/metadata"
-import type { AppLocale } from "@/locales/config"
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ locale: AppLocale }>
+  params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
   return createPageMetadata({
@@ -20,5 +19,5 @@ export async function generateMetadata({
 }
 
 export default function Page() {
-  return <Testimonials />;
+  return <Testimonials />
 }

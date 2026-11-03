@@ -6,10 +6,9 @@ import type { Metadata } from "next"
 import { notFound, redirect } from "next/navigation"
 import { z } from "zod"
 import { createPageMetadata } from "@/lib/marketing/metadata"
-import type { AppLocale } from "@/locales/config"
 
 type Props = {
-  params: Promise<{ locale: AppLocale; shortId: string }>
+  params: Promise<{ locale: string; shortId: string }>
 }
 
 const shortIdSchema = z.string().regex(/^[A-Za-z0-9_-]{20,50}$/)
