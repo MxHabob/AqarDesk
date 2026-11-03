@@ -1,5 +1,5 @@
-import { Label } from "@midday/ui/label";
-import { Switch } from "@midday/ui/switch";
+import { Label } from "@aqardesk/ui/label";
+import { Switch } from "@aqardesk/ui/switch";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 
