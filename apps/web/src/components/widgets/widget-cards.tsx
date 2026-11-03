@@ -2,9 +2,8 @@
 
 import { useSuspenseQuery } from "@tanstack/react-query"
 import Link from "next/link"
-import { useUserQuery } from "@/hooks/use-user"
-import { useTRPC } from "@/trpc/client"
-import { formatAmount, secondsToHoursAndMinutes } from "@/utils/format"
+import { getDashboardSummaryAction } from "@/actions/dashboard"
+import { useI18n } from "@/locales/client"
 
 interface WidgetCardProps {
   label: string
@@ -31,110 +30,54 @@ function WidgetCard({ label, href, value, detail }: WidgetCardProps) {
 }
 
 export function WidgetCards() {
-  const trpc = useTRPC()
-  const { data } = useSuspenseQuery(trpc.overview.summary.queryOptions())
-  const { data: user } = useUserQuery()
-  const locale = user?.locale
-
-  const cashValue =
-    formatAmount({
-      amount: data.cashBalance.totalBalance,
-      currency: data.cashBalance.currency,
-      maximumFractionDigits: 0,
-      locale,
-    }) ?? "$0"
-
-  const cashDetail =
-    data.cashBalance.accountCount > 0
-      ? `across ${data.cashBalance.accountCount} ${data.cashBalance.accountCount === 1 ? "account" : "accounts"}`
-      : undefined
-
-  const openValue = String(data.openInvoices.count)
-  const openAmount = formatAmount({
-    amount: data.openInvoices.totalAmount,
-    currency: data.openInvoices.currency,
-    maximumFractionDigits: 0,
-    locale,
+  const t = useI18n()
+  const { data } = useSuspenseQuery({
+    queryKey: ["dashboard-summary"],
+    queryFn: getDashboardSummaryAction,
   })
-  const openDetail =
-    data.openInvoices.count > 0 ? `${openAmount} outstanding` : "All paid"
-
-  const hasUnbilledAmount = data.unbilledTime.totalAmount > 0
-  const unbilledTimeStr = secondsToHoursAndMinutes(
-    data.unbilledTime.totalDuration
-  )
-  const unbilledValue = hasUnbilledAmount
-    ? (formatAmount({
-        amount: data.unbilledTime.totalAmount,
-        currency: data.unbilledTime.currency,
-        maximumFractionDigits: 0,
-        locale,
-      }) ?? unbilledTimeStr)
-    : unbilledTimeStr
-
-  const unbilledDetail = hasUnbilledAmount
-    ? [
-        unbilledTimeStr,
-        data.unbilledTime.projectCount > 0
-          ? `across ${data.unbilledTime.projectCount} ${data.unbilledTime.projectCount === 1 ? "project" : "projects"}`
-          : null,
-      ]
-        .filter(Boolean)
-        .join(" ")
-    : data.unbilledTime.projectCount > 0
-      ? `across ${data.unbilledTime.projectCount} ${data.unbilledTime.projectCount === 1 ? "project" : "projects"}`
-      : undefined
-
-  const runwayValue =
-    data.runway > 0 ? `${data.runway} ${data.runway === 1 ? "mo" : "mos"}` : "-"
-  const runwayDetail = data.runway > 0 ? "at current burn rate" : "No data yet"
-
-  const reviewValue = String(data.transactionsToReview.count)
-  const reviewDetail =
-    data.transactionsToReview.count === 0 ? "All up to date" : "Ready to export"
-
-  const inboxValue = String(data.inboxPending.count)
-  const inboxDetail =
-    data.inboxPending.count === 0 ? "All caught up" : "To review"
+  const numberFormat = new Intl.NumberFormat()
+  const access = data.access
 
   return (
     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 w-full">
-      <WidgetCard
-        label="Cash Balance"
-        href="/reports?scrollTo=cash-balance"
-        value={cashValue}
-        detail={cashDetail}
-      />
-      <WidgetCard
-        label="Open Invoices"
-        href="/invoices?statuses=draft,scheduled,unpaid"
-        value={openValue}
-        detail={openDetail}
-      />
-      <WidgetCard
-        label="Unbilled Time"
-        href="/tracker?status=in_progress"
-        value={unbilledValue}
-        detail={unbilledDetail}
-      />
-      <WidgetCard
-        label="Transactions"
-        href="/transactions?tab=review"
-        value={reviewValue}
-        detail={reviewDetail}
-      />
-      <WidgetCard
-        label="Runway"
-        href="/reports?scrollTo=runway"
-        value={runwayValue}
-        detail={runwayDetail}
-      />
-      <WidgetCard
-        label="Inbox"
-        href="/inbox?status=pending"
-        value={inboxValue}
-        detail={inboxDetail}
-      />
+      {access.properties && (
+        <WidgetCard
+          label={t("realEstateDashboard.properties")}
+          href="#"
+          value={numberFormat.format(data.propertyCount)}
+        />
+      )}
+      {access.listings && (
+        <>
+          <WidgetCard
+            label={t("realEstateDashboard.listings")}
+            href="#"
+            value={numberFormat.format(data.listingCount)}
+          />
+          <WidgetCard
+            label={t("realEstateDashboard.activeListings")}
+            href="#"
+            value={numberFormat.format(data.activeListingCount)}
+          />
+          <WidgetCard
+            label={t("realEstateDashboard.saleListings")}
+            href="#"
+            value={numberFormat.format(data.saleListingCount)}
+          />
+          <WidgetCard
+            label={t("realEstateDashboard.rentalListings")}
+            href="#"
+            value={numberFormat.format(data.rentalListingCount)}
+          />
+        </>
+      )}
+      {access.owners && (
+        <WidgetCard
+          label={t("realEstateDashboard.owners")}
+          href="#"
+          value={numberFormat.format(data.ownerCount)}
+        />
+      )}
     </div>
   )
 }

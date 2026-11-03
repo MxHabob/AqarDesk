@@ -5,24 +5,26 @@ import { useSuspenseQuery } from "@tanstack/react-query"
 import { AnimatePresence, motion } from "framer-motion"
 import Link from "next/link"
 import { useCallback, useEffect, useRef, useState } from "react"
+import { getDashboardSummaryAction } from "@/actions/dashboard"
 import { useUserQuery } from "@/hooks/use-user"
-import { useTRPC } from "@/trpc/client"
-import { formatAmount, secondsToHoursAndMinutes } from "@/utils/format"
+import { useI18n } from "@/locales/client"
 
-function getTimeBasedGreeting(timezone?: string): string {
+function getTimeBasedGreeting(
+  timezone?: string
+): "greetingMorning" | "greetingAfternoon" | "greetingEvening" {
   const userTimezone =
     timezone || Intl.DateTimeFormat().resolvedOptions().timeZone
   const now = new TZDate(new Date(), userTimezone)
   const hour = now.getHours()
 
   if (hour >= 5 && hour < 12) {
-    return "Good morning"
+    return "greetingMorning"
   }
   if (hour >= 12 && hour < 17) {
-    return "Good afternoon"
+    return "greetingAfternoon"
   }
 
-  return "Good evening"
+  return "greetingEvening"
 }
 
 type Insight = {
@@ -37,118 +39,52 @@ const linkClass =
   "border-b border-dashed border-[#878787]/30 hover:text-foreground transition-colors"
 
 type SummaryData = {
-  openInvoices: { count: number; totalAmount: number; currency: string }
-  unbilledTime: {
-    totalDuration: number
-    totalAmount: number
-    projectCount: number
-    currency: string
+  propertyCount: number
+  listingCount: number
+  ownerCount: number
+  access: {
+    properties: boolean
+    listings: boolean
+    owners: boolean
   }
-  inboxPending: { count: number }
-  transactionsToReview: { count: number }
-  cashBalance: { totalBalance: number; currency: string; accountCount: number }
-  runway: number
 }
 
-function buildInsights(data: SummaryData, locale?: string | null): Insight[] {
+function buildInsights(
+  data: SummaryData,
+  labels: {
+    summaryPrefix: string
+    properties: string
+    listings: string
+    owners: string
+  }
+): Insight[] {
   const insights: Insight[] = []
 
-  if (data.openInvoices.count > 0) {
-    const amount = formatAmount({
-      amount: data.openInvoices.totalAmount,
-      currency: data.openInvoices.currency,
-      maximumFractionDigits: 0,
-      locale,
-    })
+  if (data.access.properties) {
     insights.push({
-      key: "invoices",
-      href: "/invoices?statuses=draft,scheduled,unpaid",
-      before: "You have ",
-      link: `${data.openInvoices.count} ${data.openInvoices.count === 1 ? "invoice" : "invoices"} outstanding`,
-      after: `, totaling ${amount}.`,
-    })
-  }
-
-  if (data.unbilledTime.totalDuration > 0) {
-    const label =
-      data.unbilledTime.totalAmount > 0
-        ? formatAmount({
-            amount: data.unbilledTime.totalAmount,
-            currency: data.unbilledTime.currency,
-            maximumFractionDigits: 0,
-            locale,
-          })
-        : secondsToHoursAndMinutes(data.unbilledTime.totalDuration)
-    const projectSuffix =
-      data.unbilledTime.projectCount > 0
-        ? ` across ${data.unbilledTime.projectCount} ${data.unbilledTime.projectCount === 1 ? "project" : "projects"}`
-        : ""
-    insights.push({
-      key: "unbilled",
-      href: "/tracker?status=in_progress",
-      before: "There's ",
-      link: `${label} in unbilled time`,
-      after: `${projectSuffix} you could invoice.`,
-    })
-  }
-
-  if (data.cashBalance.totalBalance > 0) {
-    const amount = formatAmount({
-      amount: data.cashBalance.totalBalance,
-      currency: data.cashBalance.currency,
-      maximumFractionDigits: 0,
-      locale,
-    })
-    const accountSuffix =
-      data.cashBalance.accountCount > 1
-        ? ` across ${data.cashBalance.accountCount} accounts`
-        : ""
-    insights.push({
-      key: "cash",
-      href: "/reports?scrollTo=cash-balance",
-      before: "Your ",
-      link: "cash balance",
-      after: ` sits at ${amount}${accountSuffix}.`,
-    })
-  }
-
-  if (data.runway > 0) {
-    insights.push({
-      key: "runway",
-      href: "/reports?scrollTo=runway",
-      before: "At your current burn rate, you have roughly ",
-      link: `${data.runway} ${data.runway === 1 ? "month" : "months"} of runway`,
+      key: "properties",
+      href: "#",
+      before: `${labels.summaryPrefix} `,
+      link: `${data.propertyCount} ${labels.properties}`,
       after: ".",
     })
   }
-
-  if (data.transactionsToReview.count > 0) {
+  if (data.access.listings) {
     insights.push({
-      key: "transactions",
-      href: "/transactions?tab=review",
-      before: "You have ",
-      link: `${data.transactionsToReview.count} ${data.transactionsToReview.count === 1 ? "transaction" : "transactions"}`,
-      after: " ready to review and export.",
-    })
-  }
-
-  if (data.inboxPending.count > 0) {
-    insights.push({
-      key: "inbox",
-      href: "/inbox?status=pending",
-      before: `There ${data.inboxPending.count === 1 ? "is" : "are"} `,
-      link: `${data.inboxPending.count} ${data.inboxPending.count === 1 ? "item" : "items"} in your inbox`,
-      after: " waiting to be reviewed.",
-    })
-  }
-
-  if (insights.length === 0) {
-    insights.push({
-      key: "clear",
+      key: "listings",
       href: "#",
-      before: "",
-      link: "",
-      after: "You're all caught up. Nothing needs your attention right now.",
+      before: `${labels.summaryPrefix} `,
+      link: `${data.listingCount} ${labels.listings}`,
+      after: ".",
+    })
+  }
+  if (data.access.owners) {
+    insights.push({
+      key: "owners",
+      href: "#",
+      before: `${labels.summaryPrefix} `,
+      link: `${data.ownerCount} ${labels.owners}`,
+      after: ".",
     })
   }
 
@@ -157,7 +93,13 @@ function buildInsights(data: SummaryData, locale?: string | null): Insight[] {
 
 const TICK_DURATION = 6000
 
-function SummaryTicker({ insights }: { insights: Insight[] }) {
+function SummaryTicker({
+  insights,
+  label,
+}: {
+  insights: Insight[]
+  label: string
+}) {
   const [index, setIndex] = useState(0)
   const [direction, setDirection] = useState(1)
   const [fast, setFast] = useState(false)
@@ -212,7 +154,10 @@ function SummaryTicker({ insights }: { insights: Insight[] }) {
     return () => cancelAnimationFrame(raf)
   }, [insights.length])
 
-  const current = insights[index % insights.length]!
+  if (insights.length === 0) return null
+
+  const current = insights[index % insights.length]
+  if (!current) return null
   const slideY = (fast ? 8 : 14) * direction
   const duration = fast ? 0.12 : 0.32
 
@@ -231,7 +176,8 @@ function SummaryTicker({ insights }: { insights: Insight[] }) {
   }
 
   return (
-    <div
+    <section
+      aria-label={label}
       className="flex flex-col items-center max-w-lg w-full gap-3"
       onMouseEnter={() => {
         hoveredRef.current = true
@@ -285,11 +231,12 @@ function SummaryTicker({ insights }: { insights: Insight[] }) {
           </button>
         ))}
       </div>
-    </div>
+    </section>
   )
 }
 
 export function WelcomeGreeting() {
+  const t = useI18n()
   const { data: user } = useUserQuery()
   const [greeting, setGreeting] = useState(() =>
     getTimeBasedGreeting(user?.timezone ?? undefined)
@@ -312,7 +259,7 @@ export function WelcomeGreeting() {
 
   return (
     <h1 className="text-[38px] font-serif leading-tight text-center">
-      {greeting}
+      {t(`realEstateDashboard.${greeting}`)}
       {firstName ? (
         <>
           , <span className="text-muted-foreground">{firstName}</span>
@@ -323,10 +270,22 @@ export function WelcomeGreeting() {
 }
 
 export function WelcomeSummary() {
-  const { data: user } = useUserQuery()
-  const trpc = useTRPC()
-  const { data } = useSuspenseQuery(trpc.overview.summary.queryOptions())
-  const insights = buildInsights(data, user?.locale)
+  const t = useI18n()
+  const { data } = useSuspenseQuery({
+    queryKey: ["dashboard-summary"],
+    queryFn: getDashboardSummaryAction,
+  })
+  const insights = buildInsights(data, {
+    summaryPrefix: t("realEstateDashboard.summaryPrefix"),
+    properties: t("realEstateDashboard.properties"),
+    listings: t("realEstateDashboard.listings"),
+    owners: t("realEstateDashboard.owners"),
+  })
 
-  return <SummaryTicker insights={insights} />
+  return (
+    <SummaryTicker
+      insights={insights}
+      label={t("realEstateDashboard.summaryLabel")}
+    />
+  )
 }

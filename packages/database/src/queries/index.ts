@@ -1,5 +1,6 @@
 export * from "./access-control"
 export * from "./audit-logs"
+export * from "./dashboard"
 export * from "./favorites"
 export * from "./listings"
 export * from "./media"

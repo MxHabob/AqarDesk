@@ -544,4 +544,17 @@ export default {
     "hour#other": "hours",
     view_tracker: "View time tracker",
   },
-} as const;
+  realEstateDashboard: {
+    greetingMorning: "Good morning",
+    greetingAfternoon: "Good afternoon",
+    greetingEvening: "Good evening",
+    summaryLabel: "Office summary",
+    summaryPrefix: "Registered with your office:",
+    properties: "properties",
+    listings: "listings",
+    owners: "owners",
+    activeListings: "Active listings",
+    saleListings: "Active sale listings",
+    rentalListings: "Active rental listings",
+  },
+} as const
