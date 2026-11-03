@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@aqardesk/ui/components/table"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import {
   flexRender,
   getCoreRowModel,
@@ -17,13 +18,32 @@ import {
 } from "@tanstack/react-table"
 import { useMemo, useState } from "react"
 import { useRealEstateParams } from "@/hooks/use-real-estate-params"
-import { getPropertiesColumns, type PropertyRow } from "./columns"
+import { useCurrentLocale, useI18n } from "@/locales/client"
+import { realEstateQueries } from "@/queries/real-estate"
+import { getPropertiesColumns } from "./columns"
 import { PropertiesTableHeader } from "./table-header"
 
-export function PropertiesTable({ data }: { data: PropertyRow[] }) {
+export function PropertiesTable() {
   const { setParams } = useRealEstateParams()
+  const locale = useCurrentLocale()
+  const t = useI18n()
+  const { data } = useSuspenseQuery(realEstateQueries.properties())
   const [globalFilter, setGlobalFilter] = useState("")
-  const columns = useMemo(() => getPropertiesColumns(setParams), [setParams])
+  const columns = useMemo(
+    () =>
+      getPropertiesColumns(setParams, locale, {
+        property: t("realEstateTables.propertyTitle"),
+        city: t("realEstateTables.city"),
+        district: t("realEstateTables.district"),
+        area: t("realEstateTables.area"),
+        actions: t("realEstateTables.actions"),
+        view: t("realEstateTables.view"),
+        edit: t("realEstateTables.edit"),
+        notAvailable: t("common.notAvailable"),
+        squareMeters: t("realEstateTables.squareMeters"),
+      }),
+    [locale, setParams, t]
+  )
   const table = useReactTable({
     data,
     columns,
@@ -92,7 +112,7 @@ export function PropertiesTable({ data }: { data: PropertyRow[] }) {
                   className="h-40 text-center text-sm text-muted-foreground"
                   colSpan={columns.length}
                 >
-                  لا توجد عقارات مطابقة.
+                  {t("realEstateTables.noProperties")}
                 </TableCell>
               </TableRow>
             )}
@@ -100,7 +120,9 @@ export function PropertiesTable({ data }: { data: PropertyRow[] }) {
         </Table>
       </div>
       <p className="text-xs text-muted-foreground">
-        {table.getFilteredRowModel().rows.length} سجل
+        {t("realEstateTables.recordCount", {
+          count: table.getFilteredRowModel().rows.length,
+        })}
       </p>
     </section>
   )

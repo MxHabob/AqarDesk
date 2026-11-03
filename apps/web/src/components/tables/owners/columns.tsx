@@ -8,26 +8,39 @@ import type { useRealEstateParams } from "@/hooks/use-real-estate-params"
 export type OwnerRow = Awaited<ReturnType<typeof listOwners>>[number]
 
 type SetParams = ReturnType<typeof useRealEstateParams>["setParams"]
+type OwnerLabels = {
+  owner: string
+  notes: string
+  dateAdded: string
+  actions: string
+  view: string
+  edit: string
+  notAvailable: string
+}
 
-export function getOwnersColumns(setParams: SetParams): ColumnDef<OwnerRow>[] {
+export function getOwnersColumns(
+  setParams: SetParams,
+  locale: string,
+  labels: OwnerLabels
+): ColumnDef<OwnerRow>[] {
   return [
     {
       accessorKey: "name",
-      header: "المالك",
+      header: labels.owner,
       cell: ({ getValue }) => (
         <span className="font-medium">{getValue<string>()}</span>
       ),
     },
     {
       accessorKey: "notes",
-      header: "ملاحظات داخلية",
-      cell: ({ getValue }) => getValue<string | null>() || "—",
+      header: labels.notes,
+      cell: ({ getValue }) => getValue<string | null>() || labels.notAvailable,
     },
     {
       accessorKey: "createdAt",
-      header: "تاريخ الإضافة",
+      header: labels.dateAdded,
       cell: ({ getValue }) =>
-        new Intl.DateTimeFormat("ar-SA", {
+        new Intl.DateTimeFormat(locale, {
           year: "numeric",
           month: "short",
           day: "numeric",
@@ -35,7 +48,7 @@ export function getOwnersColumns(setParams: SetParams): ColumnDef<OwnerRow>[] {
     },
     {
       id: "actions",
-      header: "الإجراءات",
+      header: labels.actions,
       enableSorting: false,
       cell: ({ row }) => (
         <div className="flex items-center gap-1">
@@ -47,7 +60,7 @@ export function getOwnersColumns(setParams: SetParams): ColumnDef<OwnerRow>[] {
               setParams({ ownerId: row.original.id, ownerMode: "details" })
             }
           >
-            عرض
+            {labels.view}
           </Button>
           <Button
             type="button"
@@ -57,7 +70,7 @@ export function getOwnersColumns(setParams: SetParams): ColumnDef<OwnerRow>[] {
               setParams({ ownerId: row.original.id, ownerMode: "edit" })
             }
           >
-            تعديل
+            {labels.edit}
           </Button>
         </div>
       ),

@@ -17,6 +17,7 @@ import {
   getPropertyById,
   getPropertyDetails,
   listListingMedia,
+  listListings,
   listOwners,
   listProperties,
   savePropertyDetails,
@@ -107,6 +108,24 @@ export async function getPropertyOptions() {
   const actor = await getActor()
   await assertPermission(actor.id, "properties.read")
   return listProperties({ pageSize: 100 })
+}
+
+export async function getPropertiesTableData() {
+  const actor = await getActor()
+  await assertPermission(actor.id, "properties.read")
+  return listProperties({ pageSize: 100 })
+}
+
+export async function getListingsTableData() {
+  const actor = await getActor()
+  await assertPermission(actor.id, "listings.read")
+  return listListings({ pageSize: 100 })
+}
+
+export async function getOwnersTableData() {
+  const actor = await getActor()
+  await assertPermission(actor.id, "owners.read")
+  return listOwners({ pageSize: 100 })
 }
 
 export async function savePropertyAction(

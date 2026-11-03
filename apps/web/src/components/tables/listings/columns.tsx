@@ -11,28 +11,36 @@ export type ListingRow = Awaited<
 >["rows"][number]
 
 type SetParams = ReturnType<typeof useRealEstateParams>["setParams"]
-
-const categoryNames = new Map(
-  propertyCategories.map((category) => [category.type, category.nameAr])
-)
-
-const statusNames: Record<ListingRow["status"], string> = {
-  draft: "مسودة",
-  active: "نشط",
-  reserved: "محجوز",
-  sold: "مباع",
-  rented: "مؤجر",
-  expired: "منتهي",
-  withdrawn: "مسحوب",
+type ListingLabels = {
+  property: string
+  listingType: string
+  sale: string
+  rent: string
+  status: string
+  statuses: Record<ListingRow["status"], string>
+  price: string
+  actions: string
+  view: string
+  edit: string
+  notAvailable: string
 }
 
 export function getListingsColumns(
-  setParams: SetParams
+  setParams: SetParams,
+  locale: string,
+  labels: ListingLabels
 ): ColumnDef<ListingRow>[] {
+  const categoryNames = new Map(
+    propertyCategories.map((category) => [
+      category.type,
+      locale === "ar" ? category.nameAr : category.nameEn,
+    ])
+  )
+
   return [
     {
       accessorKey: "title",
-      header: "العقار",
+      header: labels.property,
       cell: ({ row }) => (
         <div className="min-w-40">
           <p className="font-medium">{row.original.title}</p>
@@ -46,28 +54,29 @@ export function getListingsColumns(
     },
     {
       accessorKey: "listingType",
-      header: "نوع الإعلان",
-      cell: ({ getValue }) => (getValue() === "sale" ? "بيع" : "إيجار"),
+      header: labels.listingType,
+      cell: ({ getValue }) =>
+        getValue() === "sale" ? labels.sale : labels.rent,
     },
     {
       accessorKey: "status",
-      header: "الحالة",
-      cell: ({ getValue }) => statusNames[getValue<ListingRow["status"]>()],
+      header: labels.status,
+      cell: ({ getValue }) => labels.statuses[getValue<ListingRow["status"]>()],
     },
     {
       id: "price",
       accessorFn: (row) => row.salePrice ?? row.monthlyRent,
-      header: "السعر",
+      header: labels.price,
       cell: ({ row }) => {
         const price = row.original.salePrice ?? row.original.monthlyRent
         return price
-          ? `${new Intl.NumberFormat("ar-SA").format(Number(price))} ${row.original.currencyCode}`
-          : "—"
+          ? `${new Intl.NumberFormat(locale).format(Number(price))} ${row.original.currencyCode}`
+          : labels.notAvailable
       },
     },
     {
       id: "actions",
-      header: "الإجراءات",
+      header: labels.actions,
       enableSorting: false,
       cell: ({ row }) => (
         <div className="flex items-center gap-1">
@@ -82,7 +91,7 @@ export function getListingsColumns(
               })
             }
           >
-            عرض
+            {labels.view}
           </Button>
           <Button
             type="button"
@@ -95,7 +104,7 @@ export function getListingsColumns(
               })
             }
           >
-            تعديل
+            {labels.edit}
           </Button>
         </div>
       ),

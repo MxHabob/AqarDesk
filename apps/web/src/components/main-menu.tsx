@@ -5,112 +5,20 @@ import { cn } from "@aqardesk/ui/lib/utils"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import { useEffect, useState } from "react"
+import { useCurrentLocale, useI18n } from "@/locales/client"
 
 const icons = {
   "/": () => <Icons.Overview size={20} />,
-  "/reports": () => <Icons.Monitoring size={20} />,
-  "/transactions": () => <Icons.Transactions size={20} />,
-  "/invoices": () => <Icons.Invoice size={20} />,
-  "/tracker": () => <Icons.Tracker size={20} />,
-  "/customers": () => <Icons.Customers size={20} />,
-  "/properties": () => <Icons.Overview size={20} />,
-  "/vault": () => <Icons.Vault size={20} />,
+  "/transactions": () => <Icons.Overview size={20} />,
   "/settings": () => <Icons.Settings size={20} />,
-  "/apps": () => <Icons.Apps size={20} />,
-  "/inbox": () => <Icons.Inbox2 size={20} />,
 } as const
-
-const items = [
-  {
-    path: "/",
-    name: "Overview",
-  },
-  {
-    path: "/reports",
-    name: "Reports",
-  },
-  {
-    path: "/transactions",
-    name: "Transactions",
-    children: [
-      {
-        path: "/transactions/categories",
-        name: "Categories",
-      },
-      {
-        path: "/transactions?step=connect",
-        name: "Connect bank",
-      },
-      {
-        path: "/transactions?step=import&hide=true",
-        name: "Import",
-      },
-      { path: "/transactions?createTransaction=true", name: "Create new" },
-    ],
-  },
-  {
-    path: "/inbox",
-    name: "Inbox",
-    children: [{ path: "/inbox/settings", name: "Settings" }],
-  },
-  {
-    path: "/invoices",
-    name: "Invoices",
-    children: [
-      { path: "/invoices/products", name: "Products" },
-      { path: "/invoices?invoiceType=create", name: "Create new" },
-    ],
-  },
-  {
-    path: "/tracker",
-    name: "Tracker",
-    children: [{ path: "/tracker?create=true", name: "Create new" }],
-  },
-  {
-    path: "/customers",
-    name: "Customers",
-    children: [{ path: "/customers?createCustomer=true", name: "Create new" }],
-  },
-  {
-    path: "/properties",
-    name: "العقارات",
-    children: [
-      { path: "/properties", name: "العقارات" },
-      { path: "/listings", name: "الإعلانات" },
-      { path: "/owners", name: "الملاك" },
-    ],
-  },
-  {
-    path: "/vault",
-    name: "Vault",
-  },
-  {
-    path: "/apps",
-    name: "Apps",
-    children: [
-      { path: "/apps", name: "All" },
-      { path: "/apps?tab=installed", name: "Installed" },
-    ],
-  },
-  {
-    path: "/settings",
-    name: "Settings",
-    children: [
-      { path: "/settings", name: "General" },
-      { path: "/settings/billing", name: "Billing" },
-      { path: "/settings/accounts", name: "Bank Connections" },
-      { path: "/settings/members", name: "Members" },
-      { path: "/settings/notifications", name: "Notifications" },
-      { path: "/settings/developer", name: "Developer" },
-    ],
-  },
-]
 
 interface ItemProps {
   item: {
     path: string
+    href: string
     name: string
-    children?: { path: string; name: string }[]
+    children?: { path: string; href: string; name: string }[]
   }
   isActive: boolean
   isExpanded: boolean
@@ -127,7 +35,7 @@ const ChildItem = ({
   onSelect,
   index,
 }: {
-  child: { path: string; name: string }
+  child: { path: string; href: string; name: string }
   isActive: boolean
   isExpanded: boolean
   shouldShow: boolean
@@ -138,7 +46,7 @@ const ChildItem = ({
 
   return (
     <Link
-      href={child.path}
+      href={child.href}
       prefetch
       onClick={() => onSelect?.()}
       className="block group/child"
@@ -198,7 +106,7 @@ const Item = ({
   return (
     <div className="group">
       <Link
-        href={item.path}
+        href={item.href}
         prefetch
         onClick={() => onSelect?.()}
         className="group"
@@ -261,7 +169,7 @@ const Item = ({
           )}
         >
           {item.children?.map((child, index) => {
-            const isChildActive = pathname === child.path
+            const isChildActive = pathname === child.href
             return (
               <ChildItem
                 key={child.path}
@@ -287,7 +195,36 @@ type Props = {
 
 export function MainMenu({ onSelect, isExpanded = false }: Props) {
   const pathname = usePathname()
-  const part = pathname?.split("/")[1]
+  const locale = useCurrentLocale()
+  const t = useI18n()
+  const dashboardPath = `/${locale}/dashboard`
+  const items = [
+    { path: "/", name: t("navigation.overview") },
+    {
+      path: "/transactions",
+      name: t("common.properties"),
+      children: [
+        { path: "/transactions", name: t("common.properties") },
+        { path: "/invoices", name: t("common.listings") },
+        { path: "/customers", name: t("common.owners") },
+      ],
+    },
+    {
+      path: "/settings",
+      name: t("common.settings"),
+      children: [
+        { path: "/settings", name: t("navigation.general") },
+        { path: "/settings/billing", name: t("navigation.billing") },
+        { path: "/settings/accounts", name: t("navigation.accounts") },
+        { path: "/settings/members", name: t("navigation.members") },
+        {
+          path: "/settings/notifications",
+          name: t("navigation.notifications"),
+        },
+        { path: "/settings/developer", name: t("navigation.developer") },
+      ],
+    },
+  ]
   const [expandedItem, setExpandedItem] = useState<string | null>(null)
 
   // Reset expanded item when sidebar expands/collapses
@@ -300,14 +237,27 @@ export function MainMenu({ onSelect, isExpanded = false }: Props) {
       <nav className="w-full">
         <div className="flex flex-col gap-2">
           {items.map((item) => {
-            const isActive =
-              (pathname === "/" && item.path === "/") ||
-              (pathname !== "/" && item.path.startsWith(`/${part}`))
+            const itemPath =
+              item.path === "/" ? dashboardPath : `${dashboardPath}${item.path}`
+            const isActive = Boolean(
+              pathname === itemPath ||
+                pathname.startsWith(`${itemPath}/`) ||
+                item.children?.some(
+                  (child) => pathname === `${dashboardPath}${child.path}`
+                )
+            )
 
             return (
               <Item
                 key={item.path}
-                item={item}
+                item={{
+                  ...item,
+                  href: itemPath,
+                  children: item.children?.map((child) => ({
+                    ...child,
+                    href: `${dashboardPath}${child.path}`,
+                  })),
+                }}
                 isActive={isActive}
                 isExpanded={isExpanded}
                 isItemExpanded={expandedItem === item.path}

@@ -1,160 +1,156 @@
-import { createClient } from "@midday/supabase/client"
-import { Button } from "@midday/ui/button"
+"use client"
+
+import { authClient } from "@aqardesk/auth/client"
+import { Button } from "@aqardesk/ui/components/button"
+import { Input } from "@aqardesk/ui/components/input"
 import {
-  Collapsible,
-  CollapsibleContent,
-  CollapsibleTrigger,
-} from "@midday/ui/collapsible"
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@midday/ui/input-otp"
-import { Spinner } from "@midday/ui/spinner"
-import { ChevronsUpDown } from "lucide-react"
-import Image from "next/image"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
-import { CopyInput } from "./copy-input"
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@aqardesk/ui/components/input-otp"
+import { QRCodeSVG } from "qrcode.react"
+import { useState } from "react"
+import { useI18n } from "@/locales/client"
 
 export function EnrollMFA() {
-  const supabase = createClient()
-  const router = useRouter()
-  const [isValidating, setValidating] = useState(false)
-  const [isRedirecting, setIsRedirecting] = useState(false)
-  const [factorId, setFactorId] = useState<string | undefined>(undefined)
-  const [qr, setQR] = useState<string | undefined>(undefined)
-  const [secret, setSecret] = useState<string | undefined>(undefined)
+  const t = useI18n()
+  const [password, setPassword] = useState("")
+  const [totpURI, setTotpURI] = useState("")
+  const [secret, setSecret] = useState("")
+  const [backupCodes, setBackupCodes] = useState<string[]>([])
+  const [isVerified, setIsVerified] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(false)
-  const [isOpen, setIsOpen] = useState(false)
 
-  const onComplete = async (code: string) => {
+  async function generateCode() {
     setError(false)
+    setIsLoading(true)
 
-    if (!isValidating && factorId) {
-      setValidating(true)
+    try {
+      const { data, error: enableError } = await authClient.twoFactor.enable({
+        method: "totp",
+        issuer: "AqarDesk",
+        ...(password ? { password } : {}),
+      })
 
-      const challenge = await supabase.auth.mfa.challenge({ factorId })
-
-      if (!challenge.data) {
+      if (enableError || data.method !== "totp") {
         setError(true)
-        setValidating(false)
         return
       }
 
-      const verify = await supabase.auth.mfa.verify({
-        factorId,
-        challengeId: challenge.data.id,
+      const setupSecret = new URL(data.totpURI).searchParams.get("secret")
+      if (!setupSecret) {
+        setError(true)
+        return
+      }
+
+      setTotpURI(data.totpURI)
+      setSecret(setupSecret)
+      setBackupCodes(data.backupCodes)
+    } catch {
+      setError(true)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  async function verifyCode(code: string) {
+    setError(false)
+    setIsLoading(true)
+
+    try {
+      const { error: verifyError } = await authClient.twoFactor.verifyTotp({
         code,
       })
 
-      if (verify.data) {
-        setIsRedirecting(true)
-        router.replace("/")
-      } else {
-        setError(true)
-        setValidating(false)
-      }
-    }
-  }
-
-  useEffect(() => {
-    async function enroll() {
-      const { data, error } = await supabase.auth.mfa.enroll({
-        factorType: "totp",
-        issuer: "app.midday.ai",
-      })
-
-      if (error || !data) {
+      if (verifyError) {
         setError(true)
         return
       }
 
-      setFactorId(data.id)
-
-      setQR(data.totp.qr_code)
-      setSecret(data.totp.secret)
+      setIsVerified(true)
+    } catch {
+      setError(true)
+    } finally {
+      setIsLoading(false)
     }
+  }
 
-    enroll()
-  }, [])
-
-  const handleOnCancel = () => {
-    if (factorId) {
-      supabase.auth.mfa.unenroll({
-        factorId,
-      })
-    }
-    router.push("/")
+  if (isVerified) {
+    return (
+      <div className="space-y-4">
+        <p className="text-center font-medium">{t("auth.mfaEnabled")}</p>
+        <div className="space-y-2 rounded-md border p-4">
+          <h2 className="font-medium">{t("auth.backupCodesTitle")}</h2>
+          <p className="text-sm text-muted-foreground">
+            {t("auth.backupCodesWarning")}
+          </p>
+          <ul className="grid grid-cols-2 gap-2 font-mono text-sm">
+            {backupCodes.map((code) => (
+              <li key={code}>{code}</li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    )
   }
 
   return (
-    <>
-      <div className="flex items-center justify-center">
-        <div className="w-[220px] h-[220px] bg-white rounded-md">
-          {qr && (
-            <Image src={qr} alt="qr" width={220} height={220} quality={100} />
-          )}
-        </div>
-      </div>
-      <div className="my-8">
-        <p className="font-medium pb-1 text-2xl text-[#606060]">
-          Use an authenticator app to scan the following QR code, and provide
-          the code to complete the setup.
-        </p>
-      </div>
-
-      <Collapsible
-        open={isOpen}
-        onOpenChange={setIsOpen}
-        className="w-full mb-4"
-      >
-        <CollapsibleTrigger className="p-0 text-sm w-full">
-          <div className="flex items-center justify-between">
-            <span className="font-medium">Use setup key</span>
-            <ChevronsUpDown className="h-4 w-4" />
-          </div>
-        </CollapsibleTrigger>
-        <CollapsibleContent>
-          {secret && <CopyInput value={secret} className="w-full" />}
-        </CollapsibleContent>
-      </Collapsible>
-
-      <div className="flex w-full">
-        <div className="w-full h-16 flex items-center justify-center">
-          {isValidating || isRedirecting ? (
-            <div className="flex items-center justify-center h-full bg-background/95 border border-input w-full">
-              <div className="flex items-center space-x-2 bg-background px-4 py-2 rounded-md shadow-sm">
-                <Spinner size={16} className="text-primary" />
-                <span className="text-sm text-foreground font-medium">
-                  {isRedirecting ? "Redirecting..." : "Setting up..."}
-                </span>
-              </div>
-            </div>
-          ) : (
-            <InputOTP
-              className={error ? "invalid" : ""}
-              maxLength={6}
-              autoFocus
-              onComplete={onComplete}
-              disabled={isValidating || isRedirecting}
-              render={({ slots }) => (
-                <InputOTPGroup>
-                  {slots.map((slot, index) => (
-                    <InputOTPSlot key={index.toString()} {...slot} />
-                  ))}
-                </InputOTPGroup>
-              )}
+    <div className="space-y-5">
+      {!totpURI ? (
+        <div className="space-y-4">
+          <label htmlFor="mfa-password" className="block space-y-2 text-sm">
+            <span>{t("auth.currentPassword")}</span>
+            <Input
+              id="mfa-password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              disabled={isLoading}
             />
-          )}
+          </label>
+          <Button
+            type="button"
+            className="w-full"
+            onClick={generateCode}
+            disabled={isLoading}
+          >
+            {isLoading ? t("auth.generatingCode") : t("auth.generateCode")}
+          </Button>
         </div>
-      </div>
-
-      <div className="flex border-t-[1px] pt-4 mt-6 justify-center mb-6">
-        <Button
-          onClick={handleOnCancel}
-          variant="ghost"
-          className="text-medium text-sm hover:bg-transparent"
-        >
-          Cancel
-        </Button>
-      </div>
-    </>
+      ) : (
+        <>
+          <div className="flex justify-center rounded-md bg-white p-4">
+            <QRCodeSVG value={totpURI} size={220} />
+          </div>
+          <label htmlFor="mfa-secret" className="block space-y-2 text-sm">
+            <span>{t("auth.setupKey")}</span>
+            <Input id="mfa-secret" value={secret} readOnly />
+          </label>
+          <p className="text-sm text-muted-foreground">
+            {t("auth.twoFactorDescription")}
+          </p>
+          <InputOTP
+            maxLength={6}
+            autoFocus
+            disabled={isLoading}
+            onComplete={verifyCode}
+            render={({ slots }) => (
+              <InputOTPGroup className="mx-auto">
+                {slots.map((_, index) => (
+                  <InputOTPSlot key={index} index={index} />
+                ))}
+              </InputOTPGroup>
+            )}
+          />
+        </>
+      )}
+      {error && (
+        <p role="alert" className="text-center text-sm text-destructive">
+          {t("auth.mfaError")}
+        </p>
+      )}
+    </div>
   )
 }

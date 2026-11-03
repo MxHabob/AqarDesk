@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@aqardesk/ui/components/table"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import {
   flexRender,
   getCoreRowModel,
@@ -17,13 +18,43 @@ import {
 } from "@tanstack/react-table"
 import { useMemo, useState } from "react"
 import { useRealEstateParams } from "@/hooks/use-real-estate-params"
-import { getListingsColumns, type ListingRow } from "./columns"
+import { useCurrentLocale, useI18n } from "@/locales/client"
+import { realEstateQueries } from "@/queries/real-estate"
+import { getListingsColumns } from "./columns"
 import { ListingsTableHeader } from "./table-header"
 
-export function ListingsTable({ data }: { data: ListingRow[] }) {
+export function ListingsTable() {
   const { setParams } = useRealEstateParams()
+  const locale = useCurrentLocale()
+  const t = useI18n()
+  const { data: result } = useSuspenseQuery(realEstateQueries.listings())
+  const data = result.rows
   const [globalFilter, setGlobalFilter] = useState("")
-  const columns = useMemo(() => getListingsColumns(setParams), [setParams])
+  const columns = useMemo(
+    () =>
+      getListingsColumns(setParams, locale, {
+        property: t("realEstateTables.propertyTitle"),
+        listingType: t("realEstateTables.listingType"),
+        sale: t("realEstateTables.sale"),
+        rent: t("realEstateTables.rent"),
+        status: t("realEstateTables.status"),
+        statuses: {
+          draft: t("realEstateTables.statusDraft"),
+          active: t("realEstateTables.statusActive"),
+          reserved: t("realEstateTables.statusReserved"),
+          sold: t("realEstateTables.statusSold"),
+          rented: t("realEstateTables.statusRented"),
+          expired: t("realEstateTables.statusExpired"),
+          withdrawn: t("realEstateTables.statusWithdrawn"),
+        },
+        price: t("realEstateTables.price"),
+        actions: t("realEstateTables.actions"),
+        view: t("realEstateTables.view"),
+        edit: t("realEstateTables.edit"),
+        notAvailable: t("common.notAvailable"),
+      }),
+    [locale, setParams, t]
+  )
   const table = useReactTable({
     data,
     columns,
@@ -92,7 +123,7 @@ export function ListingsTable({ data }: { data: ListingRow[] }) {
                   className="h-40 text-center text-sm text-muted-foreground"
                   colSpan={columns.length}
                 >
-                  لا توجد إعلانات مطابقة.
+                  {t("realEstateTables.noListings")}
                 </TableCell>
               </TableRow>
             )}
@@ -100,7 +131,9 @@ export function ListingsTable({ data }: { data: ListingRow[] }) {
         </Table>
       </div>
       <p className="text-xs text-muted-foreground">
-        {table.getFilteredRowModel().rows.length} سجل
+        {t("realEstateTables.recordCount", {
+          count: table.getFilteredRowModel().rows.length,
+        })}
       </p>
     </section>
   )

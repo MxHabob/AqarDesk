@@ -43,6 +43,13 @@
       "when": 1793699197094,
       "tag": "0005_ancient_bug",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1793713234562,
+      "tag": "0006_oval_captain_britain",
+      "breakpoints": true
     }
   ]
 }

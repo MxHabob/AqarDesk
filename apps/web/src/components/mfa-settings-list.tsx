@@ -1,5 +1,7 @@
-import { createClient } from "@midday/supabase/server";
-import { Button } from "@midday/ui/button";
+"use client"
+
+import { authClient } from "@aqardesk/auth/client"
+import { Button } from "@aqardesk/ui/components/button"
 import {
   Card,
   CardContent,
@@ -7,41 +9,89 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@midday/ui/card";
-import Link from "next/link";
-import { UnenrollMFA } from "./unenroll-mfa";
+} from "@aqardesk/ui/components/card"
+import { Input } from "@aqardesk/ui/components/input"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useCurrentLocale, useI18n } from "@/locales/client"
 
-export async function MfaSettingsList() {
-  const supabase = await createClient();
-  const { data } = await supabase.auth.mfa.listFactors();
-  const hasMfaFactors = data?.all && data.all.length > 0;
+export function MfaSettingsList({ enabled }: { enabled: boolean }) {
+  const locale = useCurrentLocale()
+  const router = useRouter()
+  const t = useI18n()
+  const [password, setPassword] = useState("")
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(false)
+
+  async function disableMfa() {
+    setError(false)
+    setIsLoading(true)
+
+    try {
+      const { error: disableError } = await authClient.twoFactor.disable({
+        ...(password ? { password } : {}),
+      })
+
+      if (disableError) {
+        setError(true)
+        return
+      }
+
+      setPassword("")
+      router.refresh()
+    } catch {
+      setError(true)
+    } finally {
+      setIsLoading(false)
+    }
+  }
 
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Multi-factor authentication</CardTitle>
-        <CardDescription>
-          Add an additional layer of security to your account by requiring more
-          than just a password to sign in.
-        </CardDescription>
+        <CardTitle>{t("auth.twoFactorTitle")}</CardTitle>
+        <CardDescription>{t("auth.mfaSettingsDescription")}</CardDescription>
       </CardHeader>
-
-      <CardContent>
-        {hasMfaFactors && <UnenrollMFA />}
-        {!hasMfaFactors && (
-          <p className="text-sm text-[#606060]">
-            Multi-factor authentication is not enabled. Enable it to add an
-            additional layer of security to your account.
+      <CardContent className="space-y-4">
+        <p className="text-sm">
+          {enabled ? t("auth.mfaEnabled") : t("auth.mfaDisabled")}
+        </p>
+        {enabled && (
+          <label htmlFor="disable-mfa-password" className="block space-y-2">
+            <span className="text-sm">{t("auth.currentPassword")}</span>
+            <Input
+              id="disable-mfa-password"
+              type="password"
+              autoComplete="current-password"
+              value={password}
+              onChange={(event) => setPassword(event.target.value)}
+              disabled={isLoading}
+            />
+          </label>
+        )}
+        {error && (
+          <p role="alert" className="text-sm text-destructive">
+            {t("auth.mfaError")}
           </p>
         )}
       </CardContent>
-
-      <CardFooter className="flex justify-between">
-        <div />
-        <Link href="?add=device">
-          <Button>{hasMfaFactors ? "Add new device" : "Enable MFA"}</Button>
-        </Link>
+      <CardFooter className="justify-end">
+        {enabled ? (
+          <Button
+            type="button"
+            variant="destructive"
+            onClick={disableMfa}
+            disabled={isLoading}
+          >
+            {isLoading ? t("auth.disablingMfa") : t("auth.disableMfa")}
+          </Button>
+        ) : (
+          <Button render={<Link href={`/${locale}/dashboard/mfa/setup`} />}>
+            {t("auth.enableMfa")}
+          </Button>
+        )}
       </CardFooter>
     </Card>
-  );
+  )
 }

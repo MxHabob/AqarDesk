@@ -9,18 +9,34 @@ import type { useRealEstateParams } from "@/hooks/use-real-estate-params"
 export type PropertyRow = Awaited<ReturnType<typeof listProperties>>[number]
 
 type SetParams = ReturnType<typeof useRealEstateParams>["setParams"]
-
-const categoryNames = new Map(
-  propertyCategories.map((category) => [category.type, category.nameAr])
-)
+type PropertyLabels = {
+  property: string
+  city: string
+  district: string
+  area: string
+  actions: string
+  view: string
+  edit: string
+  notAvailable: string
+  squareMeters: string
+}
 
 export function getPropertiesColumns(
-  setParams: SetParams
+  setParams: SetParams,
+  locale: string,
+  labels: PropertyLabels
 ): ColumnDef<PropertyRow>[] {
+  const categoryNames = new Map(
+    propertyCategories.map((category) => [
+      category.type,
+      locale === "ar" ? category.nameAr : category.nameEn,
+    ])
+  )
+
   return [
     {
       accessorKey: "title",
-      header: "العقار",
+      header: labels.property,
       cell: ({ row }) => (
         <div className="min-w-40">
           <p className="font-medium">{row.original.title}</p>
@@ -32,27 +48,28 @@ export function getPropertiesColumns(
     },
     {
       accessorKey: "city",
-      header: "المدينة",
+      header: labels.city,
       cell: ({ row }) =>
-        [row.original.city, row.original.district].filter(Boolean).join("، ") ||
-        "—",
+        [row.original.city, row.original.district]
+          .filter(Boolean)
+          .join(locale === "ar" ? "، " : ", ") || labels.notAvailable,
     },
     {
       accessorKey: "neighborhood",
-      header: "الحي",
-      cell: ({ getValue }) => getValue() || "—",
+      header: labels.district,
+      cell: ({ getValue }) => getValue() || labels.notAvailable,
     },
     {
       accessorKey: "lotAreaM2",
-      header: "المساحة",
+      header: labels.area,
       cell: ({ getValue }) => {
         const area = getValue<number | null>()
-        return area ? `${area} م²` : "—"
+        return area ? `${area} ${labels.squareMeters}` : labels.notAvailable
       },
     },
     {
       id: "actions",
-      header: "الإجراءات",
+      header: labels.actions,
       enableSorting: false,
       cell: ({ row }) => (
         <div className="flex items-center gap-1">
@@ -67,7 +84,7 @@ export function getPropertiesColumns(
               })
             }
           >
-            عرض
+            {labels.view}
           </Button>
           <Button
             type="button"
@@ -80,7 +97,7 @@ export function getPropertiesColumns(
               })
             }
           >
-            تعديل
+            {labels.edit}
           </Button>
         </div>
       ),

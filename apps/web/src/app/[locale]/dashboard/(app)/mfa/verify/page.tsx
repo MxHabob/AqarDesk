@@ -1,23 +1,33 @@
-"use client";
-
-import { Icons } from "@midday/ui/icons";
-import Link from "next/link";
+import { auth } from "@aqardesk/auth/server"
+import type { Metadata } from "next"
+import { headers } from "next/headers"
+import { redirect } from "next/navigation"
 import { VerifyMfa } from "@/components/verify-mfa";
 
-export default function Verify() {
-  return (
-    <div>
-      <div className="absolute left-4 top-4">
-        <Link href="https://midday.ai">
-          <Icons.LogoSmall className="h-6 w-auto" />
-        </Link>
-      </div>
+export const metadata: Metadata = {
+  title: "Verify sign in | AqarDesk",
+}
 
-      <div className="flex min-h-screen justify-center items-center overflow-hidden p-6 md:p-0">
-        <div className="relative z-20 m-auto flex w-full max-w-[380px] flex-col">
-          <VerifyMfa />
-        </div>
+export default async function Verify({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const session = await auth.api.getSession({ headers: await headers() })
+
+  if (session) {
+    redirect(`/${locale}/login/callback`)
+  }
+
+  return (
+    <main
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      className="flex min-h-screen items-center justify-center p-6"
+    >
+      <div className="w-full max-w-md">
+        <VerifyMfa />
       </div>
-    </div>
-  );
+    </main>
+  )
 }

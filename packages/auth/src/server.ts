@@ -1,11 +1,23 @@
 import { getDatabase, schema } from "@aqardesk/database"
-import { betterAuth } from "better-auth"
+import { betterAuth, type Auth, type BetterAuthOptions } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
+import { twoFactor } from "better-auth/plugins/two-factor"
 
 export { toNextJsHandler } from "better-auth/next-js"
 
 const secret = process.env.BETTER_AUTH_SECRET
 const baseURL = process.env.BETTER_AUTH_URL
+const googleClientId = process.env.GOOGLE_CLIENT_ID
+const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET
+const socialProviders =
+  googleClientId && googleClientSecret
+    ? {
+        google: {
+          clientId: googleClientId,
+          clientSecret: googleClientSecret,
+        },
+      }
+    : {}
 
 if (!secret || secret.length < 32) {
   throw new Error("BETTER_AUTH_SECRET must be set to at least 32 characters.")
@@ -17,7 +29,17 @@ if (!baseURL) {
   )
 }
 
-export const auth = betterAuth({
+if (Boolean(googleClientId) !== Boolean(googleClientSecret)) {
+  throw new Error(
+    "GOOGLE_CLIENT_ID and GOOGLE_CLIENT_SECRET must both be configured."
+  )
+}
+
+export const isGoogleAuthConfigured = Boolean(
+  googleClientId && googleClientSecret
+)
+
+const authOptions = {
   appName: "AqarDesk",
   baseURL,
   secret,
@@ -28,11 +50,20 @@ export const auth = betterAuth({
       session: schema.sessions,
       account: schema.accounts,
       verification: schema.verifications,
+      twoFactor: schema.twoFactor,
     },
   }),
   emailAndPassword: {
     enabled: true,
+    disableSignUp: true,
   },
+  socialProviders,
+  plugins: [
+    twoFactor({
+      issuer: "AqarDesk",
+      allowPasswordless: true,
+    }),
+  ],
   databaseHooks: {
     user: {
       create: {
@@ -59,4 +90,6 @@ export const auth = betterAuth({
       },
     },
   },
-})
+} satisfies BetterAuthOptions
+
+export const auth: Auth<typeof authOptions> = betterAuth(authOptions)

@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@aqardesk/ui/components/table"
+import { useSuspenseQuery } from "@tanstack/react-query"
 import {
   flexRender,
   getCoreRowModel,
@@ -17,13 +18,30 @@ import {
 } from "@tanstack/react-table"
 import { useMemo, useState } from "react"
 import { useRealEstateParams } from "@/hooks/use-real-estate-params"
-import { getOwnersColumns, type OwnerRow } from "./columns"
+import { useCurrentLocale, useI18n } from "@/locales/client"
+import { realEstateQueries } from "@/queries/real-estate"
+import { getOwnersColumns } from "./columns"
 import { OwnersTableHeader } from "./table-header"
 
-export function OwnersTable({ data }: { data: OwnerRow[] }) {
+export function OwnersTable() {
   const { setParams } = useRealEstateParams()
+  const locale = useCurrentLocale()
+  const t = useI18n()
+  const { data } = useSuspenseQuery(realEstateQueries.owners())
   const [globalFilter, setGlobalFilter] = useState("")
-  const columns = useMemo(() => getOwnersColumns(setParams), [setParams])
+  const columns = useMemo(
+    () =>
+      getOwnersColumns(setParams, locale, {
+        owner: t("realEstateTables.owner"),
+        notes: t("realEstateTables.notes"),
+        dateAdded: t("realEstateTables.dateAdded"),
+        actions: t("realEstateTables.actions"),
+        view: t("realEstateTables.view"),
+        edit: t("realEstateTables.edit"),
+        notAvailable: t("common.notAvailable"),
+      }),
+    [locale, setParams, t]
+  )
   const table = useReactTable({
     data,
     columns,
@@ -92,7 +110,7 @@ export function OwnersTable({ data }: { data: OwnerRow[] }) {
                   className="h-40 text-center text-sm text-muted-foreground"
                   colSpan={columns.length}
                 >
-                  لا يوجد ملاك مطابقون.
+                  {t("realEstateTables.noOwners")}
                 </TableCell>
               </TableRow>
             )}
@@ -100,7 +118,9 @@ export function OwnersTable({ data }: { data: OwnerRow[] }) {
         </Table>
       </div>
       <p className="text-xs text-muted-foreground">
-        {table.getFilteredRowModel().rows.length} سجل
+        {t("realEstateTables.recordCount", {
+          count: table.getFilteredRowModel().rows.length,
+        })}
       </p>
     </section>
   )

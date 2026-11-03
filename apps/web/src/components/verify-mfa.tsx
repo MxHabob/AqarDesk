@@ -1,122 +1,114 @@
-import { createClient } from "@midday/supabase/client";
-import { InputOTP, InputOTPGroup, InputOTPSlot } from "@midday/ui/input-otp";
-import { Spinner } from "@midday/ui/spinner";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+"use client"
+
+import { authClient } from "@aqardesk/auth/client"
+import { Button } from "@aqardesk/ui/components/button"
+import { Input } from "@aqardesk/ui/components/input"
+import {
+  InputOTP,
+  InputOTPGroup,
+  InputOTPSlot,
+} from "@aqardesk/ui/components/input-otp"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
+import { useCurrentLocale, useI18n } from "@/locales/client"
 
 export function VerifyMfa() {
-  const [isValidating, setValidating] = useState(false);
-  const [isRedirecting, setIsRedirecting] = useState(false);
-  const [error, setError] = useState(false);
-  const supabase = createClient();
-  const router = useRouter();
-  const searchParams = useSearchParams();
+  const locale = useCurrentLocale()
+  const router = useRouter()
+  const t = useI18n()
+  const [backupCode, setBackupCode] = useState("")
+  const [useBackupCode, setUseBackupCode] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
+  const [error, setError] = useState(false)
 
-  const onComplete = async (code: string) => {
-    setError(false);
+  async function verify(code: string, method: "totp" | "backup") {
+    setError(false)
+    setIsLoading(true)
 
-    if (!isValidating) {
-      setValidating(true);
+    try {
+      const result =
+        method === "totp"
+          ? await authClient.twoFactor.verifyTotp({ code })
+          : await authClient.twoFactor.verifyBackupCode({ code })
 
-      const factors = await supabase.auth.mfa.listFactors();
-
-      if (factors.error) {
-        setValidating(false);
-        setError(true);
+      if (result.error) {
+        setError(true)
+        return
       }
 
-      if (!factors.data) {
-        setValidating(false);
-        setError(true);
-        return;
-      }
-
-      const totpFactor = factors.data.totp[0];
-
-      if (!totpFactor) {
-        setValidating(false);
-        setError(true);
-        return;
-      }
-
-      const factorId = totpFactor.id;
-
-      const challenge = await supabase.auth.mfa.challenge({ factorId });
-
-      if (challenge.error) {
-        setValidating(false);
-        setError(true);
-        return;
-      }
-
-      const challengeId = challenge.data.id;
-
-      const verify = await supabase.auth.mfa.verify({
-        factorId,
-        challengeId,
-        code,
-      });
-
-      if (verify.error) {
-        setValidating(false);
-        setError(true);
-        return;
-      }
-
-      setIsRedirecting(true);
-      router.push(
-        `${window.location.origin}/${searchParams.get("return_to") || ""}`,
-      );
+      router.replace(`/${locale}/login/callback`)
+    } catch {
+      setError(true)
+    } finally {
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
-    <>
-      <div className="pb-4">
-        <div className="text-center">
-          <h1 className="text-lg lg:text-xl mb-2 font-serif">
-            Verify your identity.
-          </h1>
-          <p className="text-[#878787] text-sm mb-8">
-            Please enter the code from your authenticator app.
-          </p>
-        </div>
-      </div>
+    <section className="w-full space-y-6">
+      <header className="space-y-2 text-center">
+        <h1 className="text-xl font-semibold">{t("auth.twoFactorTitle")}</h1>
+        <p className="text-sm text-muted-foreground">
+          {t("auth.twoFactorDescription")}
+        </p>
+      </header>
 
-      <div className="flex w-full mb-6">
-        <div className="w-full h-16 flex items-center justify-center">
-          {isValidating || isRedirecting ? (
-            <div className="flex items-center justify-center h-full bg-background/95 border border-input w-full">
-              <div className="flex items-center space-x-2 bg-background px-4 py-2 rounded-md shadow-sm">
-                <Spinner size={16} className="text-primary" />
-                <span className="text-sm text-foreground font-medium">
-                  {isRedirecting ? "Redirecting..." : "Verifying..."}
-                </span>
-              </div>
-            </div>
-          ) : (
-            <InputOTP
-              onComplete={onComplete}
-              maxLength={6}
-              autoFocus
-              className={error ? "invalid" : undefined}
-              disabled={isValidating || isRedirecting}
-              render={({ slots }) => (
-                <InputOTPGroup>
-                  {slots.map((slot, index) => (
-                    <InputOTPSlot key={index.toString()} {...slot} />
-                  ))}
-                </InputOTPGroup>
-              )}
+      {useBackupCode ? (
+        <form
+          className="space-y-4"
+          onSubmit={(event) => {
+            event.preventDefault()
+            void verify(backupCode, "backup")
+          }}
+        >
+          <label htmlFor="backup-code" className="block space-y-2 text-sm">
+            <span>{t("auth.backupCode")}</span>
+            <Input
+              id="backup-code"
+              autoComplete="one-time-code"
+              value={backupCode}
+              onChange={(event) => setBackupCode(event.target.value)}
+              disabled={isLoading}
+              required
             />
+          </label>
+          <Button type="submit" className="w-full" disabled={isLoading}>
+            {isLoading ? t("auth.verifying") : t("auth.verifyCode")}
+          </Button>
+        </form>
+      ) : (
+        <InputOTP
+          maxLength={6}
+          autoFocus
+          disabled={isLoading}
+          onComplete={(code) => void verify(code, "totp")}
+          render={({ slots }) => (
+            <InputOTPGroup className="mx-auto">
+              {slots.map((_, index) => (
+                <InputOTPSlot key={index} index={index} />
+              ))}
+            </InputOTPGroup>
           )}
-        </div>
-      </div>
+        />
+      )}
 
-      <p className="text-xs text-[#878787] text-center font-mono">
-        Open your authenticator apps like 1Password, Authy, etc. to verify your
-        identity.
-      </p>
-    </>
-  );
+      {error && (
+        <p role="alert" className="text-center text-sm text-destructive">
+          {t("auth.mfaError")}
+        </p>
+      )}
+      <Button
+        type="button"
+        variant="outline"
+        className="w-full"
+        onClick={() => {
+          setError(false)
+          setUseBackupCode((current) => !current)
+        }}
+        disabled={isLoading}
+      >
+        {useBackupCode ? t("auth.useAuthenticatorCode") : t("auth.useBackupCode")}
+      </Button>
+    </section>
+  )
 }
