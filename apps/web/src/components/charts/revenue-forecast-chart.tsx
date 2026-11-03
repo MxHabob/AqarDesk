@@ -45,7 +45,7 @@ interface ForecastData {
 
 interface RevenueForecastChartProps extends Omit<BaseChartProps, "data"> {
   data?: ForecastData[]
-  currency?: string
+  currency?: string | null
   locale?: string
   forecastStartIndex?: number
 }
@@ -54,13 +54,13 @@ interface RevenueForecastChartProps extends Omit<BaseChartProps, "data"> {
 const CustomTooltip = ({
   active,
   payload,
-  currency,
+  currency = "USD",
   locale,
   forecastStartMonth,
 }: {
   active?: boolean
   payload?: any[]
-  currency?: string
+  currency?: string | null
   locale?: string
   forecastStartMonth?: string | null
 }) => {
@@ -186,7 +186,7 @@ export function RevenueForecastChart({
   data,
   height = 320,
   className = "",
-  currency,
+  currency = "USD",
   locale,
   forecastStartIndex,
 }: RevenueForecastChartProps) {

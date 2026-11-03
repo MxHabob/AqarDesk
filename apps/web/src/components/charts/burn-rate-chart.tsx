@@ -29,12 +29,18 @@ interface BurnRateChartProps {
   data: BurnRateData[]
   height?: number
   showLegend?: boolean
-  currency?: string
+  currency?: string | null
   locale?: string
 }
 
 // Custom tooltip component
-const CustomTooltip = ({ active, payload, label, currency, locale }: any) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+  currency = "USD",
+  locale,
+}: any) => {
   if (active && Array.isArray(payload) && payload.length > 0) {
     const current = payload[0]?.value
     const average = payload[1]?.value
@@ -65,7 +71,7 @@ const CustomTooltip = ({ active, payload, label, currency, locale }: any) => {
 export function BurnRateChart({
   data,
   height = 320,
-  currency,
+  currency = "USD",
   locale,
 }: BurnRateChartProps) {
   // Use the compact tick formatter

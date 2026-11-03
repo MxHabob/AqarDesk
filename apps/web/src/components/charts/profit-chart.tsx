@@ -33,12 +33,12 @@ interface ProfitChartProps {
   data: ProfitData[]
   height?: number
   showLegend?: boolean
-  currency?: string
+  currency?: string | null
   locale?: string
 }
 
 // Custom tooltip component
-const CustomTooltip = ({ active, payload, label, currency, locale }: any) => {
+const CustomTooltip = ({ active, payload, label, currency = "USD", locale }: any) => {
   if (active && Array.isArray(payload) && payload.length > 0) {
     const thisYear = payload.find((p) => p.dataKey === "profit")?.value
     const lastYear = payload.find((p) => p.dataKey === "lastYearProfit")?.value
@@ -53,12 +53,13 @@ const CustomTooltip = ({ active, payload, label, currency, locale }: any) => {
         <p className="mb-1 text-[#707070] dark:text-[#666666]">{label}</p>
         {typeof thisYear === "number" && (
           <p className="text-black dark:text-white">
-            Properties: {formatCurrency(thisYear)}
+            {currency ? "Current" : "Properties"}: {formatCurrency(thisYear)}
           </p>
         )}
         {typeof lastYear === "number" && (
           <p className="text-black dark:text-white">
-            Previous year: {formatCurrency(lastYear)}
+            {currency ? "Previous" : "Previous year"}:{" "}
+            {formatCurrency(lastYear)}
           </p>
         )}
         {typeof average === "number" && (
@@ -75,7 +76,7 @@ const CustomTooltip = ({ active, payload, label, currency, locale }: any) => {
 export function ProfitChart({
   data,
   height = 320,
-  currency,
+  currency = "USD",
   locale,
 }: ProfitChartProps) {
   // Use the compact tick formatter

@@ -43,7 +43,7 @@ export const formatNumber = (value: number): string => {
 
 export function formatChartValue(
   value: number,
-  currency?: string,
+  currency?: string | null,
   locale?: string
 ) {
   if (currency) {
