@@ -8,11 +8,15 @@ import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
+import type { SearchParams } from "nuqs"
 import { z } from "zod"
+import { ListingCard } from "@/components/marketing/listing-card"
 import { ShareListingDialog } from "@/components/real-estate/share-listing-dialog"
 import {
   getPublicListingById,
+  getPublicListingCoverPhotos,
   getPublicListingMedia,
+  getSimilarPublicListings,
 } from "@/lib/listings/public-queries"
 import {
   createPageMetadata,
@@ -23,9 +27,28 @@ import { getI18n, getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
 type Props = {
   params: Promise<{ locale: string; listingId: string }>
+  searchParams: Promise<SearchParams>
 }
 
 const listingIdSchema = z.uuid()
+
+function getSafeListingReturnHref(value: string | string[] | undefined) {
+  if (typeof value !== "string" || !value.startsWith("/")) return "/listings"
+
+  try {
+    const url = new URL(value, "https://aqardesk.invalid")
+    if (
+      url.origin !== "https://aqardesk.invalid" ||
+      url.pathname !== "/listings"
+    ) {
+      return "/listings"
+    }
+
+    return `${url.pathname}${url.search}${url.hash}`
+  } catch {
+    return "/listings"
+  }
+}
 
 function getWhatsAppUrl(phone: string | null, countryCode: string) {
   if (!phone) return null
@@ -72,23 +95,41 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
 }
 
-export default async function ListingDetailsPage({ params }: Props) {
-  const { listingId, locale } = await params
+export default async function ListingDetailsPage({
+  params,
+  searchParams,
+}: Props) {
+  const [{ listingId, locale }, rawSearchParams] = await Promise.all([
+    params,
+    searchParams,
+  ])
+  const returnHref = getSafeListingReturnHref(rawSearchParams.returnTo)
   setStaticParamsLocale(locale)
   if (!listingIdSchema.safeParse(listingId).success) notFound()
 
   const listing = await getPublicListingById(listingId)
   if (!listing) notFound()
 
-  const [propertyDetails, media, officeSettings, t, translate, listingT] =
-    await Promise.all([
-      getPropertyDetails(listing.propertyId, listing.propertyType),
-      getPublicListingMedia(listing.id),
-      getOfficeSettings(),
-      getScopedI18n("publicListingDetails"),
-      getI18n(),
-      getScopedI18n("publicListings"),
-    ])
+  const [
+    propertyDetails,
+    media,
+    officeSettings,
+    t,
+    translate,
+    listingT,
+    similarListings,
+  ] = await Promise.all([
+    getPropertyDetails(listing.propertyId, listing.propertyType),
+    getPublicListingMedia(listing.id),
+    getOfficeSettings(),
+    getScopedI18n("publicListingDetails"),
+    getI18n(),
+    getScopedI18n("publicListings"),
+    getSimilarPublicListings(listing),
+  ])
+  const similarCoverPhotos = await getPublicListingCoverPhotos(
+    similarListings.map((similarListing) => similarListing.id)
+  )
   const contactUrl = getWhatsAppUrl(
     officeSettings.phone,
     officeSettings.countryCode
@@ -272,7 +313,7 @@ export default async function ListingDetailsPage({ params }: Props) {
         <ol className="flex flex-wrap items-center gap-2">
           <li>
             <Link
-              href="/listings"
+              href={returnHref}
               className="text-muted-foreground transition-colors hover:text-foreground"
             >
               {t("backToListings")}
@@ -506,6 +547,50 @@ export default async function ListingDetailsPage({ params }: Props) {
           )}
         </aside>
       </div>
+
+      {similarListings.length > 0 && (
+        <section
+          aria-labelledby="similar-listings-heading"
+          className="space-y-5 border-t border-border pt-8"
+        >
+          <h2
+            id="similar-listings-heading"
+            className="font-serif text-2xl text-foreground"
+          >
+            {t("similarProperties")}
+          </h2>
+          <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+            {similarListings.map((similarListing) => (
+              <ListingCard
+                key={similarListing.id}
+                listing={similarListing}
+                coverPhoto={similarCoverPhotos[similarListing.id]}
+                propertyTypeLabel={
+                  propertyTypeLabels[similarListing.propertyType]
+                }
+                locale={locale}
+                labels={{
+                  sale: listingT("sale"),
+                  rent: listingT("rent"),
+                  perMonth: listingT("perMonth"),
+                  quickView: listingT("quickView"),
+                  openFullListing: listingT("openFullListing"),
+                  locationUnavailable: listingT("locationUnavailable"),
+                  propertyDetails: listingT("propertyDetails"),
+                  location: listingT("location"),
+                  price: listingT("price"),
+                  notAvailable: listingT("notAvailable"),
+                  noImage: listingT("noImage"),
+                  landArea: listingT("landArea"),
+                  buildingArea: listingT("buildingArea"),
+                  squareMeters: listingT("squareMeters"),
+                  close: listingT("close"),
+                }}
+              />
+            ))}
+          </div>
+        </section>
+      )}
     </div>
   )
 }

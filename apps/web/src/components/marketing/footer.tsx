@@ -167,15 +167,24 @@ export function Footer() {
             </span>
           </div>
           <p className="font-sans text-sm text-muted-foreground">
-            {t("marketingFooter.copyright", {
+            {t("marketingFooter.copyrightPrefix", {
               year: new Date().getFullYear(),
             })}
+            <a
+              href="https://www.mulverse.com/"
+              target="_blank"
+              rel="noreferrer"
+              className="transition-colors hover:text-foreground"
+            >
+              Mulverse
+            </a>
+            {t("marketingFooter.copyrightSuffix")}
           </p>
         </div>
       </div>
 
       {/* Footer Illustration */}
-      <div className="mx-auto aspect-[1879/290] w-full max-w-[1879px] overflow-hidden">
+      <div className="relative mx-auto h-[clamp(140px,17.1vw,321px)] w-full max-w-[1879px] overflow-hidden">
         <BuildingsInFooter />
       </div>
     </footer>

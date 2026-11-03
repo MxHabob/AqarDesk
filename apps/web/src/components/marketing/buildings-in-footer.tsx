@@ -4,7 +4,7 @@ export function BuildingsInFooter() {
       width={1879}
       height={321}
       viewBox="0 0 1879 321"
-      className="block h-auto w-full text-foreground"
+      className="absolute bottom-0 left-1/2 block h-full w-auto max-w-none -translate-x-1/2 text-foreground"
       aria-hidden="true"
       focusable="false"
       fill="currentColor"

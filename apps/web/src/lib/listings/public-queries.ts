@@ -132,6 +132,54 @@ export function getFilteredPublicListings(filters: PublicListingSearchParams) {
   })
 }
 
+export async function getSimilarPublicListings(listing: {
+  id: string
+  propertyType: PublicListingSearchParams["propertyType"]
+  listingType: NonNullable<PublicListingSearchParams["listingType"]>
+}) {
+  if (!listing.propertyType) return []
+
+  const matchingListings = await searchPublicListings({
+    propertyType: listing.propertyType,
+    listingType: listing.listingType,
+    page: 1,
+    pageSize: 8,
+  })
+  const matches = matchingListings.rows.filter(
+    (candidate) => candidate.id !== listing.id
+  )
+
+  if (matches.length >= 4) return matches.slice(0, 4)
+
+  const otherListings = await searchPublicListings({
+    propertyType: listing.propertyType,
+    page: 1,
+    pageSize: 8,
+  })
+  const seenIds = new Set(matches.map((candidate) => candidate.id))
+  const samePropertyType = otherListings.rows.filter(
+    (candidate) => candidate.id !== listing.id && !seenIds.has(candidate.id)
+  )
+  const recommendations = [...matches, ...samePropertyType].slice(0, 4)
+
+  if (recommendations.length >= 4) return recommendations
+
+  const sameListingType = await searchPublicListings({
+    listingType: listing.listingType,
+    page: 1,
+    pageSize: 8,
+  })
+  const includedIds = new Set(recommendations.map((candidate) => candidate.id))
+
+  return [
+    ...recommendations,
+    ...sameListingType.rows.filter(
+      (candidate) =>
+        candidate.id !== listing.id && !includedIds.has(candidate.id)
+    ),
+  ].slice(0, 4)
+}
+
 function toPublicListingSearch(
   filters: PublicListingSearchParams
 ): PublicListingSearch {

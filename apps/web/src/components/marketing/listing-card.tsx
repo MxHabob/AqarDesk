@@ -51,6 +51,7 @@ type ListingCardLabels = {
 
 type ListingCardProps = {
   listing: Listing
+  returnTo?: string
   coverPhoto?: { url: string; altText: string | null }
   propertyTypeLabel: string
   locale: string
@@ -59,6 +60,7 @@ type ListingCardProps = {
 
 export function ListingCard({
   listing,
+  returnTo,
   coverPhoto,
   propertyTypeLabel,
   locale,
@@ -79,9 +81,12 @@ export function ListingCard({
       Boolean(value)
     )
   )
+  const detailsHref = returnTo
+    ? `/listings/${listing.id}?returnTo=${encodeURIComponent(returnTo)}`
+    : `/listings/${listing.id}`
 
   return (
-    <article className="h-full">
+    <article id={`listing-${listing.id}`} className="h-full scroll-mt-4">
       <Sheet>
         <SheetTrigger
           render={
@@ -252,7 +257,7 @@ export function ListingCard({
 
           <SheetFooter className="sticky bottom-0 border-t border-border bg-background pt-5">
             <Link
-              href={`/listings/${listing.id}`}
+              href={detailsHref}
               className="inline-flex h-11 w-full items-center justify-center gap-2 bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90"
             >
               {labels.openFullListing}
