@@ -17,9 +17,9 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@midday/ui/tooltip"
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import type { ColumnDef } from "@tanstack/react-table"
 import { formatDistanceToNowStrict } from "date-fns"
+import { MoreHorizontal } from "lucide-react"
 import Link from "next/link"
 import { memo, useCallback } from "react"
 import { FormatAmount } from "@/components/format-amount"
@@ -114,7 +114,7 @@ const ActionsCell = memo(
         <DropdownMenu>
           <DropdownMenuTrigger asChild className="relative">
             <Button variant="ghost" className="h-8 w-8 p-0">
-              <DotsHorizontalIcon className="h-4 w-4" />
+              <MoreHorizontal className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
 

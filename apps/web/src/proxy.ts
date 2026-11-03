@@ -1,31 +1,85 @@
 import { type NextRequest, NextResponse } from "next/server"
-import { createI18nMiddleware } from "next-international/middleware"
 import { locales } from "./locales/config"
 
-const handleI18n = createI18nMiddleware({
-  locales: [...locales],
-  defaultLocale: "ar",
-  urlMappingStrategy: "rewrite",
-})
+const defaultLocale = "ar"
+const dashboardRoutePrefixes = new Set([
+  "apps",
+  "customers",
+  "desktop",
+  "inbox",
+  "invoices",
+  "mfa",
+  "oauth",
+  "onboarding",
+  "reports",
+  "settings",
+  "teams",
+  "tracker",
+  "transactions",
+  "upgrade",
+  "vault",
+])
 
 export function proxy(request: NextRequest) {
-  const originalPathname = request.nextUrl.pathname
-  const localePrefix = locales.find(
-    (locale) => locale === originalPathname.split("/", 2)[1]
-  )
-  const response = handleI18n(request)
+  const { pathname } = request.nextUrl
+  const [, firstSegment, ...remainingSegments] = pathname.split("/")
 
-  if (localePrefix && !response.headers.has("location")) {
-    const url = request.nextUrl.clone()
-    url.pathname = originalPathname.slice(localePrefix.length + 1) || "/"
-    const redirectResponse = NextResponse.redirect(url)
-
-    for (const cookie of response.cookies.getAll()) {
-      redirectResponse.cookies.set(cookie)
+  if (firstSegment && isAppLocale(firstSegment)) {
+    if (remainingSegments.join("/") === "account/login") {
+      const url = request.nextUrl.clone()
+      url.pathname = `/${firstSegment}/login`
+      return NextResponse.redirect(url)
     }
 
-    return redirectResponse
+    return withLocale(request, firstSegment)
   }
+
+  const cookieLocale = request.cookies.get("Next-Locale")?.value
+  const locale =
+    cookieLocale && isAppLocale(cookieLocale) ? cookieLocale : defaultLocale
+
+  if (firstSegment === "account" && remainingSegments[0] === "login") {
+    const url = request.nextUrl.clone()
+    url.pathname = `/${locale}/login`
+    return NextResponse.redirect(url)
+  }
+
+  if (firstSegment === "dashboard") {
+    const url = request.nextUrl.clone()
+    const oldLocale = remainingSegments[0]
+    if (oldLocale && isAppLocale(oldLocale)) {
+      const remainder = remainingSegments.slice(1).join("/")
+      url.pathname = `/${oldLocale}/dashboard${remainder ? `/${remainder}` : ""}`
+    } else {
+      url.pathname = `/${locale}${pathname}`
+    }
+    return NextResponse.redirect(url)
+  }
+
+  if (firstSegment && dashboardRoutePrefixes.has(firstSegment)) {
+    const url = request.nextUrl.clone()
+    url.pathname = `/${locale}/dashboard${pathname}`
+    return NextResponse.redirect(url)
+  }
+
+  const url = request.nextUrl.clone()
+  url.pathname = `/${locale}${pathname === "/" ? "" : pathname}`
+  return NextResponse.redirect(url)
+}
+
+function isAppLocale(locale: string): locale is (typeof locales)[number] {
+  return locales.some((supportedLocale) => supportedLocale === locale)
+}
+
+function withLocale(request: NextRequest, locale: string) {
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set("X-Next-Locale", locale)
+
+  const response = NextResponse.next({
+    request: { headers: requestHeaders },
+  })
+
+  response.cookies.set("Next-Locale", locale, { sameSite: "strict" })
 
   return response
 }

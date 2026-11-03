@@ -25,8 +25,8 @@ import {
 } from "@midday/ui/dropdown-menu"
 import { useToast } from "@midday/ui/use-toast"
 import { useOpenPanel } from "@openpanel/nextjs"
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
+import { MoreHorizontal } from "lucide-react"
 import { useState } from "react"
 import { useCopyToClipboard } from "usehooks-ts"
 import { OpenURL } from "@/components/open-url"
@@ -251,7 +251,7 @@ export function ActionsMenu({ row }: Props) {
       <DropdownMenu>
         <DropdownMenuTrigger asChild className="relative">
           <Button variant="ghost" className="h-8 w-8 p-0">
-            <DotsHorizontalIcon className="h-4 w-4" />
+            <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
 

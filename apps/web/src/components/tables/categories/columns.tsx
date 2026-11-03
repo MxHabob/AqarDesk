@@ -16,9 +16,8 @@ import {
   TooltipTrigger,
 } from "@midday/ui/tooltip"
 import { getTaxTypeLabel } from "@midday/utils/tax"
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import type { ColumnDef } from "@tanstack/react-table"
-import { ChevronDown, ChevronRight } from "lucide-react"
+import { ChevronDown, ChevronRight, MoreHorizontal } from "lucide-react"
 import type { Dispatch, SetStateAction } from "react"
 import { useI18n } from "@/locales/client"
 
@@ -241,7 +240,7 @@ export const columns: ColumnDef<any>[] = [
                 className="h-8 w-8 p-0"
                 onClick={(e) => e.stopPropagation()}
               >
-                <DotsHorizontalIcon className="h-4 w-4" />
+                <MoreHorizontal className="h-4 w-4" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent

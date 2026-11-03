@@ -1,30 +1,30 @@
-import { isOAuthErrorCode } from "@midday/app-store/oauth-errors"
-import { notFound } from "next/navigation"
-import type { SearchParams } from "nuqs"
+import { isOAuthErrorCode } from "@midday/app-store/oauth-errors";
+import { notFound } from "next/navigation";
+import type { SearchParams } from "nuqs";
 import {
   type AppOAuthErrorCode,
   getErrorDescription,
   getErrorTitle,
-} from "@/utils/app-oauth-errors"
-import { EventEmitter } from "./event-emitter"
-import { searchParamsSchema } from "./schema"
+} from "@/utils/app-oauth-errors";
+import { EventEmitter } from "./event-emitter";
+import { searchParamsSchema } from "./schema";
 
 type Props = {
-  searchParams: Promise<SearchParams>
-}
+  searchParams: Promise<SearchParams>;
+};
 
 const OAuthCallbackPage = async (props: Props) => {
-  const searchParams = await props.searchParams
-  const parsedSearchParams = searchParamsSchema.safeParse(searchParams)
+  const searchParams = await props.searchParams;
+  const parsedSearchParams = searchParamsSchema.safeParse(searchParams);
 
   if (!parsedSearchParams.success) {
-    notFound()
+    notFound();
   }
 
-  const { status, error } = parsedSearchParams.data
-  const isError = status === "error"
+  const { status, error } = parsedSearchParams.data;
+  const isError = status === "error";
   const errorCode: AppOAuthErrorCode | undefined =
-    typeof error === "string" && isOAuthErrorCode(error) ? error : undefined
+    typeof error === "string" && isOAuthErrorCode(error) ? error : undefined;
 
   return (
     <>
@@ -47,7 +47,7 @@ const OAuthCallbackPage = async (props: Props) => {
         )}
       </div>
     </>
-  )
-}
+  );
+};
 
-export default OAuthCallbackPage
+export default OAuthCallbackPage;

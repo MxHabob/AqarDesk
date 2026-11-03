@@ -10,7 +10,7 @@ import {
   CommandList,
 } from "@midday/ui/command"
 import { Popover, PopoverContent, PopoverTrigger } from "@midday/ui/popover"
-import { CaretSortIcon, CheckIcon } from "@radix-ui/react-icons"
+import { Check, ChevronsUpDown } from "lucide-react"
 import * as React from "react"
 import { useEffect } from "react"
 
@@ -46,7 +46,7 @@ export function CountrySelector({ defaultValue, onSelect, className }: Props) {
           )}
         >
           {value ? selected?.name : "Select country"}
-          <CaretSortIcon className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -74,7 +74,7 @@ export function CountrySelector({ defaultValue, onSelect, className }: Props) {
                   }}
                 >
                   {country.name}
-                  <CheckIcon
+                  <Check
                     className={cn(
                       "ml-auto h-4 w-4",
                       value === country.code ? "opacity-100" : "opacity-0"

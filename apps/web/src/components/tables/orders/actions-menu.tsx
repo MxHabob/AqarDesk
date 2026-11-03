@@ -9,8 +9,8 @@ import {
   DropdownMenuTrigger,
 } from "@midday/ui/dropdown-menu"
 import { useToast } from "@midday/ui/use-toast"
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import { useMutation, useQuery } from "@tanstack/react-query"
+import { MoreHorizontal } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
 import { useTRPC } from "@/trpc/client"
 
@@ -182,7 +182,7 @@ export function ActionsMenu({ order }: Props) {
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
         <Button variant="ghost" className="h-8 w-8 p-0">
-          <DotsHorizontalIcon className="h-4 w-4" />
+          <MoreHorizontal className="h-4 w-4" />
         </Button>
       </DropdownMenuTrigger>
 

@@ -1,16 +1,20 @@
 "use client"
 
 import { createI18nClient } from "next-international/client"
+import en from "./en"
 
-export { type AppLocale, locales } from "./config"
+export const languages = ["ar", "en"] as const
 
 export const {
-  I18nProviderClient,
-  useChangeLocale,
-  useCurrentLocale,
-  useI18n,
   useScopedI18n,
-} = createI18nClient({
-  ar: () => import("./ar"),
-  en: () => import("./en"),
-})
+  I18nProviderClient,
+  useCurrentLocale,
+  useChangeLocale,
+  useI18n,
+} = createI18nClient(
+  {
+    ar: () => import("./ar"),
+    en: () => import("./en"),
+  },
+  { fallbackLocale: en }
+)

@@ -1,7 +1,33 @@
+import "@/styles/globals.css"
+import { cn } from "@aqardesk/ui/lib/utils"
+import "@aqardesk/ui/globals.css"
+import { Toaster } from "@aqardesk/ui/components/toaster"
+import type { Metadata } from "next"
+import { Hedvig_Letters_Sans, Hedvig_Letters_Serif } from "next/font/google"
+import { NuqsAdapter } from "nuqs/adapters/next/app"
 import type { ReactNode } from "react"
-import { Footer } from "@/components/public/footer"
-import { Header } from "@/components/public/header"
-import { getScopedI18n, initializeLocale } from "@/locales/server"
+import { Providers } from "@/app/[locale]/dashboard/providers"
+import { DesktopHeader } from "@/components/desktop-header"
+
+export const metadata: Metadata = {
+  title: "Midday | Run your business smarter",
+  description:
+    "Automate financial tasks, stay organized, and make informed decisions effortlessly.",
+}
+
+const hedvigSans = Hedvig_Letters_Sans({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-hedvig-sans",
+})
+
+const hedvigSerif = Hedvig_Letters_Serif({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-hedvig-serif",
+})
 
 export default async function PublicLayout({
   children,
@@ -10,30 +36,22 @@ export default async function PublicLayout({
   children: ReactNode
   params: Promise<{ locale: string }>
 }) {
-  await initializeLocale(params)
-  const [t, common] = await Promise.all([
-    getScopedI18n("site"),
-    getScopedI18n("common"),
-  ])
+  const { locale } = await params
 
   return (
-    <div className="flex min-h-svh flex-col">
-      <Header
-        labels={{
-          home: t("home"),
-          browse: t("browse"),
-          about: t("about"),
-          services: t("services"),
-          account: t("customerAccount"),
-          login: t("login"),
-        }}
-        navigationLabel={common("navigationLabel")}
-      />
-      <div className="flex-1">{children}</div>
-      <Footer
-        description={t("footerDescription")}
-        copyright={t("copyright")}
-      />
+    <div
+      className={cn(
+        `${hedvigSans.variable} ${hedvigSerif.variable} font-sans`,
+        "whitespace-pre-line overscroll-none antialiased"
+      )}
+    >
+      <DesktopHeader />
+      <NuqsAdapter>
+        <Providers locale={locale}>
+          {children}
+          <Toaster />
+        </Providers>
+      </NuqsAdapter>
     </div>
   )
 }

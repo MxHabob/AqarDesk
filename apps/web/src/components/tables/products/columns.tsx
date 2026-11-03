@@ -10,9 +10,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@midday/ui/dropdown-menu"
-import { DotsHorizontalIcon } from "@radix-ui/react-icons"
 import type { ColumnDef } from "@tanstack/react-table"
 import { formatDistanceToNow } from "date-fns"
+import { MoreHorizontal } from "lucide-react"
 import { memo, useCallback } from "react"
 import { FormatAmount } from "@/components/format-amount"
 
@@ -44,7 +44,7 @@ const ActionsCell = memo(
             className="h-8 w-8 p-0"
             onClick={(e) => e.stopPropagation()}
           >
-            <DotsHorizontalIcon className="h-4 w-4" />
+            <MoreHorizontal className="h-4 w-4" />
           </Button>
         </DropdownMenuTrigger>
         <DropdownMenuContent align="end" onClick={(e) => e.stopPropagation()}>

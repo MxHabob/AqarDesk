@@ -18,7 +18,7 @@ import {
   DropdownMenuTrigger,
 } from "@midday/ui/dropdown-menu"
 import { Icons } from "@midday/ui/icons"
-import { CheckIcon } from "@radix-ui/react-icons"
+import { Check } from "lucide-react"
 import { useQuery } from "@tanstack/react-query"
 import { format, formatISO, parseISO } from "date-fns"
 import { useState } from "react"
@@ -142,9 +142,7 @@ export function MetricsFilter() {
                   >
                     {option.label}
                     <span className="absolute right-2 flex items-center justify-center shrink-0">
-                      {isCustomPeriod && (
-                        <CheckIcon className="h-4 w-4 shrink-0" />
-                      )}
+                      {isCustomPeriod && <Check className="h-4 w-4 shrink-0" />}
                     </span>
                   </DropdownMenuSubTrigger>
                   <DropdownMenuSubContent className="w-auto p-0" sideOffset={8}>

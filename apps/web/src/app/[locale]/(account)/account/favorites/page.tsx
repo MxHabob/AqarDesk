@@ -4,22 +4,10 @@ import { and, desc, eq, gt, isNull, or } from "drizzle-orm"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { FavoritesGrid } from "@/components/account/favorites-grid"
-import { EmptyState } from "@/components/empty-state"
-import { PageHeader } from "@/components/layout/page-header"
-import { getScopedI18n, initializeLocale } from "@/locales/server"
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ locale: string }>
-}): Promise<Metadata> {
-  await initializeLocale(params)
-  const t = await getScopedI18n("account")
-  return {
-    title: t("favoritesTitle"),
-    robots: { index: false, follow: false },
-  }
+export const metadata: Metadata = {
+  title: "عقاراتي المفضلة | عقار دِسك",
+  robots: { index: false, follow: false },
 }
 
 export default async function AccountFavoritesPage({
@@ -27,15 +15,12 @@ export default async function AccountFavoritesPage({
 }: {
   params: Promise<{ locale: string }>
 }) {
-  const locale = await initializeLocale(params)
-  const [t, categories, session] = await Promise.all([
-    getScopedI18n("account"),
-    getScopedI18n("propertyTypes"),
-    auth.api.getSession({ headers: await headers() }),
-  ])
+  const { locale } = await params
+  const session = await auth.api.getSession({ headers: await headers() })
+  const isArabic = locale === "ar"
 
   if (!session) {
-    redirect("/account/login")
+    redirect(`/${locale}/login`)
   }
 
   const listings = await getDatabase()
@@ -70,15 +55,36 @@ export default async function AccountFavoritesPage({
 
   return (
     <section className="space-y-5">
-      <PageHeader title={t("favoritesTitle")} />
+      <div>
+        <h1 className="text-2xl font-semibold">
+          {isArabic ? "عقاراتي المفضلة" : "Saved properties"}
+        </h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          {isArabic
+            ? "العقارات التي حفظتها للرجوع إليها."
+            : "Properties you saved to revisit later."}
+        </p>
+      </div>
       {listings.length === 0 ? (
-        <EmptyState description={t("emptyFavorites")} />
+        <p className="rounded-lg border p-5 text-sm text-muted-foreground">
+          {isArabic
+            ? "لا توجد عقارات محفوظة."
+            : "You have no saved properties."}
+        </p>
       ) : (
-        <FavoritesGrid
-          listings={listings}
-          locale={locale}
-          propertyTypeLabel={(type) => categories(type)}
-        />
+        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          {listings.map((listing) => (
+            <li className="space-y-2 rounded-lg border p-4" key={listing.id}>
+              <h2 className="font-medium">{listing.title}</h2>
+              <p className="text-sm text-muted-foreground">
+                {[listing.district, listing.city].filter(Boolean).join("، ")}
+              </p>
+              <p className="text-xs text-muted-foreground">
+                {listing.propertyType}
+              </p>
+            </li>
+          ))}
+        </ul>
       )}
     </section>
   )

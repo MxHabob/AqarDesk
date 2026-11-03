@@ -26,8 +26,6 @@
     "node_modules",
     "src/components/**",
     "src/hooks/**",
-    "src/utils/**",
-    "src/app/[locale]/(public)/login/**",
-    "src/app/[locale]/(public)/oauth-callback/**"
+    "src/utils/**"
   ]
 }
