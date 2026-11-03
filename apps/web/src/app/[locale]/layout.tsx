@@ -1,14 +1,44 @@
+import "@/styles/globals.css"
+import "@aqardesk/ui/globals.css"
+import { Toaster } from "@aqardesk/ui/components/toaster"
 import type { AppLocale } from "@/locales/config"
 import { locales } from "@/locales/config"
 import type { Metadata } from "next"
+import { Hedvig_Letters_Sans, Hedvig_Letters_Serif } from "next/font/google"
 import { notFound } from "next/navigation"
 import type { ReactNode } from "react"
+import { Providers } from "./providers"
 
 export const metadata: Metadata = {
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
   ),
 }
+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
+  userScalable: false,
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+}
+
+const hedvigSans = Hedvig_Letters_Sans({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-hedvig-sans",
+})
+
+const hedvigSerif = Hedvig_Letters_Serif({
+  weight: "400",
+  subsets: ["latin"],
+  display: "swap",
+  variable: "--font-hedvig-serif",
+})
 
 export function generateStaticParams() {
   return locales.map((locale) => ({ locale }))
@@ -32,8 +62,18 @@ export default async function LocaleLayout({
   }
 
   return (
-    <html lang={locale} dir={locale === "ar" ? "rtl" : "ltr"}>
-      <body>{children}</body>
+    <html
+      lang={locale}
+      dir={locale === "ar" ? "rtl" : "ltr"}
+      suppressHydrationWarning
+      className={`${hedvigSans.variable} ${hedvigSerif.variable} font-sans`}
+    >
+      <body className="whitespace-pre-line overscroll-none antialiased">
+        <Providers locale={locale}>
+          {children}
+          <Toaster />
+        </Providers>
+      </body>
     </html>
   )
 }

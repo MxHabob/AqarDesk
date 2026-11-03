@@ -1,13 +1,5 @@
-import "@/styles/globals.css"
-import { cn } from "@aqardesk/ui/lib/utils"
-import "@aqardesk/ui/globals.css"
-import { Toaster } from "@aqardesk/ui/components/toaster"
 import type { Metadata } from "next"
-import { Hedvig_Letters_Sans, Hedvig_Letters_Serif } from "next/font/google"
-import { NuqsAdapter } from "nuqs/adapters/next/app"
-import type { ReactElement } from "react"
-import { isDesktopApp } from "@/utils/desktop"
-import { Providers } from "./providers"
+import type { ReactNode } from "react"
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://app.midday.ai"),
@@ -54,57 +46,10 @@ export const metadata: Metadata = {
   },
 }
 
-const hedvigSans = Hedvig_Letters_Sans({
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-hedvig-sans",
-})
-
-const hedvigSerif = Hedvig_Letters_Serif({
-  weight: "400",
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-hedvig-serif",
-})
-
-export const viewport = {
-  width: "device-width",
-  initialScale: 1,
-  maximumScale: 1,
-  userScalable: false,
-  themeColor: [
-    { media: "(prefers-color-scheme: light)" },
-    { media: "(prefers-color-scheme: dark)" },
-  ],
-}
-
-export default async function Layout({
+export default function Layout({
   children,
-  params,
 }: {
-  children: ReactElement
-  params: Promise<{ locale: string }>
+  children: ReactNode
 }) {
-  const { locale } = await params
-  const isDesktop = await isDesktopApp()
-
-  return (
-    <div
-      lang={locale}
-      suppressHydrationWarning
-      className={cn(
-        isDesktop && "desktop",
-        `${hedvigSans.variable} ${hedvigSerif.variable} font-sans`,
-        "whitespace-pre-line overscroll-none antialiased"
-      )}
-    >
-      <NuqsAdapter>
-        <Providers locale={locale}>
-          {children}
-          <Toaster />
-        </Providers>
-      </NuqsAdapter>
-    </div>
-  )
+  return children
 }
