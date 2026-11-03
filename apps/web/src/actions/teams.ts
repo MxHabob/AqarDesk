@@ -2,10 +2,15 @@
 
 import { auth } from "@aqardesk/auth/server"
 import {
+  addTeamMember,
   archiveTeam,
+  createTeam,
   getTeamById,
+  getUserById,
   listUserTeams,
+  removeTeamMember,
 } from "@aqardesk/database/queries"
+import { revalidatePath } from "next/cache"
 import { cookies, headers } from "next/headers"
 import { z } from "zod"
 import { assertPermission } from "@/lib/auth/permissions"
@@ -76,4 +81,89 @@ export async function archiveActiveTeamAction() {
 
   cookieStore.delete(activeTeamCookie)
   return { id: archived.id }
+}
+
+export async function createTeamAction(formData: FormData) {
+  const { name } = z
+    .object({ name: z.string().trim().min(1).max(100) })
+    .parse({ name: formData.get("name") })
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) throw new Error("Unauthorized")
+  await assertPermission(session.user.id, "teams.manage")
+
+  const team = await createTeam({
+    name,
+    createdById: session.user.id,
+  })
+  if (!team) throw new Error("Team could not be created.")
+
+  const cookieStore = await cookies()
+  cookieStore.set(activeTeamCookie, team.id, {
+    httpOnly: true,
+    maxAge: 60 * 60 * 24 * 365,
+    path: "/",
+    sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
+  })
+
+  revalidatePath("/[locale]/dashboard/teams", "page")
+  revalidatePath("/[locale]/dashboard/settings/members", "page")
+}
+
+export async function addTeamMemberAction(formData: FormData) {
+  const { teamId, userId } = z
+    .object({ teamId: z.uuid(), userId: z.string().trim().min(1) })
+    .parse({
+      teamId: formData.get("teamId"),
+      userId: formData.get("userId"),
+    })
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) throw new Error("Unauthorized")
+  await assertPermission(session.user.id, "teams.manage")
+
+  const teams = await listUserTeams(session.user.id)
+  if (!teams.some((team) => team.id === teamId)) {
+    throw new Error("Forbidden")
+  }
+
+  const user = await getUserById(userId)
+  if (!user) throw new Error("The selected account does not exist.")
+  const added = await addTeamMember(teamId, userId, {
+    id: session.user.id,
+    name: session.user.name,
+    email: session.user.email,
+  })
+  if (!added) {
+    throw new Error(
+      "The account is already a team member or the team is unavailable."
+    )
+  }
+
+  revalidatePath("/[locale]/dashboard/settings/members", "page")
+}
+
+export async function removeTeamMemberAction(formData: FormData) {
+  const { teamId, userId } = z
+    .object({ teamId: z.uuid(), userId: z.string().trim().min(1) })
+    .parse({
+      teamId: formData.get("teamId"),
+      userId: formData.get("userId"),
+    })
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) throw new Error("Unauthorized")
+  await assertPermission(session.user.id, "teams.manage")
+
+  const teams = await listUserTeams(session.user.id)
+  if (!teams.some((team) => team.id === teamId)) {
+    throw new Error("Forbidden")
+  }
+
+  const removed = await removeTeamMember(teamId, userId, {
+    id: session.user.id,
+    name: session.user.name,
+    email: session.user.email,
+  })
+  if (!removed) throw new Error("The selected account is not a team member.")
+
+  revalidatePath("/[locale]/dashboard/settings/members", "page")
 }

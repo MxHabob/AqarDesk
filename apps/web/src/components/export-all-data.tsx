@@ -33,11 +33,11 @@ export function ExportAllData() {
     },
     onSuccess: ({ totalItems }) => {
       toast({
-        variant: "success",
+        type: "success",
         title: `Export completed (${totalItems} records).`,
       })
     },
-    onError: (error) => toast({ variant: "error", title: error.message }),
+    onError: (error) => toast({ type: "error", title: error.message }),
   })
 
   const busy = mutation.isPending || isExporting

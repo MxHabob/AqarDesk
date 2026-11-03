@@ -13,7 +13,7 @@ import {
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useOnClickOutside } from "usehooks-ts";
 import {
   getUserTeamsAction,
@@ -99,14 +99,13 @@ export function TeamDropdown({ isExpanded = false }: Props) {
     }
 
     setIsChangingTeam(true);
-    setSelectedId(teamId);
     setActive(false);
 
     changeTeamMutation.mutate(teamId);
   };
 
   return (
-    <TooltipProvider delayDuration={50}>
+    <TooltipProvider delay={50}>
       <div className="relative h-[32px]" ref={ref}>
         {/* Avatar - fixed position that absolutely never changes */}
         <div className="fixed start-[19px] bottom-4 w-[32px] h-[32px]">
@@ -167,32 +166,34 @@ export function TeamDropdown({ isExpanded = false }: Props) {
                   >
                     {!isSelected ? (
                       <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Avatar
-                            className="w-[32px] h-[32px] rounded-none border border-[#DCDAD2] dark:border-[#2C2C2C] cursor-pointer"
-                            onClick={() => {
-                              if (index === 0) {
-                                toggleActive();
-                              } else {
-                                handleTeamChange(team?.id ?? "");
-                              }
-                            }}
-                          >
-                            <AvatarImageNext
-                              src={team?.logoUrl ?? ""}
-                              alt={team?.name ?? ""}
-                              width={20}
-                              height={20}
-                              quality={100}
-                            />
-                            <AvatarFallback className="rounded-none w-[32px] h-[32px]">
-                              <span className="text-xs">
-                                {team?.name?.charAt(0)?.toUpperCase()}
-                                {team?.name?.charAt(1)?.toUpperCase()}
-                              </span>
-                            </AvatarFallback>
-                          </Avatar>
-                        </TooltipTrigger>
+                        <TooltipTrigger
+                          render={
+                            <Avatar
+                              className="w-[32px] h-[32px] rounded-none border border-[#DCDAD2] dark:border-[#2C2C2C] cursor-pointer"
+                              onClick={() => {
+                                if (index === 0) {
+                                  toggleActive();
+                                } else {
+                                  handleTeamChange(team?.id ?? "");
+                                }
+                              }}
+                            >
+                              <AvatarImageNext
+                                src={team?.logoUrl ?? ""}
+                                alt={team?.name ?? ""}
+                                width={20}
+                                height={20}
+                                quality={100}
+                              />
+                              <AvatarFallback className="rounded-none w-[32px] h-[32px]">
+                                <span className="text-xs">
+                                  {team?.name?.charAt(0)?.toUpperCase()}
+                                  {team?.name?.charAt(1)?.toUpperCase()}
+                                </span>
+                              </AvatarFallback>
+                            </Avatar>
+                          }
+                        />
                         <TooltipContent
                           side="inline-end"
                           sideOffset={8}
@@ -237,15 +238,17 @@ export function TeamDropdown({ isExpanded = false }: Props) {
         {/* Team name - appears to the right of the fixed avatar */}
         {isExpanded && sortedTeams[0] && (
           <div className="fixed start-[62px] bottom-4 h-[32px] flex items-center">
-            <span
-              className="text-sm text-primary truncate transition-opacity duration-200 ease-in-out cursor-pointer hover:opacity-80"
+            <button
+              type="button"
+              aria-expanded={isActive}
+              className="border-0 bg-transparent p-0 text-start text-sm text-primary truncate transition-opacity duration-200 ease-in-out cursor-pointer hover:opacity-80"
               onClick={(e) => {
                 e.stopPropagation();
                 toggleActive();
               }}
             >
               {sortedTeams[0].name}
-            </span>
+            </button>
           </div>
         )}
       </div>

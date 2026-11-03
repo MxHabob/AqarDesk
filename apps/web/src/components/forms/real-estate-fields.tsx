@@ -1,10 +1,102 @@
 "use client"
 
 import { Button } from "@aqardesk/ui/components/button"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@aqardesk/ui/select"
+import { useEffect, useState } from "react"
 import { useFormStatus } from "react-dom"
 
 type Option = { value: string; label: string }
+const EMPTY_SELECT_VALUE = "__aqardesk_empty__"
 
+function RealEstateSelectField({
+  controlClass,
+  controlId,
+  defaultValue,
+  disabled,
+  name,
+  onChange,
+  options = [],
+  placeholder,
+  required,
+}: {
+  controlClass: string
+  controlId: string
+  defaultValue: string
+  disabled?: boolean
+  name: string
+  onChange?: (value: string) => void
+  options?: Option[]
+  placeholder?: string
+  required?: boolean
+}) {
+  const emptyOption = options.find((option) => option.value === "")
+  const initialValue = defaultValue || (required ? "" : EMPTY_SELECT_VALUE)
+  const [selectedValue, setSelectedValue] = useState(initialValue)
+
+  useEffect(() => {
+    if (!selectedValue || selectedValue === EMPTY_SELECT_VALUE) return
+
+    const hasCurrentOption = options.some((option) =>
+      option.value === ""
+        ? selectedValue === EMPTY_SELECT_VALUE || selectedValue === ""
+        : option.value === selectedValue
+    )
+    if (hasCurrentOption) return
+
+    const nextValue =
+      options.find((option) => option.value !== "")?.value ??
+      (required ? "" : EMPTY_SELECT_VALUE)
+    setSelectedValue(nextValue)
+    onChange?.(nextValue === EMPTY_SELECT_VALUE ? "" : nextValue)
+  }, [onChange, options, required, selectedValue])
+
+  return (
+    <Select
+      name={name}
+      value={selectedValue || null}
+      required={required}
+      disabled={disabled}
+      itemToStringValue={(value) =>
+        value === EMPTY_SELECT_VALUE ? "" : String(value ?? "")
+      }
+      onValueChange={(value) => {
+        const nextValue =
+          value === EMPTY_SELECT_VALUE
+            ? EMPTY_SELECT_VALUE
+            : String(value ?? "")
+        setSelectedValue(nextValue)
+        onChange?.(nextValue === EMPTY_SELECT_VALUE ? "" : nextValue)
+      }}
+      items={options.map((option) => ({
+        value: option.value === "" ? EMPTY_SELECT_VALUE : option.value,
+        label: option.label,
+      }))}
+    >
+      <SelectTrigger
+        id={controlId}
+        className={`${controlClass} justify-between`}
+      >
+        <SelectValue placeholder={emptyOption?.label ?? placeholder} />
+      </SelectTrigger>
+      <SelectContent align="start">
+        {options.map((option) => (
+          <SelectItem
+            key={option.value || EMPTY_SELECT_VALUE}
+            value={option.value === "" ? EMPTY_SELECT_VALUE : option.value}
+          >
+            {option.label}
+          </SelectItem>
+        ))}
+      </SelectContent>
+    </Select>
+  )
+}
 export function RealEstateField({
   label,
   name,
@@ -59,21 +151,17 @@ export function RealEstateField({
           rows={rows ?? 3}
         />
       ) : type === "select" ? (
-        <select
-          id={controlId}
-          className={controlClass}
+        <RealEstateSelectField
+          controlClass={controlClass}
+          controlId={controlId}
           name={name}
           defaultValue={String(value)}
           required={required}
           disabled={disabled}
-          onChange={(event) => onChange?.(event.target.value)}
-        >
-          {(options ?? []).map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+          placeholder={placeholder}
+          options={options}
+          onChange={onChange}
+        />
       ) : (
         <input
           id={controlId}

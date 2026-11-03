@@ -1,19 +1,15 @@
-import { isDesktopApp } from "@aqardesk/desktop-client/platform";
-import { saveAs } from "file-saver";
-
 export async function saveFile(blob: Blob, filename: string) {
-  if (!isDesktopApp()) {
-    saveAs(blob, filename);
-    return;
+  if (typeof document === "undefined") {
+    throw new Error("Files can only be saved in a browser.")
   }
 
-  // Desktop mode - write blob bytes to ~/Downloads via Tauri fs plugin
-  const { nativeSaveFile } = await import("@aqardesk/desktop-client/core");
-  try {
-    await nativeSaveFile(blob, filename);
-    console.log("[saveFile] File saved successfully:", filename);
-  } catch (error) {
-    console.error("[saveFile] Failed to save file:", error);
-    throw error;
-  }
+  const url = URL.createObjectURL(blob)
+  const link = document.createElement("a")
+  link.href = url
+  link.download = filename
+  link.rel = "noopener"
+  document.body.append(link)
+  link.click()
+  link.remove()
+  setTimeout(() => URL.revokeObjectURL(url), 0)
 }

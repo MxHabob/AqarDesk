@@ -136,8 +136,9 @@ function MorphingDialogTrigger({
       : null;
   const rotation = rotationMatch?.[1] || null;
 
-  const transformTemplate = useCallback(
-    (_transform: string, generatedTransform: string) => {
+  const transformTemplate = useCallback<
+    NonNullable<React.ComponentProps<typeof motion.button>["transformTemplate"]>
+  >((_transform, generatedTransform) => {
       // Preserve rotation from style prop if present
       // generatedTransform contains the layout animation transform
       // We need to append our rotation to it
@@ -151,9 +152,7 @@ function MorphingDialogTrigger({
           : `rotate(${rotation})`;
       }
       return generatedTransform;
-    },
-    [rotation],
-  );
+  }, [rotation]);
 
   // Remove transform from style since we'll handle it via transformTemplate
   const mergedStyle = useMemo(() => {

@@ -54,23 +54,24 @@ export function CountrySelector({ defaultValue, onSelect, className }: Props) {
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          aria-expanded={open}
-          className={cn(
-            "w-full justify-between font-normal truncate",
-            className
-          )}
-        >
-          {value ? selected?.name : "Select country"}
-          <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
-        </Button>
-      </PopoverTrigger>
+      <PopoverTrigger
+        render={
+          <Button
+            variant="outline"
+            aria-expanded={open}
+            className={cn(
+              "w-full justify-between font-normal truncate",
+              className
+            )}
+          >
+            {value ? selected?.name : "Select country"}
+            <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
+          </Button>
+        }
+      />
       <PopoverContent
         className="w-[var(--radix-popover-trigger-width)] min-w-[225px] p-0 z-[60]"
         align="start"
-        portal={true}
       >
         <Command loop>
           <CommandInput

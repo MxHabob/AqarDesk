@@ -377,6 +377,10 @@ export default {
     maxPrice: "أعلى سعر",
     minArea: "المساحة من (م²)",
     maxArea: "المساحة إلى (م²)",
+    priceRange: "نطاق السعر",
+    areaRange: "نطاق المساحة",
+    rangeFrom: "من",
+    rangeTo: "إلى",
     sort: "ترتيب النتائج",
     sortNewest: "الأحدث",
     sortPriceAsc: "السعر: من الأقل إلى الأعلى",
@@ -493,6 +497,19 @@ export default {
     lightMode: "المظهر الفاتح",
     darkMode: "المظهر الداكن",
     copyright: "© {year} AqarDesk. جميع الحقوق محفوظة.",
+  },
+  locale: {
+    title: "الإعدادات المحلية",
+    searchPlaceholder: "ابحث عن المنطقة",
+    description:
+      "حدد تفضيلات المنطقة واللغة المستخدمة في العملة والتواريخ والتنسيقات.",
+    placeholder: "اختر المنطقة",
+  },
+  timezone: {
+    title: "المنطقة الزمنية",
+    searchPlaceholder: "ابحث عن المنطقة الزمنية",
+    description: "تحدد المنطقة الزمنية الافتراضية لعرض الأوقات في التطبيق.",
+    placeholder: "اختر المنطقة الزمنية",
   },
   account: {
     title: "حسابي",

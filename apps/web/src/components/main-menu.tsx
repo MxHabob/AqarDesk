@@ -216,11 +216,6 @@ export function MainMenu({ onSelect, isExpanded = false }: Props) {
       children: [
         { path: "/settings", name: t("navigation.general") },
         { path: "/settings/members", name: t("navigation.members") },
-        {
-          path: "/settings/notifications",
-          name: t("navigation.notifications"),
-        },
-        { path: "/settings/developer", name: t("navigation.developer") },
       ],
     },
   ]

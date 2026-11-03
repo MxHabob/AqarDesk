@@ -6,6 +6,7 @@ import Link from "next/link"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
 import { useI18n } from "@/locales/client"
+import { BuildingsInFooter } from "./buildings-in-footer"
 
 export function Footer() {
   const t = useI18n()
@@ -175,13 +176,7 @@ export function Footer() {
 
       {/* Footer Illustration */}
       <div className="mx-auto aspect-[1879/290] w-full max-w-[1879px] overflow-hidden">
-        <Image
-          src="/images/buildings-in-footur.svg"
-          alt=""
-          width={1879}
-          height={321}
-          className="block h-auto w-full"
-        />
+        <BuildingsInFooter />
       </div>
     </footer>
   )

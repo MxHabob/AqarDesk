@@ -99,7 +99,7 @@ export function ListingCard({
                 alt={coverPhoto.altText || listing.title}
                 fill
                 unoptimized
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                sizes="(max-width: 639px) 100vw, (max-width: 1279px) 50vw, 33vw"
                 className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
               />
             ) : (
@@ -108,29 +108,29 @@ export function ListingCard({
                 <span className="text-sm">{labels.noImage}</span>
               </span>
             )}
-            <span className="absolute start-3 top-3 border border-border bg-background/95 px-3 py-1 text-xs font-medium">
+            <span className="absolute start-3 top-3 border border-border bg-background/95 px-2.5 py-0.5 text-xs font-medium">
               {listing.type === "sale" ? labels.sale : labels.rent}
             </span>
           </span>
 
-          <span className="flex flex-1 flex-col gap-4 p-5">
+          <span className="flex flex-1 flex-col gap-3 p-4">
             <span className="flex items-start justify-between gap-3">
-              <span className="line-clamp-2 text-base font-medium text-foreground">
+              <span className="line-clamp-2 text-sm font-medium text-foreground">
                 {listing.title}
               </span>
-              <span className="shrink-0 border border-border px-2 py-1 text-xs text-muted-foreground">
+              <span className="shrink-0 border border-border px-1.5 py-0.5 text-[11px] text-muted-foreground">
                 {propertyTypeLabel}
               </span>
             </span>
 
-            <span className="text-xl font-semibold text-foreground">
+            <span className="text-lg font-semibold text-foreground">
               {formattedPrice}
             </span>
 
-            <span className="flex flex-wrap gap-x-4 gap-y-2 text-sm text-muted-foreground">
+            <span className="flex flex-wrap gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
               {location ? (
                 <span className="inline-flex items-center gap-1.5">
-                  <MapPin aria-hidden className="size-4 shrink-0" />
+                  <MapPin aria-hidden className="size-3.5 shrink-0" />
                   {location}
                 </span>
               ) : (
@@ -138,24 +138,23 @@ export function ListingCard({
               )}
               {listing.lotAreaM2 !== null && (
                 <span className="inline-flex items-center gap-1.5">
-                  <Ruler aria-hidden className="size-4 shrink-0" />
+                  <Ruler aria-hidden className="size-3.5 shrink-0" />
                   {labels.landArea}: {listing.lotAreaM2} {labels.squareMeters}
                 </span>
               )}
               {listing.buildingAreaM2 !== null && (
                 <span className="inline-flex items-center gap-1.5">
-                  <Ruler aria-hidden className="size-4 shrink-0" />
+                  <Ruler aria-hidden className="size-3.5 shrink-0" />
                   {labels.buildingArea}: {listing.buildingAreaM2}{" "}
                   {labels.squareMeters}
                 </span>
               )}
             </span>
 
-            <span className="mt-auto flex items-center justify-between border-t border-border pt-4 text-sm">
-              <span className="text-muted-foreground">{propertyTypeLabel}</span>
+            <span className="mt-auto flex items-center justify-end border-t border-border pt-3 text-xs">
               <span className="inline-flex items-center gap-1 font-medium text-foreground">
                 {labels.quickView}
-                <ArrowUpRight aria-hidden className="size-4" />
+                <ArrowUpRight aria-hidden className="size-3.5" />
               </span>
             </span>
           </span>

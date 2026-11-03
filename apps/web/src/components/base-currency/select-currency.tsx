@@ -34,15 +34,15 @@ export function SelectCurrency() {
       {
         onSuccess: () => {
           toast({
-            duration: 3500,
-            variant: "success",
+            timeout: 3500,
+            type: "success",
             title: "Office currency updated.",
           })
         },
         onError: (error) => {
           toast({
-            duration: 3500,
-            variant: "error",
+            timeout: 3500,
+            type: "error",
             title: error.message,
           })
         },

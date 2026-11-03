@@ -1,89 +1,80 @@
-import { Button } from "@aqardesk/ui/button";
-import { Icons } from "@aqardesk/ui/icons";
-import type { Metadata } from "next";
-import Link from "next/link";
-import { redirect } from "next/navigation";
-import { SelectTeamTable } from "@/components/tables/select-team/table";
-import { TeamInvites } from "@/components/team-invites";
-import { UserMenu } from "@/components/user-menu";
-import { getQueryClient, HydrateClient, trpc } from "@/trpc/server";
+import { auth } from "@aqardesk/auth/server"
+import { listUserTeams } from "@aqardesk/database/queries"
+import type { Metadata } from "next"
+import { headers } from "next/headers"
+import Link from "next/link"
+import { redirect } from "next/navigation"
+import { CreateTeamForm } from "@/components/teams/create-team-form"
+import { hasPermission } from "@/lib/auth/permissions"
 
 export const metadata: Metadata = {
   title: "Teams | AqarDesk",
-};
+}
 
-export default async function Teams() {
-  const queryClient = getQueryClient();
-  const teams = await queryClient.fetchQuery(trpc.team.list.queryOptions());
-  const invites = await queryClient.fetchQuery(
-    trpc.team.invitesByEmail.queryOptions(),
-  );
+export default async function TeamsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) redirect(`/${locale}/login`)
 
-  const user = await queryClient.fetchQuery(trpc.user.me.queryOptions());
-
-  // If no teams and no invites, redirect to onboarding
-  if (!teams?.length && !invites?.length) {
-    redirect("/onboarding");
-  }
+  const [teams, canManage] = await Promise.all([
+    listUserTeams(session.user.id),
+    hasPermission(session.user.id, "teams.manage"),
+  ])
+  const isArabic = locale === "ar"
 
   return (
-    <HydrateClient>
-      <header className="w-full absolute start-0 end-0 flex justify-between items-center">
-        <div className="p-6">
-          <Link href="/">
-            <Icons.LogoSmall className="h-6 w-auto" />
-          </Link>
-        </div>
-
-        <div className="me-6 mt-4">
-          <UserMenu onlySignOut />
-        </div>
+    <main className="mx-auto flex min-h-screen w-full max-w-2xl flex-col justify-center gap-8 px-6 py-12">
+      <header className="space-y-2">
+        <h1 className="text-xl font-semibold">
+          {isArabic ? "فرقك" : "Your teams"}
+        </h1>
+        <p className="text-sm text-muted-foreground">
+          {isArabic
+            ? "إدارة الفرق المرتبطة بحسابك."
+            : "Manage the teams associated with your account."}
+        </p>
       </header>
 
-      <div className="flex min-h-screen justify-center items-center overflow-hidden p-6 md:p-0">
-        <div className="relative z-20 m-auto flex w-full max-w-[480px] flex-col">
-          <div>
-            <div className="text-center">
-              <h1 className="text-lg lg:text-xl mb-2 font-serif">
-                Welcome, {user?.fullName?.split(" ").at(0)}
-              </h1>
-              {invites?.length > 0 ? (
-                <p className="text-[#878787] text-sm mb-8">
-                  Join a team you’ve been invited to or create a new one.
-                </p>
-              ) : (
-                <p className="text-[#878787] text-sm mb-8">
-                  Select a team or create a new one.
-                </p>
-              )}
-            </div>
-          </div>
-
-          {/* If there are teams, show them */}
-          {teams?.length && (
-            <>
-              <span className="text-sm text-[#878787] mb-4">Teams</span>
-              <div className="max-h-[260px] overflow-y-auto">
-                <SelectTeamTable data={teams} />
+      {teams.length > 0 ? (
+        <div className="divide-y divide-border border-y border-border">
+          {teams.map((team) => (
+            <div
+              key={team.id}
+              className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div>
+                <p className="font-medium">{team.name}</p>
+                <p className="text-xs text-muted-foreground">{team.id}</p>
               </div>
-            </>
-          )}
-
-          {/* If there are invites, show them */}
-          {invites?.length > 0 && <TeamInvites />}
-
-          <div className="text-center mt-12 border-t-[1px] border-border pt-6 w-full relative border-dashed">
-            <span className="absolute start-1/2 ltr:-translate-x-1/2 rtl:translate-x-1/2 text-sm text-[#878787] bg-background -top-3 px-4">
-              Or
-            </span>
-            <Link href="/onboarding" className="w-full">
-              <Button className="w-full mt-2" variant="outline">
-                Create team
-              </Button>
-            </Link>
-          </div>
+              <Link
+                href={`/${locale}/dashboard/settings/members?teamId=${team.id}`}
+                className="inline-flex h-8 items-center border border-border px-3 text-xs hover:bg-accent"
+              >
+                {isArabic ? "إدارة الأعضاء" : "Manage members"}
+              </Link>
+            </div>
+          ))}
         </div>
-      </div>
-    </HydrateClient>
-  );
+      ) : (
+        <p className="text-sm text-muted-foreground">
+          {isArabic
+            ? "لا يوجد فريق مرتبط بحسابك."
+            : "You are not in a team yet."}
+        </p>
+      )}
+
+      {canManage && (
+        <section className="space-y-3">
+          <h2 className="text-sm font-medium">
+            {isArabic ? "إنشاء فريق" : "Create a team"}
+          </h2>
+          <CreateTeamForm locale={locale} />
+        </section>
+      )}
+    </main>
+  )
 }

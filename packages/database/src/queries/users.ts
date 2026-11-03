@@ -15,6 +15,7 @@ export async function getUserById(
       id: schema.users.id,
       name: schema.users.name,
       email: schema.users.email,
+      twoFactorEnabled: schema.users.twoFactorEnabled,
       emailVerified: schema.users.emailVerified,
       image: schema.users.image,
       locale: schema.users.locale,

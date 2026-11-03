@@ -27,18 +27,20 @@ import {
   SettingsCardHeader as CardHeader,
   SettingsCardTitle as CardTitle,
 } from "@/components/settings-card"
+import { useCurrentLocale } from "@/locales/client"
 
 export function DeleteTeam() {
   const [value, setValue] = useState("")
   const router = useRouter()
+  const locale = useCurrentLocale()
   const { toast } = useToast()
 
   const deleteTeamMutation = useMutation({
     mutationFn: archiveActiveTeamAction,
     onSuccess: async () => {
-      router.push("/teams")
+      router.push(`/${locale}/dashboard/teams`)
     },
-    onError: (error) => toast({ variant: "error", title: error.message }),
+    onError: (error) => toast({ type: "error", title: error.message }),
   })
 
   return (
@@ -54,24 +56,22 @@ export function DeleteTeam() {
         <div />
 
         <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="destructive"
-              className="hover:bg-destructive text-muted"
-            >
-              Archive
-            </Button>
-          </AlertDialogTrigger>
+          <AlertDialogTrigger
+            render={
+              <Button
+                variant="destructive"
+                className="hover:bg-destructive text-muted"
+              >
+                Archive
+              </Button>
+            }
+          />
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
-              <AlertDialogDescription asChild>
-                <div>
-                  <p>
-                    The team will be archived. Existing property and listing
-                    records will remain available.
-                  </p>
-                </div>
+              <AlertDialogDescription>
+                The team will be archived. Existing property and listing records
+                will remain available.
               </AlertDialogDescription>
             </AlertDialogHeader>
 

@@ -1,4 +1,5 @@
 import { auth } from "@aqardesk/auth/server"
+import { getUserById } from "@aqardesk/database/queries"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
@@ -6,7 +7,7 @@ import { MfaSettingsList } from "@/components/mfa-settings-list"
 
 export const metadata: Metadata = {
   title: "Security | AqarDesk",
-};
+}
 
 export default async function Security({
   params,
@@ -20,9 +21,11 @@ export default async function Security({
     redirect(`/${locale}/login`)
   }
 
+  const user = await getUserById(session.user.id)
+
   return (
     <div className="space-y-12">
-      <MfaSettingsList enabled={Boolean(session.user.twoFactorEnabled)} />
+      <MfaSettingsList enabled={Boolean(user?.twoFactorEnabled)} />
     </div>
   )
 }

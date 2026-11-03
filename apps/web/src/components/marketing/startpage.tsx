@@ -232,17 +232,15 @@ export function StartPage() {
 
               <div className="flex flex-col items-center gap-3 pt-2">
                 <Button
-                  asChild
-                  className="btn-inverse h-11 px-6 transition-colors"
-                >
-                  <a
-                    href="/login"
-                  >
+                  render={
+                    <a href="/login">
                     <span className="text-inherit text-sm">
                       Start your trial
                     </span>
-                  </a>
-                </Button>
+                    </a>
+                  }
+                  className="btn-inverse h-11 px-6 transition-colors"
+                />
 
                 <p className="text-muted-foreground text-xs font-sans">
                   14-day free trial · Cancel anytime

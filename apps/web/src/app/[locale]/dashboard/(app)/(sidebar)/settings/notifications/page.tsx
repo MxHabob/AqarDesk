@@ -1,15 +1,10 @@
-import type { Metadata } from "next";
-import { Suspense } from "react";
-import { NotificationsSettingsList } from "@/components/notifications-settings-list";
+import { redirect } from "next/navigation"
 
-export const metadata: Metadata = {
-  title: "Notifications | AqarDesk",
-};
-
-export default async function Notifications() {
-  return (
-    <Suspense>
-      <NotificationsSettingsList />
-    </Suspense>
-  );
+export default async function NotificationSettingsRedirect({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  redirect(`/${locale}/dashboard/settings`)
 }

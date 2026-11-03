@@ -33,6 +33,7 @@ export function TimeFormatSettings() {
         <Select
           value={user?.timeFormat?.toString() ?? undefined}
           onValueChange={(value) => {
+            if (!value) return
             updateUserMutation.mutate({ timeFormat: +value })
           }}
         >

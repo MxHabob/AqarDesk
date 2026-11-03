@@ -11,9 +11,9 @@ import {
   DropdownMenuTrigger,
 } from "@aqardesk/ui/dropdown-menu"
 import Link from "next/link"
-import { useCurrentLocale } from "@/locales/client"
 import { useFileUrl } from "@/hooks/use-file-url"
 import { useUserQuery } from "@/hooks/use-user"
+import { useCurrentLocale } from "@/locales/client"
 import { SignOut } from "./sign-out"
 import { ThemeSwitch } from "./theme-switch"
 
@@ -30,24 +30,26 @@ export function UserMenu({ onlySignOut }: Props) {
 
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Avatar className="rounded-full w-8 h-8 cursor-pointer bg-accent">
-          {avatarUrl && (
-            <AvatarImageNext
-              src={avatarUrl}
-              alt={user.fullName ?? ""}
-              width={32}
-              height={32}
-              quality={100}
-            />
-          )}
-          <AvatarFallback>
-            <span className="text-xs">
-              {user?.fullName.charAt(0).toUpperCase()}
-            </span>
-          </AvatarFallback>
-        </Avatar>
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger
+        render={
+          <Avatar className="rounded-full w-8 h-8 cursor-pointer bg-accent">
+            {avatarUrl && (
+              <AvatarImageNext
+                src={avatarUrl}
+                alt={user?.fullName ?? ""}
+                width={32}
+                height={32}
+                quality={100}
+              />
+            )}
+            <AvatarFallback>
+              <span className="text-xs">
+                {user?.fullName?.charAt(0).toUpperCase()}
+              </span>
+            </AvatarFallback>
+          </Avatar>
+        }
+      />
       <DropdownMenuContent className="w-[240px]" sideOffset={10} align="end">
         {!onlySignOut && (
           <>
@@ -86,7 +88,6 @@ export function UserMenu({ onlySignOut }: Props) {
               <Link href={`/${locale}/apps`}>
                 <DropdownMenuItem className="text-xs">Apps</DropdownMenuItem>
               </Link>
-
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />

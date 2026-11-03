@@ -1,24 +1,10 @@
-import type { Metadata } from "next";
-import { ErrorBoundary } from "next/dist/client/components/error-boundary";
-import { Suspense } from "react";
-import { ErrorFallback } from "@/components/error-fallback";
-import { TeamsTable } from "@/components/tables/teams";
-import { TeamsSkeleton } from "@/components/tables/teams/skeleton";
-import { prefetch, trpc } from "@/trpc/server";
+import { redirect } from "next/navigation"
 
-export const metadata: Metadata = {
-  title: "Teams | AqarDesk",
-};
-
-export default function Teams() {
-  prefetch(trpc.team.list.queryOptions());
-  prefetch(trpc.user.invites.queryOptions());
-
-  return (
-    <ErrorBoundary errorComponent={ErrorFallback}>
-      <Suspense fallback={<TeamsSkeleton />}>
-        <TeamsTable />
-      </Suspense>
-    </ErrorBoundary>
-  );
+export default async function AccountTeamsPage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  redirect(`/${locale}/dashboard/teams`)
 }

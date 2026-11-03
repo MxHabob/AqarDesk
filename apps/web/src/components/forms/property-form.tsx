@@ -1,6 +1,13 @@
 "use client"
 
 import { propertyCategories } from "@aqardesk/categories"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@aqardesk/ui/select"
 import { useRouter } from "next/navigation"
 import { useActionState, useEffect, useState } from "react"
 import type {
@@ -335,25 +342,36 @@ export function PropertyForm({
           />
         </div>
 
-        <label className="flex flex-col gap-2 text-sm font-medium">
-          الملاك
-          <select
-            className="min-h-24 w-full border border-input bg-transparent px-3 py-2 text-sm outline-none focus-visible:border-ring focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
+        <div className="flex flex-col gap-2 text-sm font-medium">
+          <label htmlFor="property-owners">الملاك</label>
+          <Select
             name="ownerIds"
             multiple
             defaultValue={data?.ownerRows.map(({ ownerId }) => ownerId) ?? []}
             disabled={readOnly}
+            items={ownerOptions.map((owner) => ({
+              value: owner.id,
+              label: owner.name,
+            }))}
           >
-            {ownerOptions.map((owner) => (
-              <option key={owner.id} value={owner.id}>
-                {owner.name}
-              </option>
-            ))}
-          </select>
+            <SelectTrigger
+              id="property-owners"
+              className="h-auto min-h-24 w-full items-start bg-transparent py-2"
+            >
+              <SelectValue placeholder="اختر الملاك" />
+            </SelectTrigger>
+            <SelectContent align="start">
+              {ownerOptions.map((owner) => (
+                <SelectItem key={owner.id} value={owner.id}>
+                  {owner.name}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <span className="text-xs font-normal text-muted-foreground">
             يمكن اختيار أكثر من مالك. أضف المالك أولًا من صفحة الملاك.
           </span>
-        </label>
+        </div>
 
         <h3 className="border-b pb-2 text-sm font-medium">مواصفات العقار</h3>
         <div className="grid gap-4 sm:grid-cols-2">

@@ -1,9 +1,8 @@
-"use client";
+"use client"
 
-import { Button } from "@aqardesk/ui/button";
-import { useEffect } from "react";
-import { CopyInput } from "@/components/copy-input";
-import { SUPPORT_EMAIL } from "@/utils/constants";
+import { Button } from "@aqardesk/ui/button"
+import { CopyInput } from "@/components/copy-input"
+import { SUPPORT_EMAIL } from "@/utils/constants"
 
 /**
  * Error boundary scoped to the (sidebar) layout.
@@ -16,25 +15,15 @@ export default function SidebarError({
   error,
   reset,
 }: {
-  error: Error & { digest?: string };
-  reset: () => void;
+  error: Error & { digest?: string }
+  reset: () => void
 }) {
-  useEffect(() => {
-    if (process.env.NODE_ENV === "production") {
-      import("@sentry/nextjs").then((Sentry) => {
-        Sentry.captureException(error);
-      });
-    }
-  }, [error]);
-
   return (
     <div className="h-[calc(100vh-200px)] w-full flex items-center justify-center">
       <div className="max-w-md w-full text-center px-4">
         <h2 className="font-medium mb-4">Something went wrong</h2>
         <p className="text-sm text-[#878787] mb-6">
-          We've been notified and are looking into it.
-          <br />
-          If this issue persists, please reach out to our support team.
+          Please try again. If this issue persists, contact our support team.
         </p>
 
         <CopyInput value={SUPPORT_EMAIL} />
@@ -50,5 +39,5 @@ export default function SidebarError({
         </Button>
       </div>
     </div>
-  );
+  )
 }

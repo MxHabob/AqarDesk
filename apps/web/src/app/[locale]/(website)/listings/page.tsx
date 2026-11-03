@@ -1,21 +1,35 @@
 import { propertyCategories } from "@aqardesk/categories"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@aqardesk/ui/select"
 import Link from "next/link"
 import type { SearchParams } from "nuqs"
 import { ListingCard } from "@/components/marketing/listing-card"
+import { MaterialIcon } from "@/components/marketing/homepage/icon-mapping"
 import {
   getFilteredPublicListings,
   getPublicListingCoverPhotos,
 } from "@/lib/listings/public-queries"
 import { loadPublicListingSearchParams } from "@/lib/listings/public-search-loader"
-import { createPageMetadata } from "@/lib/metadata"
-import { getI18n, getScopedI18n } from "@/locales/server"
+import { createPageMetadata } from "@/lib/marketing/metadata"
+import {
+  getI18n,
+  getScopedI18n,
+  setStaticParamsLocale,
+} from "@/locales/server"
 
 type Props = {
   params: Promise<{ locale: string }>
   searchParams: Promise<SearchParams>
 }
 
-export async function generateMetadata() {
+export async function generateMetadata({ params }: Pick<Props, "params">) {
+  const { locale } = await params
+  setStaticParamsLocale(locale)
   const t = await getScopedI18n("publicListings")
   return createPageMetadata({
     title: t("title"),
@@ -29,11 +43,23 @@ export default async function ListingsPage({ params, searchParams }: Props) {
     params,
     searchParams,
   ])
+  setStaticParamsLocale(locale)
   const [t, translate] = await Promise.all([
     getScopedI18n("publicListings"),
     getI18n(),
   ])
   const filters = loadPublicListingSearchParams(rawSearchParams)
+  const hasActiveFilters = Boolean(
+    filters.q.trim() ||
+      filters.propertyType ||
+      filters.listingType ||
+      filters.minPrice !== null ||
+      filters.maxPrice !== null ||
+      filters.minArea !== null ||
+      filters.maxArea !== null ||
+      filters.sort !== "newest" ||
+      filters.page > 1
+  )
   const results = await getFilteredPublicListings(filters)
   const coverPhotos = await getPublicListingCoverPhotos(
     results.rows.map((listing) => listing.id)
@@ -82,118 +108,192 @@ export default async function ListingsPage({ params, searchParams }: Props) {
 
       <form
         method="get"
-        className="grid gap-x-4 gap-y-5 border-y border-border py-6 sm:grid-cols-2 lg:grid-cols-4"
+        className="bg-secondary/30 p-3 sm:p-4"
       >
-        <label className="space-y-2 text-sm lg:col-span-2">
-          <span className="font-medium">{t("search")}</span>
-          <input
-            name="q"
-            type="search"
-            defaultValue={filters.q}
-            placeholder={t("search")}
-            className="h-10 w-full rounded-none border border-input bg-background px-3"
-          />
-        </label>
-        <label className="space-y-2 text-sm">
-          <span className="font-medium">{t("propertyType")}</span>
-          <select
-            name="propertyType"
-            defaultValue={filters.propertyType ?? ""}
-            className="h-10 w-full rounded-none border border-input bg-background px-3"
-          >
-            <option value="">{t("allPropertyTypes")}</option>
-            {propertyCategories.map((category) => (
-              <option key={category.type} value={category.type}>
-                {propertyTypeLabels[category.type]}
-              </option>
-            ))}
-          </select>
-        </label>
-        <label className="space-y-2 text-sm">
-          <span className="font-medium">{t("listingTypeFilter")}</span>
-          <select
-            name="listingType"
-            defaultValue={filters.listingType ?? ""}
-            className="h-10 w-full rounded-none border border-input bg-background px-3"
-          >
-            <option value="">{t("allListingTypes")}</option>
-            <option value="sale">{t("sale")}</option>
-            <option value="rent">{t("rent")}</option>
-          </select>
-        </label>
-        <label className="space-y-2 text-sm">
-          <span className="font-medium">{t("minPrice")}</span>
-          <input
-            name="minPrice"
-            type="number"
-            min="0"
-            step="any"
-            defaultValue={filters.minPrice ?? ""}
-            className="h-10 w-full rounded-none border border-input bg-background px-3"
-          />
-        </label>
-        <label className="space-y-2 text-sm">
-          <span className="font-medium">{t("maxPrice")}</span>
-          <input
-            name="maxPrice"
-            type="number"
-            min="0"
-            step="any"
-            defaultValue={filters.maxPrice ?? ""}
-            className="h-10 w-full rounded-none border border-input bg-background px-3"
-          />
-        </label>
-        <label className="space-y-2 text-sm">
-          <span className="font-medium">{t("minArea")}</span>
-          <input
-            name="minArea"
-            type="number"
-            min="0"
-            step="any"
-            defaultValue={filters.minArea ?? ""}
-            className="h-10 w-full rounded-none border border-input bg-background px-3"
-          />
-        </label>
-        <label className="space-y-2 text-sm">
-          <span className="font-medium">{t("maxArea")}</span>
-          <input
-            name="maxArea"
-            type="number"
-            min="0"
-            step="any"
-            defaultValue={filters.maxArea ?? ""}
-            className="h-10 w-full rounded-none border border-input bg-background px-3"
-          />
-        </label>
-        <label className="space-y-2 text-sm">
-          <span className="font-medium">{t("sort")}</span>
-          <select
-            name="sort"
-            defaultValue={filters.sort}
-            className="h-10 w-full rounded-none border border-input bg-background px-3"
-          >
-            <option value="newest">{t("sortNewest")}</option>
-            <option value="price_asc">{t("sortPriceAsc")}</option>
-            <option value="price_desc">{t("sortPriceDesc")}</option>
-          </select>
-        </label>
+        <div className="grid grid-cols-1 gap-3 min-[480px]:grid-cols-2 lg:grid-cols-12 lg:gap-4">
+          <label className="min-w-0 space-y-1 text-xs min-[480px]:col-span-2 lg:col-span-4">
+            <span className="font-medium">{t("search")}</span>
+            <span className="relative block focus-within:ring-2 focus-within:ring-ring/40">
+              <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-muted-foreground">
+                <MaterialIcon name="search" size={16} />
+              </span>
+              <input
+                name="q"
+                type="search"
+                defaultValue={filters.q}
+                placeholder={t("search")}
+                className="h-9 w-full rounded-none bg-background/80 pe-3 ps-10 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none"
+              />
+            </span>
+          </label>
+          <label className="min-w-0 space-y-1 text-xs lg:col-span-3">
+            <span className="font-medium">{t("propertyType")}</span>
+            <Select
+              name="propertyType"
+              defaultValue={filters.propertyType ?? "all"}
+              items={[
+                { value: "all", label: t("allPropertyTypes") },
+                ...propertyCategories.map((category) => ({
+                  value: category.type,
+                  label: propertyTypeLabels[category.type],
+                })),
+              ]}
+            >
+              <SelectTrigger className="h-9 w-full border-0 bg-background/80 px-3 text-sm focus-visible:ring-2 focus-visible:ring-ring/40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="start">
+                <SelectItem value="all">{t("allPropertyTypes")}</SelectItem>
+                {propertyCategories.map((category) => (
+                  <SelectItem key={category.type} value={category.type}>
+                    {propertyTypeLabels[category.type]}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </label>
+
+          <fieldset className="min-w-0 space-y-1 min-[480px]:col-span-1 lg:col-span-5">
+            <legend className="text-sm font-medium">
+              {t("listingTypeFilter")}
+            </legend>
+            <div className="grid grid-cols-3 bg-muted/50 p-1">
+              {[
+                { value: "", label: t("allListingTypes") },
+                { value: "sale", label: t("sale") },
+                { value: "rent", label: t("rent") },
+              ].map((option, index) => (
+                <label
+                  key={option.value || "all"}
+                  className="min-w-0 cursor-pointer"
+                >
+                  <input
+                    className="peer sr-only"
+                    type="radio"
+                    name="listingType"
+                    value={option.value}
+                    defaultChecked={
+                      (filters.listingType ?? "") === option.value
+                    }
+                  />
+                  <span
+                    className={`flex h-8 items-center justify-center px-2 text-center text-xs transition-colors hover:bg-background/70 sm:text-sm ${
+                      index > 0 ? "ms-1" : ""
+                    } peer-checked:bg-background peer-checked:text-foreground peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring/50`}
+                  >
+                    {option.label}
+                  </span>
+                </label>
+              ))}
+            </div>
+          </fieldset>
+
+          <fieldset className="min-w-0 space-y-1 lg:col-span-4">
+            <legend className="text-sm font-medium">{t("priceRange")}</legend>
+            <div className="grid grid-cols-2 gap-2">
+              <label className="min-w-0">
+                <span className="sr-only">{t("minPrice")}</span>
+                <input
+                  name="minPrice"
+                  type="number"
+                  min="0"
+                  step="any"
+                  placeholder={t("rangeFrom")}
+                  aria-label={t("minPrice")}
+                  defaultValue={filters.minPrice ?? ""}
+                  className="h-9 min-w-0 w-full rounded-none bg-background/80 px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+                />
+              </label>
+              <label className="min-w-0">
+                <span className="sr-only">{t("maxPrice")}</span>
+                <input
+                  name="maxPrice"
+                  type="number"
+                  min="0"
+                  step="any"
+                  placeholder={t("rangeTo")}
+                  aria-label={t("maxPrice")}
+                  defaultValue={filters.maxPrice ?? ""}
+                  className="h-9 min-w-0 w-full rounded-none bg-background/80 px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+                />
+              </label>
+            </div>
+          </fieldset>
+
+          <fieldset className="min-w-0 space-y-1 lg:col-span-4">
+            <legend className="text-sm font-medium">{t("areaRange")}</legend>
+            <div className="grid grid-cols-2 gap-2">
+              <label className="min-w-0">
+                <span className="sr-only">{t("minArea")}</span>
+                <input
+                  name="minArea"
+                  type="number"
+                  min="0"
+                  step="any"
+                  placeholder={t("rangeFrom")}
+                  aria-label={t("minArea")}
+                  defaultValue={filters.minArea ?? ""}
+                  className="h-9 min-w-0 w-full rounded-none bg-background/80 px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+                />
+              </label>
+              <label className="min-w-0">
+                <span className="sr-only">{t("maxArea")}</span>
+                <input
+                  name="maxArea"
+                  type="number"
+                  min="0"
+                  step="any"
+                  placeholder={t("rangeTo")}
+                  aria-label={t("maxArea")}
+                  defaultValue={filters.maxArea ?? ""}
+                  className="h-9 min-w-0 w-full rounded-none bg-background/80 px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+                />
+              </label>
+            </div>
+          </fieldset>
+
+          <label className="min-w-0 space-y-1 text-xs lg:col-span-2">
+            <span className="font-medium">{t("sort")}</span>
+            <Select
+              name="sort"
+              defaultValue={filters.sort}
+              items={[
+                { value: "newest", label: t("sortNewest") },
+                { value: "price_asc", label: t("sortPriceAsc") },
+                { value: "price_desc", label: t("sortPriceDesc") },
+              ]}
+            >
+              <SelectTrigger className="h-9 w-full border-0 bg-background/80 px-3 text-sm focus-visible:ring-2 focus-visible:ring-ring/40">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent align="start">
+                <SelectItem value="newest">{t("sortNewest")}</SelectItem>
+                <SelectItem value="price_asc">{t("sortPriceAsc")}</SelectItem>
+                <SelectItem value="price_desc">{t("sortPriceDesc")}</SelectItem>
+              </SelectContent>
+            </Select>
+          </label>
+
+          <div className="flex min-w-0 items-end gap-2 min-[480px]:col-span-2 lg:col-span-2">
+            {hasActiveFilters && (
+              <Link
+                href="/listings"
+                className="inline-flex h-9 flex-1 items-center justify-center px-3 text-sm font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
+              >
+                {t("clearFilters")}
+              </Link>
+            )}
+            <button
+              type="submit"
+              className={`h-9 bg-foreground px-3 text-sm font-medium text-background transition-opacity hover:opacity-90 ${
+                hasActiveFilters ? "flex-1" : "w-full"
+              }`}
+            >
+              {t("applyFilters")}
+            </button>
+          </div>
+        </div>
         <input type="hidden" name="pageSize" value={filters.pageSize} />
-        <div className="flex items-end">
-          <button
-            type="submit"
-            className="h-10 w-full bg-foreground px-4 font-medium text-background transition-opacity hover:opacity-90"
-          >
-            {t("applyFilters")}
-          </button>
-        </div>
-        <div className="flex items-end">
-          <Link
-            href="/listings"
-            className="inline-flex h-10 w-full items-center justify-center border border-border px-4 text-sm font-medium transition-colors hover:bg-muted"
-          >
-            {t("clearFilters")}
-          </Link>
-        </div>
       </form>
 
       <section aria-label={t("title")} className="space-y-6">

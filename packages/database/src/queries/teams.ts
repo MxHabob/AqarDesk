@@ -73,6 +73,12 @@ export async function createTeam(
       .values(values)
       .returning()
     if (team) {
+      await transaction.insert(schema.teamMembers).values({
+        teamId: team.id,
+        userId: values.createdById,
+        role: "lead",
+        assignedById: values.createdById,
+      })
       await writeAuditLog(
         {
           actorId: values.createdById,
@@ -183,6 +189,97 @@ export async function setTeamMembers(
       },
       transaction
     )
+  }, database)
+}
+
+export async function addTeamMember(
+  teamId: string,
+  userId: string,
+  actor: { id: string; name?: string | null; email?: string | null },
+  database: DatabaseOrTransaction = getDatabase()
+) {
+  return withTransaction(async (transaction) => {
+    const [team] = await transaction
+      .select({ id: schema.teams.id })
+      .from(schema.teams)
+      .where(and(eq(schema.teams.id, teamId), isNull(schema.teams.archivedAt)))
+      .limit(1)
+    if (!team) return undefined
+
+    const [member] = await transaction
+      .insert(schema.teamMembers)
+      .values({
+        teamId,
+        userId,
+        role: "member",
+        assignedById: actor.id,
+      })
+      .onConflictDoNothing()
+      .returning({ userId: schema.teamMembers.userId })
+    if (!member) return undefined
+
+    await writeAuditLog(
+      {
+        actorId: actor.id,
+        actorName: actor.name,
+        actorEmail: actor.email,
+        action: "team.member_added",
+        entityType: "team",
+        entityId: teamId,
+        after: { userId },
+      },
+      transaction
+    )
+    return member
+  }, database)
+}
+
+export async function removeTeamMember(
+  teamId: string,
+  userId: string,
+  actor: { id: string; name?: string | null; email?: string | null },
+  database: DatabaseOrTransaction = getDatabase()
+) {
+  return withTransaction(async (transaction) => {
+    const [member] = await transaction
+      .select({ role: schema.teamMembers.role })
+      .from(schema.teamMembers)
+      .where(
+        and(
+          eq(schema.teamMembers.teamId, teamId),
+          eq(schema.teamMembers.userId, userId)
+        )
+      )
+      .limit(1)
+    if (!member) return undefined
+    if (member.role === "lead") {
+      throw new Error("The team lead cannot be removed.")
+    }
+
+    const [removed] = await transaction
+      .delete(schema.teamMembers)
+      .where(
+        and(
+          eq(schema.teamMembers.teamId, teamId),
+          eq(schema.teamMembers.userId, userId)
+        )
+      )
+      .returning({ userId: schema.teamMembers.userId })
+    if (!removed) return undefined
+
+    await writeAuditLog(
+      {
+        actorId: actor.id,
+        actorName: actor.name,
+        actorEmail: actor.email,
+        action: "team.member_removed",
+        entityType: "team",
+        entityId: teamId,
+        before: { userId },
+      },
+      transaction
+    )
+    return removed
   }, database)
 }
 

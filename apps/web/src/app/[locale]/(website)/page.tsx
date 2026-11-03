@@ -1,5 +1,5 @@
 import { StartPage } from "@/components/marketing/startpage"
-import { createPageMetadata } from "@/lib/metadata"
+import { createPageMetadata } from "@/lib/marketing/metadata"
 
 export const metadata = createPageMetadata({
   title: "AqarDesk — The business stack for modern founders",

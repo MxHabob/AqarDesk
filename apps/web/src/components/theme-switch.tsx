@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Select,
@@ -7,45 +7,47 @@ import {
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@aqardesk/ui/select";
-import { Monitor, Moon, Sun } from "lucide-react";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+} from "@aqardesk/ui/select"
+import { Monitor, Moon, Sun } from "lucide-react"
+import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
 
-type Theme = "dark" | "system" | "light";
+type Theme = "dark" | "system" | "light"
 
 type Props = {
-  currentTheme?: Theme;
-};
+  currentTheme?: Theme
+}
 
 const ThemeIcon = ({ currentTheme }: Props) => {
   switch (currentTheme) {
     case "dark":
-      return <Moon size={12} />;
+      return <Moon size={12} />
     case "system":
-      return <Monitor size={12} />;
+      return <Monitor size={12} />
     default:
-      return <Sun size={12} />;
+      return <Sun size={12} />
   }
-};
+}
 
 export const ThemeSwitch = () => {
-  const { theme, setTheme, themes, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme, themes, resolvedTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
 
   // After mounting, we have access to the theme
-  useEffect(() => setMounted(true), []);
+  useEffect(() => setMounted(true), [])
 
   if (!mounted) {
-    return <div className="h-[24px]" />;
+    return <div className="h-[24px]" />
   }
 
   return (
     <div className="flex items-center relative">
       <Select
         value={theme}
-        onValueChange={(value: Theme) => {
-          setTheme(value);
+        onValueChange={(value) => {
+          if (value === "dark" || value === "system" || value === "light") {
+            setTheme(value)
+          }
         }}
       >
         <SelectTrigger className="w-full ps-6 pe-3 py-0.5 bg-transparent outline-none capitalize h-[24px] text-xs border-0 shadow-none">
@@ -74,5 +76,5 @@ export const ThemeSwitch = () => {
         <ThemeIcon currentTheme={resolvedTheme as Theme} />
       </div>
     </div>
-  );
-};
+  )
+}

@@ -73,13 +73,15 @@ export function MetricsFilter() {
 
   return (
     <DropdownMenu open={isDropdownOpen} onOpenChange={setIsDropdownOpen}>
-      <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="gap-2 px-2">
-          <Icons.Filter size={16} className="text-[#666]" />
-          <span className="hidden sm:inline">{getButtonLabel()}</span>
-          <Icons.ChevronDown size={16} className="text-[#666]" />
-        </Button>
-      </DropdownMenuTrigger>
+      <DropdownMenuTrigger
+        render={
+          <Button variant="outline" className="gap-2 px-2">
+            <Icons.Filter size={16} className="text-[#666]" />
+            <span className="hidden sm:inline">{getButtonLabel()}</span>
+            <Icons.ChevronDown size={16} className="text-[#666]" />
+          </Button>
+        }
+      />
       <DropdownMenuContent className="w-64" align="end" sideOffset={10}>
         {/* PERIOD Section */}
         <DropdownMenuGroup>

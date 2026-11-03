@@ -7,7 +7,7 @@ import { ScrollArea } from "@aqardesk/ui/scroll-area"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@aqardesk/ui/tabs"
 import { ErrorBoundary } from "next/dist/client/components/error-boundary"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { ErrorFallback } from "@/components/error-fallback"
 import { useNotifications } from "@/hooks/use-notifications"
 import { EmptyState } from "./empty-state"
@@ -29,26 +29,29 @@ export function NotificationCenter() {
   const unreadNotifications = notifications // Main notifications (unread/read)
   const archivedNotifications = archived // Archived notifications
 
-  useEffect(() => {
-    if (isOpen && hasUnseenNotifications) {
+  const handleOpenChange = (open: boolean) => {
+    setOpen(open)
+    if (open && hasUnseenNotifications) {
       markAllMessagesAsSeen()
     }
-  }, [hasUnseenNotifications, isOpen])
+  }
 
   return (
-    <Popover onOpenChange={setOpen} open={isOpen}>
-      <PopoverTrigger asChild>
-        <Button
-          variant="outline"
-          size="icon"
-          className="rounded-full w-8 h-8 flex items-center relative"
-        >
-          {hasUnseenNotifications && (
-            <div className="w-1.5 h-1.5 bg-[#FFD02B] rounded-full absolute top-0 end-0" />
-          )}
-          <Icons.Notifications size={16} />
-        </Button>
-      </PopoverTrigger>
+    <Popover onOpenChange={handleOpenChange} open={isOpen}>
+      <PopoverTrigger
+        render={
+          <Button
+            variant="outline"
+            size="icon"
+            className="rounded-full w-8 h-8 flex items-center relative"
+          >
+            {hasUnseenNotifications && (
+              <div className="w-1.5 h-1.5 bg-[#FFD02B] rounded-full absolute top-0 end-0" />
+            )}
+            <Icons.Notifications size={16} />
+          </Button>
+        }
+      />
       <PopoverContent
         className="h-[535px] w-screen md:w-[400px] p-0 overflow-hidden relative"
         align="end"
@@ -65,18 +68,19 @@ export function NotificationCenter() {
                   Archive
                 </TabsTrigger>
               </div>
-              <Link
-                href="/settings/notifications"
-                onClick={() => setOpen(false)}
+              <Button
+                render={
+                  <Link
+                    href="/settings/notifications"
+                    onClick={() => setOpen(false)}
+                  />
+                }
+                variant="ghost"
+                size="icon"
+                className="items-center justify-center transition-colors h-9 w-9 rounded-full bg-ransparent hover:bg-accent me-2"
               >
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="items-center justify-center transition-colors h-9 w-9 rounded-full bg-ransparent hover:bg-accent me-2"
-                >
-                  <Icons.Settings size={16} />
-                </Button>
-              </Link>
+                <Icons.Settings size={16} />
+              </Button>
             </TabsList>
 
             <TabsContent value="inbox" className="relative mt-0">

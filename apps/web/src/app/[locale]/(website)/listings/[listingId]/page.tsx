@@ -10,7 +10,7 @@ import {
   getPublicListingById,
   getPublicListingMedia,
 } from "@/lib/listings/public-queries"
-import { getI18n, getScopedI18n } from "@/locales/server"
+import { getI18n, getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
 type Props = {
   params: Promise<{ locale: string; listingId: string }>
@@ -19,7 +19,8 @@ type Props = {
 const listingIdSchema = z.uuid()
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { listingId } = await params
+  const { listingId, locale } = await params
+  setStaticParamsLocale(locale)
   const t = await getScopedI18n("publicListingDetails")
   if (!listingIdSchema.safeParse(listingId).success) {
     return {
@@ -49,6 +50,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ListingDetailsPage({ params }: Props) {
   const { listingId, locale } = await params
+  setStaticParamsLocale(locale)
   if (!listingIdSchema.safeParse(listingId).success) notFound()
 
   const listing = await getPublicListingById(listingId)

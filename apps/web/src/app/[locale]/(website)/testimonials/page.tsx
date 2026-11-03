@@ -1,5 +1,5 @@
 import { Testimonials } from "@/components/marketing/testimonials";
-import { createPageMetadata } from "@/lib/metadata";
+import { createPageMetadata } from "@/lib/marketing/metadata";
 
 export const metadata = createPageMetadata({
   title: "Customer Stories",

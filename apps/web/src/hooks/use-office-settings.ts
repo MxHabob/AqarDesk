@@ -36,7 +36,7 @@ export function useOfficeSettingsMutation() {
       })
     },
     onError: (error) => {
-      toast({ variant: "error", title: error.message })
+      toast({ type: "error", title: error.message })
     },
   })
 }

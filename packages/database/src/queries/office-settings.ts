@@ -4,7 +4,9 @@ import { writeAuditLog } from "../utils/audit-log"
 import { withTransaction } from "../utils/database"
 import type { DatabaseOrTransaction } from "./types"
 
-export async function getOfficeSettings(database = getDatabase()) {
+export async function getOfficeSettings(
+  database = getDatabase()
+): Promise<typeof schema.officeSettings.$inferSelect> {
   const [existing] = await database
     .select()
     .from(schema.officeSettings)
@@ -54,6 +56,10 @@ export async function updateOfficeSettings(
       })
       .returning()
 
+    if (!settings) {
+      throw new Error("Office settings could not be updated.")
+    }
+
     await writeAuditLog(
       {
         actorId: values.updatedById,
@@ -72,18 +78,16 @@ export async function updateOfficeSettings(
               timezone: before.timezone,
             }
           : null,
-        after: settings
-          ? {
-              name: settings.name,
-              email: settings.email,
-              phone: settings.phone,
-              address: settings.address,
-              city: settings.city,
-              countryCode: settings.countryCode,
-              defaultCurrency: settings.defaultCurrency,
-              timezone: settings.timezone,
-            }
-          : null,
+        after: {
+          name: settings.name,
+          email: settings.email,
+          phone: settings.phone,
+          address: settings.address,
+          city: settings.city,
+          countryCode: settings.countryCode,
+          defaultCurrency: settings.defaultCurrency,
+          timezone: settings.timezone,
+        },
       },
       transaction
     )

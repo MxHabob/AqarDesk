@@ -1,7 +1,5 @@
 "use client"
 
-import { authClient } from "@aqardesk/auth/client"
-import { LogEvents } from "@aqardesk/events/events"
 import {
   AlertDialog,
   AlertDialogAction,
@@ -11,7 +9,6 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "@aqardesk/ui/alert-dialog"
 import { Button } from "@aqardesk/ui/button"
 import {
@@ -23,8 +20,6 @@ import {
 } from "@aqardesk/ui/card"
 import { Input } from "@aqardesk/ui/input"
 import { Label } from "@aqardesk/ui/label"
-import { useToast } from "@aqardesk/ui/use-toast"
-import { useOpenPanel } from "@openpanel/nextjs"
 import { useMutation } from "@tanstack/react-query"
 import { Loader2 } from "lucide-react"
 import { useState } from "react"
@@ -32,20 +27,17 @@ import { deleteCurrentAccountAction } from "@/actions/delete-account"
 import { redirectAfterAccountDeletion } from "@/actions/revalidate-action"
 
 export function DeleteAccount() {
-  const { track } = useOpenPanel()
-  const { toast } = useToast()
+  const [value, setValue] = useState("")
+  const [isOpen, setIsOpen] = useState(false)
+  const [errorMessage, setErrorMessage] = useState<string | null>(null)
 
   const deleteUserMutation = useMutation({
     mutationFn: deleteCurrentAccountAction,
     onSuccess: async () => {
-      track(LogEvents.AccountDeleted.name)
-      await authClient.signOut()
       await redirectAfterAccountDeletion()
     },
-    onError: (error) => toast({ variant: "error", title: error.message }),
+    onError: (error) => setErrorMessage(error.message),
   })
-
-  const [value, setValue] = useState("")
 
   return (
     <Card className="border-destructive">
@@ -59,15 +51,24 @@ export function DeleteAccount() {
       <CardFooter className="flex justify-between">
         <div />
 
-        <AlertDialog>
-          <AlertDialogTrigger asChild>
-            <Button
-              variant="destructive"
-              className="hover:bg-destructive text-muted"
-            >
-              Delete
-            </Button>
-          </AlertDialogTrigger>
+        <AlertDialog
+          open={isOpen}
+          onOpenChange={(open) => {
+            setIsOpen(open)
+            if (!open) setValue("")
+          }}
+        >
+          <Button
+            type="button"
+            variant="destructive"
+            className="hover:bg-destructive text-muted"
+            onClick={() => {
+              setErrorMessage(null)
+              setIsOpen(true)
+            }}
+          >
+            Delete
+          </Button>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
@@ -86,6 +87,11 @@ export function DeleteAccount() {
                 value={value}
                 onChange={(e) => setValue(e.target.value)}
               />
+              {errorMessage && (
+                <p role="alert" className="text-sm text-destructive">
+                  {errorMessage}
+                </p>
+              )}
             </div>
 
             <AlertDialogFooter>

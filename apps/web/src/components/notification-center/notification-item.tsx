@@ -4,15 +4,14 @@ import { Button } from "@aqardesk/ui/button"
 import { cn } from "@aqardesk/ui/cn"
 import { Icons } from "@aqardesk/ui/icons"
 import { formatDistanceToNow } from "date-fns"
+import { ar } from "date-fns/locale"
 import {
   type Activity,
   getMetadata,
   getMetadataProperty,
 } from "@/hooks/use-notifications"
-import { useUserQuery } from "@/hooks/use-user"
-import { useI18n } from "@/locales/client"
+import { useCurrentLocale } from "@/locales/client"
 import { getActivityIcon } from "@/utils/activity-utils"
-import { getNotificationDescription } from "./notification-descriptions"
 import { NotificationLink } from "./notification-link"
 
 interface NotificationItemProps {
@@ -28,15 +27,15 @@ export function NotificationItem({
   activity,
   markMessageAsRead,
 }: NotificationItemProps) {
-  const t = useI18n()
-  const { data: user } = useUserQuery()
+  const isArabic = useCurrentLocale() === "ar"
 
   const recordId = getMetadataProperty(activity, "recordId")
   const metadata = getMetadata(activity)
-
-  const description =
-    activity.title ||
-    getNotificationDescription(activity.type, metadata, user, t)
+  const description = activity.title || activity.type.replaceAll("_", " ")
+  const timeAgo = formatDistanceToNow(new Date(activity.createdAt), {
+    addSuffix: true,
+    locale: isArabic ? ar : undefined,
+  })
 
   const notificationContent = (
     <>
@@ -54,11 +53,7 @@ export function NotificationItem({
         >
           {description}
         </p>
-        <span className="text-xs text-[#606060]">
-          {t("notifications.time_ago", {
-            time: formatDistanceToNow(new Date(activity.createdAt)),
-          })}
-        </span>
+        <span className="text-xs text-[#606060]">{timeAgo}</span>
       </div>
     </>
   )
@@ -70,7 +65,7 @@ export function NotificationItem({
         variant="secondary"
         className="rounded-full bg-transparent dark:hover:bg-[#1A1A1A] hover:bg-[#F6F6F3]"
         onClick={() => markMessageAsRead(id)}
-        title={t("notifications.archive_button")}
+        title={isArabic ? "أرشفة الإشعار" : "Archive notification"}
       >
         <Icons.Inventory2 />
       </Button>
