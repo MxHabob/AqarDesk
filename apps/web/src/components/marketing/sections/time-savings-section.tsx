@@ -1,113 +1,125 @@
 "use client";
 
 import Link from "next/link";
+import { useI18n } from "@/locales/client";
 
 export function TimeSavingsSection() {
+  const t = useI18n();
+
   return (
     <section className="bg-background py-12 sm:py-16 lg:py-24">
       <div className="max-w-[1400px] mx-auto">
         <div className="text-center space-y-4 mb-12">
           <h2 className="font-serif text-2xl sm:text-2xl text-foreground">
-            Less admin. More focus.
+            {t("homeJourney.title")}
           </h2>
           <p className="hidden sm:block font-sans text-base text-muted-foreground leading-normal max-w-2xl mx-auto">
-            AqarDesk removes manual work so you can spend time on what actually
-            matters.
+            {t("homeJourney.description")}
           </p>
         </div>
 
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4">
-            <article className="group relative overflow-hidden bg-background border border-border p-4 sm:p-5 hover-bg hover-border transition-all duration-200 cursor-pointer">
+            <Link
+              href="/listings"
+              className="group relative overflow-hidden bg-background border border-border p-4 sm:p-5 hover-bg hover-border transition-all duration-200 cursor-pointer"
+            >
               <div className="flex items-start gap-3">
                 <div className="min-w-0">
                   <p className="hidden sm:block text-xs  tracking-wide text-muted-foreground">
-                    Chasing receipts
+                    {t("homeJourney.discoverEyebrow")}
                   </p>
                   <h3 className="mt-1 text-base sm:text-lg text-foreground">
-                    45 minutes per week
+                    {t("homeJourney.discoverTitle")}
                   </h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Receipts arrive late, get lost, or need follow-ups.
+                    {t("homeJourney.discoverDescription")}
                   </p>
                 </div>
               </div>
-            </article>
+            </Link>
 
-            <article className="group relative overflow-hidden bg-background border border-border p-4 sm:p-5 hover-bg hover-border transition-all duration-200 cursor-pointer">
+            <Link
+              href="/listings?listingType=sale"
+              className="group relative overflow-hidden bg-background border border-border p-4 sm:p-5 hover-bg hover-border transition-all duration-200 cursor-pointer"
+            >
               <div className="flex items-start gap-3">
                 <div className="min-w-0">
                   <p className="hidden sm:block text-xs  tracking-wide text-muted-foreground">
-                    Cleaning transactions
+                    {t("homeJourney.saleEyebrow")}
                   </p>
                   <h3 className="mt-1 text-base sm:text-lg text-foreground">
-                    1 hour per week
+                    {t("homeJourney.saleTitle")}
                   </h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Categorizing, fixing duplicates, and making numbers line up.
+                    {t("homeJourney.saleDescription")}
                   </p>
                 </div>
               </div>
-            </article>
+            </Link>
 
-            <article className="group relative overflow-hidden bg-background border border-border p-4 sm:p-5 hover-bg hover-border transition-all duration-200 cursor-pointer hidden xl:block">
+            <Link
+              href="/listings?listingType=rent"
+              className="group relative overflow-hidden bg-background border border-border p-4 sm:p-5 hover-bg hover-border transition-all duration-200 cursor-pointer hidden xl:block"
+            >
               <div className="flex items-start gap-3">
                 <div className="min-w-0">
                   <p className="hidden sm:block text-xs  tracking-wide text-muted-foreground">
-                    Preparing invoices
+                    {t("homeJourney.rentEyebrow")}
                   </p>
                   <h3 className="mt-1 text-base sm:text-lg text-foreground">
-                    1–2 hours per week
+                    {t("homeJourney.rentTitle")}
                   </h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Creating invoices, checking payments, and answering
-                    questions.
+                    {t("homeJourney.rentDescription")}
                   </p>
                 </div>
               </div>
-            </article>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-10 gap-3 sm:gap-4">
             <Link
-              href="/file-storage"
+              href="/listings"
               className="group relative overflow-hidden bg-background border border-border p-4 sm:p-5 hover-bg hover-border transition-all duration-200 xl:col-span-3 touch-manipulation"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <div className="flex items-start gap-3">
                 <div className="min-w-0">
                   <p className="hidden sm:block text-xs  tracking-wide text-muted-foreground">
-                    Explaining the numbers
+                    {t("homeJourney.detailsEyebrow")}
                   </p>
                   <h3 className="mt-1 text-base sm:text-lg text-foreground">
-                    1 hour per week
+                    {t("homeJourney.detailsTitle")}
                   </h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Pulling data together and explaining what changed and why.
+                    {t("homeJourney.detailsDescription")}
                   </p>
                 </div>
               </div>
             </Link>
 
-            <article className="group relative overflow-hidden bg-background border border-border p-4 sm:p-5 hover-bg hover-border transition-all duration-200 cursor-pointer xl:hidden">
+            <Link
+              href="/listings?listingType=rent"
+              className="group relative overflow-hidden bg-background border border-border p-4 sm:p-5 hover-bg hover-border transition-all duration-200 cursor-pointer xl:hidden"
+            >
               <div className="flex items-start gap-3">
                 <div className="min-w-0">
                   <p className="hidden sm:block text-xs  tracking-wide text-muted-foreground">
-                    Preparing invoices
+                    {t("homeJourney.rentEyebrow")}
                   </p>
                   <h3 className="mt-1 text-base sm:text-lg text-foreground">
-                    1–2 hours per week
+                    {t("homeJourney.rentTitle")}
                   </h3>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Creating invoices, checking payments, and answering
-                    questions.
+                    {t("homeJourney.rentDescription")}
                   </p>
                 </div>
               </div>
-            </article>
+            </Link>
 
-            <a
-              href="/login"
+            <Link
+              href="/listings"
               className="relative overflow-hidden bg-secondary border border-border p-4 sm:p-5 md:p-5 lg:p-6 transition-all duration-200 group hidden xl:block xl:col-span-7 hover:border-muted-foreground touch-manipulation"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
@@ -115,64 +127,63 @@ export function TimeSavingsSection() {
                 <div className="flex-1">
                   <p className="hidden sm:block text-xs tracking-wide/loose text-muted-foreground transition-colors duration-200">
                     <span className="group-hover:hidden transition-opacity duration-200">
-                      As things add up
+                      {t("homeJourney.ctaEyebrow")}
                     </span>
                     <span className="hidden group-hover:inline transition-opacity duration-200">
-                      What changes
+                      {t("homeJourney.ctaHoverEyebrow")}
                     </span>
                   </p>
                   <p className="mt-1 text-base sm:text-lg text-foreground transition-colors duration-200">
                     <span className="group-hover:hidden transition-opacity duration-200">
-                      What disappears over time
+                      {t("homeJourney.ctaTitle")}
                     </span>
                     <span className="hidden group-hover:inline transition-opacity duration-200">
-                      Get your time back
+                      {t("homeJourney.ctaHoverTitle")}
                     </span>
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground transition-colors duration-200">
                     <span className="group-hover:hidden transition-opacity duration-200">
-                      Manual work caused by disconnected tools.
+                      {t("homeJourney.ctaDescription")}
                     </span>
                     <span className="hidden group-hover:inline transition-opacity duration-200">
-                      AqarDesk handles the busywork so you can focus on running
-                      the business.
+                      {t("homeJourney.ctaHoverDescription")}
                     </span>
                   </p>
                 </div>
                 <div className="flex flex-col items-end">
                   <div className="text-4xl sm:text-5xl text-foreground transition-colors duration-200">
-                    4–6 hours
+                    {t("homeJourney.ctaAction")}
                   </div>
                 </div>
               </div>
-            </a>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 gap-3 sm:gap-4 xl:hidden">
-            <a
-              href="/login"
+            <Link
+              href="/listings"
               className="relative overflow-hidden bg-secondary border border-border p-4 sm:p-5 md:p-5 lg:p-6 transition-all duration-200 hover:border-muted-foreground touch-manipulation"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
               <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                 <div className="flex-1">
                   <p className="hidden sm:block text-xs tracking-wide/loose text-muted-foreground transition-colors duration-200">
-                    As things add up
+                    {t("homeJourney.ctaEyebrow")}
                   </p>
                   <p className="mt-1 text-base sm:text-lg text-foreground transition-colors duration-200">
-                    What disappears over time
+                    {t("homeJourney.ctaTitle")}
                   </p>
                   <p className="mt-1 text-sm text-muted-foreground transition-colors duration-200">
-                    Manual work caused by disconnected tools.
+                    {t("homeJourney.ctaDescription")}
                   </p>
                 </div>
                 <div className="flex flex-col items-end">
                   <div className="text-4xl sm:text-5xl text-foreground transition-colors duration-200">
-                    4–6 hours
+                    {t("homeJourney.ctaAction")}
                   </div>
                 </div>
               </div>
-            </a>
+            </Link>
           </div>
         </div>
       </div>
