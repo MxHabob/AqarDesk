@@ -394,7 +394,6 @@ export function Header({
             >
               {portfolioLabel}
             </Link>
-
           </div>
         </div>
       )}

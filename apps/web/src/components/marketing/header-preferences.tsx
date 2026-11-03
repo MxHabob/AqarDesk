@@ -91,7 +91,7 @@ export function HeaderPreferences({
                 : countryCode}
           </SelectValue>
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent className="min-w-56">
           {websiteCountries.map((country) => (
             <SelectItem key={country.code} value={country.code}>
               {countryName(country)}
