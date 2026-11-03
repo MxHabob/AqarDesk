@@ -6,7 +6,6 @@ import type { Metadata } from "next"
 import { Hedvig_Letters_Sans, Hedvig_Letters_Serif } from "next/font/google"
 import { NuqsAdapter } from "nuqs/adapters/next/app"
 import type { ReactElement } from "react"
-import { DesktopHeader } from "@/components/desktop-header"
 import { isDesktopApp } from "@/utils/desktop"
 import { Providers } from "./providers"
 
@@ -100,8 +99,6 @@ export default async function Layout({
         "whitespace-pre-line overscroll-none antialiased"
       )}
     >
-      <DesktopHeader />
-
       <NuqsAdapter>
         <Providers locale={locale}>
           {children}
