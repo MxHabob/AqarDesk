@@ -1,18 +1,52 @@
-"use client";
+"use client"
 
-import { Icons } from "@aqardesk/ui/icons";
-import Image from "next/image";
-import Link from "next/link";
-import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { Icons } from "@aqardesk/ui/icons"
+import Image from "next/image"
+import Link from "next/link"
+import { useTheme } from "next-themes"
+import { useEffect, useState } from "react"
+import { useI18n } from "@/locales/client"
 
 export function Footer() {
-  const { resolvedTheme, setTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
+  const t = useI18n()
+  const { resolvedTheme, setTheme } = useTheme()
+  const [mounted, setMounted] = useState(false)
+
+  const linkGroups = [
+    {
+      title: t("marketingFooter.properties"),
+      items: [
+        { href: "/listings", label: t("marketingFooter.allListings") },
+        {
+          href: "/listings?listingType=sale",
+          label: t("marketingFooter.forSale"),
+        },
+        {
+          href: "/listings?listingType=rent",
+          label: t("marketingFooter.forRent"),
+        },
+      ],
+    },
+    {
+      title: t("marketingFooter.aboutAqarDesk"),
+      items: [
+        { href: "/about", label: t("marketingFooter.aboutUs") },
+        { href: "/testimonials", label: t("marketingFooter.customerStories") },
+      ],
+    },
+    {
+      title: t("marketingFooter.help"),
+      items: [
+        { href: "/support", label: t("marketingFooter.contactUs") },
+        { href: "/terms", label: t("marketingFooter.terms") },
+        { href: "/policy", label: t("marketingFooter.privacy") },
+      ],
+    },
+  ]
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    setMounted(true)
+  }, [])
   return (
     <footer className="bg-background relative overflow-hidden">
       {/* Top Divider - Full Bleed */}
@@ -21,122 +55,31 @@ export function Footer() {
       <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-16">
           {/* Left Column - Links */}
-          <div className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3 md:grid-cols-5 sm:gap-x-8 sm:gap-y-12 lg:col-span-1">
-            {/* Features Column */}
-            <div className="space-y-3">
-              <h3 className="font-sans text-sm text-foreground mb-4">
-                Features
-              </h3>
-              <div className="space-y-2.5">
-                {[
-                  { href: "/invoicing", label: "Invoicing" },
-                  { href: "/transactions", label: "Transactions" },
-                  { href: "/inbox", label: "Inbox" },
-                  { href: "/time-tracking", label: "Time tracking" },
-                  { href: "/customers", label: "Customers" },
-                  { href: "/file-storage", label: "Files" },
-                  { href: "/pre-accounting", label: "Exports" },
-                  { href: "/assistant", label: "Assistant" },
-                ].map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="font-sans text-sm text-muted-foreground hover:text-foreground transition-colors block"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
+          <div className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3 sm:gap-x-8 sm:gap-y-12 lg:col-span-1">
+            {linkGroups.map((group) => (
+              <div key={group.title} className="space-y-3">
+                <h3 className="mb-4 font-sans text-sm text-foreground">
+                  {group.title}
+                </h3>
+                <div className="space-y-2.5">
+                  {group.items.map((item) => (
+                    <Link
+                      key={item.href}
+                      href={item.href}
+                      className="block font-sans text-sm text-muted-foreground transition-colors hover:text-foreground"
+                    >
+                      {item.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
-            </div>
-
-            {/* Product Column */}
-            <div className="space-y-3">
-              <h3 className="font-sans text-sm text-foreground mb-4">
-                Product
-              </h3>
-              <div className="space-y-2.5">
-                {[
-                  { href: "/download", label: "Download" },
-                  { href: "/pre-accounting", label: "Pre-accounting" },
-                  { href: "/integrations", label: "Apps & Integrations" },
-                  { href: "/testimonials", label: "Customer Stories" },
-                ].map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    className="font-sans text-sm text-muted-foreground hover:text-foreground transition-colors block"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Company Column */}
-            <div className="space-y-3">
-              <h3 className="font-sans text-sm text-foreground mb-4">
-                Company
-              </h3>
-              <div className="space-y-2.5">
-                {[
-                  { href: "/story", label: "Story", external: false },
-                  { href: "/updates", label: "Updates", external: false },
-                ].map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    target={item.external ? "_blank" : undefined}
-                    rel={item.external ? "noopener noreferrer" : undefined}
-                    className="font-sans text-sm text-muted-foreground hover:text-foreground transition-colors block"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
-
-            {/* Resources Column */}
-            <div className="space-y-3">
-              <h3 className="font-sans text-sm text-foreground mb-4">
-                Resources
-              </h3>
-              <div className="space-y-2.5">
-                {[
-                  { href: "/chat", label: "Chat", external: false },
-                  { href: "/docs", label: "Documentation", external: false },
-                  { href: "/agents", label: "CLI", external: false },
-                  { href: "/computer", label: "Computer", external: false },
-                  { href: "/sdks", label: "SDKs", external: false },
-                  { href: "/support", label: "Support", external: false },
-                  {
-                    href: "/policy",
-                    label: "Privacy Policy",
-                    external: false,
-                  },
-                  {
-                    href: "/terms",
-                    label: "Terms of Service",
-                    external: false,
-                  },
-                ].map((item) => (
-                  <Link
-                    key={item.href}
-                    href={item.href}
-                    target={item.external ? "_blank" : undefined}
-                    rel={item.external ? "noopener noreferrer" : undefined}
-                    className="font-sans text-sm text-muted-foreground hover:text-foreground transition-colors block"
-                  >
-                    {item.label}
-                  </Link>
-                ))}
-              </div>
-            </div>
+            ))}
           </div>
 
           {/* Right Column - Tagline & Compliance */}
           <div className="flex flex-col items-start lg:items-end gap-6 lg:gap-10">
             <p className="font-sans text-base sm:text-xl text-foreground text-left lg:text-right">
-              Run your company. Not the admin.
+              {t("marketingFooter.tagline")}
             </p>
 
             {/* Compliance Section */}
@@ -145,16 +88,18 @@ export function Footer() {
                 <div className="w-9 h-9">
                   <Image
                     src="/images/gdpr.png"
-                    alt="GDPR Compliant"
+                    alt={t("marketingFooter.gdprAlt")}
                     width={36}
                     height={36}
                     className="w-full h-full object-contain"
                   />
                 </div>
                 <div className="text-center">
-                  <p className="font-sans text-xs text-foreground">GDPR</p>
+                  <p className="font-sans text-xs text-foreground">
+                    {t("marketingFooter.gdpr")}
+                  </p>
                   <p className="font-sans text-xs text-muted-foreground">
-                    Compliant
+                    {t("marketingFooter.compliant")}
                   </p>
                 </div>
               </div>
@@ -162,16 +107,18 @@ export function Footer() {
                 <div className="w-9 h-9">
                   <Image
                     src="/images/soc2.png"
-                    alt="SOC2 In Progress"
+                    alt={t("marketingFooter.soc2Alt")}
                     width={36}
                     height={36}
                     className="w-full h-full object-contain"
                   />
                 </div>
                 <div className="text-center">
-                  <p className="font-sans text-xs text-foreground">Soc2</p>
+                  <p className="font-sans text-xs text-foreground">
+                    {t("marketingFooter.soc2")}
+                  </p>
                   <p className="font-sans text-xs text-muted-foreground">
-                    In progress
+                    {t("marketingFooter.inProgress")}
                   </p>
                 </div>
               </div>
@@ -184,7 +131,7 @@ export function Footer() {
                 setTheme(resolvedTheme === "dark" ? "light" : "dark")
               }
               className="flex items-center gap-2 px-3 py-1.5 border border-border text-muted-foreground hover:text-foreground hover:border-foreground/20 transition-colors"
-              aria-label="Toggle theme"
+              aria-label={t("marketingFooter.toggleTheme")}
             >
               {mounted ? (
                 resolvedTheme === "dark" ? (
@@ -198,9 +145,9 @@ export function Footer() {
               <span className="font-sans text-sm">
                 {mounted
                   ? resolvedTheme === "dark"
-                    ? "Light mode"
-                    : "Dark mode"
-                  : "Toggle theme"}
+                    ? t("marketingFooter.lightMode")
+                    : t("marketingFooter.darkMode")
+                  : t("marketingFooter.toggleTheme")}
               </span>
             </button>
           </div>
@@ -219,7 +166,9 @@ export function Footer() {
             </span>
           </div>
           <p className="font-sans text-sm text-muted-foreground">
-            © {new Date().getFullYear()} AqarDesk. All rights reserved.
+            {t("marketingFooter.copyright", {
+              year: new Date().getFullYear(),
+            })}
           </p>
         </div>
       </div>
@@ -235,5 +184,5 @@ export function Footer() {
         />
       </div>
     </footer>
-  );
+  )
 }

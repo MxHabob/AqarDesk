@@ -27,7 +27,7 @@ import { useZodForm } from "@/hooks/use-zod-form"
 
 const formSchema = z.object({
   subject: z.string(),
-  priority: z.string(),
+  priority: z.enum(["low", "normal", "high", "urgent", "0", "1", "2", "3"]),
   type: z.string(),
   message: z.string(),
   url: z.string().optional(),
@@ -48,17 +48,17 @@ export function SupportForm() {
   const sendSupport = useAction(sendSupportAction, {
     onSuccess: () => {
       toast({
-        duration: 2500,
+        timeout: 2500,
         title: "Support ticket sent.",
-        variant: "success",
+        type: "success",
       })
 
       form.reset()
     },
     onError: () => {
       toast({
-        duration: 3500,
-        variant: "error",
+        timeout: 3500,
+        type: "error",
         title: "Something went wrong please try again.",
       })
     },

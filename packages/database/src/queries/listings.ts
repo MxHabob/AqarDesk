@@ -383,6 +383,8 @@ export async function searchPublicListings(
         propertyType: schema.properties.type,
         city: schema.properties.city,
         district: schema.properties.district,
+        lotAreaM2: schema.properties.lotAreaM2,
+        buildingAreaM2: schema.properties.buildingAreaM2,
       })
       .from(schema.listings)
       .innerJoin(

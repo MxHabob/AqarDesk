@@ -4,16 +4,12 @@ import { apps as appStoreApps } from "@aqardesk/app-store";
 import type { UnifiedApp } from "@aqardesk/app-store/types";
 import { Button } from "@aqardesk/ui/button";
 import {
-  useQuery,
   useQueryClient,
   useSuspenseQuery,
 } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect } from "react";
 import { AppConnectionToast } from "@/components/app-connection-toast";
-import { ConnectIMessage } from "@/components/inbox/connect-imessage";
-import { ConnectTelegram } from "@/components/inbox/connect-telegram";
-import { ConnectWhatsApp } from "@/components/inbox/connect-whatsapp";
 import { useUserQuery } from "@/hooks/use-user";
 import { useTRPC } from "@/trpc/client";
 import { isOAuthMessage } from "@/utils/oauth-message";
@@ -68,18 +64,6 @@ export function Apps() {
     trpc.invoicePayments.stripeStatus.queryOptions(),
   );
 
-  const { data: catalog } = useSuspenseQuery(
-    trpc.connectors.list.queryOptions(undefined, {
-      staleTime: 30 * 60 * 1000,
-    }),
-  );
-
-  const { data: connections } = useQuery(
-    trpc.connectors.connections.queryOptions(undefined, {
-      staleTime: 2 * 60 * 1000,
-    }),
-  );
-
   const searchParams = useSearchParams();
   const isInstalledPage = searchParams.get("tab") === "installed";
   const search = searchParams.get("q");
@@ -90,64 +74,66 @@ export function Apps() {
   };
 
   // Transform official apps
-  const transformedOfficialApps: UnifiedApp[] = appStoreApps.map((app) => {
-    // Gmail and Outlook use inbox_accounts for installation status
-    const isInboxApp = app.id === "gmail" || app.id === "outlook";
-    const inboxAccount = isInboxApp ? getInboxAccount(app.id) : null;
-    // Stripe Payments uses team.stripeAccountId for installation status
-    const isStripePaymentsApp = app.id === "stripe-payments";
-    const installed = isInboxApp
-      ? !!inboxAccount
-      : isStripePaymentsApp
-        ? (stripeStatus?.connected ?? false)
-        : (installedOfficialApps?.some(
-            (installed) => installed.app_id === app.id,
-          ) ?? false);
+  const transformedOfficialApps: UnifiedApp[] = appStoreApps
+    .filter((app) => !app.id.endsWith("-mcp"))
+    .map((app) => {
+      // Gmail and Outlook use inbox_accounts for installation status
+      const isInboxApp = app.id === "gmail" || app.id === "outlook";
+      const inboxAccount = isInboxApp ? getInboxAccount(app.id) : null;
+      // Stripe Payments uses team.stripeAccountId for installation status
+      const isStripePaymentsApp = app.id === "stripe-payments";
+      const installed = isInboxApp
+        ? !!inboxAccount
+        : isStripePaymentsApp
+          ? (stripeStatus?.connected ?? false)
+          : (installedOfficialApps?.some(
+              (installed) => installed.app_id === app.id,
+            ) ?? false);
 
-    return {
-      id: app.id,
-      name: app.name,
-      category: "category" in app ? app.category : "Integration",
-      active: app.active,
-      beta:
-        "beta" in app && typeof app.beta === "boolean" ? app.beta : undefined,
-      logo: app.logo,
-      short_description: app.short_description,
-      description: app.description || undefined,
-      images: app.images || [],
-      installed,
-      type: "official" as const,
-      onInitialize:
-        "onInitialize" in app && typeof app.onInitialize === "function"
-          ? async ({
-              accessToken,
-              onComplete,
-            }: {
-              accessToken: string;
-              onComplete?: () => void;
-            }) => {
-              const result = app.onInitialize({ accessToken, onComplete });
-              return result instanceof Promise
-                ? result
-                : Promise.resolve(result);
-            }
-          : undefined,
-      settings:
-        "settings" in app && Array.isArray(app.settings)
-          ? app.settings
-          : undefined,
-      userSettings:
-        (installedOfficialApps?.find((inst) => inst.app_id === app.id)
-          ?.settings as Record<string, any>) || undefined,
-      // Include inbox account ID for Gmail/Outlook disconnect
-      inboxAccountId: inboxAccount?.id,
-      // Include installUrl for apps with external download pages
-      installUrl:
-        "installUrl" in app && typeof app.installUrl === "string"
-          ? app.installUrl
-          : undefined,
-    };
-  });
+      return {
+        id: app.id,
+        name: app.name,
+        category: "category" in app ? app.category : "Integration",
+        active: app.active,
+        beta:
+          "beta" in app && typeof app.beta === "boolean" ? app.beta : undefined,
+        logo: app.logo,
+        short_description: app.short_description,
+        description: app.description || undefined,
+        images: app.images || [],
+        installed,
+        type: "official" as const,
+        onInitialize:
+          "onInitialize" in app && typeof app.onInitialize === "function"
+            ? async ({
+                accessToken,
+                onComplete,
+              }: {
+                accessToken: string;
+                onComplete?: () => void;
+              }) => {
+                const result = app.onInitialize({ accessToken, onComplete });
+                return result instanceof Promise
+                  ? result
+                  : Promise.resolve(result);
+              }
+            : undefined,
+        settings:
+          "settings" in app && Array.isArray(app.settings)
+            ? app.settings
+            : undefined,
+        userSettings:
+          (installedOfficialApps?.find((inst) => inst.app_id === app.id)
+            ?.settings as Record<string, any>) || undefined,
+        // Include inbox account ID for Gmail/Outlook disconnect
+        inboxAccountId: inboxAccount?.id,
+        // Include installUrl for apps with external download pages
+        installUrl:
+          "installUrl" in app && typeof app.installUrl === "string"
+            ? app.installUrl
+            : undefined,
+      };
+    });
 
   // Transform external apps (only approved, manually created ones — exclude DCR apps)
   const approvedExternalApps =
@@ -185,38 +171,8 @@ export function Apps() {
     }),
   );
 
-  const connectionMap = new Map(
-    (connections ?? []).map((c) => [c.slug, c.connectedAccountId]),
-  );
-
-  const transformedConnectorApps: UnifiedApp[] = catalog.map(
-    (c: {
-      slug: string;
-      name: string;
-      logo: string | null;
-      description: string | null;
-    }) => ({
-      id: `connector-${c.slug}`,
-      name: c.name,
-      category: "Connected app",
-      active: true,
-      logo: c.logo || undefined,
-      short_description:
-        c.description || `Connect ${c.name} to use with the AI assistant.`,
-      images: [],
-      installed: connectionMap.has(c.slug),
-      type: "connector" as const,
-      connectorSlug: c.slug,
-      connectedAccountId: connectionMap.get(c.slug) || undefined,
-    }),
-  );
-
   // Combine all apps
-  const allApps = [
-    ...transformedOfficialApps,
-    ...transformedExternalApps,
-    ...transformedConnectorApps,
-  ];
+  const allApps = [...transformedOfficialApps, ...transformedExternalApps];
 
   // Filter apps
   const filteredApps = allApps
@@ -277,10 +233,6 @@ export function Apps() {
           </div>
         )}
       </div>
-
-      <ConnectWhatsApp showTrigger={false} />
-      <ConnectTelegram showTrigger={false} />
-      <ConnectIMessage showTrigger={false} />
     </>
   );
 }

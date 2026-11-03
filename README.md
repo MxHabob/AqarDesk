@@ -22,7 +22,10 @@ The development seed adds sample listings across all property categories and
 creates the admin account `admin@aqrdesk.com` with password `admin`. It refuses
 to run when `NODE_ENV=production`; these default credentials are for local
 development only. If that email already exists, the seed grants it the admin
-role without changing its password.
+role without changing its password. The database seed downloads optimized
+sample property photos from Unsplash and uploads them to the configured private
+object-storage bucket, so `STORAGE_BUCKET` and outbound access to
+`images.unsplash.com` are required when running `bun run db:seed`.
 
 The schema contains Better Auth users, sessions, accounts, and verifications,
 along with properties, owners, sale/rent listings, type-specific details,

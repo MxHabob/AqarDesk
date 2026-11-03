@@ -1,7 +1,6 @@
-"use client";
+"use client"
 
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Button } from "@aqardesk/ui/button";
+import { Button } from "@aqardesk/ui/button"
 import {
   Form,
   FormControl,
@@ -9,57 +8,62 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@aqardesk/ui/form";
-import { Input } from "@aqardesk/ui/input";
+} from "@aqardesk/ui/form"
+import { Input } from "@aqardesk/ui/input"
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from "@aqardesk/ui/select";
-import { Textarea } from "@aqardesk/ui/textarea";
-import { useToast } from "@aqardesk/ui/use-toast";
-import { Loader2 } from "lucide-react";
-import { useAction } from "next-safe-action/hooks";
-import { useForm } from "react-hook-form";
-import type { z } from "zod";
-import { sendSupportSchema } from "@/actions/support/schema";
-import { sendSupportAction } from "@/actions/support/send-support-action";
+} from "@aqardesk/ui/select"
+import { Textarea } from "@aqardesk/ui/textarea"
+import { useToast } from "@aqardesk/ui/use-toast"
+import { zodResolver } from "@hookform/resolvers/zod"
+import { Loader2 } from "lucide-react"
+import { useAction } from "next-safe-action/hooks"
+import { useForm } from "react-hook-form"
+import type { z } from "zod"
+import { sendSupportSchema } from "@/actions/support/schema"
+import { sendSupportAction } from "@/actions/support/send-support-action"
 
 export function SupportForm() {
-  const { toast } = useToast();
+  const { toast } = useToast()
 
-  const form = useForm<z.infer<typeof sendSupportSchema>>({
+  const form = useForm<
+    z.input<typeof sendSupportSchema>,
+    undefined,
+    z.output<typeof sendSupportSchema>
+  >({
     resolver: zodResolver(sendSupportSchema),
     defaultValues: {
       email: "",
       fullName: "",
       subject: "",
       type: "",
-      priority: "",
+      priority: "normal",
       message: "",
     },
-  });
+  })
 
   const sendSupport = useAction(sendSupportAction, {
     onSuccess: () => {
       toast({
-        duration: 2500,
+        timeout: 2500,
         title: "Support ticket sent.",
-        variant: "success",
-      });
+        type: "success",
+      })
 
-      form.reset();
+      form.reset()
     },
     onError: () => {
       toast({
-        duration: 3500,
-        variant: "error",
+        timeout: 3500,
+        type: "error",
         title: "Something went wrong pleaase try again.",
-      });
+      })
     },
-  });
+  })
 
   return (
     <div className="pt-32 pb-24">
@@ -222,5 +226,5 @@ export function SupportForm() {
         </Form>
       </div>
     </div>
-  );
+  )
 }

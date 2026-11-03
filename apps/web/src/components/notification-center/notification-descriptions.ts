@@ -1,7 +1,6 @@
-import { getFrequencyShortLabel } from "@aqardesk/invoice/recurring"
-import { formatAmount } from "@aqardesk/utils/format"
 import { format } from "date-fns"
 import type { useI18n } from "@/locales/client"
+import { formatAmount } from "@/utils/format"
 
 type UseI18nReturn = ReturnType<typeof useI18n>
 
@@ -301,10 +300,13 @@ const handleRecurringSeriesStarted: NotificationDescriptionHandler = (
   const endType = metadata?.endType
   const endCount = metadata?.endCount
 
-  // Convert raw frequency (e.g., "monthly_date") to human-readable label (e.g., "Monthly")
-  const frequency = rawFrequency
-    ? getFrequencyShortLabel(rawFrequency)
-    : undefined
+  const frequency =
+    typeof rawFrequency === "string" && rawFrequency
+      ? rawFrequency
+          .replace(/_(date|day)$/, "")
+          .replace(/_/g, " ")
+          .replace(/^\w/, (letter) => letter.toUpperCase())
+      : undefined
 
   if (customerName && frequency) {
     if (endType === "after_count" && endCount) {

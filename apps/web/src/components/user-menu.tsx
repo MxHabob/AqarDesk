@@ -1,13 +1,5 @@
 "use client"
 
-import {
-  ChatGPTMcpLogo,
-  ClaudeMcpLogo,
-  CursorMcpLogo,
-  GeminiMcpLogo,
-  MiddayDesktopLogo,
-} from "@aqardesk/app-store/logos"
-import { isDesktopApp } from "@aqardesk/desktop-client/platform"
 import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar"
 import {
   DropdownMenu,
@@ -92,52 +84,9 @@ export function UserMenu({ onlySignOut }: Props) {
 
             <DropdownMenuGroup>
               <Link href={`/${locale}/apps`}>
-                <DropdownMenuItem className="text-xs flex items-center justify-between">
-                  <span>Apps</span>
-                  <div
-                    className="flex items-center -space-x-1.5 mr-1 animate-in fade-in duration-500"
-                    style={{
-                      animationDelay: "100ms",
-                      animationFillMode: "backwards",
-                    }}
-                  >
-                    {[
-                      ChatGPTMcpLogo,
-                      ClaudeMcpLogo,
-                      GeminiMcpLogo,
-                      CursorMcpLogo,
-                    ].map((Logo, i) => (
-                      <div
-                        key={i}
-                        className="size-4 rounded-full overflow-hidden border-2 border-background user-menu-mcp-icon"
-                      >
-                        <Logo />
-                      </div>
-                    ))}
-                  </div>
-                </DropdownMenuItem>
+                <DropdownMenuItem className="text-xs">Apps</DropdownMenuItem>
               </Link>
 
-              {!isDesktopApp() && (
-                <Link
-                  href="https://midday.ai/api/download"
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <DropdownMenuItem className="text-xs flex items-center justify-between">
-                    <span>Download Mac app</span>
-                    <div
-                      className="size-4 rounded overflow-hidden user-menu-mcp-icon mr-1 animate-in fade-in duration-500"
-                      style={{
-                        animationDelay: "150ms",
-                        animationFillMode: "backwards",
-                      }}
-                    >
-                      <MiddayDesktopLogo />
-                    </div>
-                  </DropdownMenuItem>
-                </Link>
-              )}
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
@@ -151,11 +100,6 @@ export function UserMenu({ onlySignOut }: Props) {
 
         <SignOut />
       </DropdownMenuContent>
-      <style>
-        {
-          ".user-menu-mcp-icon img, .user-menu-mcp-icon svg { width: 100% !important; height: 100% !important; }"
-        }
-      </style>
     </DropdownMenu>
   )
 }

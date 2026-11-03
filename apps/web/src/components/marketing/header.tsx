@@ -83,7 +83,6 @@ interface HeaderProps {
 
 // Feature pages to prefetch on hover
 const FEATURE_ROUTES = [
-  "/assistant",
   "/insights",
   "/transactions",
   "/inbox",
@@ -99,9 +98,6 @@ const APP_ROUTES = [
   "/integrations",
   "/download",
   "/docs",
-  "/agents",
-  "/computer",
-  "/mcp",
 ];
 
 export function Header({
@@ -400,11 +396,6 @@ export function Header({
                                   title: "Exports",
                                   desc: "Accounting ready",
                                 },
-                                {
-                                  href: "/assistant",
-                                  title: "Assistant",
-                                  desc: "Ask anything, get things done",
-                                },
                               ].map((item) => (
                                 <div key={item.href}>
                                   <Link
@@ -642,18 +633,6 @@ export function Header({
                                   desc: "Learn how to use AqarDesk.",
                                   external: false,
                                 },
-                                {
-                                  href: "/agents",
-                                  title: "CLI",
-                                  desc: "Agent-native CLI and MCP workflows.",
-                                  external: false,
-                                },
-                                {
-                                  href: "/mcp",
-                                  title: "AI Integrations",
-                                  desc: "Connect AI tools to your business data.",
-                                  external: false,
-                                },
                               ].map((item) => (
                                 <div key={item.href}>
                                   <Link
@@ -686,18 +665,6 @@ export function Header({
                                   href: "/sdks",
                                   title: "SDKs",
                                   desc: "Typed SDKs to build faster.",
-                                  external: false,
-                                },
-                                {
-                                  href: "/chat",
-                                  title: "Chat",
-                                  desc: "Run your business from any chat app.",
-                                  external: false,
-                                },
-                                {
-                                  href: "/computer",
-                                  title: "Computer",
-                                  desc: "Autonomous agents for your business.",
                                   external: false,
                                 },
                               ].map((item) => (
@@ -920,7 +887,6 @@ export function Header({
                           { href: "/customers", label: "Customers" },
                           { href: "/file-storage", label: "Files" },
                           { href: "/pre-accounting", label: "Exports" },
-                          { href: "/assistant", label: "Assistant" },
                         ].map((item) => (
                           <Link
                             key={item.href}
@@ -1029,39 +995,6 @@ export function Header({
                         >
                           Documentation
                         </Link>
-                        <Link
-                          href="/agents"
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            setIsMobileAppsOpen(false);
-                          }}
-                          className="text-lg font-sans text-left text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
-                          style={{ WebkitTapHighlightColor: "transparent" }}
-                        >
-                          CLI
-                        </Link>
-                        <Link
-                          href="/computer"
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            setIsMobileAppsOpen(false);
-                          }}
-                          className="text-lg font-sans text-left text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
-                          style={{ WebkitTapHighlightColor: "transparent" }}
-                        >
-                          Computer
-                        </Link>
-                        <Link
-                          href="/mcp"
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            setIsMobileAppsOpen(false);
-                          }}
-                          className="text-lg font-sans text-left text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
-                          style={{ WebkitTapHighlightColor: "transparent" }}
-                        >
-                          AI Integrations
-                        </Link>
                         <a
                           href="/dashboard/settings/developer"
                           onClick={() => {
@@ -1083,17 +1016,6 @@ export function Header({
                           style={{ WebkitTapHighlightColor: "transparent" }}
                         >
                           SDKs
-                        </Link>
-                        <Link
-                          href="/chat"
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            setIsMobileAppsOpen(false);
-                          }}
-                          className="text-lg font-sans text-left text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
-                          style={{ WebkitTapHighlightColor: "transparent" }}
-                        >
-                          Chat
                         </Link>
                       </div>
                     </div>

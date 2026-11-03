@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { z } from "zod"
 
 export const featureRequestSchema = z.object({
   email: z.string().email(),
@@ -9,13 +9,26 @@ export const featureRequestSchema = z.object({
     message: "Description must be at least 2 characters.",
   }),
   category: z.string(),
-});
+})
 
 export const sendSupportSchema = z.object({
-  email: z.string().email(),
-  fullName: z.string(),
-  subject: z.string(),
-  priority: z.string(),
-  type: z.string(),
-  message: z.string(),
-});
+  email: z.email(),
+  fullName: z.string().trim().min(2).max(150),
+  subject: z.string().trim().min(3).max(200),
+  priority: z.enum(["low", "normal", "high", "urgent"]),
+  type: z.string().trim().min(1).max(80),
+  message: z.string().trim().min(10).max(5000),
+  url: z
+    .string()
+    .url()
+    .max(2048)
+    .refine((value) => {
+      const { protocol, username, password } = new URL(value)
+      return (
+        (protocol === "http:" || protocol === "https:") &&
+        !username &&
+        !password
+      )
+    })
+    .optional(),
+})

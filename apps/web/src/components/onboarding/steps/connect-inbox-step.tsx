@@ -10,11 +10,7 @@ import {
 import { motion } from "framer-motion";
 import { CopyInput } from "@/components/copy-input";
 import { ConnectGmail } from "@/components/inbox/connect-gmail";
-import { ConnectIMessage } from "@/components/inbox/connect-imessage";
 import { ConnectOutlook } from "@/components/inbox/connect-outlook";
-import { ConnectSlack } from "@/components/inbox/connect-slack";
-import { ConnectTelegram } from "@/components/inbox/connect-telegram";
-import { ConnectWhatsApp } from "@/components/inbox/connect-whatsapp";
 import { useUserQuery } from "@/hooks/use-user";
 
 export function ConnectInboxStep() {
@@ -50,7 +46,7 @@ export function ConnectInboxStep() {
       >
         {[
           "Suggested matches to transactions",
-          "Works with Slack, WhatsApp, and email forwarding",
+          "Works with email forwarding",
           "Everything stored and searchable",
         ].map((feature, index) => (
           <motion.li
@@ -102,22 +98,20 @@ export function ConnectInboxStep() {
           <ConnectOutlook redirectPath="/onboarding?s=connect-inbox" />
         </div>
 
-        <Accordion type="single" collapsible className="border-t pt-2 mt-4">
-          <AccordionItem value="more-options" className="border-0">
-            <AccordionTrigger className="justify-center space-x-2 flex text-sm">
-              <span>More options</span>
-            </AccordionTrigger>
-            <AccordionContent className="mt-4">
-              <div className="flex flex-col space-y-4">
-                <ConnectSlack />
-                <ConnectTelegram />
-                <ConnectWhatsApp />
-                <ConnectIMessage />
-                {inboxEmail && <CopyInput value={inboxEmail} />}
-              </div>
-            </AccordionContent>
-          </AccordionItem>
-        </Accordion>
+        {inboxEmail && (
+          <Accordion type="single" collapsible className="border-t pt-2 mt-4">
+            <AccordionItem value="more-options" className="border-0">
+              <AccordionTrigger className="justify-center space-x-2 flex text-sm">
+                <span>More options</span>
+              </AccordionTrigger>
+              <AccordionContent className="mt-4">
+                <div className="flex flex-col space-y-4">
+                  <CopyInput value={inboxEmail} />
+                </div>
+              </AccordionContent>
+            </AccordionItem>
+          </Accordion>
+        )}
       </motion.div>
 
       <p className="text-[11px] text-muted-foreground text-center pt-4">

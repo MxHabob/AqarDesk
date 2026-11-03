@@ -3,6 +3,7 @@
 import * as React from "react"
 import { Avatar as AvatarPrimitive } from "@base-ui/react/avatar"
 import { cn } from "cn"
+import Image from "next/image"
 
 function Avatar({
   className,
@@ -33,6 +34,23 @@ function AvatarImage({ className, ...props }: AvatarPrimitive.Image.Props) {
         className
       )}
       {...props}
+    />
+  )
+}
+
+function AvatarImageNext({
+  className,
+  ...props
+}: React.ComponentProps<typeof Image>) {
+  return (
+    <AvatarPrimitive.Image
+      data-slot="avatar-image"
+      keepMounted
+      className={cn(
+        "aspect-square size-full rounded-full object-cover",
+        className
+      )}
+      render={<Image {...props} />}
     />
   )
 }
@@ -101,6 +119,7 @@ function AvatarGroupCount({
 export {
   Avatar,
   AvatarImage,
+  AvatarImageNext,
   AvatarFallback,
   AvatarGroup,
   AvatarGroupCount,

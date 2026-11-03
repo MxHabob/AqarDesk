@@ -9,8 +9,6 @@ const STEP_KEYS = [
   "connect-bank",
   "connect-inbox",
   "reconciliation",
-  "connect-mcp",
-  "connect-chat",
 ] as const
 
 export type OnboardingStepKey = (typeof STEP_KEYS)[number]
@@ -22,6 +20,9 @@ type OnboardingStepOptions = {
 
 function keyToIndex(key: string | null): number {
   if (!key) return -1
+  if (key === "connect-mcp" || key === "connect-chat") {
+    return STEP_KEYS.length - 1
+  }
   return STEP_KEYS.indexOf(key as OnboardingStepKey)
 }
 
@@ -39,7 +40,7 @@ export function useOnboardingStep(opts: OnboardingStepOptions) {
     ? "set-name"
     : !opts.hasTeam
       ? "create-team"
-      : "connect-chat"
+      : "reconciliation"
 
   const minIndex = keyToIndex(minKey)
   const maxIndex = keyToIndex(maxKey)

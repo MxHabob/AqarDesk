@@ -1,6 +1,5 @@
 "use client";
 
-import { LogEvents } from "@aqardesk/events/events";
 import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar";
 import { Button } from "@aqardesk/ui/button";
 import { Icons } from "@aqardesk/ui/icons";
@@ -11,7 +10,6 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@aqardesk/ui/tooltip";
-import { useOpenPanel } from "@openpanel/nextjs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
@@ -43,7 +41,6 @@ function TeamDropdownSkeleton({ isExpanded }: { isExpanded: boolean }) {
 
 export function TeamDropdown({ isExpanded = false }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const { track } = useOpenPanel();
   const queryClient = useQueryClient();
 
   const [isActive, setActive] = useState(false);
@@ -105,7 +102,6 @@ export function TeamDropdown({ isExpanded = false }: Props) {
     setSelectedId(teamId);
     setActive(false);
 
-    track(LogEvents.ChangeTeam.name);
     changeTeamMutation.mutate(teamId);
   };
 

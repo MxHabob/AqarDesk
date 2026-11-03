@@ -1,10 +1,8 @@
 import { apps as officialApps } from "@aqardesk/app-store";
-import { connectorApps } from "@aqardesk/connectors";
 import { AppsTabs } from "./apps-tabs";
 import { SearchField } from "./search-field";
 
-const totalApps =
-  officialApps.length + connectorApps.filter((c) => c.active).length;
+const totalApps = officialApps.filter((app) => !app.id.endsWith("-mcp")).length;
 
 export function AppsHeader() {
   return (

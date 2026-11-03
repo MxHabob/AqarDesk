@@ -1,3 +1,8 @@
+import {
+  closeStorageClient,
+  storageProvider,
+  uploadStorageObject,
+} from "@aqardesk/storage/server"
 import { closeDatabase, getDatabase } from "./index"
 import * as schema from "./schema"
 import { permissions, rolePermissions, roles } from "./schema"
@@ -190,6 +195,117 @@ const testListings = [
   },
 ] as const
 
+const testListingPhotos = [
+  {
+    listingId: testListings[0].id,
+    photoId: "photo-1486406146926-c627a92ad1ab",
+    altText: "واجهة مبنى سكني حديث",
+  },
+  {
+    listingId: testListings[1].id,
+    photoId: "photo-1509316785289-025f5b846b35",
+    altText: "أرض طبيعية مفتوحة",
+  },
+  {
+    listingId: testListings[2].id,
+    photoId: "photo-1600585154340-be6161a56a0c",
+    altText: "فيلا عصرية بحديقة",
+  },
+  {
+    listingId: testListings[3].id,
+    photoId: "photo-1600607687939-ce8a6c25118c",
+    altText: "مساحة داخلية بتصميم معاصر",
+  },
+  {
+    listingId: testListings[4].id,
+    photoId: "photo-1517248135467-4c7edcad34c4",
+    altText: "مساحة تجارية داخلية",
+  },
+  {
+    listingId: testListings[5].id,
+    photoId: "photo-1586528116311-ad8dd3c8310d",
+    altText: "مستودع واسع ومنظم",
+  },
+  {
+    listingId: testListings[6].id,
+    photoId: "photo-1504307651254-35680f356dfd",
+    altText: "مساحة خارجية مفتوحة",
+  },
+  {
+    listingId: testListings[7].id,
+    photoId: "photo-1600210492486-724fe5c67fb0",
+    altText: "شقة عصرية بتصميم داخلي أنيق",
+  },
+] as const
+
+const maximumSeedPhotoBytes = 10 * 1024 * 1024
+
+async function seedListingPhotos() {
+  const media: (typeof schema.listingMedia.$inferInsert)[] = []
+
+  for (const photo of testListingPhotos) {
+    const url = new URL(
+      `${photo.photoId}?auto=format&fit=crop&w=1600&q=82`,
+      "https://images.unsplash.com/"
+    )
+    const response = await fetch(url, {
+      headers: { Accept: "image/jpeg" },
+      signal: AbortSignal.timeout(15_000),
+    })
+
+    if (!response.ok) {
+      throw new Error(
+        `Unable to download seed photo ${photo.photoId}: HTTP ${response.status}.`
+      )
+    }
+
+    const contentType = response.headers
+      .get("content-type")
+      ?.split(";")[0]
+      ?.trim()
+      .toLowerCase()
+    if (contentType !== "image/jpeg") {
+      throw new Error(
+        `Seed photo ${photo.photoId} returned an unsupported content type.`
+      )
+    }
+
+    const contentLength = Number(response.headers.get("content-length"))
+    if (contentLength > maximumSeedPhotoBytes) {
+      throw new Error(`Seed photo ${photo.photoId} exceeds the 10 MiB limit.`)
+    }
+
+    const body = new Uint8Array(await response.arrayBuffer())
+    if (body.byteLength === 0 || body.byteLength > maximumSeedPhotoBytes) {
+      throw new Error(
+        `Seed photo ${photo.photoId} has an invalid size or exceeds the 10 MiB limit.`
+      )
+    }
+
+    const objectKey = `listings/${photo.listingId}/photo/seed-cover-v1.jpg`
+    await uploadStorageObject({
+      objectKey,
+      contentType: "image/jpeg",
+      body,
+    })
+
+    media.push({
+      listingId: photo.listingId,
+      type: "photo",
+      storageProvider,
+      objectKey,
+      originalFilename: `unsplash-${photo.photoId}.jpg`,
+      contentType: "image/jpeg",
+      sizeBytes: body.byteLength,
+      altText: photo.altText,
+      position: 0,
+      isPrimary: true,
+    })
+  }
+
+  return media
+}
+
 const permissionDefinitions = [
   ["properties.read", "View properties"],
   ["properties.create", "Create properties"],
@@ -282,6 +398,7 @@ async function seed() {
   }
 
   const db = getDatabase()
+  const testMedia = await seedListingPhotos()
 
   await db.transaction(async (tx) => {
     await tx
@@ -466,14 +583,28 @@ async function seed() {
         }))
       )
       .onConflictDoNothing()
+
+    await tx
+      .insert(schema.listingMedia)
+      .values(testMedia)
+      .onConflictDoNothing({
+        target: [
+          schema.listingMedia.storageProvider,
+          schema.listingMedia.objectKey,
+        ],
+      })
   })
 }
 
 try {
   await seed()
   console.info(
-    `Seeded default roles, permissions, and ${testListings.length} test listings.`
+    `Seeded default roles, permissions, ${testListings.length} test listings, and ${testListingPhotos.length} listing photos.`
   )
 } finally {
-  await closeDatabase()
+  try {
+    await closeDatabase()
+  } finally {
+    closeStorageClient()
+  }
 }

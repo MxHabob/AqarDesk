@@ -11,13 +11,11 @@ import {
 import { Badge } from "@aqardesk/ui/badge";
 import { Button } from "@aqardesk/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@aqardesk/ui/card";
-import { Icons } from "@aqardesk/ui/icons";
 import { ScrollArea } from "@aqardesk/ui/scroll-area";
 import { Sheet, SheetContent, SheetHeader } from "@aqardesk/ui/sheet";
-import { Skeleton } from "@aqardesk/ui/skeleton";
 import { SubmitButton } from "@aqardesk/ui/submit-button";
 import { useToast } from "@aqardesk/ui/use-toast";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { parseAsBoolean, parseAsString, useQueryStates } from "nuqs";
 import { useState } from "react";
 import { useAppOAuth } from "@/hooks/use-app-oauth";
@@ -25,15 +23,6 @@ import { useTRPC } from "@/trpc/client";
 import { getScopeDescription } from "@/utils/scopes";
 import { AppSettings } from "./app-settings";
 import { MemoizedReactMarkdown } from "./markdown";
-import {
-  ChatGPTSetupInstructions,
-  ClaudeSetupInstructions,
-  ClineSetupInstructions,
-  GeminiSetupInstructions,
-  ManusSetupInstructions,
-  WindsurfSetupInstructions,
-  ZedSetupInstructions,
-} from "./mcp-setup-instructions";
 
 // OAuth app configuration
 const oauthAppConfig: Record<
@@ -51,114 +40,6 @@ const oauthAppConfig: Record<
     queryKey: "stripeStatus",
   },
 };
-
-function ConnectorDetailContent({ slug }: { slug: string }) {
-  const trpc = useTRPC();
-  const { data, isLoading } = useQuery(
-    trpc.connectors.detail.queryOptions({ slug }),
-  );
-
-  if (isLoading) {
-    return (
-      <div className="space-y-4">
-        <Skeleton className="h-4 w-3/4" />
-        <Skeleton className="h-4 w-full" />
-        <Skeleton className="h-4 w-2/3" />
-        <div className="space-y-2 mt-4">
-          <Skeleton className="h-8 w-full" />
-          <Skeleton className="h-8 w-full" />
-          <Skeleton className="h-8 w-full" />
-        </div>
-      </div>
-    );
-  }
-
-  if (!data) return null;
-
-  return (
-    <Accordion
-      type="multiple"
-      defaultValue={["about", "tools"]}
-      className="mt-4"
-    >
-      <AccordionItem value="about" className="border-none">
-        <AccordionTrigger>About</AccordionTrigger>
-        <AccordionContent className="text-[#878787] text-sm">
-          <p>{data.description}</p>
-
-          <div className="flex flex-wrap gap-1.5 mt-3">
-            {data.categories.map((cat) => (
-              <Badge key={cat.slug} variant="tag">
-                {cat.name}
-              </Badge>
-            ))}
-          </div>
-
-          <div className="flex items-center gap-4 mt-3 text-xs">
-            <span>{data.toolsCount} tools available</span>
-            {data.triggersCount > 0 && (
-              <span>{data.triggersCount} triggers</span>
-            )}
-          </div>
-
-          {data.appUrl && (
-            <a
-              href={data.appUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-1 text-xs mt-3 hover:underline"
-            >
-              Visit website
-              <Icons.ExternalLink className="size-3" />
-            </a>
-          )}
-        </AccordionContent>
-      </AccordionItem>
-
-      {data.tools.length > 0 && (
-        <AccordionItem value="tools" className="border-none">
-          <AccordionTrigger>
-            Available tools ({data.tools.length})
-          </AccordionTrigger>
-          <AccordionContent>
-            <div className="space-y-3">
-              {data.tools.map((tool) => (
-                <div key={tool.slug}>
-                  <div className="flex items-start gap-2">
-                    <div className="size-1.5 rounded-full bg-primary mt-1.5 shrink-0" />
-                    <div className="min-w-0">
-                      <p className="text-sm font-medium truncate">
-                        {tool.name}
-                      </p>
-                      <p className="text-xs text-[#878787] line-clamp-2">
-                        {tool.description}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      )}
-
-      {data.authSchemes.length > 0 && (
-        <AccordionItem value="auth" className="border-none">
-          <AccordionTrigger>Authentication</AccordionTrigger>
-          <AccordionContent>
-            <div className="flex flex-wrap gap-1.5">
-              {data.authSchemes.map((scheme) => (
-                <Badge key={scheme} variant="tag">
-                  {scheme.replace(/_/g, " ").toUpperCase()}
-                </Badge>
-              ))}
-            </div>
-          </AccordionContent>
-        </AccordionItem>
-      )}
-    </Accordion>
-  );
-}
 
 interface UnifiedAppProps {
   app: UnifiedApp;
@@ -277,20 +158,6 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
     }),
   );
 
-  const connectorAuthorizeMutation = useMutation(
-    trpc.connectors.authorize.mutationOptions(),
-  );
-
-  const connectorDisconnectMutation = useMutation(
-    trpc.connectors.disconnect.mutationOptions({
-      onSuccess: () => {
-        queryClient.invalidateQueries({
-          queryKey: trpc.connectors.list.queryKey(),
-        });
-      },
-    }),
-  );
-
   // Mutation to disconnect Stripe Payments
   const disconnectStripeMutation = useMutation(
     trpc.invoicePayments.disconnectStripe.mutationOptions({
@@ -308,8 +175,7 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
     disconnectOfficialAppMutation.isPending ||
     revokeExternalAppMutation.isPending ||
     disconnectInboxAccountMutation.isPending ||
-    disconnectStripeMutation.isPending ||
-    connectorDisconnectMutation.isPending;
+    disconnectStripeMutation.isPending;
 
   const handleDisconnect = () => {
     // Gmail and Outlook use inbox_accounts table
@@ -324,13 +190,6 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
       return;
     }
 
-    if (app.type === "connector" && app.connectedAccountId) {
-      connectorDisconnectMutation.mutate({
-        connectedAccountId: app.connectedAccountId,
-      });
-      return;
-    }
-
     if (app.type === "official") {
       disconnectOfficialAppMutation.mutate({ appId: app.id });
     } else {
@@ -342,70 +201,6 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
     setLoading(true);
 
     try {
-      if (app.type === "connector" && app.connectorSlug) {
-        const callbackUrl = `${window.location.origin}/connectors/callback`;
-        const result = await connectorAuthorizeMutation.mutateAsync({
-          toolkit: app.connectorSlug,
-          callbackUrl,
-        });
-
-        const redirectUrl = result.redirectUrl;
-        if (!redirectUrl) {
-          setLoading(false);
-          return;
-        }
-
-        const width = 600;
-        const height = 700;
-        const left = window.screenX + (window.outerWidth - width) / 2;
-        const top = window.screenY + (window.outerHeight - height) / 2.5;
-
-        const popup = window.open(
-          redirectUrl,
-          "composio_auth",
-          `toolbar=no, location=no, directories=no, status=no, menubar=no, scrollbars=no, resizable=no, copyhistory=no, width=${width}, height=${height}, top=${top}, left=${left}`,
-        );
-
-        if (!popup) {
-          window.location.href = redirectUrl;
-          return;
-        }
-
-        const listener = (e: MessageEvent) => {
-          if (e.data === "connector_oauth_completed") {
-            window.removeEventListener("message", listener);
-            queryClient.invalidateQueries({
-              queryKey: trpc.connectors.list.queryKey(),
-            });
-            setLoading(false);
-          }
-        };
-
-        window.addEventListener("message", listener);
-
-        const checkInterval = setInterval(() => {
-          if (popup.closed) {
-            clearInterval(checkInterval);
-            window.removeEventListener("message", listener);
-            queryClient.invalidateQueries({
-              queryKey: trpc.connectors.list.queryKey(),
-            });
-            setLoading(false);
-          }
-        }, 500);
-
-        setTimeout(
-          () => {
-            clearInterval(checkInterval);
-            window.removeEventListener("message", listener);
-            setLoading(false);
-          },
-          5 * 60 * 1000,
-        );
-
-        return;
-      }
-
       // Use OAuth hook for configured apps
       if (oauthConfig) {
         await appOAuth.connect();
@@ -455,8 +250,6 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
       setLoading(false);
     }
   };
-
-  const isMcpApp = app.id.endsWith("-mcp");
 
   return (
     <Card key={app.id} className="w-full flex flex-col">
@@ -510,8 +303,7 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
             Details
           </Button>
 
-          {!isMcpApp &&
-            (app.installUrl ? (
+          {app.installUrl ? (
               <Button
                 variant="outline"
                 className="w-full"
@@ -539,7 +331,7 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
               >
                 Install
               </SubmitButton>
-            ))}
+            )}
         </div>
 
         <SheetContent>
@@ -559,46 +351,39 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
 
                 <span className="text-xs text-[#878787]">
                   {app.category} •{" "}
-                  {app.type === "connector"
-                    ? "Connected app"
-                    : app.type === "external"
-                      ? `By ${app.developerName}`
-                      : "By AqarDesk"}
+                  {app.type === "external"
+                    ? `By ${app.developerName}`
+                    : "By AqarDesk"}
                 </span>
               </div>
 
-              {!isMcpApp && (
-                <div>
-                  {app.installed ? (
-                    <SubmitButton
-                      variant="outline"
-                      className="w-full"
-                      onClick={handleDisconnect}
-                      isSubmitting={isDisconnecting}
-                    >
-                      Disconnect
-                    </SubmitButton>
-                  ) : (
-                    <SubmitButton
-                      variant="outline"
-                      className="w-full border-primary"
-                      onClick={handleOnInitialize}
-                      disabled={!app.active}
-                      isSubmitting={isInstalling}
-                    >
-                      {app.id === "midday-desktop" ? "Download" : "Install"}
-                    </SubmitButton>
-                  )}
-                </div>
-              )}
+              <div>
+                {app.installed ? (
+                  <SubmitButton
+                    variant="outline"
+                    className="w-full"
+                    onClick={handleDisconnect}
+                    isSubmitting={isDisconnecting}
+                  >
+                    Disconnect
+                  </SubmitButton>
+                ) : (
+                  <SubmitButton
+                    variant="outline"
+                    className="w-full border-primary"
+                    onClick={handleOnInitialize}
+                    disabled={!app.active}
+                    isSubmitting={isInstalling}
+                  >
+                    {app.id === "midday-desktop" ? "Download" : "Install"}
+                  </SubmitButton>
+                )}
+              </div>
             </div>
 
             <div className="mt-4 flex-1 min-h-0 flex flex-col">
               <ScrollArea className="flex-1 h-0" hideScrollbar>
-                {app.type === "connector" && app.connectorSlug ? (
-                  <ConnectorDetailContent slug={app.connectorSlug} />
-                ) : (
-                  <Accordion
+                <Accordion
                     type="multiple"
                     defaultValue={[
                       "description",
@@ -609,27 +394,11 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
                     <AccordionItem value="description" className="border-none">
                       <AccordionTrigger>How it works</AccordionTrigger>
                       <AccordionContent className="text-[#878787] text-sm">
-                        {app.id === "chatgpt-mcp" ? (
-                          <ChatGPTSetupInstructions />
-                        ) : app.id === "claude-mcp" ? (
-                          <ClaudeSetupInstructions />
-                        ) : app.id === "gemini-mcp" ? (
-                          <GeminiSetupInstructions />
-                        ) : app.id === "windsurf-mcp" ? (
-                          <WindsurfSetupInstructions />
-                        ) : app.id === "cline-mcp" ? (
-                          <ClineSetupInstructions />
-                        ) : app.id === "zed-mcp" ? (
-                          <ZedSetupInstructions />
-                        ) : app.id === "manus-mcp" ? (
-                          <ManusSetupInstructions />
-                        ) : (
-                          <div className="prose prose-sm prose-invert prose-p:text-[#878787] prose-p:my-3 [&_strong]:text-primary [&_strong]:font-normal max-w-none">
-                            <MemoizedReactMarkdown>
-                              {app.description || app.overview || ""}
-                            </MemoizedReactMarkdown>
-                          </div>
-                        )}
+                        <div className="prose prose-sm prose-invert prose-p:text-[#878787] prose-p:my-3 [&_strong]:text-primary [&_strong]:font-normal max-w-none">
+                          <MemoizedReactMarkdown>
+                            {app.description || app.overview || ""}
+                          </MemoizedReactMarkdown>
+                        </div>
                       </AccordionContent>
                     </AccordionItem>
 
@@ -705,7 +474,6 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
                       </>
                     )}
                   </Accordion>
-                )}
               </ScrollArea>
 
               <div className="shrink-0 pt-4 border-t border-border">

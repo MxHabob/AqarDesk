@@ -1,6 +1,5 @@
 import { Skeleton } from "@aqardesk/ui/skeleton"
 import { UserMenu } from "@/components/user-menu"
-import { ConnectionStatus } from "@/components/connection-status"
 import { NotificationCenter } from "@/components/notification-center"
 import { OpenSearchButton } from "@/components/search/open-search-button"
 import { MobileMenu } from "./mobile-menu"
@@ -25,7 +24,6 @@ export function Header() {
       <OpenSearchButton />
 
       <div className="flex space-x-2 ml-auto">
-        <ConnectionStatus />
         <NotificationCenter />
         <Suspense fallback={<UserMenuSkeleton />}>
           <UserMenu />

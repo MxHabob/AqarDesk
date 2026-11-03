@@ -1,12 +1,12 @@
 import "@/styles/globals.css"
 import "@aqardesk/ui/globals.css"
 import { Toaster } from "@aqardesk/ui/components/toaster"
-import type { AppLocale } from "@/locales/config"
-import { locales } from "@/locales/config"
 import type { Metadata } from "next"
 import { Hedvig_Letters_Sans, Hedvig_Letters_Serif } from "next/font/google"
 import { notFound } from "next/navigation"
 import type { ReactNode } from "react"
+import type { AppLocale } from "@/locales/config"
+import { locales } from "@/locales/config"
 import { Providers } from "./providers"
 
 export const metadata: Metadata = {
@@ -70,8 +70,7 @@ export default async function LocaleLayout({
     >
       <body className="whitespace-pre-line overscroll-none antialiased">
         <Providers locale={locale}>
-          {children}
-          <Toaster />
+          <Toaster>{children}</Toaster>
         </Providers>
       </body>
     </html>
