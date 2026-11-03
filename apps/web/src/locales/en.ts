@@ -67,6 +67,7 @@ export default {
     servicesTitle: "Real estate services for your needs",
     servicesDescription:
       "We help you explore properties for sale and rent, review investment opportunities, and get support from the office team.",
+    serviceSelectionTitle: "Support for every step of your property journey",
     saleServiceTitle: "Property sales",
     saleServiceDescription:
       "We help owners present their properties and buyers explore available options.",
@@ -80,6 +81,15 @@ export default {
     contactServiceDescription:
       "Our team is ready to answer your questions and help coordinate the next steps.",
     exploreService: "Explore properties",
+    serviceDetails: "Service details",
+    portfolioEyebrow: "Selected properties",
+    portfolioTitle: "Our portfolio",
+    portfolioDescription:
+      "Explore the latest properties handled by our office and view each listing's details.",
+    portfolioEmpty: "There are no published properties to show right now.",
+    forSale: "For sale",
+    forRent: "For rent",
+    perMonth: "per month",
   },
   sharing: {
     share: "Share",
@@ -257,6 +267,7 @@ export default {
     aboutAqarDesk: "About AqarDesk",
     aboutUs: "About us",
     services: "Our services",
+    portfolio: "Portfolio",
     customerStories: "Customer stories",
     help: "Help",
     contactUs: "Contact us",

@@ -444,6 +444,7 @@ export default {
     servicesTitle: "خدمات عقارية تناسب احتياجك",
     servicesDescription:
       "نرافقك في البحث والبيع والتأجير، ونسهّل متابعة العروض والتواصل مع فريق المكتب.",
+    serviceSelectionTitle: "خدمات متكاملة لاحتياجك العقاري",
     saleServiceTitle: "بيع العقارات",
     saleServiceDescription:
       "نساعد الملاك في عرض عقاراتهم، ونساعد المشترين في استكشاف الخيارات المتاحة.",
@@ -457,6 +458,15 @@ export default {
     contactServiceDescription:
       "فريقنا جاهز للإجابة عن استفساراتك وتنسيق الخطوات التالية.",
     exploreService: "استكشف العقارات",
+    serviceDetails: "تفاصيل الخدمة",
+    portfolioEyebrow: "من أعمال المكتب",
+    portfolioTitle: "ملف الأعمال",
+    portfolioDescription:
+      "تعرّف على أحدث العقارات التي يعمل عليها المكتب، واستكشف تفاصيل كل عرض.",
+    portfolioEmpty: "لا توجد عقارات منشورة لعرضها حاليًا.",
+    forSale: "للبيع",
+    forRent: "للإيجار",
+    perMonth: "شهريًا",
     footerDescription: "اكتشف العقارات وتابع عروض مكتبك في مكان واحد.",
     copyright: "جميع الحقوق محفوظة.",
     notFoundTitle: "لم نعثر على هذه الصفحة",
@@ -596,6 +606,7 @@ export default {
     aboutAqarDesk: "عن عقار دِسك",
     aboutUs: "من نحن",
     services: "خدماتنا",
+    portfolio: "ملف الأعمال",
     customerStories: "آراء العملاء",
     help: "المساعدة",
     contactUs: "تواصل معنا",

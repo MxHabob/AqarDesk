@@ -35,7 +35,7 @@ const pageCopy = {
     services: {
       title: "خدماتنا العقارية",
       description:
-        "اكتشف خدمات عقار دِسك في بيع العقارات وتأجيرها والفرص الاستثمارية، مع دعم فريق المكتب في رحلتك.",
+        "اكتشف خدمات مكتب عقار دِسك في البيع والشراء والتأجير والفرص الاستثمارية، وتواصل مع فريقنا لمتابعة العقارات المتاحة.",
     },
     testimonials: {
       title: "آراء وتجارب العملاء",
@@ -79,7 +79,7 @@ const pageCopy = {
     services: {
       title: "Real Estate Services",
       description:
-        "Explore AqarDesk services for property sales, rentals, and investment opportunities, with support from our office team.",
+        "Explore AqarDesk office services for buying, selling, rentals, and investment opportunities, with support from our team.",
     },
     testimonials: {
       title: "Customer Stories",

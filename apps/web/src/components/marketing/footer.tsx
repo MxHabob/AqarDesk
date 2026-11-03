@@ -33,6 +33,7 @@ export function Footer() {
       items: [
         { href: "/about", label: t("marketingFooter.aboutUs") },
         { href: "/services", label: t("marketingFooter.services") },
+        { href: "/portfolio", label: t("marketingFooter.portfolio") },
         { href: "/testimonials", label: t("marketingFooter.customerStories") },
       ],
     },

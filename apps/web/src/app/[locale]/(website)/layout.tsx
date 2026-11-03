@@ -8,6 +8,10 @@ import { Header } from "@/components/marketing/header"
 import { SunsetBanner } from "@/components/sunset-banner"
 import { getRoleDestination, getUserRoleKeys } from "@/lib/auth/roles"
 import {
+  getFilteredPublicListings,
+  getPublicListingCoverPhotos,
+} from "@/lib/listings/public-queries"
+import {
   createSafeJsonLd,
   getMarketingPageCopy,
   getSiteUrl,
@@ -81,6 +85,28 @@ export default async function Layout({
   ])
   const roleKeys = session ? await getUserRoleKeys(session.user.id) : []
   const roleDestination = session ? getRoleDestination(roleKeys, locale) : null
+  const latestListings = await getFilteredPublicListings({
+    q: "",
+    propertyType: null,
+    listingType: null,
+    minPrice: null,
+    maxPrice: null,
+    minArea: null,
+    maxArea: null,
+    sort: "newest",
+    page: 1,
+    pageSize: 2,
+  })
+  const latestListingPhotos = await getPublicListingCoverPhotos(
+    latestListings.rows.map((listing) => listing.id)
+  )
+  const listingPreviews = latestListings.rows.map((listing) => ({
+    id: listing.id,
+    title: listing.title,
+    listingType: listing.type,
+    location: [listing.city, listing.district].filter(Boolean).join("، "),
+    image: latestListingPhotos[listing.id] ?? null,
+  }))
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -123,6 +149,8 @@ export default async function Layout({
       />
       <SunsetBanner />
       <Header
+        listingPreviews={listingPreviews}
+        locale={locale}
         user={
           session
             ? {
