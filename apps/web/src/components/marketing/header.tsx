@@ -31,6 +31,8 @@ interface HeaderProps {
   roleDestination?: string | null
 }
 
+const ANNOUNCEMENT_BAR_HEIGHT = 36
+
 export function Header({
   transparent = false,
   hideMenuItems = false,
@@ -43,7 +45,7 @@ export function Header({
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isServicesOpen, setIsServicesOpen] = useState(false)
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false)
-  const [headerHeight, setHeaderHeight] = useState(72)
+  const [headerHeight, setHeaderHeight] = useState(68)
   const headerRef = useRef<HTMLDivElement>(null)
   const t = useScopedI18n("site")
 
@@ -70,15 +72,15 @@ export function Header({
             : "pointer-events-none invisible opacity-0"
         )}
         onClick={() => setIsServicesOpen(false)}
-        style={{ top: headerHeight }}
+        style={{ top: ANNOUNCEMENT_BAR_HEIGHT + headerHeight }}
         type="button"
       />
 
-      <nav className="sticky inset-x-0 top-0 z-50 w-full">
+      <nav className="fixed inset-x-0 top-9 z-50 w-full">
         <div
           ref={headerRef}
           className={cn(
-            "relative flex items-center justify-between gap-6 px-4 py-3 sm:px-4 md:px-4 lg:px-4 xl:px-6 xl:py-4 2xl:px-8",
+            "relative flex items-center justify-between px-4 py-3 sm:px-4 md:px-4 lg:px-4 xl:gap-6 xl:px-6 xl:py-4 2xl:px-8",
             isMenuOpen && "border-b border-border",
             !transparent && "bg-background-semi-transparent backdrop-blur-md",
             !transparent && isServicesOpen && "xl:bg-background"
@@ -90,7 +92,7 @@ export function Header({
             href="/"
             onClick={() => setIsMenuOpen(false)}
           >
-            <span className="size-9">
+            <span className="size-6">
               <Icons.LogoSmall className="size-full text-foreground" />
             </span>
             <span className="max-w-40 truncate font-sans text-base text-foreground xl:hidden sm:max-w-none">
@@ -124,7 +126,7 @@ export function Header({
                     />
                     <div
                       className="fixed inset-x-0 z-50 overflow-hidden border-y border-border bg-background shadow-lg"
-                      style={{ top: headerHeight }}
+                      style={{ top: ANNOUNCEMENT_BAR_HEIGHT + headerHeight }}
                     >
                       <div className="p-6 xl:p-8 2xl:p-10">
                         <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-4 xl:gap-6">
