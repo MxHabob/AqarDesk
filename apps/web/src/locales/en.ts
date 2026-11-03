@@ -42,6 +42,9 @@ export default {
     currentPassword: "Current password (if set)",
     twoFactorTitle: "Two-factor authentication",
     twoFactorDescription: "Enter the code from your authenticator app.",
+    twoFactorEmailDescription: "Enter the code sent to your email.",
+    sendEmailOtp: "Send a code to my email",
+    emailOtpSent: "A verification code was sent to your email.",
     mfaSetupDescription:
       "Add another layer of security with an authenticator app that supports TOTP codes.",
     generateCode: "Generate setup code",

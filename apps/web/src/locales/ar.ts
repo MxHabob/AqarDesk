@@ -93,6 +93,9 @@ export default {
     currentPassword: "كلمة المرور الحالية (إن وجدت)",
     twoFactorTitle: "التحقق بخطوتين",
     twoFactorDescription: "أدخل الرمز من تطبيق المصادقة.",
+    twoFactorEmailDescription: "أدخل الرمز المرسل إلى بريدك الإلكتروني.",
+    sendEmailOtp: "إرسال رمز إلى بريدي الإلكتروني",
+    emailOtpSent: "تم إرسال رمز التحقق إلى بريدك الإلكتروني.",
     mfaSetupDescription:
       "أضف طبقة حماية إضافية باستخدام تطبيق مصادقة يدعم رموز TOTP.",
     generateCode: "إنشاء رمز الإعداد",

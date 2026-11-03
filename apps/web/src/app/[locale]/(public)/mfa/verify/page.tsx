@@ -1,4 +1,4 @@
-import { auth } from "@aqardesk/auth/server"
+import { auth, isEmailOtpConfigured } from "@aqardesk/auth/server"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
@@ -10,15 +10,20 @@ export const metadata: Metadata = {
 
 export default async function Verify({
   params,
+  searchParams,
 }: {
   params: Promise<{ locale: string }>
+  searchParams: Promise<{ methods?: string | string[] }>
 }) {
-  const { locale } = await params
+  const [{ locale }, { methods }] = await Promise.all([params, searchParams])
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (session) {
     redirect(`/${locale}/login/callback`)
   }
+
+  const availableMethods =
+    typeof methods === "string" ? methods.split(",") : (methods ?? [])
 
   return (
     <main
@@ -26,7 +31,11 @@ export default async function Verify({
       className="flex min-h-screen items-center justify-center p-6"
     >
       <div className="w-full max-w-md">
-        <VerifyMfa />
+        <VerifyMfa
+          emailOtpAvailable={
+            isEmailOtpConfigured && availableMethods.includes("otp")
+          }
+        />
       </div>
     </main>
   )

@@ -6,7 +6,6 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { LoginForm } from "@/components/login-form"
 import { LoginVideoBackground } from "@/components/login-video-background"
-import { SunsetBanner } from "@/components/sunset-banner"
 import { getRoleDestination, getUserRoleKeys } from "@/lib/auth/roles"
 import ar from "@/locales/ar"
 import en from "@/locales/en"
@@ -38,7 +37,6 @@ export default async function Page({ params, searchParams }: Props) {
   return (
     <div className="min-h-screen bg-background flex relative">
       <div className="fixed top-0 left-0 right-0 z-50 w-full">
-        <SunsetBanner />
         <nav className="w-full pointer-events-none">
           <div className="relative py-3 xl:py-4 px-4 sm:px-4 md:px-4 lg:px-4 xl:px-6 2xl:px-8 flex items-center">
             <Link

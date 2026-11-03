@@ -10,7 +10,9 @@ receive the `customer` role. Google sign-in and sign-up are enabled when both
 OAuth redirect URI as `${BETTER_AUTH_URL}/api/auth/callback/google`.
 
 TOTP multi-factor authentication and recovery codes are enabled through Better
-Auth. Email-delivered second-factor OTP requires a configured email delivery
-provider; do not expose provider credentials to the browser. Provisioning staff
-accounts and assigning office roles must be handled by trusted server-side
-workflows.
+Auth. To enable email-delivered second-factor OTP, configure `RESEND_API_KEY`
+and `EMAIL_FROM` on the server. `EMAIL_FROM` must be a sender address verified
+with Resend. The email OTP option is shown only when Resend is configured and
+Better Auth reports it as an available method for the sign-in challenge. Do not
+expose provider credentials to the browser. Provisioning staff accounts and
+assigning office roles must be handled by trusted server-side workflows.

@@ -12,16 +12,21 @@ import { useRouter } from "next/navigation"
 import { useState } from "react"
 import { useCurrentLocale, useI18n } from "@/locales/client"
 
-export function VerifyMfa() {
+export function VerifyMfa({
+  emailOtpAvailable = false,
+}: {
+  emailOtpAvailable?: boolean
+}) {
   const locale = useCurrentLocale()
   const router = useRouter()
   const t = useI18n()
   const [backupCode, setBackupCode] = useState("")
   const [useBackupCode, setUseBackupCode] = useState(false)
+  const [useEmailOtp, setUseEmailOtp] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(false)
 
-  async function verify(code: string, method: "totp" | "backup") {
+  async function verify(code: string, method: "totp" | "otp" | "backup") {
     setError(false)
     setIsLoading(true)
 
@@ -29,7 +34,9 @@ export function VerifyMfa() {
       const result =
         method === "totp"
           ? await authClient.twoFactor.verifyTotp({ code })
-          : await authClient.twoFactor.verifyBackupCode({ code })
+          : method === "otp"
+            ? await authClient.twoFactor.verifyOtp({ code })
+            : await authClient.twoFactor.verifyBackupCode({ code })
 
       if (result.error) {
         setError(true)
@@ -44,12 +51,34 @@ export function VerifyMfa() {
     }
   }
 
+  async function sendEmailOtp() {
+    setError(false)
+    setIsLoading(true)
+
+    try {
+      const result = await authClient.twoFactor.sendOtp()
+
+      if (result.error) {
+        setError(true)
+        return
+      }
+
+      setUseEmailOtp(true)
+    } catch {
+      setError(true)
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
   return (
     <section className="w-full space-y-6">
       <header className="space-y-2 text-center">
         <h1 className="text-xl font-semibold">{t("auth.twoFactorTitle")}</h1>
         <p className="text-sm text-muted-foreground">
-          {t("auth.twoFactorDescription")}
+          {useEmailOtp
+            ? t("auth.twoFactorEmailDescription")
+            : t("auth.twoFactorDescription")}
         </p>
       </header>
 
@@ -81,7 +110,7 @@ export function VerifyMfa() {
           maxLength={6}
           autoFocus
           disabled={isLoading}
-          onComplete={(code) => void verify(code, "totp")}
+          onComplete={(code) => void verify(code, useEmailOtp ? "otp" : "totp")}
           render={({ slots }) => (
             <InputOTPGroup className="mx-auto">
               {slots.map((_, index) => (
@@ -90,6 +119,34 @@ export function VerifyMfa() {
             </InputOTPGroup>
           )}
         />
+      )}
+
+      {emailOtpAvailable && !useBackupCode && (
+        <div className="space-y-3">
+          {useEmailOtp && (
+            <p className="text-center text-sm text-muted-foreground">
+              {t("auth.emailOtpSent")}
+            </p>
+          )}
+          <Button
+            type="button"
+            variant="outline"
+            className="w-full"
+            onClick={() => {
+              if (useEmailOtp) {
+                setError(false)
+                setUseEmailOtp(false)
+              } else {
+                void sendEmailOtp()
+              }
+            }}
+            disabled={isLoading}
+          >
+            {useEmailOtp
+              ? t("auth.useAuthenticatorCode")
+              : t("auth.sendEmailOtp")}
+          </Button>
+        </div>
       )}
 
       {error && (
@@ -107,7 +164,9 @@ export function VerifyMfa() {
         }}
         disabled={isLoading}
       >
-        {useBackupCode ? t("auth.useAuthenticatorCode") : t("auth.useBackupCode")}
+        {useBackupCode
+          ? t("auth.useAuthenticatorCode")
+          : t("auth.useBackupCode")}
       </Button>
     </section>
   )
