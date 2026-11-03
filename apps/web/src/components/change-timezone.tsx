@@ -98,10 +98,16 @@ export function ChangeTimezone() {
         {/* Auto-sync toggle */}
         <div className="flex items-center justify-between">
           <div className="space-y-0.5">
-            <Label htmlFor="auto-sync">Use device timezone</Label>
+            <Label htmlFor="auto-sync">
+              {t("accountSettings.useDeviceTimezone")}
+            </Label>
             <div className="text-[0.8rem] text-muted-foreground">
-              Automatically use your device's current timezone
-              <div>Current: {currentBrowserTimezone}</div>
+              {t("accountSettings.autoTimezoneDescription")}
+              <div>
+                {t("accountSettings.currentTimezone", {
+                  timezone: currentBrowserTimezone,
+                })}
+              </div>
             </div>
           </div>
           <Switch
@@ -114,7 +120,7 @@ export function ChangeTimezone() {
         {/* Manual timezone selection - only show when auto-sync is disabled */}
         {!isAutoSyncEnabled && (
           <div className="space-y-2">
-            <Label>Timezone</Label>
+            <Label>{t("accountSettings.timezoneLabel")}</Label>
             <div className="w-full">
               <ComboboxDropdown
                 placeholder={t("timezone.placeholder")}

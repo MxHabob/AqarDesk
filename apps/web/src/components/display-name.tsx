@@ -18,6 +18,7 @@ import {
 import { Input } from "@aqardesk/ui/input";
 import { SubmitButton } from "@aqardesk/ui/submit-button";
 import { z } from "zod/v3";
+import { useI18n } from "@/locales/client";
 import { useUserMutation, useUserQuery } from "@/hooks/use-user";
 import { useZodForm } from "@/hooks/use-zod-form";
 
@@ -26,6 +27,7 @@ const formSchema = z.object({
 });
 
 export function DisplayName() {
+  const t = useI18n();
   const { data: user } = useUserQuery();
   const updateUserMutation = useUserMutation();
 
@@ -47,11 +49,10 @@ export function DisplayName() {
         <Card>
           <CardHeader>
             <CardTitle className="normal-case tracking-normal">
-              Display Name
+              {t("accountSettings.displayNameTitle")}
             </CardTitle>
             <CardDescription>
-              Please enter your full name, or a display name you are comfortable
-              with.
+              {t("accountSettings.displayNameDescription")}
             </CardDescription>
           </CardHeader>
 
@@ -79,13 +80,13 @@ export function DisplayName() {
           </CardContent>
 
           <CardFooter className="flex justify-between">
-            <div>Please use 32 characters at maximum.</div>
+            <div>{t("accountSettings.displayNameLimit")}</div>
             <SubmitButton
               type="submit"
               disabled={updateUserMutation.isPending}
               isSubmitting={updateUserMutation.isPending}
             >
-              Save
+              {t("accountSettings.save")}
             </SubmitButton>
           </CardFooter>
         </Card>

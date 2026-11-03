@@ -13,6 +13,7 @@ import Link from "next/link"
 import { redirect } from "next/navigation"
 import { viewTeamFromAccountAction } from "@/actions/teams"
 import { hasPermission } from "@/lib/auth/permissions"
+import { getI18n, setStaticParamsLocale } from "@/locales/server"
 
 export const metadata: Metadata = {
   title: "Teams | AqarDesk",
@@ -24,6 +25,8 @@ export default async function AccountTeamsPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
+  setStaticParamsLocale(locale)
+  const t = await getI18n()
   const session = await auth.api.getSession({ headers: await headers() })
   if (!session) redirect(`/${locale}/login`)
 
@@ -50,7 +53,7 @@ export default async function AccountTeamsPage({
                     <input type="hidden" name="teamId" value={team.id} />
                     <input type="hidden" name="locale" value={locale} />
                     <Button type="submit" variant="outline">
-                      View
+                      {t("accountSettings.viewTeam")}
                     </Button>
                   </form>
                   {canManage && (
@@ -62,7 +65,7 @@ export default async function AccountTeamsPage({
                       }
                       variant="outline"
                     >
-                      Manage
+                      {t("accountSettings.manageTeam")}
                     </Button>
                   )}
                 </div>
@@ -72,7 +75,7 @@ export default async function AccountTeamsPage({
         ) : (
           <TableRow className="hover:bg-transparent">
             <TableCell colSpan={2} className="h-24 text-center">
-              No results.
+              {t("accountSettings.noTeams")}
             </TableCell>
           </TableRow>
         )}

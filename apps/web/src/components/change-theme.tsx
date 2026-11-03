@@ -6,16 +6,19 @@ import {
   CardTitle,
 } from "@aqardesk/ui/card"
 import { ThemeSwitch } from "@/components/theme-switch"
+import { useI18n } from "@/locales/client"
 
 export function ChangeTheme() {
+  const t = useI18n()
+
   return (
     <Card>
       <CardHeader>
         <CardTitle className="normal-case tracking-normal">
-          Appearance
+          {t("accountSettings.appearanceTitle")}
         </CardTitle>
         <CardDescription>
-          Customize how AqarDesk looks on your device.
+          {t("accountSettings.appearanceDescription")}
         </CardDescription>
       </CardHeader>
 

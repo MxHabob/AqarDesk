@@ -25,8 +25,10 @@ import { Loader2 } from "lucide-react"
 import { useState } from "react"
 import { deleteCurrentAccountAction } from "@/actions/delete-account"
 import { redirectAfterAccountDeletion } from "@/actions/revalidate-action"
+import { useI18n } from "@/locales/client"
 
 export function DeleteAccount() {
+  const t = useI18n()
   const [value, setValue] = useState("")
   const [isOpen, setIsOpen] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -43,11 +45,10 @@ export function DeleteAccount() {
     <Card className="border-destructive">
       <CardHeader>
         <CardTitle className="normal-case tracking-normal">
-          Delete account
+          {t("accountSettings.deleteTitle")}
         </CardTitle>
         <CardDescription>
-          Permanently remove your AqarDesk account and sign-in data. This action
-          cannot be undone.
+          {t("accountSettings.deleteDescription")}
         </CardDescription>
       </CardHeader>
       <CardFooter className="flex justify-between">
@@ -69,22 +70,23 @@ export function DeleteAccount() {
               setIsOpen(true)
             }}
           >
-            Delete
+            {t("accountSettings.deleteButton")}
           </Button>
           <AlertDialogContent>
             <AlertDialogHeader>
               <AlertDialogTitle className="normal-case tracking-normal">
-                Are you absolutely sure?
+                {t("accountSettings.deleteConfirmTitle")}
               </AlertDialogTitle>
               <AlertDialogDescription>
-                This action cannot be undone. This will permanently delete your
-                account and remove your data from our servers.
+                {t("accountSettings.deleteConfirmDescription")}
               </AlertDialogDescription>
             </AlertDialogHeader>
 
             <div className="flex flex-col gap-2 mt-2">
               <Label htmlFor="confirm-delete">
-                Type <span className="font-medium">DELETE</span> to confirm.
+                {t("accountSettings.deleteConfirmPrompt", {
+                  keyword: t("accountSettings.deleteConfirmKeyword"),
+                })}
               </Label>
               <Input
                 id="confirm-delete"
@@ -99,15 +101,15 @@ export function DeleteAccount() {
             </div>
 
             <AlertDialogFooter>
-              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogCancel>{t("common.cancel")}</AlertDialogCancel>
               <AlertDialogAction
                 onClick={() => deleteUserMutation.mutate()}
-                disabled={value !== "DELETE"}
+                disabled={value !== t("accountSettings.deleteConfirmKeyword")}
               >
                 {deleteUserMutation.isPending ? (
                   <Loader2 className="h-4 w-4 animate-spin" />
                 ) : (
-                  "Continue"
+                  t("accountSettings.continue")
                 )}
               </AlertDialogAction>
             </AlertDialogFooter>

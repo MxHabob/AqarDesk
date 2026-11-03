@@ -24,16 +24,32 @@ import { useAction } from "next-safe-action/hooks"
 import { z } from "zod/v3"
 import { sendSupportAction } from "@/actions/send-support-action"
 import { useZodForm } from "@/hooks/use-zod-form"
+import { useI18n } from "@/locales/client"
 
 const formSchema = z.object({
-  subject: z.string(),
+  subject: z.string().trim().min(3).max(200),
   priority: z.enum(["low", "normal", "high", "urgent", "0", "1", "2", "3"]),
-  type: z.string(),
-  message: z.string(),
+  type: z.string().trim().min(1).max(80),
+  message: z.string().trim().min(10).max(5000),
   url: z.string().optional(),
 })
 
+const supportSections = [
+  ["Overview", "serviceOverview"],
+  ["Reports", "serviceReports"],
+  ["Properties", "serviceProperties"],
+  ["Listings", "serviceListings"],
+  ["Owners", "serviceOwners"],
+  ["Customers", "serviceCustomers"],
+  ["Invoices", "serviceInvoices"],
+  ["Teams", "serviceTeams"],
+  ["Office settings", "serviceOfficeSettings"],
+  ["Account and security", "serviceAccount"],
+  ["Other", "serviceOther"],
+] as const
+
 export function SupportForm() {
+  const t = useI18n()
   const { toast } = useToast()
 
   const form = useZodForm(formSchema, {
@@ -49,7 +65,7 @@ export function SupportForm() {
     onSuccess: () => {
       toast({
         timeout: 2500,
-        title: "Support ticket sent.",
+        title: t("accountSettings.supportSent"),
         type: "success",
       })
 
@@ -59,7 +75,7 @@ export function SupportForm() {
       toast({
         timeout: 3500,
         type: "error",
-        title: "Something went wrong please try again.",
+        title: t("accountSettings.supportError"),
       })
     },
   })
@@ -75,10 +91,10 @@ export function SupportForm() {
           name="subject"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Subject</FormLabel>
+              <FormLabel>{t("accountSettings.supportSubject")}</FormLabel>
               <FormControl>
                 <Input
-                  placeholder="Summary of the problem you have"
+                  placeholder={t("accountSettings.supportSubjectPlaceholder")}
                   {...field}
                 />
               </FormControl>
@@ -93,24 +109,26 @@ export function SupportForm() {
             name="type"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Product</FormLabel>
+                <FormLabel>{t("accountSettings.supportSection")}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select Product" />
+                      <SelectValue
+                        placeholder={t(
+                          "accountSettings.supportSectionPlaceholder"
+                        )}
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="Transactions">Transactions</SelectItem>
-                    <SelectItem value="Vault">Vault</SelectItem>
-                    <SelectItem value="Inbox">Inbox</SelectItem>
-                    <SelectItem value="Invoicing">Invoicing</SelectItem>
-                    <SelectItem value="Tracker">Tracker</SelectItem>
-                    <SelectItem value="AI">AI</SelectItem>
-                    <SelectItem value="General">General</SelectItem>
+                    {supportSections.map(([value, translationKey]) => (
+                      <SelectItem key={value} value={value}>
+                        {t(`accountSettings.${translationKey}`)}
+                      </SelectItem>
+                    ))}
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -122,21 +140,33 @@ export function SupportForm() {
             name="priority"
             render={({ field }) => (
               <FormItem className="w-full">
-                <FormLabel>Severity</FormLabel>
+                <FormLabel>{t("accountSettings.supportSeverity")}</FormLabel>
                 <Select
                   onValueChange={field.onChange}
                   defaultValue={field.value}
                 >
                   <FormControl>
                     <SelectTrigger>
-                      <SelectValue placeholder="Select severity" />
+                      <SelectValue
+                        placeholder={t(
+                          "accountSettings.supportSeverityPlaceholder"
+                        )}
+                      />
                     </SelectTrigger>
                   </FormControl>
                   <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="normal">Normal</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="urgent">Urgent</SelectItem>
+                    <SelectItem value="low">
+                      {t("accountSettings.severityLow")}
+                    </SelectItem>
+                    <SelectItem value="normal">
+                      {t("accountSettings.severityNormal")}
+                    </SelectItem>
+                    <SelectItem value="high">
+                      {t("accountSettings.severityHigh")}
+                    </SelectItem>
+                    <SelectItem value="urgent">
+                      {t("accountSettings.severityUrgent")}
+                    </SelectItem>
                   </SelectContent>
                 </Select>
                 <FormMessage />
@@ -150,10 +180,12 @@ export function SupportForm() {
           name="message"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Message</FormLabel>
+              <FormLabel>{t("accountSettings.supportMessage")}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder="Describe the issue you're facing, along with any relevant information. Please be as detailed and specific as possible."
+                  placeholder={t(
+                    "accountSettings.supportMessagePlaceholder"
+                  )}
                   className="resize-none min-h-[150px]"
                   {...field}
                 />
@@ -173,7 +205,7 @@ export function SupportForm() {
           {sendSupport.status === "executing" ? (
             <Loader2 className="h-4 w-4 animate-spin" />
           ) : (
-            "Submit"
+            t("accountSettings.supportSubmit")
           )}
         </Button>
       </form>

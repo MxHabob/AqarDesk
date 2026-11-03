@@ -24,14 +24,16 @@ export function LocaleSettings() {
   }))
 
   return (
-    <Card className="flex justify-between items-center">
-      <CardHeader>
-        <CardTitle>{t("locale.title")}</CardTitle>
+    <Card className="flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center">
+      <CardHeader className="min-w-0 w-full sm:flex-1">
+        <CardTitle className="normal-case tracking-normal">
+          {t("locale.title")}
+        </CardTitle>
         <CardDescription>{t("locale.description")}</CardDescription>
       </CardHeader>
 
-      <CardContent>
-        <div className="w-[250px]">
+      <CardContent className="w-full sm:w-auto">
+        <div className="w-full sm:w-[250px]">
           <ComboboxDropdown
             placeholder={t("locale.placeholder")}
             selectedItem={localeItems.find(

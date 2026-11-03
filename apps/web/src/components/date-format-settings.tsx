@@ -15,23 +15,25 @@ import {
   SelectValue,
 } from "@aqardesk/ui/select"
 import { useUserMutation, useUserQuery } from "@/hooks/use-user"
+import { useI18n } from "@/locales/client"
 
 export function DateFormatSettings() {
+  const t = useI18n()
   const { data: user } = useUserQuery()
   const updateUserMutation = useUserMutation()
 
   return (
-    <Card className="flex justify-between items-center">
-      <CardHeader>
+    <Card className="flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center">
+      <CardHeader className="min-w-0 w-full sm:flex-1">
         <CardTitle className="normal-case tracking-normal">
-          Date Display Format
+          {t("accountSettings.dateFormatTitle")}
         </CardTitle>
         <CardDescription>
-          Select the format used to display dates throughout the app.
+          {t("accountSettings.dateFormatDescription")}
         </CardDescription>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="w-full sm:w-auto">
         <Select
           value={user?.dateFormat ?? undefined}
           onValueChange={(value) => {
@@ -44,8 +46,8 @@ export function DateFormatSettings() {
             })
           }}
         >
-          <SelectTrigger className="w-[180px]">
-            <SelectValue placeholder="Date format" />
+          <SelectTrigger className="w-full sm:w-[180px]">
+            <SelectValue placeholder={t("accountSettings.dateFormatPlaceholder")} />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="dd/MM/yyyy">dd/MM/yyyy</SelectItem>

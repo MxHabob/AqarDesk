@@ -11,6 +11,7 @@ import {
 import { Monitor, Moon, Sun } from "lucide-react"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
+import { useI18n } from "@/locales/client"
 
 type Theme = "dark" | "system" | "light"
 
@@ -30,6 +31,7 @@ const ThemeIcon = ({ currentTheme }: Props) => {
 }
 
 export const ThemeSwitch = () => {
+  const t = useI18n()
   const { theme, setTheme, themes, resolvedTheme } = useTheme()
   const [mounted, setMounted] = useState(false)
 
@@ -51,10 +53,14 @@ export const ThemeSwitch = () => {
         }}
       >
         <SelectTrigger className="w-full ps-6 pe-3 py-0.5 bg-transparent outline-none capitalize h-[24px] text-xs border-0 shadow-none">
-          <SelectValue>
-            {theme
-              ? theme.charAt(0).toUpperCase() + theme.slice(1)
-              : "Select theme"}
+          <SelectValue placeholder={t("accountSettings.themePlaceholder")}>
+            {theme === "light"
+              ? t("accountSettings.themeLight")
+              : theme === "dark"
+                ? t("accountSettings.themeDark")
+                : theme === "system"
+                  ? t("accountSettings.themeSystem")
+                  : t("accountSettings.themePlaceholder")}
           </SelectValue>
         </SelectTrigger>
         <SelectContent>
@@ -65,7 +71,13 @@ export const ThemeSwitch = () => {
                 value={theme}
                 className="capitalize text-xs"
               >
-                {theme}
+                {theme === "light"
+                  ? t("accountSettings.themeLight")
+                  : theme === "dark"
+                    ? t("accountSettings.themeDark")
+                    : theme === "system"
+                      ? t("accountSettings.themeSystem")
+                      : theme}
               </SelectItem>
             ))}
           </SelectGroup>

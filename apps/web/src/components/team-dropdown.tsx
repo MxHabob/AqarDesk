@@ -124,7 +124,7 @@ export function TeamDropdown({ isExpanded = false }: Props) {
                     mass: 1.2,
                   }}
                 >
-                  <Link href="/onboarding" onClick={() => setActive(false)}>
+                  <Link href="/dashboard/teams" onClick={() => setActive(false)}>
                     <Button
                       className="w-[32px] h-[32px] bg-background"
                       size="icon"

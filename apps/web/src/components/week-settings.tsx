@@ -9,23 +9,25 @@ import {
 } from "@aqardesk/ui/card";
 import { Switch } from "@aqardesk/ui/switch";
 import { useUserMutation, useUserQuery } from "@/hooks/use-user";
+import { useI18n } from "@/locales/client";
 
 export function WeekSettings() {
+  const t = useI18n();
   const { data: user } = useUserQuery();
   const updateUserMutation = useUserMutation();
 
   return (
-    <Card className="flex justify-between items-center">
-      <CardHeader>
+    <Card className="flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center">
+      <CardHeader className="min-w-0 w-full sm:flex-1">
         <CardTitle className="normal-case tracking-normal">
-          Start Week on Monday
+          {t("accountSettings.weekStartTitle")}
         </CardTitle>
         <CardDescription>
-          Set the first day of the week in calendar views.
+          {t("accountSettings.weekStartDescription")}
         </CardDescription>
       </CardHeader>
 
-      <CardContent>
+      <CardContent className="flex w-full justify-end sm:w-auto">
         <Switch
           checked={user?.weekStartsOnMonday ?? false}
           disabled={updateUserMutation.isPending}

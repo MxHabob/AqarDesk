@@ -10,7 +10,6 @@ const dashboardRoutePrefixes = new Set([
   "invoices",
   "mfa",
   "oauth",
-  "onboarding",
   "reports",
   "owners",
   "properties",
