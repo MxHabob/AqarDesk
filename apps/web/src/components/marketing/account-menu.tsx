@@ -96,10 +96,7 @@ export function MarketingAccountMenu({
               <Link href={roleDestination} onClick={onNavigate}>
                 <DropdownMenuItem>{t("auth.myAccount")}</DropdownMenuItem>
               </Link>
-              <Link
-                href={`/${locale}/account/favorites`}
-                onClick={onNavigate}
-              >
+              <Link href={`/${locale}/account/favorites`} onClick={onNavigate}>
                 <DropdownMenuItem>{t("auth.savedProperties")}</DropdownMenuItem>
               </Link>
             </>
