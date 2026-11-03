@@ -208,6 +208,10 @@ const permissionDefinitions = [
   ["users.manage", "Manage user accounts"],
   ["roles.manage", "Manage roles and permissions"],
   ["audit.read", "View change history"],
+  ["teams.read", "View office teams"],
+  ["teams.manage", "Create teams and assign members"],
+  ["office_settings.read", "View office settings"],
+  ["office_settings.manage", "Manage office settings"],
 ] as const
 
 const allPermissions = permissionDefinitions.map(([key]) => key)
@@ -215,6 +219,8 @@ const readPermissions = [
   "properties.read",
   "listings.read",
   "owners.read",
+  "teams.read",
+  "office_settings.read",
 ] as const
 
 const roleDefinitions = [
@@ -236,7 +242,12 @@ const roleDefinitions = [
     description: "Manage listings, properties, and owner records.",
     permissionKeys: permissionDefinitions
       .map(([key]) => key)
-      .filter((key) => key !== "users.manage" && key !== "roles.manage"),
+      .filter(
+        (key) =>
+          key !== "users.manage" &&
+          key !== "roles.manage" &&
+          key !== "office_settings.manage"
+      ),
   },
   {
     key: "staff",
@@ -304,6 +315,11 @@ async function seed() {
           }))
         )
       )
+      .onConflictDoNothing()
+
+    await tx
+      .insert(schema.officeSettings)
+      .values({ id: "default", name: "عقار دِسك" })
       .onConflictDoNothing()
 
     await tx

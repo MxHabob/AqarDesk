@@ -29,6 +29,13 @@
       "when": 1793553006976,
       "tag": "0003_busy_jack_power",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1793693514204,
+      "tag": "0004_spooky_strong_guy",
+      "breakpoints": true
     }
   ]
 }
