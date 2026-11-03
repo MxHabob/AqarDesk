@@ -15,10 +15,8 @@ export const metadata: Metadata = {
 
 export default async function PropertiesPage() {
   const queryClient = getQueryClient()
-  const [_, initialSettings] = await Promise.all([
-    queryClient.prefetchQuery(realEstateQueries.properties()),
-    getInitialTableSettings("properties"),
-  ])
+  void queryClient.prefetchQuery(realEstateQueries.properties())
+  const initialSettings = await getInitialTableSettings("properties")
 
   return (
     <HydrateClient>

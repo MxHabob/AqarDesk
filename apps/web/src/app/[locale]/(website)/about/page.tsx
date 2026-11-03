@@ -1,16 +1,32 @@
-import { createPageMetadata } from "@/lib/marketing/metadata";
+import {
+  createPageMetadata,
+  getMarketingPageCopy,
+} from "@/lib/marketing/metadata"
+import type { AppLocale } from "@/locales/config"
 
-export const metadata = createPageMetadata({
-  title: "About",
-  description:
-    "About AqarDesk. Learn more about the team and company behind the property management platform.",
-  path: "/about",
-  og: {
-    title: "About AqarDesk",
-    description: "The team behind your business stack",
-  },
-});
+type Props = { params: Promise<{ locale: AppLocale }> }
 
-export default function AboutPage() {
-  return <div>AboutPage</div>;
+export async function generateMetadata({ params }: Props) {
+  const { locale } = await params
+  return createPageMetadata({
+    ...getMarketingPageCopy("about", locale),
+    locale,
+    path: "/about",
+  })
+}
+
+export default async function AboutPage({ params }: Props) {
+  const { locale } = await params
+  const copy = getMarketingPageCopy("about", locale)
+
+  return (
+    <article className="mx-auto max-w-3xl space-y-5 py-12 sm:py-16">
+      <h1 className="font-serif text-3xl text-foreground sm:text-4xl">
+        {copy.title}
+      </h1>
+      <p className="text-base leading-8 text-muted-foreground">
+        {copy.description}
+      </p>
+    </article>
+  )
 }

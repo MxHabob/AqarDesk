@@ -1,6 +1,7 @@
 import type { Metadata } from "next"
 import { ErrorBoundary } from "next/dist/client/components/error-boundary"
 import { Suspense } from "react"
+import { getDashboardSummaryAction } from "@/actions/dashboard"
 import { CollapsibleSummary } from "@/components/collapsible-summary"
 import { ErrorFallback } from "@/components/error-fallback"
 import { ScrollableContent } from "@/components/scrollable-content"
@@ -20,10 +21,12 @@ export const metadata: Metadata = {
 
 export default async function ListingsPage() {
   const queryClient = getQueryClient()
-  const [_, initialSettings] = await Promise.all([
-    queryClient.prefetchQuery(realEstateQueries.listings()),
-    getInitialTableSettings("listings"),
-  ])
+  void queryClient.prefetchQuery(realEstateQueries.listings())
+  void queryClient.prefetchQuery({
+    queryKey: ["dashboard-summary"],
+    queryFn: getDashboardSummaryAction,
+  })
+  const initialSettings = await getInitialTableSettings("listings")
 
   return (
     <HydrateClient>

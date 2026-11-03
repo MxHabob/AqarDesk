@@ -1,7 +1,9 @@
 import type { Metadata } from "next"
+import { Suspense } from "react"
 import { ChangeTimezone } from "@/components/change-timezone"
 import { DateFormatSettings } from "@/components/date-format-settings"
 import { LocaleSettings } from "@/components/locale-settings"
+import { SettingsLoading } from "@/components/settings-loading"
 import { TimeFormatSettings } from "@/components/time-format-settings"
 import { WeekSettings } from "@/components/week-settings"
 import { getQueryClient, HydrateClient } from "@/queries/server"
@@ -12,16 +14,18 @@ export const metadata: Metadata = {
 }
 
 export default async function Page() {
-  await getQueryClient().prefetchQuery(userSettingsQueryOptions())
+  void getQueryClient().prefetchQuery(userSettingsQueryOptions())
   return (
     <HydrateClient>
-      <div className="space-y-12">
-        <LocaleSettings />
-        <ChangeTimezone />
-        <TimeFormatSettings />
-        <DateFormatSettings />
-        <WeekSettings />
-      </div>
+      <Suspense fallback={<SettingsLoading />}>
+        <div className="space-y-12">
+          <LocaleSettings />
+          <ChangeTimezone />
+          <TimeFormatSettings />
+          <DateFormatSettings />
+          <WeekSettings />
+        </div>
+      </Suspense>
     </HydrateClient>
   )
 }

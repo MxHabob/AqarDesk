@@ -1,15 +1,20 @@
 import type { PropertyType } from "@aqardesk/categories"
-import { getPropertyDetails } from "@aqardesk/database/queries"
+import {
+  getOfficeSettings,
+  getPropertyDetails,
+} from "@aqardesk/database/queries"
 import { ArrowUpRight, MapPin, Ruler } from "lucide-react"
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import { z } from "zod"
+import { ShareListingDialog } from "@/components/real-estate/share-listing-dialog"
 import {
   getPublicListingById,
   getPublicListingMedia,
 } from "@/lib/listings/public-queries"
+import { createPageMetadata } from "@/lib/marketing/metadata"
 import { getI18n, getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
 type Props = {
@@ -17,6 +22,21 @@ type Props = {
 }
 
 const listingIdSchema = z.uuid()
+
+function getWhatsAppUrl(phone: string | null, countryCode: string) {
+  if (!phone) return null
+
+  const digits = phone.replace(/\D/g, "")
+  if (!digits) return null
+
+  const internationalNumber = digits.startsWith("00")
+    ? digits.slice(2)
+    : countryCode === "SA" && !digits.startsWith("966")
+      ? `966${digits.startsWith("0") ? digits.slice(1) : digits}`
+      : digits
+
+  return `https://wa.me/${internationalNumber}`
+}
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { listingId, locale } = await params
@@ -37,15 +57,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  return {
+  return createPageMetadata({
     title: listing.title,
-    description: listing.description ?? t("metadataDescription"),
-    openGraph: {
-      title: listing.title,
-      description: listing.description ?? undefined,
-      type: "article",
-    },
-  }
+    description:
+      listing.description ?? listing.publicNotes ?? t("metadataDescription"),
+    locale: locale as "ar" | "en",
+    path: `/listings/${listing.id}`,
+    ogImagePath: `/listings/${listing.id}/opengraph-image`,
+    type: "article",
+  })
 }
 
 export default async function ListingDetailsPage({ params }: Props) {
@@ -56,13 +76,19 @@ export default async function ListingDetailsPage({ params }: Props) {
   const listing = await getPublicListingById(listingId)
   if (!listing) notFound()
 
-  const [propertyDetails, media, t, translate, listingT] = await Promise.all([
-    getPropertyDetails(listing.propertyId, listing.propertyType),
-    getPublicListingMedia(listing.id),
-    getScopedI18n("publicListingDetails"),
-    getI18n(),
-    getScopedI18n("publicListings"),
-  ])
+  const [propertyDetails, media, officeSettings, t, translate, listingT] =
+    await Promise.all([
+      getPropertyDetails(listing.propertyId, listing.propertyType),
+      getPublicListingMedia(listing.id),
+      getOfficeSettings(),
+      getScopedI18n("publicListingDetails"),
+      getI18n(),
+      getScopedI18n("publicListings"),
+    ])
+  const contactUrl = getWhatsAppUrl(
+    officeSettings.phone,
+    officeSettings.countryCode
+  )
   const propertyTypeLabels: Record<PropertyType, string> = {
     building: translate("propertyTypes.building"),
     land: translate("propertyTypes.land"),
@@ -208,6 +234,16 @@ export default async function ListingDetailsPage({ params }: Props) {
               <span className="text-sm text-muted-foreground">
                 {propertyTypeLabels[listing.propertyType]}
               </span>
+              <ShareListingDialog
+                listings={[
+                  {
+                    id: listing.id,
+                    title: listing.title,
+                    listingType: listing.listingType,
+                  },
+                ]}
+                useShortLink={false}
+              />
             </div>
             <div className="space-y-3">
               <h1 className="font-serif text-3xl text-foreground sm:text-4xl">
@@ -380,13 +416,17 @@ export default async function ListingDetailsPage({ params }: Props) {
               <p className="mt-2 text-sm leading-6 text-muted-foreground">
                 {t("contactDescription")}
               </p>
-              <Link
-                href="/support"
-                className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90"
-              >
-                {t("contactUs")}
-                <ArrowUpRight aria-hidden className="size-4" />
-              </Link>
+              {contactUrl && (
+                <a
+                  href={contactUrl}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="mt-5 inline-flex h-11 w-full items-center justify-center gap-2 bg-foreground px-5 text-sm font-medium text-background transition-opacity hover:opacity-90"
+                >
+                  {t("contactUs")}
+                  <ArrowUpRight aria-hidden className="size-4" />
+                </a>
+              )}
             </div>
           </section>
 

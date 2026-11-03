@@ -312,6 +312,33 @@ export async function listPublicListings(limit = 30, database = getDatabase()) {
   return rows
 }
 
+export async function listPublicListingSitemapEntries(
+  database = getDatabase()
+) {
+  return database
+    .select({
+      id: schema.listings.id,
+      publishedAt: schema.listings.publishedAt,
+      updatedAt: schema.listings.updatedAt,
+    })
+    .from(schema.listings)
+    .innerJoin(
+      schema.properties,
+      eq(schema.listings.propertyId, schema.properties.id)
+    )
+    .where(
+      and(
+        eq(schema.listings.status, "active"),
+        isNull(schema.properties.archivedAt),
+        or(
+          isNull(schema.listings.expiresAt),
+          gt(schema.listings.expiresAt, new Date())
+        )
+      )
+    )
+    .orderBy(desc(schema.listings.publishedAt), desc(schema.listings.updatedAt))
+}
+
 export async function searchPublicListings(
   filters: PublicListingSearch = {},
   database = getDatabase()

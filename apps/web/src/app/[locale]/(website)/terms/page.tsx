@@ -1,12 +1,22 @@
-import { createPageMetadata } from "@/lib/marketing/metadata"
+import {
+  createPageMetadata,
+  getMarketingPageCopy,
+} from "@/lib/marketing/metadata"
+import type { AppLocale } from "@/locales/config"
 
-export const metadata = createPageMetadata({
-  title: "Terms and Conditions",
-  description:
-    "Terms and Conditions for using Midday. Read about your rights and responsibilities when using our service.",
-  path: "/terms",
-  og: { title: "Terms", description: "Your rights and responsibilities" },
-})
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: AppLocale }>
+}) {
+  const { locale } = await params
+  return createPageMetadata({
+    ...getMarketingPageCopy("terms", locale),
+    locale,
+    path: "/terms",
+    noindex: true,
+  })
+}
 
 export default function TermsPage() {
   return (

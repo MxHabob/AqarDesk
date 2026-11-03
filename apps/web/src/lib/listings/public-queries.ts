@@ -19,6 +19,7 @@ export async function getPublicListingCoverPhotos(listingIds: string[]) {
       listingId: schema.listingMedia.listingId,
       objectKey: schema.listingMedia.objectKey,
       altText: schema.listingMedia.altText,
+      contentType: schema.listingMedia.contentType,
       isPrimary: schema.listingMedia.isPrimary,
     })
     .from(schema.listingMedia)
@@ -49,13 +50,18 @@ export async function getPublicListingCoverPhotos(listingIds: string[]) {
 
   const coverPhotos = new Map<
     string,
-    { objectKey: string; altText: string | null }
+    {
+      objectKey: string
+      altText: string | null
+      contentType: string | null
+    }
   >()
   for (const row of rows) {
     if (!coverPhotos.has(row.listingId)) {
       coverPhotos.set(row.listingId, {
         objectKey: row.objectKey,
         altText: row.altText,
+        contentType: row.contentType,
       })
     }
   }
@@ -63,7 +69,10 @@ export async function getPublicListingCoverPhotos(listingIds: string[]) {
   const signedPhotos = await Promise.all(
     [...coverPhotos].map(async ([listingId, photo]) => {
       const { url } = await createReadUrl(photo.objectKey)
-      return [listingId, { url, altText: photo.altText }] as const
+      return [
+        listingId,
+        { url, altText: photo.altText, contentType: photo.contentType },
+      ] as const
     })
   )
 

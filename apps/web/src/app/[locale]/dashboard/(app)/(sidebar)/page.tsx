@@ -9,7 +9,7 @@ export const metadata: Metadata = {
 
 export default async function Overview() {
   const queryClient = getQueryClient()
-  await queryClient.prefetchQuery({
+  void queryClient.prefetchQuery({
     queryKey: ["dashboard-summary"],
     queryFn: getDashboardSummaryAction,
   })

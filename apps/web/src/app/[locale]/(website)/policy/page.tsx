@@ -1,15 +1,22 @@
-import { createPageMetadata } from "@/lib/marketing/metadata"
+import {
+  createPageMetadata,
+  getMarketingPageCopy,
+} from "@/lib/marketing/metadata"
+import type { AppLocale } from "@/locales/config"
 
-export const metadata = createPageMetadata({
-  title: "Privacy Policy",
-  description:
-    "Privacy Policy for Midday. Learn how we collect, use, and protect your personal data.",
-  path: "/policy",
-  og: {
-    title: "Privacy Policy",
-    description: "How we protect your data",
-  },
-})
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: AppLocale }>
+}) {
+  const { locale } = await params
+  return createPageMetadata({
+    ...getMarketingPageCopy("privacy", locale),
+    locale,
+    path: "/policy",
+    noindex: true,
+  })
+}
 
 export default function PrivacyPage() {
   return (

@@ -1,16 +1,19 @@
 import { StartPage } from "@/components/marketing/startpage"
-import { createPageMetadata } from "@/lib/marketing/metadata"
+import {
+  createPageMetadata,
+  getMarketingPageCopy,
+} from "@/lib/marketing/metadata"
+import type { AppLocale } from "@/locales/config"
 
-export const metadata = createPageMetadata({
-  title: "AqarDesk — The business stack for modern founders",
-  description:
-    "Invoicing, automatic reconciliation, time tracking, documents, and financial exports in one place. The business stack that replaces the tools you've outgrown.",
-  path: "/",
-  og: {
-    title: "AqarDesk",
-    description: "The business stack for modern founders",
-  },
-})
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: AppLocale }>
+}) {
+  const { locale } = await params
+  const copy = getMarketingPageCopy("home", locale)
+  return createPageMetadata({ ...copy, locale, path: "/" })
+}
 
 export default function Page() {
   return <StartPage />

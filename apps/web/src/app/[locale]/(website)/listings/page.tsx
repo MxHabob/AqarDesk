@@ -27,14 +27,19 @@ type Props = {
   searchParams: Promise<SearchParams>
 }
 
-export async function generateMetadata({ params }: Pick<Props, "params">) {
-  const { locale } = await params
+export async function generateMetadata({ params, searchParams }: Props) {
+  const [{ locale }, rawSearchParams] = await Promise.all([
+    params,
+    searchParams,
+  ])
   setStaticParamsLocale(locale)
   const t = await getScopedI18n("publicListings")
   return createPageMetadata({
     title: t("title"),
     description: t("description"),
+    locale: locale as "ar" | "en",
     path: "/listings",
+    noindex: Object.keys(rawSearchParams).length > 0,
   })
 }
 

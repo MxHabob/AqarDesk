@@ -43,7 +43,7 @@ export function WidgetCards() {
       {access.properties && (
         <WidgetCard
           label={t("realEstateDashboard.properties")}
-          href="#"
+          href="/dashboard/properties"
           value={numberFormat.format(data.propertyCount)}
         />
       )}
@@ -51,22 +51,22 @@ export function WidgetCards() {
         <>
           <WidgetCard
             label={t("realEstateDashboard.listings")}
-            href="#"
+            href="/dashboard/listings"
             value={numberFormat.format(data.listingCount)}
           />
           <WidgetCard
             label={t("realEstateDashboard.activeListings")}
-            href="#"
+            href="/dashboard/listings"
             value={numberFormat.format(data.activeListingCount)}
           />
           <WidgetCard
             label={t("realEstateDashboard.saleListings")}
-            href="#"
+            href="/dashboard/listings"
             value={numberFormat.format(data.saleListingCount)}
           />
           <WidgetCard
             label={t("realEstateDashboard.rentalListings")}
-            href="#"
+            href="/dashboard/listings"
             value={numberFormat.format(data.rentalListingCount)}
           />
         </>
@@ -74,7 +74,7 @@ export function WidgetCards() {
       {access.owners && (
         <WidgetCard
           label={t("realEstateDashboard.owners")}
-          href="#"
+          href="/dashboard/owners"
           value={numberFormat.format(data.ownerCount)}
         />
       )}

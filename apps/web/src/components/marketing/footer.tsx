@@ -38,7 +38,6 @@ export function Footer() {
     {
       title: t("marketingFooter.help"),
       items: [
-        { href: "/support", label: t("marketingFooter.contactUs") },
         { href: "/terms", label: t("marketingFooter.terms") },
         { href: "/policy", label: t("marketingFooter.privacy") },
       ],

@@ -11,11 +11,13 @@ import {
   createListingMedia,
   createOwner,
   createProperty,
+  createShortLink,
   deleteListingMedia,
   getListingById,
   getOwnerById,
   getPropertyById,
   getPropertyDetails,
+  getPublicListingById,
   listListingMedia,
   listListings,
   listOwners,
@@ -33,7 +35,7 @@ import {
   storageProvider,
   verifyUploadedObject,
 } from "@aqardesk/storage/server"
-import { eq } from "drizzle-orm"
+import { and, eq, gt, isNull, or } from "drizzle-orm"
 import { headers } from "next/headers"
 import { z } from "zod"
 import { assertPermission } from "@/lib/auth/permissions"
@@ -85,7 +87,7 @@ export async function getPropertyFormData(id: string) {
   const parsedId = idSchema.parse(id)
   const property = await getPropertyById(parsedId)
   if (!property) return null
-  const [details, ownerRows] = await Promise.all([
+  const [details, ownerRows, shareableListings] = await Promise.all([
     getPropertyDetails(property.id, property.type),
     getDatabase()
       .select({
@@ -94,8 +96,30 @@ export async function getPropertyFormData(id: string) {
       })
       .from(schema.propertyOwners)
       .where(eq(schema.propertyOwners.propertyId, property.id)),
+    getDatabase()
+      .select({
+        id: schema.listings.id,
+        title: schema.properties.title,
+        listingType: schema.listings.type,
+      })
+      .from(schema.listings)
+      .innerJoin(
+        schema.properties,
+        eq(schema.listings.propertyId, schema.properties.id)
+      )
+      .where(
+        and(
+          eq(schema.listings.propertyId, property.id),
+          eq(schema.listings.status, "active"),
+          isNull(schema.properties.archivedAt),
+          or(
+            isNull(schema.listings.expiresAt),
+            gt(schema.listings.expiresAt, new Date())
+          )
+        )
+      ),
   ])
-  return { property, details, ownerRows }
+  return { property, details, ownerRows, shareableListings }
 }
 
 export async function getPropertyOwnerOptions() {
@@ -120,6 +144,32 @@ export async function getListingsTableData() {
   const actor = await getActor()
   await assertPermission(actor.id, "listings.read")
   return listListings({ pageSize: 100 })
+}
+
+export async function createListingShareLink(id: string) {
+  const actor = await getActor()
+  await assertPermission(actor.id, "listings.read")
+  const parsedId = idSchema.parse(id)
+  const listing = await getPublicListingById(parsedId)
+  if (!listing) {
+    throw new Error("This listing is not available for public sharing.")
+  }
+
+  const defaultExpiration = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000)
+  const expiresAt =
+    listing.expiresAt && listing.expiresAt < defaultExpiration
+      ? listing.expiresAt
+      : defaultExpiration
+  const shortLink = await createShortLink({
+    resourceType: "listing",
+    resourceId: listing.id,
+    createdById: actor.id,
+    actorName: actor.name,
+    actorEmail: actor.email,
+    expiresAt,
+  })
+
+  return { token: shortLink.token, expiresAt: shortLink.expiresAt }
 }
 
 export async function getOwnersTableData() {

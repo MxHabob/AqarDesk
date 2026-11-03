@@ -22,6 +22,7 @@ import { ListingMediaForm } from "@/components/forms/listing-media-form"
 import { OwnerForm } from "@/components/forms/owner-form"
 import { PropertyForm } from "@/components/forms/property-form"
 import { RealEstateSubmitButton } from "@/components/forms/real-estate-fields"
+import { ShareListingDialog } from "@/components/real-estate/share-listing-dialog"
 import { useRealEstateParams } from "@/hooks/use-real-estate-params"
 
 function CloseButton({ onClose }: { onClose: () => void }) {
@@ -57,6 +58,7 @@ export function PropertySheet() {
   useEffect(() => {
     let active = true
     setError(undefined)
+    setData(null)
     if (propertyId) {
       getPropertyFormData(propertyId)
         .then((result) => {
@@ -111,7 +113,12 @@ export function PropertySheet() {
                 ? "تعديل العقار"
                 : "إضافة عقار"}
           </SheetTitle>
-          <CloseButton onClose={close} />
+          <div className="flex items-center gap-2">
+            {readOnly && data && (
+              <ShareListingDialog listings={data.shareableListings} />
+            )}
+            <CloseButton onClose={close} />
+          </div>
         </SheetHeader>
         {error ? (
           <p className="text-sm text-destructive" role="alert">
@@ -154,6 +161,7 @@ export function ListingSheet() {
   useEffect(() => {
     let active = true
     setError(undefined)
+    setData(null)
     if (listingId) {
       getListingFormData(listingId)
         .then((result) => {
@@ -207,7 +215,27 @@ export function ListingSheet() {
                 ? "تعديل الإعلان"
                 : "إنشاء إعلان"}
           </SheetTitle>
-          <CloseButton onClose={close} />
+          <div className="flex items-center gap-2">
+            {readOnly && data && (
+              <ShareListingDialog
+                listings={
+                  data.listing.status === "active" &&
+                  !data.property.archivedAt &&
+                  (!data.listing.expiresAt ||
+                    data.listing.expiresAt > new Date())
+                    ? [
+                        {
+                          id: data.listing.id,
+                          title: data.property.title,
+                          listingType: data.listing.type,
+                        },
+                      ]
+                    : []
+                }
+              />
+            )}
+            <CloseButton onClose={close} />
+          </div>
         </SheetHeader>
         {error ? (
           <p className="text-sm text-destructive" role="alert">

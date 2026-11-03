@@ -1,5 +1,6 @@
 import { auth } from "@aqardesk/auth/server"
 import type { Metadata } from "next"
+import { Suspense } from "react"
 import { headers } from "next/headers"
 import Link from "next/link"
 import { redirect } from "next/navigation"
@@ -9,9 +10,11 @@ import { CompanyEmail } from "@/components/company-email"
 import { CompanyFiscalYear } from "@/components/company-fiscal-year"
 import { CompanyLogo } from "@/components/company-logo"
 import { CompanyName } from "@/components/company-name"
+import { CompanyPhone } from "@/components/company-phone"
 import { DeleteTeam } from "@/components/delete-team"
 import { ExportAllData } from "@/components/export-all-data"
 import { TeamIdSection } from "@/components/team-id-section"
+import { SettingsLoading } from "@/components/settings-loading"
 import { hasPermission } from "@/lib/auth/permissions"
 import { officeSettingsQueryOptions } from "@/queries/office-settings"
 import { getQueryClient, HydrateClient } from "@/queries/server"
@@ -58,21 +61,24 @@ export default async function Account({
     )
   }
 
-  await getQueryClient().prefetchQuery(officeSettingsQueryOptions())
+  void getQueryClient().prefetchQuery(officeSettingsQueryOptions())
 
   return (
     <HydrateClient>
-      <div className="space-y-12">
-        <CompanyLogo />
-        <CompanyName />
-        <CompanyEmail />
-        <CompanyCountry />
-        <BaseCurrency />
-        <CompanyFiscalYear />
-        <TeamIdSection />
-        <ExportAllData />
-        <DeleteTeam />
-      </div>
+      <Suspense fallback={<SettingsLoading count={10} />}>
+        <div className="space-y-12">
+          <CompanyLogo />
+          <CompanyName />
+          <CompanyEmail />
+          <CompanyPhone />
+          <CompanyCountry />
+          <BaseCurrency />
+          <CompanyFiscalYear />
+          <TeamIdSection />
+          <ExportAllData />
+          <DeleteTeam />
+        </div>
+      </Suspense>
     </HydrateClient>
   )
 }

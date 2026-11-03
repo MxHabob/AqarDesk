@@ -5,14 +5,13 @@ import type { Metadata } from "next"
 import { Hedvig_Letters_Sans, Hedvig_Letters_Serif } from "next/font/google"
 import { notFound } from "next/navigation"
 import type { ReactNode } from "react"
+import { siteOrigin } from "@/lib/marketing/metadata"
 import type { AppLocale } from "@/locales/config"
 import { locales } from "@/locales/config"
 import { Providers } from "./providers"
 
 export const metadata: Metadata = {
-  metadataBase: new URL(
-    process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"
-  ),
+  metadataBase: new URL(siteOrigin),
 }
 
 export const viewport = {

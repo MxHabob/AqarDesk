@@ -86,7 +86,9 @@ export async function resolveShortLink(
   token: string,
   database = getDatabase()
 ) {
-  if (!/^[A-Za-z0-9_-]{40,50}$/.test(token)) return undefined
+  if (!/^(?:[A-Za-z0-9_-]{20,30}|[A-Za-z0-9_-]{40,50})$/.test(token)) {
+    return undefined
+  }
 
   const [shortLink] = await database
     .select({
