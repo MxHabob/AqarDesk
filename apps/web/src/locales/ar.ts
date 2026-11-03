@@ -13,6 +13,11 @@ export default {
     yard: "أراضٍ وأحواش",
     apartment: "شقق",
   },
+  homeCategories: {
+    title: "استكشف العقارات حسب الفئة",
+    description: "اكتشف عقارات للبيع والإيجار، واختر ما يناسبك.",
+    viewListings: "عرض العقارات",
+  },
   common: {
     dashboard: "لوحة التحكم",
     listings: "العروض العقارية",

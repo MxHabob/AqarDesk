@@ -9,6 +9,11 @@ export default {
     yard: "Yards",
     apartment: "Apartments",
   },
+  homeCategories: {
+    title: "Explore properties by category",
+    description: "Explore properties for sale and rent, and find the right fit.",
+    viewListings: "View listings",
+  },
   common: {
     properties: "Properties",
     listings: "Listings",
