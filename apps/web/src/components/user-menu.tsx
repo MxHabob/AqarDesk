@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   ChatGPTMcpLogo,
@@ -6,9 +6,9 @@ import {
   CursorMcpLogo,
   GeminiMcpLogo,
   MiddayDesktopLogo,
-} from "@aqardesk/app-store/logos";
-import { isDesktopApp } from "@aqardesk/desktop-client/platform";
-import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar";
+} from "@aqardesk/app-store/logos"
+import { isDesktopApp } from "@aqardesk/desktop-client/platform"
+import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar"
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -17,18 +17,20 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@aqardesk/ui/dropdown-menu";
-import Link from "next/link";
-import { useUserQuery } from "@/hooks/use-user";
-import { SignOut } from "./sign-out";
-import { ThemeSwitch } from "./theme-switch";
+} from "@aqardesk/ui/dropdown-menu"
+import Link from "next/link"
+import { useCurrentLocale } from "@/locales/client"
+import { useUserQuery } from "@/hooks/use-user"
+import { SignOut } from "./sign-out"
+import { ThemeSwitch } from "./theme-switch"
 
 type Props = {
-  onlySignOut?: boolean;
-};
+  onlySignOut?: boolean
+}
 
 export function UserMenu({ onlySignOut }: Props) {
-  const { data: user } = useUserQuery();
+  const { data: user } = useUserQuery()
+  const locale = useCurrentLocale()
 
   return (
     <DropdownMenu>
@@ -36,8 +38,8 @@ export function UserMenu({ onlySignOut }: Props) {
         <Avatar className="rounded-full w-8 h-8 cursor-pointer bg-accent">
           {user?.avatarUrl && (
             <AvatarImageNext
-              src={user?.avatarUrl}
-              alt={user?.fullName ?? ""}
+              src={user.avatarUrl}
+              alt={user.fullName}
               width={32}
               height={32}
               quality={100}
@@ -45,7 +47,7 @@ export function UserMenu({ onlySignOut }: Props) {
           )}
           <AvatarFallback>
             <span className="text-xs">
-              {user?.fullName?.charAt(0)?.toUpperCase()}
+              {user?.fullName.charAt(0).toUpperCase()}
             </span>
           </AvatarFallback>
         </Avatar>
@@ -69,15 +71,15 @@ export function UserMenu({ onlySignOut }: Props) {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <Link href="/account">
+              <Link href={`/${locale}/account`}>
                 <DropdownMenuItem className="text-xs">Account</DropdownMenuItem>
               </Link>
 
-              <Link href="/account/support">
+              <Link href={`/${locale}/account/support`}>
                 <DropdownMenuItem className="text-xs">Support</DropdownMenuItem>
               </Link>
 
-              <Link href="/account/teams">
+              <Link href={`/${locale}/account/teams`}>
                 <DropdownMenuItem className="text-xs">Teams</DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>
@@ -85,7 +87,7 @@ export function UserMenu({ onlySignOut }: Props) {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <Link href="/apps">
+              <Link href={`/${locale}/apps`}>
                 <DropdownMenuItem className="text-xs flex items-center justify-between">
                   <span>Apps</span>
                   <div
@@ -151,5 +153,5 @@ export function UserMenu({ onlySignOut }: Props) {
         }
       </style>
     </DropdownMenu>
-  );
+  )
 }

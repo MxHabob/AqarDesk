@@ -11,7 +11,7 @@ import {
   RealEstateSummarySkeleton,
 } from "@/components/tables/real-estate-summary"
 import { realEstateQueries } from "@/queries/real-estate"
-import { getQueryClient, HydrateClient } from "@/trpc/server"
+import { getQueryClient, HydrateClient } from "@/queries/server"
 
 export const metadata: Metadata = {
   title: "الإعلانات | AqarDesk",

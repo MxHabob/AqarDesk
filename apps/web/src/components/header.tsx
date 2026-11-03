@@ -1,10 +1,10 @@
 import { Skeleton } from "@aqardesk/ui/skeleton"
-import { Suspense } from "react"
+import { UserMenu } from "@/components/user-menu"
 import { ConnectionStatus } from "@/components/connection-status"
 import { NotificationCenter } from "@/components/notification-center"
 import { OpenSearchButton } from "@/components/search/open-search-button"
-import { UserMenu } from "@/components/user-menu"
 import { MobileMenu } from "./mobile-menu"
+import { Suspense } from "react"
 
 function UserMenuSkeleton() {
   return <Skeleton className="w-8 h-8 rounded-full" />

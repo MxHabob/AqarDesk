@@ -50,6 +50,13 @@
       "when": 1793713234562,
       "tag": "0006_oval_captain_britain",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1793715949690,
+      "tag": "0007_cloudy_shotgun",
+      "breakpoints": true
     }
   ]
 }

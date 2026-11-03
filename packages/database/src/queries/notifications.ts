@@ -1,11 +1,17 @@
-import { and, desc, eq, isNull } from "drizzle-orm"
+import { and, desc, eq, isNotNull, isNull } from "drizzle-orm"
 import { getDatabase, schema } from "../index"
 import { normalizePagination } from "../utils/pagination"
 import type { DatabaseOrTransaction } from "./types"
 
 export async function listNotifications(
   userId: string,
-  options: { page?: number; pageSize?: number; unreadOnly?: boolean } = {},
+  options: {
+    page?: number
+    pageSize?: number
+    unreadOnly?: boolean
+    archivedOnly?: boolean
+    excludeArchived?: boolean
+  } = {},
   database = getDatabase()
 ) {
   const { limit, offset } = normalizePagination(options)
@@ -16,7 +22,13 @@ export async function listNotifications(
     .where(
       and(
         eq(schema.notifications.userId, userId),
-        options.unreadOnly ? isNull(schema.notifications.readAt) : undefined
+        options.unreadOnly ? isNull(schema.notifications.readAt) : undefined,
+        options.archivedOnly
+          ? isNotNull(schema.notifications.archivedAt)
+          : undefined,
+        options.excludeArchived
+          ? isNull(schema.notifications.archivedAt)
+          : undefined
       )
     )
     .orderBy(desc(schema.notifications.createdAt))
@@ -67,6 +79,46 @@ export async function markAllNotificationsRead(
       and(
         eq(schema.notifications.userId, userId),
         isNull(schema.notifications.readAt)
+      )
+    )
+    .returning({ id: schema.notifications.id })
+
+  return notifications.length
+}
+
+export async function archiveNotification(
+  id: string,
+  userId: string,
+  database: DatabaseOrTransaction = getDatabase()
+) {
+  const archivedAt = new Date()
+  const [notification] = await database
+    .update(schema.notifications)
+    .set({ readAt: archivedAt, archivedAt })
+    .where(
+      and(
+        eq(schema.notifications.id, id),
+        eq(schema.notifications.userId, userId),
+        isNull(schema.notifications.archivedAt)
+      )
+    )
+    .returning()
+
+  return notification
+}
+
+export async function archiveAllNotifications(
+  userId: string,
+  database: DatabaseOrTransaction = getDatabase()
+) {
+  const archivedAt = new Date()
+  const notifications = await database
+    .update(schema.notifications)
+    .set({ readAt: archivedAt, archivedAt })
+    .where(
+      and(
+        eq(schema.notifications.userId, userId),
+        isNull(schema.notifications.archivedAt)
       )
     )
     .returning({ id: schema.notifications.id })

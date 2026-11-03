@@ -34,12 +34,9 @@ export function NotificationItem({
   const recordId = getMetadataProperty(activity, "recordId")
   const metadata = getMetadata(activity)
 
-  const description = getNotificationDescription(
-    activity.type,
-    metadata,
-    user,
-    t
-  )
+  const description =
+    activity.title ||
+    getNotificationDescription(activity.type, metadata, user, t)
 
   const notificationContent = (
     <>

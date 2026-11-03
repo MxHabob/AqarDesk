@@ -12,6 +12,23 @@ export async function listTeams(database = getDatabase()) {
     .orderBy(asc(schema.teams.name))
 }
 
+export async function listUserTeams(userId: string, database = getDatabase()) {
+  return database
+    .select({
+      id: schema.teams.id,
+      name: schema.teams.name,
+    })
+    .from(schema.teamMembers)
+    .innerJoin(schema.teams, eq(schema.teamMembers.teamId, schema.teams.id))
+    .where(
+      and(
+        eq(schema.teamMembers.userId, userId),
+        isNull(schema.teams.archivedAt)
+      )
+    )
+    .orderBy(asc(schema.teams.name))
+}
+
 export async function getTeamById(id: string, database = getDatabase()) {
   const [team] = await database
     .select()

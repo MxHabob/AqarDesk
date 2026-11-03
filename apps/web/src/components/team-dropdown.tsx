@@ -17,9 +17,10 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useOnClickOutside } from "usehooks-ts";
-import { revalidateAfterTeamChange } from "@/actions/revalidate-action";
-import { useUserQuery } from "@/hooks/use-user";
-import { useTRPC } from "@/trpc/client";
+import {
+  getUserTeamsAction,
+  switchActiveTeamAction,
+} from "@/actions/teams";
 
 type Props = {
   isExpanded?: boolean;
@@ -42,36 +43,34 @@ function TeamDropdownSkeleton({ isExpanded }: { isExpanded: boolean }) {
 
 export function TeamDropdown({ isExpanded = false }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const { data: user } = useUserQuery();
-  const trpc = useTRPC();
   const { track } = useOpenPanel();
   const queryClient = useQueryClient();
 
-  const [selectedId, setSelectedId] = useState<string | undefined>(
-    user?.team?.id,
-  );
   const [isActive, setActive] = useState(false);
   const [isChangingTeam, setIsChangingTeam] = useState(false);
 
-  const changeTeamMutation = useMutation(
-    trpc.user.switchTeam.mutationOptions({
-      onSuccess: async () => {
-        await queryClient.invalidateQueries();
-        setIsChangingTeam(false);
-        await revalidateAfterTeamChange();
-      },
-    }),
-  );
+  const changeTeamMutation = useMutation({
+    mutationFn: switchActiveTeamAction,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey: ["user-teams"] });
+      setIsChangingTeam(false);
+    },
+    onError: () => {
+      setIsChangingTeam(false);
+      setActive(false);
+    },
+  });
 
-  const { data: teams, isLoading: isTeamsLoading } = useQuery(
-    trpc.team.list.queryOptions(),
-  );
-
-  useEffect(() => {
-    if (user?.team?.id) {
-      setSelectedId(user.team.id);
-    }
-  }, [user?.team?.id]);
+  const {
+    data: teamData,
+    isLoading: isTeamsLoading,
+    isError: isTeamsError,
+  } = useQuery({
+    queryKey: ["user-teams"],
+    queryFn: getUserTeamsAction,
+  });
+  const teams = teamData?.teams;
+  const selectedId = teamData?.selectedTeamId;
 
   const sortedTeams =
     teams?.sort((a, b) => {
@@ -92,7 +91,7 @@ export function TeamDropdown({ isExpanded = false }: Props) {
 
   // Show skeleton while teams are loading
   // Note: user loading is handled by Suspense since useUserQuery uses useSuspenseQuery
-  if (isTeamsLoading) {
+  if (isTeamsLoading || isTeamsError) {
     return <TeamDropdownSkeleton isExpanded={isExpanded} />;
   }
 
@@ -107,7 +106,7 @@ export function TeamDropdown({ isExpanded = false }: Props) {
     setActive(false);
 
     track(LogEvents.ChangeTeam.name);
-    changeTeamMutation.mutate({ teamId });
+    changeTeamMutation.mutate(teamId);
   };
 
   return (

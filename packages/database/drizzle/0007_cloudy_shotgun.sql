@@ -1,0 +1,2 @@
+ALTER TABLE "notification" ADD COLUMN "archived_at" timestamp with time zone;--> statement-breakpoint
+CREATE INDEX "notification_user_archived_idx" ON "notification" USING btree ("user_id","archived_at");

@@ -1,17 +1,22 @@
-import type { Metadata } from "next";
-import { OverviewView } from "@/components/widgets";
-import { HydrateClient, prefetch, trpc } from "@/trpc/server";
+import type { Metadata } from "next"
+import { OverviewView } from "@/components/widgets"
+import { getDashboardSummaryAction } from "@/actions/dashboard"
+import { getQueryClient, HydrateClient } from "@/queries/server"
 
 export const metadata: Metadata = {
   title: "Overview | AqarDesk",
 };
 
-export default function Overview() {
-  prefetch(trpc.overview.summary.queryOptions());
+export default async function Overview() {
+  const queryClient = getQueryClient()
+  await queryClient.prefetchQuery({
+    queryKey: ["dashboard-summary"],
+    queryFn: getDashboardSummaryAction,
+  })
 
   return (
     <HydrateClient>
       <OverviewView />
     </HydrateClient>
-  );
+  )
 }

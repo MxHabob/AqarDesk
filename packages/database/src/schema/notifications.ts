@@ -22,6 +22,7 @@ export const notifications = pgTable(
     body: text("body"),
     data: jsonb("data").$type<Record<string, unknown>>(),
     readAt: timestamp("read_at", { withTimezone: true }),
+    archivedAt: timestamp("archived_at", { withTimezone: true }),
     createdAt: timestamp("created_at", { withTimezone: true })
       .notNull()
       .defaultNow(),
@@ -31,5 +32,6 @@ export const notifications = pgTable(
     index("notification_user_unread_idx")
       .on(table.userId, table.createdAt)
       .where(sql`${table.readAt} is null`),
+    index("notification_user_archived_idx").on(table.userId, table.archivedAt),
   ]
 )

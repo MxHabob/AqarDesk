@@ -4,8 +4,8 @@ import type { ReactNode } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
 import type { AppLocale } from "@/locales/config"
 import { I18nProviderClient } from "@/locales/client"
-import { TRPCReactProvider } from "@/trpc/client"
 import { NuqsAdapter } from "nuqs/adapters/next/app"
+import { QueryProvider } from "@/queries/query-provider"
 
 export function Providers({
   locale,
@@ -16,7 +16,7 @@ export function Providers({
 }) {
   return (
     <NuqsAdapter>
-      <TRPCReactProvider>
+      <QueryProvider>
         <I18nProviderClient locale={locale}>
           <ThemeProvider
             attribute="class"
@@ -27,7 +27,7 @@ export function Providers({
             {children}
           </ThemeProvider>
         </I18nProviderClient>
-      </TRPCReactProvider>
+      </QueryProvider>
     </NuqsAdapter>
   )
 }

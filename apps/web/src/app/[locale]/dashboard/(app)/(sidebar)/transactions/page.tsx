@@ -6,7 +6,7 @@ import { ScrollableContent } from "@/components/scrollable-content"
 import { PropertiesTable } from "@/components/tables/properties"
 import { PropertiesSkeleton } from "@/components/tables/properties/skeleton"
 import { realEstateQueries } from "@/queries/real-estate"
-import { getQueryClient, HydrateClient } from "@/trpc/server"
+import { getQueryClient, HydrateClient } from "@/queries/server"
 
 export const metadata: Metadata = {
   title: "العقارات | AqarDesk",
