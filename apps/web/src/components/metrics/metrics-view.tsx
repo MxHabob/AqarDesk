@@ -1,14 +1,8 @@
 "use client"
 
-import { Button } from "@aqardesk/ui/button"
-import { useQuery } from "@tanstack/react-query"
 import { useSearchParams } from "next/navigation"
-import { useQueryState } from "nuqs"
 import { useCallback, useEffect, useMemo, useRef, useState } from "react"
 import { updateMetricsSettingsAction } from "@/actions/update-metrics-settings-action"
-import { useMetricsFilter } from "@/hooks/use-metrics-filter"
-import { useUserQuery } from "@/hooks/use-user"
-import { useTRPC } from "@/trpc/client"
 import { BurnRateCard } from "./cards/burn-rate-card"
 import { CashBalanceCard } from "./cards/cash-balance-card"
 import { CategoryExpensesCard } from "./cards/category-expenses-card"
@@ -17,6 +11,8 @@ import { MonthlyRevenueCard } from "./cards/monthly-revenue-card"
 import { ProfitCard } from "./cards/profit-card"
 import { RevenueForecastCard } from "./cards/revenue-forecast-card"
 import { RunwayCard } from "./cards/runway-card"
+import { useMetricsFilter } from "@/hooks/use-metrics-filter"
+import { useUserQuery } from "@/hooks/use-user"
 import { DraggableChartCard } from "./components/draggable-chart-card"
 import { MetricsGrid } from "./components/metrics-grid"
 import {
@@ -32,19 +28,20 @@ const ORDERED_SPANS: ColSpan[] = [4, 6, 8, 12]
 function closestSpan(n: number): ColSpan {
   let best: ColSpan = 4
   let bestDist = Math.abs(n - 4)
-  for (const s of ORDERED_SPANS) {
-    const d = Math.abs(n - s)
-    if (d < bestDist) {
-      best = s
-      bestDist = d
+  for (const span of ORDERED_SPANS) {
+    const distance = Math.abs(n - span)
+    if (distance < bestDist) {
+      best = span
+      bestDist = distance
     }
   }
   return best
 }
 
 function largestSpanFitting(max: number): ColSpan {
-  for (let i = ORDERED_SPANS.length - 1; i >= 0; i--) {
-    if (ORDERED_SPANS[i]! <= max) return ORDERED_SPANS[i]!
+  for (let index = ORDERED_SPANS.length - 1; index >= 0; index--) {
+    const span = ORDERED_SPANS[index]!
+    if (span <= max) return span
   }
   return 4
 }
@@ -58,9 +55,9 @@ function fillRowGap(
 ) {
   if (rowTotal >= 12) return
   const gap = 12 - rowTotal
-  for (let j = end; j >= start; j--) {
-    if (items[j]!.id !== protectedId) {
-      items[j]!.colSpan = closestSpan(items[j]!.colSpan + gap)
+  for (let index = end; index >= start; index--) {
+    if (items[index]!.id !== protectedId) {
+      items[index]!.colSpan = closestSpan(items[index]!.colSpan + gap)
       return
     }
   }
@@ -70,23 +67,20 @@ function normalizeRows(
   layout: ChartLayoutItem[],
   protectedId?: ChartId
 ): ChartLayoutItem[] {
-  const result: ChartLayoutItem[] = layout.map((item) => ({ ...item }))
-
+  const result = layout.map((item) => ({ ...item }))
   let rowStart = 0
   let rowTotal = 0
 
-  for (let i = 0; i < result.length; i++) {
-    const item = result[i]!
-
+  for (let index = 0; index < result.length; index++) {
+    const item = result[index]!
     if (rowTotal + item.colSpan > 12) {
       const remaining = 12 - rowTotal
-
       if (remaining >= 4 && item.id !== protectedId) {
         item.colSpan = largestSpanFitting(remaining)
         rowTotal += item.colSpan
       } else {
-        fillRowGap(result, rowStart, i - 1, rowTotal, protectedId)
-        rowStart = i
+        fillRowGap(result, rowStart, index - 1, rowTotal, protectedId)
+        rowStart = index
         rowTotal = item.colSpan
       }
     } else {
@@ -94,13 +88,12 @@ function normalizeRows(
     }
 
     if (rowTotal >= 12) {
-      rowStart = i + 1
+      rowStart = index + 1
       rowTotal = 0
     }
   }
 
   fillRowGap(result, rowStart, result.length - 1, rowTotal, protectedId)
-
   return result
 }
 
@@ -113,12 +106,9 @@ export function MetricsView({
   initialLayout,
   isEditing = false,
 }: MetricsViewProps) {
-  const trpc = useTRPC()
   const { data: user } = useUserQuery()
-  const { data: connections } = useQuery(
-    trpc.bankConnections.get.queryOptions()
-  )
-  const { from, to, currency, revenueType } = useMetricsFilter()
+  const { from, to } = useMetricsFilter()
+  const locale = user?.locale ?? undefined
   const [layout, setLayout] = useState<ChartLayoutItem[]>(
     initialLayout ?? DEFAULT_CHART_LAYOUT
   )
@@ -143,10 +133,7 @@ export function MetricsView({
     []
   )
 
-  const gridRef = useRef<HTMLDivElement>(null!)
-
-  const locale = user?.locale ?? undefined
-
+  const gridRef = useRef<HTMLDivElement>(null)
   const normalizedLayout = useMemo(() => {
     const seen = new Set(layout.map((item) => item.id))
     const missing = DEFAULT_CHART_ORDER.filter((id) => !seen.has(id))
@@ -157,23 +144,17 @@ export function MetricsView({
       ...layout,
       ...missing.map((id) => ({
         id,
-        colSpan: defaultSpans.get(id) ?? (6 as ColSpan),
+        colSpan: defaultSpans.get(id) ?? 6,
       })),
     ]
   }, [layout])
 
-  const [_, setStep] = useQueryState("step")
-  const hasConnections = connections && connections.length > 0
-  const showConnectOverlay = connections !== undefined && !hasConnections
-
-  const renderChart = (chartId: ChartId, index: number) => {
+  const renderChart = (chartId: ChartId, _index: number) => {
     const commonProps = {
       from,
       to,
-      currency,
       locale,
       isCustomizing: isEditing,
-      revenueType,
     }
 
     const chartContent = (() => {
@@ -195,7 +176,8 @@ export function MetricsView({
         case "cash-balance":
           return (
             <CashBalanceCard
-              currency={currency}
+              from={from}
+              to={to}
               locale={locale}
               isCustomizing={isEditing}
             />
@@ -212,30 +194,7 @@ export function MetricsView({
         isEditing={isEditing}
         onResize={(newColSpan) => handleResizeChart(chartId, newColSpan)}
       >
-        {showConnectOverlay ? (
-          <div
-            className="relative overflow-hidden group/connect cursor-pointer border border-border bg-background"
-            onClick={() => setStep("connect")}
-            onKeyDown={(e) => e.key === "Enter" && setStep("connect")}
-            role="button"
-            tabIndex={0}
-          >
-            <div className="transition-all duration-200 group-hover/connect:blur-[7px] group-hover/connect:opacity-20 group-hover/connect:pointer-events-none group-hover/connect:select-none [&>*]:border-0">
-              {chartContent}
-            </div>
-            <div className="absolute inset-0 z-10 flex items-center justify-center opacity-0 pointer-events-none group-hover/connect:opacity-100 transition-opacity duration-200">
-              <div className="text-center flex flex-col items-center">
-                <h2 className="text-lg font-medium mb-2">No data available</h2>
-                <p className="text-sm text-[#878787] mb-4">
-                  Connect your bank account to unlock this metric.
-                </p>
-                <Button>Connect Bank</Button>
-              </div>
-            </div>
-          </div>
-        ) : (
-          chartContent
-        )}
+        {chartContent}
       </DraggableChartCard>
     )
   }
@@ -248,17 +207,14 @@ export function MetricsView({
 
     let attempts = 0
     const maxAttempts = 15
-
     const tryScroll = () => {
-      const el = document.getElementById(scrollTo)
-      if (el) {
-        el.scrollIntoView({ behavior: "smooth", block: "start" })
+      const element = document.getElementById(scrollTo)
+      if (element) {
+        element.scrollIntoView({ behavior: "smooth", block: "start" })
         return
       }
       attempts++
-      if (attempts < maxAttempts) {
-        setTimeout(tryScroll, 100)
-      }
+      if (attempts < maxAttempts) setTimeout(tryScroll, 100)
     }
 
     tryScroll()

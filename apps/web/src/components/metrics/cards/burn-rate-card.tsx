@@ -1,19 +1,17 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
 import { useMemo } from "react"
 import { AnimatedNumber } from "@/components/animated-number"
 import { BurnRateChart } from "@/components/charts/burn-rate-chart"
 import { formatChartMonth } from "@/components/charts/chart-utils"
-import { useTRPC } from "@/trpc/client"
+import { useRealEstateMetricsQuery } from "@/hooks/use-real-estate-metrics"
+import { useI18n } from "@/locales/client"
 import { ChartFadeIn } from "../components/chart-loading-overlay"
 import { DragIndicator } from "../components/drag-indicator"
-import { ShareMetricButton } from "../components/share-metric-button"
 
 interface BurnRateCardProps {
   from: string
   to: string
-  currency?: string
   locale?: string
   isCustomizing?: boolean
 }
@@ -21,50 +19,40 @@ interface BurnRateCardProps {
 export function BurnRateCard({
   from,
   to,
-  currency,
   locale,
   isCustomizing,
 }: BurnRateCardProps) {
-  const trpc = useTRPC()
+  const { data: metrics } = useRealEstateMetricsQuery(from, to)
+  const t = useI18n()
+  const monthlyData = metrics?.listings.byMonth ?? []
 
-  const { data: burnRateData } = useQuery(
-    trpc.reports.burnRate.queryOptions({
-      from,
-      to,
-      currency: currency,
-    })
-  )
-
-  // Transform burn rate data
   const burnRateChartData = useMemo(() => {
-    if (!burnRateData || burnRateData.length === 0) return []
+    const average = monthlyData.length
+      ? monthlyData.reduce((sum, item) => sum + item.total, 0) /
+        monthlyData.length
+      : 0
 
-    const values = burnRateData.map((item) => item.value)
-    const average = values.reduce((sum, val) => sum + val, 0) / values.length
-
-    const totalMonths = burnRateData.length
-
-    return burnRateData.map((item) => ({
-      month: formatChartMonth(item.date, totalMonths),
-      amount: item.value,
+    return monthlyData.map((item) => ({
+      month: formatChartMonth(`${item.month}-01`, monthlyData.length),
+      amount: item.total,
       average,
-      currentBurn: item.value,
+      currentBurn: item.total,
       averageBurn: average,
     }))
-  }, [burnRateData])
+  }, [monthlyData])
 
-  const averageBurnRate = useMemo(() => {
-    if (!burnRateData || burnRateData.length === 0) return 0
-    const values = burnRateData.map((item) => item.value)
-    return values.reduce((sum, val) => sum + val, 0) / values.length
-  }, [burnRateData])
+  const averageBurnRate =
+    monthlyData.length > 0
+      ? monthlyData.reduce((sum, item) => sum + item.total, 0) /
+        monthlyData.length
+      : 0
 
   return (
     <div className="border bg-background border-border p-6 flex flex-col h-full relative group">
       <div className="mb-4 min-h-[140px]">
         <div className="flex items-start justify-between h-7">
           <h3 className="text-sm font-normal text-muted-foreground">
-            Average Monthly Burn Rate
+            {t("metrics.listingsCreatedOverTime")}
           </h3>
           <div
             className={
@@ -73,22 +61,12 @@ export function BurnRateCard({
                 : "opacity-0 group-hover:opacity-100 group-has-[*[data-state=open]]:opacity-100 transition-opacity"
             }
           >
-            {isCustomizing ? (
-              <DragIndicator />
-            ) : (
-              <ShareMetricButton
-                type="burn_rate"
-                from={from}
-                to={to}
-                currency={currency}
-              />
-            )}
+            {isCustomizing && <DragIndicator />}
           </div>
         </div>
         <p className="text-3xl font-normal mb-3">
           <AnimatedNumber
             value={averageBurnRate}
-            currency={currency || "USD"}
             locale={locale}
             maximumFractionDigits={0}
           />
@@ -96,7 +74,9 @@ export function BurnRateCard({
         <div className="flex items-center gap-4 mt-2">
           <div className="flex gap-2 items-center">
             <div className="w-2 h-2 bg-foreground" />
-            <span className="text-xs text-muted-foreground">Monthly</span>
+            <span className="text-xs text-muted-foreground">
+              {t("common.listings")}
+            </span>
           </div>
           <div className="flex gap-2 items-center">
             <div
@@ -115,7 +95,6 @@ export function BurnRateCard({
             <BurnRateChart
               data={burnRateChartData}
               height={320}
-              currency={currency}
               locale={locale}
             />
           </ChartFadeIn>

@@ -9,9 +9,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
   DropdownMenuSub,
   DropdownMenuSubContent,
   DropdownMenuSubTrigger,
@@ -19,60 +16,29 @@ import {
 } from "@aqardesk/ui/dropdown-menu"
 import { Icons } from "@aqardesk/ui/icons"
 import { Check } from "lucide-react"
-import { useQuery } from "@tanstack/react-query"
 import { format, formatISO, parseISO } from "date-fns"
 import { useState } from "react"
 import type { DateRange } from "react-day-picker"
 import { useMetricsFilter } from "@/hooks/use-metrics-filter"
-import { useTeamQuery } from "@/hooks/use-team"
 import { useUserQuery } from "@/hooks/use-user"
-import { useTRPC } from "@/trpc/client"
+import { useI18n } from "@/locales/client"
 import type { PeriodOption } from "@/utils/metrics-date-utils"
 
-const PERIOD_OPTIONS: Array<{ value: PeriodOption; label: string }> = [
-  { value: "3-months", label: "3 months" },
-  { value: "6-months", label: "6 months" },
-  { value: "this-year", label: "This year" },
-  { value: "1-year", label: "1 year" },
-  { value: "2-years", label: "2 years" },
-  { value: "5-years", label: "5 years" },
-  { value: "fiscal-year", label: "Fiscal year" },
-  { value: "custom", label: "Custom" },
-]
-
-const REVENUE_TYPE_OPTIONS: Array<{ value: "gross" | "net"; label: string }> = [
-  { value: "gross", label: "Gross Revenue (inc tax)" },
-  { value: "net", label: "Net Revenue (ex tax)" },
-]
-
 export function MetricsFilter() {
-  const { data: team } = useTeamQuery()
+  const t = useI18n()
   const { data: user } = useUserQuery()
-  const trpc = useTRPC()
-  const {
-    period,
-    revenueType,
-    effectiveCurrency,
-    from,
-    to,
-    updatePeriod,
-    updateRevenueType,
-    updateCurrency,
-    updateDateRange,
-  } = useMetricsFilter()
+  const { period, from, to, updatePeriod, updateDateRange } = useMetricsFilter()
 
-  const { data: currencies } = useQuery(
-    trpc.bankAccounts.currencies.queryOptions()
-  )
-
-  const baseCurrency = team?.baseCurrency
-
-  // Get unique currencies from bank accounts, excluding base currency
-  const uniqueCurrencies = currencies
-    ? [...new Set(currencies.map((c) => c.currency).filter(Boolean))]
-        .filter((curr) => curr !== baseCurrency)
-        .sort()
-    : []
+  const periodOptions: Array<{ value: PeriodOption; label: string }> = [
+    { value: "3-months", label: t("metrics.threeMonths") },
+    { value: "6-months", label: t("metrics.sixMonths") },
+    { value: "this-year", label: t("metrics.thisYear") },
+    { value: "1-year", label: t("metrics.oneYear") },
+    { value: "2-years", label: t("metrics.twoYears") },
+    { value: "5-years", label: t("metrics.fiveYears") },
+    { value: "fiscal-year", label: t("metrics.fiscalYear") },
+    { value: "custom", label: t("metrics.custom") },
+  ]
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false)
 
@@ -101,8 +67,8 @@ export function MetricsFilter() {
     }
 
     // Otherwise, show period label
-    const option = PERIOD_OPTIONS.find((opt) => opt.value === period)
-    return option?.label || "1 year"
+    const option = periodOptions.find((opt) => opt.value === period)
+    return option?.label || t("metrics.oneYear")
   }
 
   return (
@@ -118,9 +84,9 @@ export function MetricsFilter() {
         {/* PERIOD Section */}
         <DropdownMenuGroup>
           <DropdownMenuLabel className="text-[10px] text-muted-foreground font-normal px-2 py-1.5">
-            PERIOD
+            {t("metrics.period")}
           </DropdownMenuLabel>
-          {PERIOD_OPTIONS.map((option) => {
+          {periodOptions.map((option) => {
             if (option.value === "custom") {
               const isCustomPeriod = String(period) === "custom"
               return (
@@ -206,91 +172,6 @@ export function MetricsFilter() {
             )
           })}
         </DropdownMenuGroup>
-
-        <DropdownMenuSeparator />
-
-        {/* REVENUE TYPE Section */}
-        <DropdownMenuGroup>
-          <DropdownMenuLabel className="text-[10px] text-muted-foreground font-normal px-2 py-1.5">
-            REVENUE TYPE
-          </DropdownMenuLabel>
-          <DropdownMenuRadioGroup
-            value={revenueType}
-            onValueChange={(value) =>
-              updateRevenueType(value as "gross" | "net")
-            }
-          >
-            {REVENUE_TYPE_OPTIONS.map((option) => (
-              <DropdownMenuRadioItem
-                key={option.value}
-                value={option.value}
-                className={cn(
-                  "text-xs",
-                  revenueType === option.value &&
-                    "dark:bg-[#131313] dark:data-[state=checked]:bg-[#131313]",
-                  "hover:dark:bg-[#131313]"
-                )}
-              >
-                {option.label}
-              </DropdownMenuRadioItem>
-            ))}
-          </DropdownMenuRadioGroup>
-        </DropdownMenuGroup>
-
-        {uniqueCurrencies.length > 0 && (
-          <>
-            <DropdownMenuSeparator />
-
-            {/* CURRENCY Section */}
-            <DropdownMenuGroup>
-              <DropdownMenuLabel className="text-[10px] text-muted-foreground font-normal px-2 py-1.5">
-                CURRENCY
-              </DropdownMenuLabel>
-              <DropdownMenuRadioGroup
-                value={effectiveCurrency ?? "base"}
-                onValueChange={(value) =>
-                  updateCurrency(value === "base" ? null : value)
-                }
-              >
-                <DropdownMenuRadioItem
-                  value="base"
-                  className={cn(
-                    "text-xs",
-                    !effectiveCurrency &&
-                      "dark:bg-[#131313] dark:data-[state=checked]:bg-[#131313]",
-                    "hover:dark:bg-[#131313]"
-                  )}
-                >
-                  Base currency{baseCurrency ? ` (${baseCurrency})` : ""}
-                </DropdownMenuRadioItem>
-                {uniqueCurrencies.map((curr) => (
-                  <DropdownMenuRadioItem
-                    key={curr}
-                    value={curr}
-                    className={cn(
-                      "text-xs",
-                      effectiveCurrency === curr &&
-                        "dark:bg-[#131313] dark:data-[state=checked]:bg-[#131313]",
-                      "hover:dark:bg-[#131313]"
-                    )}
-                  >
-                    {curr}
-                  </DropdownMenuRadioItem>
-                ))}
-              </DropdownMenuRadioGroup>
-            </DropdownMenuGroup>
-          </>
-        )}
-
-        <DropdownMenuSeparator />
-
-        {/* Info Text */}
-        <div className="px-2 py-2">
-          <p className="text-xs text-muted-foreground leading-relaxed">
-            All amounts are converted to your base currency. Metrics depend on
-            how your transactions are categorized.
-          </p>
-        </div>
       </DropdownMenuContent>
     </DropdownMenu>
   )

@@ -3,6 +3,7 @@
  */
 
 import { format, parseISO } from "date-fns"
+import { formatAmount } from "@/utils/format"
 
 // Tailwind classes for chart styling
 export const chartClasses = {
@@ -38,6 +39,26 @@ export const formatNumber = (value: number): string => {
     return `${(value / 1000).toFixed(0)}k`
   }
   return value.toString()
+}
+
+export function formatChartValue(
+  value: number,
+  currency?: string,
+  locale?: string
+) {
+  if (currency) {
+    return (
+      formatAmount({
+        amount: value,
+        currency,
+        locale,
+        maximumFractionDigits: 0,
+      }) ?? `${currency}${value.toLocaleString(locale)}`
+    )
+  }
+  return new Intl.NumberFormat(locale, { maximumFractionDigits: 0 }).format(
+    value
+  )
 }
 
 // Compact tick formatter for charts (600k, 1.2M, etc.)

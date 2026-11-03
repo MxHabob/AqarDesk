@@ -1,22 +1,19 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
 import { format, parseISO } from "date-fns"
 import { useMemo } from "react"
 import {
   CategoryExpenseDonutChart,
   grayShades,
 } from "@/components/charts/category-expense-donut-chart"
-import { useTRPC } from "@/trpc/client"
-import { formatAmount } from "@/utils/format"
+import { useRealEstateMetricsQuery } from "@/hooks/use-real-estate-metrics"
+import { useI18n } from "@/locales/client"
 import { ChartFadeIn } from "../components/chart-loading-overlay"
 import { DragIndicator } from "../components/drag-indicator"
-import { ShareMetricButton } from "../components/share-metric-button"
 
 interface CategoryExpensesCardProps {
   from: string
   to: string
-  currency?: string
   locale?: string
   isCustomizing?: boolean
 }
@@ -24,35 +21,25 @@ interface CategoryExpensesCardProps {
 export function CategoryExpensesCard({
   from,
   to,
-  currency,
   locale,
   isCustomizing,
 }: CategoryExpensesCardProps) {
-  const trpc = useTRPC()
-
-  // Get spending data for categories
-  const { data: spendingData, isPending } = useQuery(
-    trpc.reports.spending.queryOptions({
-      from,
-      to,
-      currency: currency,
-    })
-  )
+  const { data: metrics, isPending } = useRealEstateMetricsQuery(from, to)
+  const t = useI18n()
 
   const categoryDonutChartData = useMemo(() => {
-    if (!spendingData || spendingData.length === 0) return []
+    const listingTypes = metrics?.listings.byType ?? []
+    const total = listingTypes.reduce((sum, item) => sum + item.total, 0)
 
-    const total = spendingData.reduce(
-      (sum, item) => sum + Math.abs(item.amount),
-      0
-    )
-
-    return spendingData.slice(0, 5).map((item) => ({
-      category: item.name,
-      amount: Math.abs(item.amount),
-      percentage: total > 0 ? (Math.abs(item.amount) / total) * 100 : 0,
+    return listingTypes.map((item) => ({
+      category:
+        item.type === "sale"
+          ? t("realEstateTables.sale")
+          : t("realEstateTables.rent"),
+      amount: item.total,
+      percentage: total > 0 ? (item.total / total) * 100 : 0,
     }))
-  }, [spendingData])
+  }, [metrics, t])
 
   const totalExpenses = categoryDonutChartData.reduce(
     (sum, item) => sum + item.amount,
@@ -74,7 +61,7 @@ export function CategoryExpensesCard({
       <div className="mb-4 min-h-[140px]">
         <div className="flex items-start justify-between h-7">
           <h3 className="text-sm font-normal text-muted-foreground">
-            Expenses by Category
+            {t("metrics.listingsByType")}
           </h3>
           <div
             className={
@@ -83,25 +70,11 @@ export function CategoryExpensesCard({
                 : "opacity-0 group-hover:opacity-100 group-has-[*[data-state=open]]:opacity-100 transition-opacity"
             }
           >
-            {isCustomizing ? (
-              <DragIndicator />
-            ) : (
-              <ShareMetricButton
-                type="category_expenses"
-                from={from}
-                to={to}
-                currency={currency}
-              />
-            )}
+            {isCustomizing && <DragIndicator />}
           </div>
         </div>
         <p className="text-3xl font-normal">
-          {formatAmount({
-            amount: totalExpenses,
-            currency: currency || "USD",
-            locale,
-            maximumFractionDigits: 0,
-          })}
+          {new Intl.NumberFormat(locale).format(totalExpenses)}
         </p>
         <p className="text-xs mt-1 text-muted-foreground">{dateRangeDisplay}</p>
         {categoryDonutChartData.length > 0 && (
@@ -128,13 +101,12 @@ export function CategoryExpensesCard({
             <CategoryExpenseDonutChart
               data={categoryDonutChartData}
               height={320}
-              currency={currency}
               locale={locale}
             />
           </ChartFadeIn>
         ) : isPending ? null : (
           <div className="flex items-center justify-center h-full text-xs text-muted-foreground -mt-10">
-            No expense data available.
+            No listing type data available.
           </div>
         )}
       </div>

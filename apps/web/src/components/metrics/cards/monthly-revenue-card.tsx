@@ -1,72 +1,68 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
 import { useMemo } from "react"
 import { AnimatedNumber } from "@/components/animated-number"
 import { formatChartMonth } from "@/components/charts/chart-utils"
 import { MonthlyRevenueChart } from "@/components/charts/monthly-revenue-chart"
-import { useTRPC } from "@/trpc/client"
+import { useRealEstateMetricsQuery } from "@/hooks/use-real-estate-metrics"
+import { useI18n } from "@/locales/client"
 import { ChartFadeIn } from "../components/chart-loading-overlay"
 import { DragIndicator } from "../components/drag-indicator"
-import { ShareMetricButton } from "../components/share-metric-button"
 
 interface MonthlyRevenueCardProps {
   from: string
   to: string
-  currency?: string
   locale?: string
-  revenueType: "net" | "gross"
   isCustomizing?: boolean
 }
 
 export function MonthlyRevenueCard({
   from,
   to,
-  currency,
   locale,
-  revenueType = "net",
   isCustomizing,
 }: MonthlyRevenueCardProps) {
-  const trpc = useTRPC()
+  const { data: metrics } = useRealEstateMetricsQuery(from, to)
+  const t = useI18n()
 
-  const { data: revenueData } = useQuery(
-    trpc.reports.revenue.queryOptions({
-      from,
-      to,
-      currency: currency,
-      revenueType,
-    })
-  )
-
-  // Transform revenue data
   const monthlyRevenueChartData = useMemo(() => {
-    if (!revenueData?.result || revenueData.result.length === 0) return []
+    const values = metrics?.properties.byMonth ?? []
+    const previousValues = new Map(
+      (metrics?.properties.previousByMonth ?? []).map((item) => [
+        item.month,
+        item.total,
+      ])
+    )
+    const average = values.length
+      ? values.reduce((sum, item) => sum + item.total, 0) / values.length
+      : 0
 
-    const values = revenueData.result.map((item) => item.current.value)
-    const average = values.reduce((sum, val) => sum + val, 0) / values.length
-
-    const totalMonths = revenueData.result.length
-
-    return revenueData.result.map((item) => ({
-      month: formatChartMonth(item.date, totalMonths),
-      amount: item.current.value,
-      lastYearAmount: item.previous.value,
+    return values.map((item) => ({
+      month: formatChartMonth(`${item.month}-01`, values.length),
+      amount: item.total,
+      lastYearAmount:
+        previousValues.get(
+          `${Number(item.month.slice(0, 4)) - 1}${item.month.slice(4)}`
+        ) ?? 0,
       average,
-      currentRevenue: item.current.value,
-      lastYearRevenue: item.previous.value,
+      currentRevenue: item.total,
+      lastYearRevenue:
+        previousValues.get(
+          `${Number(item.month.slice(0, 4)) - 1}${item.month.slice(4)}`
+        ) ?? 0,
       averageRevenue: average,
     }))
-  }, [revenueData])
+  }, [metrics])
 
-  const totalRevenue = useMemo(() => {
-    return revenueData?.summary?.currentTotal ?? 0
-  }, [revenueData])
+  const totalRevenue = metrics?.properties.total ?? 0
 
   return (
     <div className="border bg-background border-border p-6 flex flex-col h-full relative group">
       <div className="mb-4 min-h-[140px]">
         <div className="flex items-start justify-between h-7">
-          <h3 className="text-sm font-normal text-muted-foreground">Revenue</h3>
+          <h3 className="text-sm font-normal text-muted-foreground">
+            {t("metrics.propertiesCreatedOverTime")}
+          </h3>
           <div
             className={
               isCustomizing
@@ -74,22 +70,12 @@ export function MonthlyRevenueCard({
                 : "flex items-center gap-2 opacity-0 group-hover:opacity-100 group-has-[*[data-state=open]]:opacity-100 transition-opacity"
             }
           >
-            {isCustomizing ? (
-              <DragIndicator />
-            ) : (
-              <ShareMetricButton
-                type="monthly_revenue"
-                from={from}
-                to={to}
-                currency={currency}
-              />
-            )}
+            {isCustomizing && <DragIndicator />}
           </div>
         </div>
         <p className="text-3xl font-normal mb-3">
           <AnimatedNumber
             value={totalRevenue}
-            currency={currency || "USD"}
             locale={locale}
             maximumFractionDigits={0}
           />
@@ -97,7 +83,9 @@ export function MonthlyRevenueCard({
         <div className="flex items-center gap-4 mt-2">
           <div className="flex gap-2 items-center">
             <div className="w-2 h-2 bg-foreground" />
-            <span className="text-xs text-muted-foreground">Current</span>
+            <span className="text-xs text-muted-foreground">
+              {t("common.properties")}
+            </span>
           </div>
           <div className="flex gap-2 items-center">
             <div
@@ -106,7 +94,7 @@ export function MonthlyRevenueCard({
                 backgroundColor: "var(--chart-bar-fill-secondary)",
               }}
             />
-            <span className="text-xs text-muted-foreground">Previous</span>
+            <span className="text-xs text-muted-foreground">Previous year</span>
           </div>
           <div className="flex gap-2 items-center">
             <div
@@ -125,7 +113,6 @@ export function MonthlyRevenueCard({
             <MonthlyRevenueChart
               data={monthlyRevenueChartData}
               height={320}
-              currency={currency}
               locale={locale}
             />
           </ChartFadeIn>

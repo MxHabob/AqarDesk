@@ -10,10 +10,10 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { formatAmount } from "@/utils/format"
 import {
   commonChartConfig,
   createCompactTickFormatter,
+  formatChartValue,
   useChartMargin,
 } from "./chart-utils"
 
@@ -34,25 +34,14 @@ interface BurnRateChartProps {
 }
 
 // Custom tooltip component
-const CustomTooltip = ({
-  active,
-  payload,
-  label,
-  currency = "USD",
-  locale,
-}: any) => {
+const CustomTooltip = ({ active, payload, label, currency, locale }: any) => {
   if (active && Array.isArray(payload) && payload.length > 0) {
     const current = payload[0]?.value
     const average = payload[1]?.value
 
     // Format amounts using proper currency formatting
     const formatCurrency = (amount: number) =>
-      formatAmount({
-        amount,
-        currency,
-        locale: locale ?? undefined,
-        maximumFractionDigits: 0,
-      }) ?? `${currency}${amount.toLocaleString()}`
+      formatChartValue(amount, currency, locale)
 
     return (
       <div className="border p-2 text-[10px] font-hedvig-sans bg-white dark:bg-[#0c0c0c] border-[#e6e6e6] dark:border-[#1d1d1d] text-black dark:text-white shadow-sm">
@@ -76,7 +65,7 @@ const CustomTooltip = ({
 export function BurnRateChart({
   data,
   height = 320,
-  currency = "USD",
+  currency,
   locale,
 }: BurnRateChartProps) {
   // Use the compact tick formatter

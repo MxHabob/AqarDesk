@@ -12,10 +12,10 @@ import {
   YAxis,
 } from "recharts"
 import { useUserQuery } from "@/hooks/use-user"
-import { formatAmount } from "@/utils/format"
 import {
   commonChartConfig,
   createCompactTickFormatter,
+  formatChartValue,
   formatChartMonth,
   useChartMargin,
 } from "./chart-utils"
@@ -37,23 +37,14 @@ const ToolTipContent = ({
 
   if (!current) return null
 
-  // Format amounts using proper currency formatting
   const formatCurrency = (amount: number) =>
-    formatAmount({
-      amount,
-      currency: current.currency,
-      locale: user?.locale ?? undefined,
-      maximumFractionDigits: 0,
-    }) ?? `${current.currency}${amount.toLocaleString()}`
+    formatChartValue(amount, current.currency, user?.locale ?? undefined)
 
   return (
     <div className="border p-2 text-[10px] font-hedvig-sans bg-white dark:bg-[#0c0c0c] border-[#e6e6e6] dark:border-[#1d1d1d] text-black dark:text-white shadow-sm">
       <p className="mb-1 text-[#707070] dark:text-[#666666]">{label}</p>
       <p className="text-black dark:text-white">
-        Total: {formatCurrency(current.total)}
-      </p>
-      <p className="text-black dark:text-white">
-        Recurring: {formatCurrency(current.recurring)}
+        Listings: {formatCurrency(current.total)}
       </p>
     </div>
   )
@@ -77,7 +68,9 @@ export function StackedBarChart({
     recurring: item.recurring,
     total: item.total,
     meta: data?.meta,
-    date: formatChartMonth(item.date, totalMonths),
+    date: /^\d{4}-\d{2}/.test(item.date)
+      ? formatChartMonth(item.date, totalMonths)
+      : item.date,
   }))
 
   const { marginLeft } = useChartMargin(formattedData, "total", tickFormatter)

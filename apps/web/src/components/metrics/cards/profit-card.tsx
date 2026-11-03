@@ -1,63 +1,62 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
 import { format, parseISO } from "date-fns"
 import { useMemo } from "react"
 import { AnimatedNumber } from "@/components/animated-number"
-import { formatChartMonth } from "@/components/charts/chart-utils"
 import { ProfitChart } from "@/components/charts/profit-chart"
-import { useTRPC } from "@/trpc/client"
+import type { PropertyType } from "@aqardesk/categories"
+import { useRealEstateMetricsQuery } from "@/hooks/use-real-estate-metrics"
+import { useI18n } from "@/locales/client"
 import { ChartFadeIn } from "../components/chart-loading-overlay"
 import { DragIndicator } from "../components/drag-indicator"
-import { ShareMetricButton } from "../components/share-metric-button"
 
 interface ProfitCardProps {
   from: string
   to: string
-  currency?: string
   locale?: string
-  revenueType?: "net" | "gross"
   isCustomizing?: boolean
 }
 
 export function ProfitCard({
   from,
   to,
-  currency,
   locale,
-  revenueType = "net",
   isCustomizing,
 }: ProfitCardProps) {
-  const trpc = useTRPC()
+  const { data: metrics } = useRealEstateMetricsQuery(from, to)
+  const t = useI18n()
+  const propertyTypes: Record<PropertyType, string> = {
+    building: t("propertyTypes.building"),
+    land: t("propertyTypes.land"),
+    house_villa: t("propertyTypes.house_villa"),
+    investment: t("propertyTypes.investment"),
+    commercial: t("propertyTypes.commercial"),
+    warehouse: t("propertyTypes.warehouse"),
+    yard: t("propertyTypes.yard"),
+    apartment: t("propertyTypes.apartment"),
+  }
 
-  const { data: profitData } = useQuery(
-    trpc.reports.profit.queryOptions({
-      from,
-      to,
-      currency: currency,
-      revenueType,
-    })
-  )
-
-  // Transform profit data
   const profitChartData = useMemo(() => {
-    if (!profitData?.result || profitData.result.length === 0) return []
+    const values = metrics?.properties.byType ?? []
+    const previousValues = new Map(
+      (metrics?.properties.previousByType ?? []).map((item) => [
+        item.type,
+        item.total,
+      ])
+    )
+    const average = values.length
+      ? values.reduce((sum, item) => sum + item.total, 0) / values.length
+      : 0
 
-    const currentValues = profitData.result.map((item) => item.current.value)
-    const average =
-      currentValues.reduce((sum, val) => sum + val, 0) / currentValues.length
-
-    const totalMonths = profitData.result.length
-
-    return profitData.result.map((item) => ({
-      month: formatChartMonth(item.current.date, totalMonths),
-      profit: item.current.value,
-      lastYearProfit: item.previous.value,
+    return values.map((item) => ({
+      month: propertyTypes[item.type],
+      profit: item.total,
+      lastYearProfit: previousValues.get(item.type) ?? 0,
       average,
     }))
-  }, [profitData])
+  }, [metrics, propertyTypes])
 
-  const totalProfit = profitData?.summary?.currentTotal ?? 0
+  const totalProfit = metrics?.properties.total ?? 0
 
   const dateRangeDisplay = useMemo(() => {
     try {
@@ -74,7 +73,7 @@ export function ProfitCard({
       <div className="mb-4 min-h-[140px]">
         <div className="flex items-start justify-between h-7">
           <h3 className="text-sm font-normal text-muted-foreground">
-            Profit & Loss
+            {t("metrics.propertiesByType")}
           </h3>
           <div
             className={
@@ -83,22 +82,12 @@ export function ProfitCard({
                 : "flex items-center gap-2 opacity-0 group-hover:opacity-100 group-has-[*[data-state=open]]:opacity-100 transition-opacity"
             }
           >
-            {isCustomizing ? (
-              <DragIndicator />
-            ) : (
-              <ShareMetricButton
-                type="profit"
-                from={from}
-                to={to}
-                currency={currency}
-              />
-            )}
+            {isCustomizing && <DragIndicator />}
           </div>
         </div>
         <p className="text-3xl font-normal">
           <AnimatedNumber
             value={totalProfit}
-            currency={currency || "USD"}
             locale={locale}
             maximumFractionDigits={0}
           />
@@ -108,12 +97,7 @@ export function ProfitCard({
       <div className="h-80">
         {profitChartData.length > 0 ? (
           <ChartFadeIn>
-            <ProfitChart
-              data={profitChartData}
-              height={320}
-              currency={currency}
-              locale={locale}
-            />
+            <ProfitChart data={profitChartData} height={320} locale={locale} />
           </ChartFadeIn>
         ) : null}
       </div>

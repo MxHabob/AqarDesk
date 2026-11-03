@@ -13,11 +13,11 @@ import {
   XAxis,
   YAxis,
 } from "recharts"
-import { formatAmount } from "@/utils/format"
 import type { BaseChartProps } from "./chart-utils"
 import {
   commonChartConfig,
   createCompactTickFormatter,
+  formatChartValue,
   useChartMargin,
 } from "./chart-utils"
 
@@ -54,7 +54,7 @@ interface RevenueForecastChartProps extends Omit<BaseChartProps, "data"> {
 const CustomTooltip = ({
   active,
   payload,
-  currency = "USD",
+  currency,
   locale,
   forecastStartMonth,
 }: {
@@ -87,12 +87,7 @@ const CustomTooltip = ({
 
     // Format currency using formatAmount utility
     const formatCurrency = (amount: number) =>
-      formatAmount({
-        amount,
-        currency,
-        locale: locale ?? undefined,
-        maximumFractionDigits: 0,
-      }) ?? `${currency}${amount.toLocaleString()}`
+      formatChartValue(amount, currency, locale)
 
     // Check if we have breakdown data (only for forecast points)
     const hasBreakdown = !isActual && data?.breakdown
@@ -111,10 +106,10 @@ const CustomTooltip = ({
         }}
       >
         <p className="mb-1 text-[#707070] dark:text-[#666666]">
-          {data?.month} {year}
+          {data?.date ? `${data.month} ${year}` : data?.month}
         </p>
         <p className="text-black dark:text-white font-medium">
-          Revenue: {value != null ? formatCurrency(value) : "-"}
+          Properties: {value != null ? formatCurrency(value) : "-"}
         </p>
         <p className="text-[#707070] dark:text-[#666666] mb-1">
           {isForecastStart
@@ -191,7 +186,7 @@ export function RevenueForecastChart({
   data,
   height = 320,
   className = "",
-  currency = "USD",
+  currency,
   locale,
   forecastStartIndex,
 }: RevenueForecastChartProps) {

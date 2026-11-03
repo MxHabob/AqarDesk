@@ -38,7 +38,7 @@ interface RunwayChartProps extends BaseChartProps {
   showLegend?: boolean
   currency?: string
   locale?: string
-  displayMode?: "currency" | "months"
+  displayMode?: "currency" | "months" | "number"
 }
 
 // Custom formatter for runway tooltip
@@ -47,7 +47,7 @@ const runwayTooltipFormatter = (
   name: string,
   currency = "USD",
   locale?: string,
-  displayMode: "currency" | "months" = "currency"
+  displayMode: "currency" | "months" | "number" = "currency"
 ): [string, string] => {
   if (displayMode === "months") {
     const formattedValue = `${value.toFixed(1)} months`
@@ -58,6 +58,13 @@ const runwayTooltipFormatter = (
           ? "Burn Rate"
           : name
     return [formattedValue, displayName]
+  }
+
+  if (displayMode === "number") {
+    return [
+      new Intl.NumberFormat(locale).format(value),
+      name === "runwayMonths" ? "Listings" : name,
+    ]
   }
 
   const formattedValue =
@@ -87,6 +94,7 @@ export function RunwayChart({
   displayMode = "months",
 }: RunwayChartProps) {
   const isMonthsMode = displayMode === "months"
+  const isSingleSeriesMode = displayMode !== "currency"
   const tickFormatter = isMonthsMode
     ? createMonthsTickFormatter()
     : createYAxisTickFormatter(currency, locale)
@@ -104,11 +112,16 @@ export function RunwayChart({
         <ChartLegend
           items={[
             {
-              label: isMonthsMode ? "Runway (months)" : "Cash Remaining",
+              label:
+                displayMode === "months"
+                  ? "Runway (months)"
+                  : displayMode === "number"
+                    ? "Listings"
+                    : "Cash Remaining",
               type: "solid" as const,
               color: "hsl(var(--foreground))",
             },
-            ...(isMonthsMode
+            ...(isSingleSeriesMode
               ? []
               : [
                   { label: "Burn Rate", type: "pattern" as const },
@@ -132,7 +145,7 @@ export function RunwayChart({
               bottom: 6,
             }}
           >
-            {isMonthsMode && (
+            {isSingleSeriesMode && (
               <defs>
                 <linearGradient
                   id="runwayMonthsGradient"
@@ -177,7 +190,7 @@ export function RunwayChart({
                 fontFamily: commonChartConfig.fontFamily,
               }}
               tickFormatter={tickFormatter}
-              domain={isMonthsMode ? [0, "dataMax"] : undefined}
+              domain={isSingleSeriesMode ? [0, "dataMax"] : undefined}
             />
 
             <Tooltip
@@ -197,7 +210,7 @@ export function RunwayChart({
               wrapperStyle={{ zIndex: 9999 }}
             />
 
-            {isMonthsMode ? (
+            {isSingleSeriesMode ? (
               <Area
                 type="monotone"
                 dataKey="runwayMonths"

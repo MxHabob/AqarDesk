@@ -1,7 +1,7 @@
 "use client"
 
 import { Cell, Pie, PieChart, ResponsiveContainer, Tooltip } from "recharts"
-import { formatAmount } from "@/utils/format"
+import { formatChartValue } from "./chart-utils"
 
 interface CategoryData {
   category: string
@@ -19,12 +19,7 @@ interface CategoryExpenseDonutChartProps {
 }
 
 // Custom donut chart tooltip
-const donutTooltipFormatter = ({
-  active,
-  payload,
-  currency = "USD",
-  locale,
-}: any) => {
+const donutTooltipFormatter = ({ active, payload, currency, locale }: any) => {
   if (active && payload?.length) {
     const data = payload[0].payload
     return (
@@ -33,11 +28,7 @@ const donutTooltipFormatter = ({
           {data.category}
         </p>
         <p className="text-black dark:text-white">
-          {formatAmount({
-            amount: data.amount,
-            currency,
-            locale,
-          })}
+          {formatChartValue(data.amount, currency, locale)}
         </p>
         <p className="text-[#707070] dark:text-[#666666]">
           {data.percentage.toFixed(1)}%
@@ -61,7 +52,7 @@ export const grayShades = [
 
 export function CategoryExpenseDonutChart({
   data,
-  currency = "USD",
+  currency,
   locale,
   height = 320,
   className = "",

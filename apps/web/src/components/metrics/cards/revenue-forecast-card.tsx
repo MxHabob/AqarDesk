@@ -1,96 +1,42 @@
 "use client"
 
-import { useQuery } from "@tanstack/react-query"
 import { format, parseISO } from "date-fns"
 import { useMemo } from "react"
 import { AnimatedNumber } from "@/components/animated-number"
-import { formatChartMonth } from "@/components/charts/chart-utils"
 import { RevenueForecastChart } from "@/components/charts/revenue-forecast-chart"
-import { useTRPC } from "@/trpc/client"
+import { useRealEstateMetricsQuery } from "@/hooks/use-real-estate-metrics"
+import { useI18n } from "@/locales/client"
 import { ChartFadeIn } from "../components/chart-loading-overlay"
 import { DragIndicator } from "../components/drag-indicator"
-import { ShareMetricButton } from "../components/share-metric-button"
 
 interface RevenueForecastCardProps {
   from: string
   to: string
-  currency?: string
   locale?: string
-  revenueType?: "net" | "gross"
   isCustomizing?: boolean
 }
 
 export function RevenueForecastCard({
   from,
   to,
-  currency,
   locale,
-  revenueType = "net",
   isCustomizing,
 }: RevenueForecastCardProps) {
-  const trpc = useTRPC()
-
-  const { data: revenueForecastData } = useQuery(
-    trpc.reports.revenueForecast.queryOptions({
-      from,
-      to,
-      forecastMonths: 6,
-      currency: currency,
-      revenueType,
-    })
-  )
-
-  // Transform revenue forecast data with enhanced fields
+  const { data: metrics } = useRealEstateMetricsQuery(from, to)
+  const t = useI18n()
   const revenueForecastChartData = useMemo(() => {
-    if (!revenueForecastData) return []
+    return (metrics?.properties.byCity ?? []).map((item) => ({
+      month: item.city,
+      actual: item.total,
+      forecasted: null,
+      optimistic: null,
+      pessimistic: null,
+      confidence: null,
+      breakdown: null,
+    }))
+  }, [metrics])
 
-    const historical = revenueForecastData.historical || []
-    const forecast = revenueForecastData.forecast || []
-    const totalMonths = historical.length + forecast.length
-
-    return [
-      ...historical.map((item, index) => ({
-        month: formatChartMonth(item.date, totalMonths),
-        actual: item.value,
-        // Set forecasted value on the last historical point to same as actual to connect the lines
-        forecasted: index === historical.length - 1 ? item.value : null,
-        date: item.date,
-        // Historical points don't have confidence data
-        optimistic: null,
-        pessimistic: null,
-        confidence: null,
-        breakdown: null,
-      })),
-      ...forecast.map((item) => ({
-        month: formatChartMonth(item.date, totalMonths),
-        actual: null,
-        forecasted: item.value,
-        date: item.date,
-        optimistic: item.optimistic ?? null,
-        pessimistic: item.pessimistic ?? null,
-        confidence: item.confidence ?? null,
-        breakdown: item.breakdown ?? null,
-      })),
-    ]
-  }, [revenueForecastData])
-
-  // Calculate forecast start index
-  const forecastStartIndex = useMemo(() => {
-    if (!revenueForecastData?.historical) return -1
-    return revenueForecastData.historical.length - 1
-  }, [revenueForecastData])
-
-  const forecastedRevenue =
-    revenueForecastData?.summary?.totalProjectedRevenue ?? 0
-
-  // Get confidence score from new bottom-up forecast meta
-  const confidenceScore = useMemo(() => {
-    const meta = revenueForecastData?.meta
-    if (meta && "confidenceScore" in meta) {
-      return meta.confidenceScore as number
-    }
-    return null
-  }, [revenueForecastData])
+  const forecastedRevenue = metrics?.properties.total ?? 0
 
   const dateRangeDisplay = useMemo(() => {
     try {
@@ -107,7 +53,7 @@ export function RevenueForecastCard({
       <div className="mb-4 min-h-[140px]">
         <div className="flex items-start justify-between h-7">
           <h3 className="text-sm font-normal text-muted-foreground">
-            Revenue Forecast
+            {t("metrics.propertiesByCity")}
           </h3>
           <div
             className={
@@ -116,22 +62,12 @@ export function RevenueForecastCard({
                 : "opacity-0 group-hover:opacity-100 group-has-[*[data-state=open]]:opacity-100 transition-opacity"
             }
           >
-            {isCustomizing ? (
-              <DragIndicator />
-            ) : (
-              <ShareMetricButton
-                type="revenue_forecast"
-                from={from}
-                to={to}
-                currency={currency}
-              />
-            )}
+            {isCustomizing && <DragIndicator />}
           </div>
         </div>
         <p className="text-3xl font-normal">
           <AnimatedNumber
             value={forecastedRevenue}
-            currency={currency || "USD"}
             locale={locale}
             maximumFractionDigits={0}
           />
@@ -140,25 +76,10 @@ export function RevenueForecastCard({
         <div className="flex gap-4 items-center mt-2">
           <div className="flex gap-2 items-center">
             <div className="w-4 h-0.5 bg-foreground" />
-            <span className="text-xs text-muted-foreground">Actual</span>
+            <span className="text-xs text-muted-foreground">
+              {t("common.properties")}
+            </span>
           </div>
-          <div className="flex gap-2 items-center">
-            <div
-              className="w-4 h-0.5"
-              style={{
-                backgroundImage:
-                  "repeating-linear-gradient(90deg, hsl(var(--muted-foreground)), hsl(var(--muted-foreground)) 4px, transparent 4px, transparent 8px)",
-              }}
-            />
-            <span className="text-xs text-muted-foreground">Forecast</span>
-          </div>
-          {confidenceScore !== null && (
-            <div className="flex gap-1 items-center ml-auto">
-              <span className="text-xs text-muted-foreground">
-                {confidenceScore}% confidence
-              </span>
-            </div>
-          )}
         </div>
       </div>
       <div className="h-80">
@@ -167,9 +88,8 @@ export function RevenueForecastCard({
             <RevenueForecastChart
               data={revenueForecastChartData}
               height={320}
-              currency={currency}
               locale={locale}
-              forecastStartIndex={forecastStartIndex}
+              forecastStartIndex={-1}
             />
           </ChartFadeIn>
         ) : null}
