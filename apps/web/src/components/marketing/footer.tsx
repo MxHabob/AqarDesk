@@ -1,6 +1,5 @@
 "use client";
 
-import { cn } from "@aqardesk/ui/cn";
 import { Icons } from "@aqardesk/ui/icons";
 import Image from "next/image";
 import Link from "next/link";
@@ -19,7 +18,7 @@ export function Footer() {
       {/* Top Divider - Full Bleed */}
       <div className="h-px w-full border-t border-border" />
 
-      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-16 sm:pb-80">
+      <div className="max-w-[1400px] mx-auto px-4 sm:px-8 py-16">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-16">
           {/* Left Column - Links */}
           <div className="grid grid-cols-2 gap-x-8 gap-y-8 sm:grid-cols-3 md:grid-cols-5 sm:gap-x-8 sm:gap-y-12 lg:col-span-1">
@@ -225,22 +224,15 @@ export function Footer() {
         </div>
       </div>
 
-      {/* Large Wordmark */}
-      <div className="absolute bottom-0 left-0 sm:left-1/2 sm:transform sm:-translate-x-1/2 translate-y-[25%] sm:translate-y-[40%] bg-background overflow-hidden">
-        <h1
-          className={cn(
-            "font-sans text-[200px] sm:text-[508px] leading-none select-none",
-            "text-secondary",
-            "[WebkitTextStroke:1px_hsl(var(--muted-foreground))]",
-            "[textStroke:1px_hsl(var(--muted-foreground))]",
-          )}
-          style={{
-            WebkitTextStroke: "1px hsl(var(--muted-foreground))",
-            color: "hsl(var(--secondary))",
-          }}
-        >
-          AqarDesk
-        </h1>
+      {/* Footer Illustration */}
+      <div className="mx-auto aspect-[1879/290] w-full max-w-[1879px] overflow-hidden">
+        <Image
+          src="/images/buildings-in-footur.svg"
+          alt=""
+          width={1879}
+          height={321}
+          className="block h-auto w-full"
+        />
       </div>
     </footer>
   );
