@@ -55,7 +55,7 @@ export function ExportAllData() {
         <Button onClick={() => mutation.mutate()} disabled={busy}>
           {busy ? (
             <>
-              <Loader2 className="size-4 animate-spin mr-2" />
+              <Loader2 className="size-4 animate-spin me-2" />
               Exporting…
             </>
           ) : (

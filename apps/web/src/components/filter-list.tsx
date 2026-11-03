@@ -218,7 +218,7 @@ export function FilterList({
   };
 
   return (
-    <ul className="flex space-x-2">
+    <ul className="flex gap-x-2">
       {Object.entries(filters)
         .filter(([key, value]) => value !== null && key !== "end")
         .map(([key, value]) => {
@@ -226,7 +226,7 @@ export function FilterList({
           return (
             <li key={key}>
               <Button
-                className="h-9 px-2 bg-secondary hover:bg-secondary font-normal text-[#878787] flex space-x-1 items-center group rounded-none"
+                className="h-9 px-2 bg-secondary hover:bg-secondary font-normal text-[#878787] flex gap-x-1 items-center group rounded-none"
                 onClick={() => handleOnRemove(filterKey)}
               >
                 <Icons.Clear className="scale-0 group-hover:scale-100 transition-all w-0 group-hover:w-4" />

@@ -46,7 +46,7 @@ export function DesktopTrafficLight() {
   };
 
   return (
-    <div className="fixed top-[8px] left-[8px] space-x-[8px] flex">
+    <div className="fixed top-[8px] start-[8px] gap-x-[8px] flex">
       {/* Close button (red) */}
       <button
         type="button"

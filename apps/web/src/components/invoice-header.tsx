@@ -7,7 +7,7 @@ export function InvoiceHeader() {
     <div className="flex items-center justify-between">
       <InvoiceSearchFilter />
 
-      <div className="hidden sm:flex space-x-2">
+      <div className="hidden sm:flex gap-x-2">
         <InvoiceColumnVisibility />
         <OpenInvoiceSheet />
       </div>

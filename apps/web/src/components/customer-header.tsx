@@ -26,7 +26,7 @@ export default function CustomerHeader({
   portalId,
 }: Props) {
   const customerInfo = (
-    <div className="flex items-center space-x-2">
+    <div className="flex items-center gap-x-2">
       {name && (
         <Avatar className="size-5 object-contain border border-border">
           {website && (
@@ -52,7 +52,7 @@ export default function CustomerHeader({
       {portalEnabled && portalId ? (
         <Link
           href={`/p/${portalId}`}
-          className="flex items-center space-x-2 hover:opacity-80 transition-opacity"
+          className="flex items-center gap-x-2 hover:opacity-80 transition-opacity"
         >
           {customerInfo}
         </Link>

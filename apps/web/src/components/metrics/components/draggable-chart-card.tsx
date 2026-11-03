@@ -102,16 +102,16 @@ export function DraggableChartCard({
       {isEditing && (
         <>
           <div
-            className="absolute inset-y-0 left-0 w-4 z-20 cursor-col-resize group/resize-l"
+            className="absolute inset-y-0 start-0 w-4 z-20 cursor-col-resize group/resize-l"
             onPointerDown={(e) => startResize(e, "left")}
           >
-            <div className="absolute top-1/2 -translate-y-1/2 left-0.5 w-1 h-8 rounded-full bg-border opacity-60 group-hover/resize-l:opacity-100 transition-opacity" />
+            <div className="absolute top-1/2 -translate-y-1/2 start-0.5 w-1 h-8 rounded-full bg-border opacity-60 group-hover/resize-l:opacity-100 transition-opacity" />
           </div>
           <div
-            className="absolute inset-y-0 right-0 w-4 z-20 cursor-col-resize group/resize-r"
+            className="absolute inset-y-0 end-0 w-4 z-20 cursor-col-resize group/resize-r"
             onPointerDown={(e) => startResize(e, "right")}
           >
-            <div className="absolute top-1/2 -translate-y-1/2 right-0.5 w-1 h-8 rounded-full bg-border opacity-60 group-hover/resize-r:opacity-100 transition-opacity" />
+            <div className="absolute top-1/2 -translate-y-1/2 end-0.5 w-1 h-8 rounded-full bg-border opacity-60 group-hover/resize-r:opacity-100 transition-opacity" />
           </div>
         </>
       )}

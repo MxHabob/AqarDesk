@@ -273,7 +273,7 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
         </div>
 
         <CardHeader className="pb-0">
-          <div className="flex items-center space-x-2 pb-4">
+          <div className="flex items-center gap-x-2 pb-4">
             <CardTitle className="text-md font-medium leading-none p-0 m-0">
               {app.name}
             </CardTitle>
@@ -342,7 +342,7 @@ export function UnifiedAppComponent({ app }: UnifiedAppProps) {
 
             <div className="flex items-center justify-between border-b border-border pb-2 shrink-0">
               <div>
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-x-2">
                   <h3 className="text-lg leading-none">{app.name}</h3>
                   {app.installed && (
                     <div className="bg-green-600 text-[9px] dark:bg-green-300 rounded-full size-1" />

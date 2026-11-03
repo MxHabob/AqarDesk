@@ -35,7 +35,7 @@ export const columns: ColumnDef<OAuthApplication>[] = [
     header: "Name",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-x-2">
           {row.original.logoUrl && (
             <img
               src={row.original.logoUrl}
@@ -116,7 +116,7 @@ export const columns: ColumnDef<OAuthApplication>[] = [
     header: "Status",
     cell: ({ row }) => {
       return (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-x-2">
           <OAuthApplicationStatusBadge status={row.original.status} />
         </div>
       )
@@ -130,7 +130,7 @@ export const columns: ColumnDef<OAuthApplication>[] = [
 
       return (
         <div className="flex justify-end">
-          <div className="flex space-x-2 items-center">
+          <div className="flex gap-x-2 items-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button size="icon" variant="ghost">
@@ -171,7 +171,7 @@ export const columns: ColumnDef<OAuthApplication>[] = [
       )
     },
     meta: {
-      className: "text-right",
+      className: "text-end",
     },
   },
 ]

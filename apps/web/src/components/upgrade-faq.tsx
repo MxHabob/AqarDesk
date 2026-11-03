@@ -34,10 +34,10 @@ export function UpgradeFAQ() {
             <button
               type="button"
               onClick={() => setOpenIndex(openIndex === index ? null : index)}
-              className="w-full flex items-center justify-between p-3 text-left hover:bg-muted/50 transition-colors"
+              className="w-full flex items-center justify-between p-3 text-start hover:bg-muted/50 transition-colors"
               style={{ WebkitTapHighlightColor: "transparent" }}
             >
-              <span className="font-sans text-sm text-foreground pr-6">
+              <span className="font-sans text-sm text-foreground pe-6">
                 {faq.question}
               </span>
               <span className="flex-shrink-0 text-muted-foreground text-base">

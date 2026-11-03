@@ -26,7 +26,7 @@ function BankConnectionSkeleton() {
     <div className="py-4">
       {/* Connection Header */}
       <div className="flex justify-between items-center">
-        <div className="flex space-x-4 items-center">
+        <div className="flex gap-x-4 items-center">
           <Skeleton className="h-9 w-9 rounded-full" />
           <div className="flex flex-col gap-1">
             <Skeleton className="h-4 w-32" />

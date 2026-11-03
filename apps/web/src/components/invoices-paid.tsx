@@ -22,7 +22,7 @@ export function InvoicesPaid() {
           statuses: ["paid"],
         })
       }
-      className="hidden sm:block text-left"
+      className="hidden sm:block text-start"
     >
       <InvoiceSummary data={data} title="Paid" />
     </button>

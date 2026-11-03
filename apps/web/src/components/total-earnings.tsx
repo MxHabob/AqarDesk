@@ -50,10 +50,10 @@ export function TotalEarnings({ selectedView, billableHoursData }: Props) {
                     className="space-y-0.5"
                   >
                     <div className="flex items-center justify-between text-[11px]">
-                      <div className="font-medium truncate flex-1 min-w-0 mr-1">
+                      <div className="font-medium truncate flex-1 min-w-0 me-1">
                         {project.name}
                       </div>
-                      <div className="text-right">
+                      <div className="text-end">
                         <FormatAmount
                           amount={Math.round(project.amount)}
                           currency={project.currency}

@@ -35,7 +35,7 @@ export function Category({ name, color, className }: Props) {
   return (
     <div
       className={cn(
-        "flex space-x-2 items-center min-w-0 overflow-hidden",
+        "flex gap-x-2 items-center min-w-0 overflow-hidden",
         className,
       )}
     >

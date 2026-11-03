@@ -91,8 +91,8 @@ export function useUpdateTransactionCategory(
         title: "AqarDesk AI",
         description: `We found ${similarTransactions.length} similar transactions to "${transactionName}". Mark them as ${category.name} too?`,
         footer: (
-          <div className="flex space-x-2 mt-4">
-            <ToastAction altText="Cancel" className="pl-5 pr-5">
+          <div className="flex gap-x-2 mt-4">
+            <ToastAction altText="Cancel" className="ps-5 pe-5">
               Cancel
             </ToastAction>
             <ToastAction
@@ -106,7 +106,7 @@ export function useUpdateTransactionCategory(
                   categorySlug: category.slug,
                 })
               }}
-              className="pl-5 pr-5 bg-primary text-primary-foreground hover:bg-primary/90"
+              className="ps-5 pe-5 bg-primary text-primary-foreground hover:bg-primary/90"
             >
               Yes
             </ToastAction>

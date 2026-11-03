@@ -95,7 +95,7 @@ export function PropertySheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
-      <SheetContent side="right" className="sm:max-w-2xl">
+      <SheetContent side="end" className="sm:max-w-2xl">
         <SheetHeader className="flex-row items-center justify-between border-b pb-4">
           <SheetTitle>
             {readOnly
@@ -183,7 +183,7 @@ export function ListingSheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
-      <SheetContent side="right" className="sm:max-w-2xl">
+      <SheetContent side="end" className="sm:max-w-2xl">
         <SheetHeader className="flex-row items-center justify-between border-b pb-4">
           <SheetTitle>
             {readOnly
@@ -260,7 +260,7 @@ export function OwnerSheet() {
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
-      <SheetContent side="right" className="sm:max-w-xl">
+      <SheetContent side="end" className="sm:max-w-xl">
         <SheetHeader className="flex-row items-center justify-between border-b pb-4">
           <SheetTitle>
             {readOnly

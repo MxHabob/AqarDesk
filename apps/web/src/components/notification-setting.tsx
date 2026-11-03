@@ -104,7 +104,7 @@ export function NotificationSetting({
     <div className="border-b-[1px] pb-4 mb-4">
       <div className="flex items-start justify-between">
         {/* Left side - Name and Description */}
-        <div className="flex-1 pr-8">
+        <div className="flex-1 pe-8">
           <Label className="text-sm font-medium">{name}</Label>
           <p className="text-sm text-[#606060] mt-1">{description}</p>
         </div>

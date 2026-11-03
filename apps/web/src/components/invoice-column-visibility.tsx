@@ -27,7 +27,7 @@ export function InvoiceColumnVisibility() {
             )
             .map((column) => {
               return (
-                <div key={column.id} className="flex items-center space-x-2">
+                <div key={column.id} className="flex items-center gap-x-2">
                   <Checkbox
                     id={column.id}
                     checked={column.getIsVisible()}

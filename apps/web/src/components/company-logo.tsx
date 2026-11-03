@@ -46,7 +46,7 @@ export function CompanyLogo() {
 
   return (
     <Card>
-      <div className="flex justify-between items-center pr-6">
+      <div className="flex justify-between items-center pe-6">
         <CardHeader>
           <CardTitle>Company logo</CardTitle>
           <CardDescription>

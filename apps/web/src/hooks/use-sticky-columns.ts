@@ -85,7 +85,7 @@ export function useStickyColumns({
       const isSticky = stickyColumnIds.has(columnId)
       return cn(
         baseClassName,
-        isSticky && "md:sticky md:left-[var(--stick-left)]"
+        isSticky && "md:sticky md:start-[var(--stick-left)]"
       )
     },
     [stickyColumnIds]

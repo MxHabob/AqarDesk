@@ -287,7 +287,7 @@ export function InvoiceActions({
     case "paid":
       return (
         <>
-          <div className="absolute right-4 mt-7">
+          <div className="absolute end-4 mt-7">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button
@@ -399,13 +399,13 @@ export function InvoiceActions({
     case "unpaid":
       return (
         <>
-          <div className="flex space-x-2 mt-8">
+          <div className="flex gap-x-2 mt-8">
             <AlertDialog>
               <AlertDialogTrigger asChild>
                 <Button
                   size="sm"
                   variant="secondary"
-                  className="flex items-center space-x-2 hover:bg-secondary w-full"
+                  className="flex items-center gap-x-2 hover:bg-secondary w-full"
                 >
                   <Icons.Notifications className="size-3.5" />
                   <span>Remind</span>
@@ -438,7 +438,7 @@ export function InvoiceActions({
             <Button
               size="sm"
               variant="secondary"
-              className="flex items-center space-x-2 hover:bg-secondary w-full"
+              className="flex items-center gap-x-2 hover:bg-secondary w-full"
               onClick={() => setParams({ invoiceId: id, invoiceType: "edit" })}
             >
               <Icons.Edit className="size-3.5" />
@@ -562,11 +562,11 @@ export function InvoiceActions({
     case "draft":
       return (
         <>
-          <div className="flex space-x-2 mt-8">
+          <div className="flex gap-x-2 mt-8">
             <Button
               size="sm"
               variant="secondary"
-              className="flex items-center space-x-2 hover:bg-secondary w-full"
+              className="flex items-center gap-x-2 hover:bg-secondary w-full"
               onClick={() => setParams({ invoiceId: id, invoiceType: "edit" })}
             >
               <Icons.Edit className="size-3.5" />

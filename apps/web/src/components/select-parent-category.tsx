@@ -98,16 +98,16 @@ export function SelectParentCategory({
         }
       }}
       renderSelectedItem={(selectedItem) => (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-x-2">
           <CategoryColor color={selectedItem.color} />
-          <span className="text-left truncate max-w-[90%] font-normal">
+          <span className="text-start truncate max-w-[90%] font-normal">
             {selectedItem.label}
           </span>
         </div>
       )}
       renderListItem={({ item }) => {
         return (
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-x-2">
             <CategoryColor color={item.color} />
             <span className="line-clamp-1">{item.label}</span>
           </div>

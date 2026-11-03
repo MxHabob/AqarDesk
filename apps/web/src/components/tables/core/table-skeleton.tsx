@@ -31,9 +31,9 @@ interface TableSkeletonProps<TData> {
   columnSizing?: ColumnSizingState
   /** Column order array */
   columnOrder?: string[]
-  /** IDs of sticky columns (left-aligned) */
+  /** IDs of sticky columns (start-aligned) */
   stickyColumnIds?: string[]
-  /** ID of the actions column (right-aligned sticky) */
+  /** ID of the actions column (end-aligned sticky) */
   actionsColumnId?: string
   /** Render in empty state (blurred) */
   isEmpty?: boolean
@@ -101,7 +101,7 @@ export function TableSkeleton<TData>({
       <div
         className={cn(
           "overflow-auto overscroll-x-none scrollbar-hide",
-          !isEmpty && "md:border-l md:border-r md:border-b md:border-border"
+          !isEmpty && "md:border-s md:border-e md:border-b md:border-border"
         )}
       >
         <Table
@@ -126,7 +126,7 @@ export function TableSkeleton<TData>({
                   "group/header relative h-full px-4 border-t border-border flex items-center"
                 )
                 const headerClassName = isActions
-                  ? "group/header relative h-full px-4 border-t border-border flex items-center justify-center md:sticky md:right-0 bg-background z-10"
+                  ? "group/header relative h-full px-4 border-t border-border flex items-center justify-center md:sticky md:end-0 bg-background z-10"
                   : sticky
                     ? `${stickyClass} bg-background z-10`
                     : stickyClass
@@ -142,10 +142,10 @@ export function TableSkeleton<TData>({
                       ...getStickyStyle(columnId),
                       ...(!isActions &&
                         !isStatus && {
-                          borderRight: "1px solid hsl(var(--border))",
+                          borderInlineEnd: "1px solid hsl(var(--border))",
                         }),
                       ...(isActions && {
-                        borderLeft: "1px solid hsl(var(--border))",
+                        borderInlineStart: "1px solid hsl(var(--border))",
                         borderTop: "1px solid hsl(var(--border))",
                       }),
                     }}
@@ -173,7 +173,7 @@ export function TableSkeleton<TData>({
             </TableRow>
           </TableHeader>
 
-          <TableBody className="border-l-0 border-r-0">
+          <TableBody className="border-s-0 border-e-0">
             {rows.map((row) => (
               <TableRow
                 key={row.id}
@@ -194,7 +194,7 @@ export function TableSkeleton<TData>({
                     "h-full flex items-center",
                     getStickyClassName(columnId, meta?.className),
                     isActions &&
-                      "md:sticky md:right-0 bg-background z-10 justify-center"
+                      "md:sticky md:end-0 bg-background z-10 justify-center"
                   )
 
                   return (
@@ -207,7 +207,7 @@ export function TableSkeleton<TData>({
                         maxWidth,
                         ...getStickyStyle(columnId),
                         ...(isActions && {
-                          borderLeft: "1px solid hsl(var(--border))",
+                          borderInlineStart: "1px solid hsl(var(--border))",
                           borderBottom: "1px solid hsl(var(--border))",
                         }),
                       }}

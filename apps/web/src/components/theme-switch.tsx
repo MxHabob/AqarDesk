@@ -48,7 +48,7 @@ export const ThemeSwitch = () => {
           setTheme(value);
         }}
       >
-        <SelectTrigger className="w-full pl-6 pr-3 py-0.5 bg-transparent outline-none capitalize h-[24px] text-xs border-0 shadow-none">
+        <SelectTrigger className="w-full ps-6 pe-3 py-0.5 bg-transparent outline-none capitalize h-[24px] text-xs border-0 shadow-none">
           <SelectValue>
             {theme
               ? theme.charAt(0).toUpperCase() + theme.slice(1)
@@ -70,7 +70,7 @@ export const ThemeSwitch = () => {
         </SelectContent>
       </Select>
 
-      <div className="absolute left-2 pointer-events-none">
+      <div className="absolute start-2 pointer-events-none">
         <ThemeIcon currentTheme={resolvedTheme as Theme} />
       </div>
     </div>

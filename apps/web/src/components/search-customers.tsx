@@ -61,7 +61,7 @@ export function SearchCustomers({
       }}
       renderOnCreate={(name) => {
         return (
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-x-2">
             <button
               type="button"
               onClick={() => onCreate?.(name)}

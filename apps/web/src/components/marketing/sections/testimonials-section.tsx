@@ -169,7 +169,7 @@ function VideoTestimonialCard({
         }}
       >
         <div className="bg-background border border-border p-6 w-64 flex flex-col gap-4 transition-all duration-200 hover:border-muted-foreground relative">
-          <div className="absolute top-4 right-4 w-7 h-7 bg-muted flex items-center justify-center">
+          <div className="absolute top-4 end-4 w-7 h-7 bg-muted flex items-center justify-center">
             <MaterialIcon
               name="play_arrow"
               className="text-muted-foreground"
@@ -177,7 +177,7 @@ function VideoTestimonialCard({
             />
           </div>
           <div className="flex flex-col gap-3">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider text-left">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider text-start">
               {testimonial.country}
             </p>
             <div className="flex gap-2 items-center">
@@ -198,7 +198,7 @@ function VideoTestimonialCard({
               </span>
             </div>
           </div>
-          <div className="flex flex-col gap-2 text-left">
+          <div className="flex flex-col gap-2 text-start">
             <span className="font-sans text-sm text-muted-foreground">
               {testimonial.company}
             </span>
@@ -219,14 +219,14 @@ function VideoTestimonialCard({
             <button
               type="button"
               onClick={() => setIsOpen(false)}
-              className="absolute top-6 right-6"
+              className="absolute top-6 end-6"
               aria-label="Close dialog"
             >
               <Icons.Close className="h-6 w-6 text-primary" />
             </button>
             <div className="flex flex-col gap-6">
               <div className="flex flex-col gap-3">
-                <p className="text-[10px] text-muted-foreground uppercase tracking-wider text-left">
+                <p className="text-[10px] text-muted-foreground uppercase tracking-wider text-start">
                   {testimonial.country}
                 </p>
                 <div className="flex gap-3 items-center">
@@ -305,14 +305,14 @@ function VideoTestimonialCardMobile({
         <button
           type="button"
           onClick={() => setIsOpen(false)}
-          className="absolute top-6 right-6"
+          className="absolute top-6 end-6"
           aria-label="Close dialog"
         >
           <Icons.Close className="h-6 w-6 text-primary" />
         </button>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-3">
-            <p className="text-[10px] text-muted-foreground uppercase tracking-wider text-left">
+            <p className="text-[10px] text-muted-foreground uppercase tracking-wider text-start">
               {testimonial.country}
             </p>
             <div className="flex gap-3 items-center">
@@ -360,7 +360,7 @@ function VideoTestimonialCardMobile({
         }}
       >
         <div className="bg-background border border-border p-8 sm:p-6 flex flex-col gap-4 select-none hover:border-muted-foreground transition-all duration-200 min-h-[240px] sm:min-h-0 relative">
-          <div className="absolute top-4 right-4 w-7 h-7 bg-muted flex items-center justify-center">
+          <div className="absolute top-4 end-4 w-7 h-7 bg-muted flex items-center justify-center">
             <MaterialIcon
               name="play_arrow"
               className="text-muted-foreground"
@@ -598,7 +598,7 @@ export function TestimonialsSection({
         </div>
 
         {/* Mobile Carousel */}
-        <div className="lg:hidden w-screen -mx-4 sm:-mx-6 md:-mx-8 pl-4">
+        <div className="lg:hidden w-screen -mx-4 sm:-mx-6 md:-mx-8 ps-4">
           <div
             ref={scrollContainerRef}
             className="relative overflow-x-auto overflow-y-visible scroll-smooth snap-x snap-mandatory py-3 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
@@ -621,7 +621,7 @@ export function TestimonialsSection({
             }}
           >
             <div
-              className="flex gap-4 pl-4 pr-4"
+              className="flex gap-4 ps-4 pe-4"
               style={{ width: "max-content" }}
             >
               {testimonials.map((testimonial, index) => {
@@ -702,7 +702,7 @@ export function TestimonialsSection({
                         >
                           <div className="bg-background border border-border p-8 sm:p-6 flex flex-col gap-4 select-none hover:border-muted-foreground transition-all duration-200 min-h-[240px] sm:min-h-0">
                             <div className="flex flex-col gap-3">
-                              <p className="text-[10px] text-muted-foreground uppercase tracking-wider text-left">
+                              <p className="text-[10px] text-muted-foreground uppercase tracking-wider text-start">
                                 {testimonial.country}
                               </p>
                               <div className="flex gap-2 items-center">
@@ -723,7 +723,7 @@ export function TestimonialsSection({
                                 </MorphingDialogTitle>
                               </div>
                             </div>
-                            <div className="flex flex-col gap-2 text-left">
+                            <div className="flex flex-col gap-2 text-start">
                               <MorphingDialogSubtitle className="font-sans text-sm text-muted-foreground">
                                 {testimonial.company}
                               </MorphingDialogSubtitle>
@@ -741,7 +741,7 @@ export function TestimonialsSection({
 
                           <div className="flex flex-col gap-6">
                             <div className="flex flex-col gap-3">
-                              <p className="text-[10px] text-muted-foreground uppercase tracking-wider text-left">
+                              <p className="text-[10px] text-muted-foreground uppercase tracking-wider text-start">
                                 {testimonial.country}
                               </p>
                               <div className="flex gap-3 items-center">

@@ -354,7 +354,7 @@ export function PortalContent({ portalId }: Props) {
             >
               {isFetchingNextPage ? (
                 <>
-                  <Spinner size={16} className="mr-2" />
+                  <Spinner size={16} className="me-2" />
                   <span>Loading...</span>
                 </>
               ) : (
@@ -366,7 +366,7 @@ export function PortalContent({ portalId }: Props) {
       </div>
 
       {/* Footer */}
-      <div className="fixed bottom-4 right-4 hidden md:block">
+      <div className="fixed bottom-4 end-4 hidden md:block">
         <a
           href="https://midday.ai?utm_source=customer-portal"
           target="_blank"
@@ -381,7 +381,7 @@ export function PortalContent({ portalId }: Props) {
       <AnimatePresence>
         {selectedIds.size > 0 && (
           <motion.div
-            className="h-12 fixed bottom-6 left-0 right-0 pointer-events-none flex justify-center z-50"
+            className="h-12 fixed bottom-6 start-0 end-0 pointer-events-none flex justify-center z-50"
             initial={{ y: 100 }}
             animate={{ y: 0 }}
             exit={{ y: 100 }}
@@ -395,10 +395,10 @@ export function PortalContent({ portalId }: Props) {
                 exit={{ opacity: 0 }}
                 transition={{ duration: 0.15 }}
               />
-              <div className="relative h-12 justify-between items-center flex pl-4 pr-2">
+              <div className="relative h-12 justify-between items-center flex ps-4 pe-2">
                 <span className="text-sm">{selectedIds.size} selected</span>
 
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <Button
                     variant="ghost"
                     className="text-muted-foreground"
@@ -412,12 +412,12 @@ export function PortalContent({ portalId }: Props) {
                     disabled={isDownloading}
                   >
                     {isDownloading ? (
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center gap-2">
                         <Spinner size={16} />
                         <span>Downloading...</span>
                       </div>
                     ) : (
-                      <div className="flex items-center space-x-2">
+                      <div className="flex items-center gap-2">
                         <span>Download</span>
                         <Icons.ArrowCoolDown className="size-4" />
                       </div>

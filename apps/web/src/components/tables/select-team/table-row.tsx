@@ -35,8 +35,8 @@ export function TableRow({ row }: Props) {
 
   return (
     <BaseTableRow key={row.id} className="hover:bg-transparent">
-      <TableCell className="border-r-[0px] py-4 px-0">
-        <div className="flex items-center space-x-4">
+      <TableCell className="border-e-[0px] py-4 px-0">
+        <div className="flex items-center gap-x-4">
           <Avatar className="size-8 rounded-none">
             {row.logoUrl && (
               <AvatarImageNext
@@ -59,7 +59,7 @@ export function TableRow({ row }: Props) {
       </TableCell>
       <TableCell className="px-0">
         <div className="flex justify-end">
-          <div className="flex space-x-3 items-center">
+          <div className="flex gap-x-3 items-center">
             <SubmitButton
               isSubmitting={isLoading}
               variant="outline"

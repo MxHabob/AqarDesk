@@ -29,7 +29,7 @@ export default async function Layout({
   return (
     <div className="relative">
       <Sidebar />
-      <div className="pb-4 md:ml-[70px]">
+      <div className="pb-4 md:ms-[70px]">
         <Header />
         <div className="px-4 md:px-8">{children}</div>
       </div>

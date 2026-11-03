@@ -78,7 +78,7 @@ export function ManageSubscription() {
           <button
             type="button"
             onClick={() => setCancelOpen(true)}
-            className="text-xs text-[#878787] hover:text-foreground transition-colors text-left"
+            className="text-xs text-[#878787] hover:text-foreground transition-colors text-start"
           >
             Cancel subscription
           </button>

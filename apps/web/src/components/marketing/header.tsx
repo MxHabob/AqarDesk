@@ -244,7 +244,7 @@ export function Header({
     <>
       {/* Dark Overlay */}
       <div
-        className={`fixed left-0 right-0 bottom-0 z-40 transition-opacity duration-150 ${
+        className={`fixed inset-x-0 bottom-0 z-40 transition-opacity duration-150 ${
           isFeaturesOpen || isAppsOpen
             ? "opacity-100 visible bg-black/40"
             : "opacity-0 invisible pointer-events-none"
@@ -253,7 +253,7 @@ export function Header({
       />
 
       {/* Navigation Bar */}
-      <nav className="sticky top-0 left-0 right-0 z-50 w-full">
+      <nav className="sticky top-0 inset-x-0 z-50 w-full">
         <div
           ref={headerRef}
           className={cn(
@@ -316,7 +316,7 @@ export function Header({
                 {/* Invisible bridge to dropdown */}
                 {isFeaturesOpen && (
                   <div
-                    className="absolute left-0 right-0 h-4"
+                    className="absolute inset-x-0 h-4"
                     style={{ top: "100%" }}
                   />
                 )}
@@ -325,7 +325,7 @@ export function Header({
                 {isFeaturesOpen && (
                   <div
                     data-features-dropdown
-                    className="fixed left-0 right-0 bg-background border-t border-b border-border shadow-lg z-50 overflow-hidden"
+                    className="fixed inset-x-0 bg-background border-t border-b border-border shadow-lg z-50 overflow-hidden"
                     style={{ top: dropdownOffset }}
                   >
                     <div className="p-6 xl:p-8 2xl:p-10">
@@ -366,7 +366,7 @@ export function Header({
                                     className="flex items-center py-3 group hover:bg-secondary transition-colors duration-200"
                                     onClick={() => setIsFeaturesOpen(false)}
                                   >
-                                    <div className="flex flex-col pl-2">
+                                    <div className="flex flex-col ps-2">
                                       <span className="font-sans text-base text-foreground mb-1">
                                         {item.title}
                                       </span>
@@ -403,7 +403,7 @@ export function Header({
                                     className="flex items-center py-3 group hover:bg-secondary transition-colors duration-200"
                                     onClick={() => setIsFeaturesOpen(false)}
                                   >
-                                    <div className="flex flex-col pl-2">
+                                    <div className="flex flex-col ps-2">
                                       <span className="font-sans text-base text-foreground mb-1">
                                         {item.title}
                                       </span>
@@ -593,7 +593,7 @@ export function Header({
                 {/* Invisible bridge to dropdown */}
                 {isAppsOpen && (
                   <div
-                    className="absolute left-0 right-0 h-4"
+                    className="absolute inset-x-0 h-4"
                     style={{ top: "100%" }}
                   />
                 )}
@@ -601,7 +601,7 @@ export function Header({
                 {/* Resources Dropdown - Full Width */}
                 {isAppsOpen && (
                   <div
-                    className="fixed left-0 right-0 bg-background border-t border-b border-border shadow-lg z-50 overflow-hidden"
+                    className="fixed inset-x-0 bg-background border-t border-b border-border shadow-lg z-50 overflow-hidden"
                     style={{
                       top: dropdownOffset,
                       height:
@@ -640,7 +640,7 @@ export function Header({
                                     className="flex items-center py-3 group hover:bg-secondary transition-colors duration-200"
                                     onClick={() => setIsAppsOpen(false)}
                                   >
-                                    <div className="flex flex-col pl-2">
+                                    <div className="flex flex-col ps-2">
                                       <span className="font-sans text-base text-foreground mb-1">
                                         {item.title}
                                       </span>
@@ -675,7 +675,7 @@ export function Header({
                                       className="flex items-center py-3 group hover:bg-secondary transition-colors duration-200"
                                       onClick={() => setIsAppsOpen(false)}
                                     >
-                                      <div className="flex flex-col pl-2">
+                                      <div className="flex flex-col ps-2">
                                         <span className="font-sans text-base text-foreground mb-1">
                                           {item.title}
                                         </span>
@@ -690,7 +690,7 @@ export function Header({
                                       className="flex items-center py-3 group hover:bg-secondary transition-colors duration-200"
                                       onClick={() => setIsAppsOpen(false)}
                                     >
-                                      <div className="flex flex-col pl-2">
+                                      <div className="flex flex-col ps-2">
                                         <span className="font-sans text-base text-foreground mb-1">
                                           {item.title}
                                         </span>
@@ -786,7 +786,7 @@ export function Header({
               </div>
 
               {/* Sign in */}
-              <div className="border-l border-border pl-4">
+              <div className="border-s border-border ps-4">
                 {user ? (
                   <MarketingAccountMenu
                     user={user}
@@ -850,7 +850,7 @@ export function Header({
       {isMenuOpen && (
         <div className="fixed inset-0 z-40 xl:hidden bg-background">
           <div className="pt-28 px-6">
-            <div className="flex flex-col space-y-6 text-left">
+            <div className="flex flex-col space-y-6 text-start">
               {/* Features Expandable Section */}
               <div className="flex flex-col">
                 <button
@@ -895,7 +895,7 @@ export function Header({
                               setIsMenuOpen(false);
                               setIsMobileFeaturesOpen(false);
                             }}
-                            className="text-lg font-sans text-left text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
+                            className="text-lg font-sans text-start text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
                             style={{ WebkitTapHighlightColor: "transparent" }}
                           >
                             {item.label}
@@ -979,7 +979,7 @@ export function Header({
                             setIsMenuOpen(false);
                             setIsMobileAppsOpen(false);
                           }}
-                          className="text-lg font-sans text-left text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
+                          className="text-lg font-sans text-start text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
                           style={{ WebkitTapHighlightColor: "transparent" }}
                         >
                           Integrations
@@ -990,7 +990,7 @@ export function Header({
                             setIsMenuOpen(false);
                             setIsMobileAppsOpen(false);
                           }}
-                          className="text-lg font-sans text-left text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
+                          className="text-lg font-sans text-start text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
                           style={{ WebkitTapHighlightColor: "transparent" }}
                         >
                           Documentation
@@ -1001,7 +1001,7 @@ export function Header({
                             setIsMenuOpen(false);
                             setIsMobileAppsOpen(false);
                           }}
-                          className="text-lg font-sans text-left text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
+                          className="text-lg font-sans text-start text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
                           style={{ WebkitTapHighlightColor: "transparent" }}
                         >
                           Developer & API
@@ -1012,7 +1012,7 @@ export function Header({
                             setIsMenuOpen(false);
                             setIsMobileAppsOpen(false);
                           }}
-                          className="text-lg font-sans text-left text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
+                          className="text-lg font-sans text-start text-muted-foreground hover:text-muted-foreground xl:active:text-muted-foreground focus:outline-none focus-visible:outline-none touch-manipulation transition-colors"
                           style={{ WebkitTapHighlightColor: "transparent" }}
                         >
                           SDKs

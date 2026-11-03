@@ -55,7 +55,7 @@ export function InvoiceSuccess() {
             transition={{ duration: 0.3 }}
             className="flex items-center justify-between mb-6"
           >
-            <div className="flex space-x-1 items-center">
+            <div className="flex gap-x-1 items-center">
               <div className="flex items-center">
                 <span className="text-[11px] text-[#878787] font-mono">
                   {invoice.template.invoiceNoLabel}
@@ -66,7 +66,7 @@ export function InvoiceSuccess() {
               <span className="text-[11px]">{invoice.invoiceNumber}</span>
             </div>
 
-            <div className="flex space-x-1 items-center">
+            <div className="flex gap-x-1 items-center">
               <div className="flex items-center">
                 <span className="text-[11px] text-[#878787] font-mono">
                   {invoice.template.dueDateLabel}
@@ -165,7 +165,7 @@ export function InvoiceSuccess() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.3 }}
-            className="flex flex-wrap gap-3 absolute -bottom-[15px] left-0 right-0 w-full justify-center"
+            className="flex flex-wrap gap-3 absolute -bottom-[15px] start-0 end-0 w-full justify-center"
           >
             {Array.from({ length: 10 }).map((_, index) => (
               <div
@@ -177,7 +177,7 @@ export function InvoiceSuccess() {
         </div>
       </div>
 
-      <div className="flex mt-auto absolute bottom-6 justify-end gap-4 right-6 left-6">
+      <div className="flex mt-auto absolute bottom-6 justify-end gap-4 end-6 start-6">
         <OpenURL href={`${getUrl()}/i/${invoice.token}`}>
           <Button variant="secondary">View invoice</Button>
         </OpenURL>

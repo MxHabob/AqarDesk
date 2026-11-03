@@ -80,6 +80,28 @@
   }
 }
 
+.marketing-inline-end-gradient {
+  background: linear-gradient(
+    to left,
+    hsl(var(--background)) 0%,
+    hsl(var(--background)) 30%,
+    hsla(var(--background), 0.8) 50%,
+    hsla(var(--background), 0.4) 70%,
+    transparent 100%
+  );
+}
+
+[dir="rtl"] .marketing-inline-end-gradient {
+  background: linear-gradient(
+    to right,
+    hsl(var(--background)) 0%,
+    hsl(var(--background)) 30%,
+    hsla(var(--background), 0.8) 50%,
+    hsla(var(--background), 0.4) 70%,
+    transparent 100%
+  );
+}
+
 /* Updates/Blog styles */
 .updates p {
   min-height: 1.87em;
@@ -117,7 +139,7 @@
 .updates ul li {
   margin-top: 1px;
   margin-bottom: 1px;
-  padding-left: 12px;
+  padding-inline-start: 12px;
   padding-top: 3px;
   padding-bottom: 2px;
 }
@@ -171,9 +193,8 @@ pre code div,
 
 .updates blockquote p {
   margin: 7px 2px;
-  padding-left: 14px;
-  padding-right: 14px;
-  border-left: 3px solid;
+  padding-inline: 14px;
+  border-inline-start: 3px solid;
   color: hsl(var(--foreground));
 }
 

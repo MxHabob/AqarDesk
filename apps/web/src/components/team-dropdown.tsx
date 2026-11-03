@@ -27,11 +27,11 @@ type Props = {
 function TeamDropdownSkeleton({ isExpanded }: { isExpanded: boolean }) {
   return (
     <div className="relative h-[32px]">
-      <div className="fixed left-[19px] bottom-4 w-[32px] h-[32px]">
+      <div className="fixed start-[19px] bottom-4 w-[32px] h-[32px]">
         <Skeleton className="w-[32px] h-[32px] rounded-none" />
       </div>
       {isExpanded && (
-        <div className="fixed left-[62px] bottom-4 h-[32px] flex items-center">
+        <div className="fixed start-[62px] bottom-4 h-[32px] flex items-center">
           <Skeleton className="h-4 w-24" />
         </div>
       )}
@@ -109,12 +109,12 @@ export function TeamDropdown({ isExpanded = false }: Props) {
     <TooltipProvider delayDuration={50}>
       <div className="relative h-[32px]" ref={ref}>
         {/* Avatar - fixed position that absolutely never changes */}
-        <div className="fixed left-[19px] bottom-4 w-[32px] h-[32px]">
+        <div className="fixed start-[19px] bottom-4 w-[32px] h-[32px]">
           <div className="relative w-[32px] h-[32px]">
             <AnimatePresence>
               {isActive && (
                 <motion.div
-                  className="w-[32px] h-[32px] left-0 overflow-hidden absolute"
+                  className="w-[32px] h-[32px] start-0 overflow-hidden absolute"
                   style={{ zIndex: 1 }}
                   initial={{ y: 0, opacity: 0 }}
                   animate={{ y: -(32 + 10) * sortedTeams.length, opacity: 1 }}
@@ -141,7 +141,7 @@ export function TeamDropdown({ isExpanded = false }: Props) {
                 return (
                   <motion.div
                     key={team.id}
-                    className="w-[32px] h-[32px] left-0 overflow-hidden absolute"
+                    className="w-[32px] h-[32px] start-0 overflow-hidden absolute"
                     style={{ zIndex: -index }}
                     initial={{
                       scale: `${100 - index * 16}%`,
@@ -194,7 +194,7 @@ export function TeamDropdown({ isExpanded = false }: Props) {
                           </Avatar>
                         </TooltipTrigger>
                         <TooltipContent
-                          side="right"
+                          side="inline-end"
                           sideOffset={8}
                           className="px-2 py-1"
                         >
@@ -236,7 +236,7 @@ export function TeamDropdown({ isExpanded = false }: Props) {
 
         {/* Team name - appears to the right of the fixed avatar */}
         {isExpanded && sortedTeams[0] && (
-          <div className="fixed left-[62px] bottom-4 h-[32px] flex items-center">
+          <div className="fixed start-[62px] bottom-4 h-[32px] flex items-center">
             <span
               className="text-sm text-primary truncate transition-opacity duration-200 ease-in-out cursor-pointer hover:opacity-80"
               onClick={(e) => {

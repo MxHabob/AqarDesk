@@ -64,7 +64,7 @@ export function BulkActions({ ids }: Props) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline" className="space-x-2">
+        <Button variant="outline" className="gap-x-2">
           <span>Actions</span>
           <Icons.ChevronDown size={16} />
         </Button>
@@ -73,7 +73,7 @@ export function BulkActions({ ids }: Props) {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.AlertCircle className="mr-2 h-4 w-4" />
+              <Icons.AlertCircle className="me-2 h-4 w-4" />
               <span>Export</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -106,7 +106,7 @@ export function BulkActions({ ids }: Props) {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Check className="mr-2 h-4 w-4" />
+              <Icons.Check className="me-2 h-4 w-4" />
               <span>Mark exported</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -129,7 +129,7 @@ export function BulkActions({ ids }: Props) {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Visibility className="mr-2 h-4 w-4" />
+              <Icons.Visibility className="me-2 h-4 w-4" />
               <span>Exclude</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -162,7 +162,7 @@ export function BulkActions({ ids }: Props) {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Files className="mr-2 h-4 w-4" />
+              <Icons.Files className="me-2 h-4 w-4" />
               <span>Archive</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -195,7 +195,7 @@ export function BulkActions({ ids }: Props) {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Category className="mr-2 h-4 w-4" />
+              <Icons.Category className="me-2 h-4 w-4" />
               <span>Categories</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -220,7 +220,7 @@ export function BulkActions({ ids }: Props) {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Status className="mr-2 h-4 w-4" />
+              <Icons.Status className="me-2 h-4 w-4" />
               <span>Tags</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -255,7 +255,7 @@ export function BulkActions({ ids }: Props) {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Face className="mr-2 h-4 w-4" />
+              <Icons.Face className="me-2 h-4 w-4" />
               <span>Assign</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -279,7 +279,7 @@ export function BulkActions({ ids }: Props) {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Repeat className="mr-2 h-4 w-4" />
+              <Icons.Repeat className="me-2 h-4 w-4" />
               <span>Recurring</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>

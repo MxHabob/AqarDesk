@@ -106,7 +106,7 @@ export function TrackerSearchFilter() {
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-      <div className="flex space-x-4 items-center">
+      <div className="flex gap-x-4 items-center">
         <FilterList
           filters={validFilters}
           onRemove={setFilter}
@@ -123,11 +123,11 @@ export function TrackerSearchFilter() {
             handleSubmit();
           }}
         >
-          <Icons.Search className="absolute pointer-events-none left-3 top-[11px]" />
+          <Icons.Search className="absolute pointer-events-none start-3 top-[11px]" />
           <Input
             ref={inputRef}
             placeholder="Search projects..."
-            className="pl-9 w-full md:w-[350px] pr-8"
+            className="ps-9 w-full md:w-[350px] pe-8"
             value={input}
             onChange={handleSearch}
             autoComplete="off"
@@ -143,7 +143,7 @@ export function TrackerSearchFilter() {
               onClick={() => setIsOpen((prev) => !prev)}
               type="button"
               className={cn(
-                "absolute z-10 right-3 top-[10px] opacity-50 transition-opacity duration-300 hover:opacity-100",
+                "absolute z-10 end-3 top-[10px] opacity-50 transition-opacity duration-300 hover:opacity-100",
                 hasValidFilters && "opacity-100",
                 isOpen && "opacity-100",
               )}
@@ -164,7 +164,7 @@ export function TrackerSearchFilter() {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.CalendarMonth className="mr-2 h-4 w-4" />
+              <Icons.CalendarMonth className="me-2 h-4 w-4" />
               <span>Date</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -211,7 +211,7 @@ export function TrackerSearchFilter() {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.ProjectStatus className="mr-2 h-4 w-4 rotate-180" />
+              <Icons.ProjectStatus className="me-2 h-4 w-4 rotate-180" />
               <span>Status</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -242,7 +242,7 @@ export function TrackerSearchFilter() {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Face className="mr-2 h-4 w-4" />
+              <Icons.Face className="me-2 h-4 w-4" />
               <span>Customer</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -280,7 +280,7 @@ export function TrackerSearchFilter() {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Status className="mr-2 h-4 w-4" />
+              <Icons.Status className="me-2 h-4 w-4" />
               <span>Tags</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>

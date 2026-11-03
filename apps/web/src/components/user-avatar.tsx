@@ -15,7 +15,7 @@ export function UserAvatar() {
 
   return (
     <Card>
-      <div className="flex justify-between items-center pr-6">
+      <div className="flex justify-between items-center pe-6">
         <CardHeader>
           <CardTitle>Avatar</CardTitle>
           <CardDescription>

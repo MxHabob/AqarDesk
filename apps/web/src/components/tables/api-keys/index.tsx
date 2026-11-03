@@ -89,7 +89,7 @@ export function DataTable() {
                       }
                     }}
                     className={cn(
-                      "border-r-[0px] py-4 cursor-pointer",
+                      "border-e-[0px] py-4 cursor-pointer",
                       cell.column.columnDef.meta?.className
                     )}
                   >

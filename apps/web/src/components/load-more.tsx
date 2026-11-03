@@ -14,7 +14,7 @@ export function LoadMore({
 
   return (
     <div className="flex items-center justify-center mt-6" ref={ref}>
-      <div className="flex items-center space-x-2 py-5">
+      <div className="flex items-center gap-x-2 py-5">
         <Spinner />
         <span className="text-sm text-[#606060]">Loading more...</span>
       </div>

@@ -87,7 +87,7 @@ export function SupportForm() {
           )}
         />
 
-        <div className="flex space-x-4">
+        <div className="flex gap-x-4">
           <FormField
             control={form.control}
             name="type"

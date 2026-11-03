@@ -20,7 +20,7 @@ export function HorizontalPagination({
   className,
 }: HorizontalPaginationProps) {
   return (
-    <div className={cn("flex items-center space-x-2", className)}>
+    <div className={cn("flex items-center gap-x-2", className)}>
       <Button
         variant="outline"
         size="sm"
@@ -29,7 +29,10 @@ export function HorizontalPagination({
         onClick={onScrollLeft}
       >
         <Icons.ArrowBack
-          className={cn("size-3.5", canScrollLeft && "text-primary")}
+          className={cn(
+            "size-3.5 rtl:rotate-180",
+            canScrollLeft && "text-primary"
+          )}
         />
       </Button>
       <Button
@@ -40,7 +43,10 @@ export function HorizontalPagination({
         onClick={onScrollRight}
       >
         <Icons.ArrowForward
-          className={cn("size-3.5", canScrollRight && "text-primary")}
+          className={cn(
+            "size-3.5 rtl:rotate-180",
+            canScrollRight && "text-primary"
+          )}
         />
       </Button>
     </div>

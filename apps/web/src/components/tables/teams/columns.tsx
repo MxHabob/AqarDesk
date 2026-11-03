@@ -46,7 +46,7 @@ export const columns: ColumnDef<RouterOutputs["team"]["list"][number]>[] = [
       const t = useI18n()
 
       return (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-x-4">
           <Avatar className="rounded-full w-8 h-8">
             <AvatarImageNext
               src={row.original.logoUrl ?? ""}
@@ -112,7 +112,7 @@ export const columns: ColumnDef<RouterOutputs["team"]["list"][number]>[] = [
 
       return (
         <div className="flex justify-end">
-          <div className="flex space-x-3 items-center">
+          <div className="flex gap-x-3 items-center">
             <SubmitButton
               variant="outline"
               isSubmitting={viewTeamMutation.isPending}
@@ -204,7 +204,7 @@ export const columns: ColumnDef<RouterOutputs["team"]["list"][number]>[] = [
       )
     },
     meta: {
-      className: "text-right",
+      className: "text-end",
     },
   },
 ]

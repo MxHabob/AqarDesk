@@ -14,7 +14,7 @@ export function AssignedUser({ avatarUrl, fullName }: Props) {
   )
 
   return (
-    <div className="flex space-x-2 items-center">
+    <div className="flex gap-x-2 items-center">
       {url && (
         <Avatar className="h-5 w-5">
           <AvatarImageNext src={url} alt={fullName ?? ""} width={20} height={20} />

@@ -46,7 +46,7 @@ export function DataTable() {
 
   return (
     <div className="w-full">
-      <div className="flex items-center pb-4 space-x-4">
+      <div className="flex items-center pb-4 gap-x-4">
         <Input
           className="flex-1"
           placeholder="Search..."
@@ -77,7 +77,7 @@ export function DataTable() {
                   <TableCell
                     key={cell.id}
                     className={cn(
-                      "border-r-[0px] py-4",
+                      "border-e-[0px] py-4",
                       cell.column.columnDef.meta?.className
                     )}
                   >

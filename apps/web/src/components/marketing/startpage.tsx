@@ -403,7 +403,7 @@ export function StartPage() {
               <button
                 type="button"
                 onClick={() => setIsVideoModalOpen(false)}
-                className="hidden sm:block absolute top-4 right-4 z-10 backdrop-blur-md bg-background-semi-transparent p-2 transition-colors"
+                className="hidden sm:block absolute top-4 end-4 z-10 backdrop-blur-md bg-background-semi-transparent p-2 transition-colors"
                 aria-label="Close dialog"
               >
                 <Icons.Close className="h-5 w-5 text-foreground" />
@@ -430,13 +430,13 @@ export function StartPage() {
             <div className="relative w-full border-t border-border bg-background overflow-hidden">
               <div
                 ref={videoTagsScrollRef}
-                className="overflow-x-auto scrollbar-hide"
+                className="overflow-x-auto scrollbar-hide scroll-px-5"
               >
                 <div className="p-4 lg:p-6">
                   <div className="flex gap-4">
                     {videos.map((video, index) => (
                       <div key={video.id} className="flex items-stretch">
-                        {index > 0 && <div className="w-px bg-border mr-4" />}
+                        {index > 0 && <div className="w-px bg-border me-4" />}
                         <button
                           type="button"
                           onClick={(e) => {
@@ -446,79 +446,47 @@ export function StartPage() {
                             const scrollContainer = videoTagsScrollRef.current;
                             if (!scrollContainer) return;
 
-                            const buttonRect =
-                              e.currentTarget.getBoundingClientRect();
                             const containerRect =
                               scrollContainer.getBoundingClientRect();
-                            const currentScrollLeft =
-                              scrollContainer.scrollLeft;
+                            const adjacentVideos = [
+                              scrollContainer.querySelector<HTMLElement>(
+                                `[data-video-index="${index + 1}"]`,
+                              ),
+                              scrollContainer.querySelector<HTMLElement>(
+                                `[data-video-index="${index - 1}"]`,
+                              ),
+                            ];
+                            const adjacentVideo = adjacentVideos.find((tag) => {
+                              if (!tag) return false;
+                              const rect = tag.getBoundingClientRect();
+                              return (
+                                rect.left < containerRect.left + 20 ||
+                                rect.right > containerRect.right - 20
+                              );
+                            });
 
-                            // Check if this is the last visible tag and scroll to show next one
-                            if (index < videos.length - 1) {
-                              const isLastVisible =
-                                buttonRect.right >= containerRect.right - 50; // 50px threshold
-
-                              if (isLastVisible) {
-                                const nextTag = scrollContainer.querySelector(
-                                  `[data-video-index="${index + 1}"]`,
-                                ) as HTMLElement;
-                                if (nextTag) {
-                                  const nextTagRect =
-                                    nextTag.getBoundingClientRect();
-                                  // Calculate how much to scroll to show the next tag
-                                  const scrollAmount =
-                                    nextTagRect.right -
-                                    containerRect.right +
-                                    20; // 20px padding
-
-                                  scrollContainer.scrollTo({
-                                    left: currentScrollLeft + scrollAmount,
-                                    behavior: "smooth",
-                                  });
-                                }
-                              }
-                            }
-
-                            // Check if this is the first visible tag and scroll to show previous one
-                            if (index > 0) {
-                              const isFirstVisible =
-                                buttonRect.left <= containerRect.left + 50; // 50px threshold
-
-                              if (isFirstVisible) {
-                                const prevTag = scrollContainer.querySelector(
-                                  `[data-video-index="${index - 1}"]`,
-                                ) as HTMLElement;
-                                if (prevTag) {
-                                  const prevTagRect =
-                                    prevTag.getBoundingClientRect();
-                                  // Calculate how much to scroll to show the previous tag
-                                  const scrollAmount =
-                                    containerRect.left - prevTagRect.left + 20; // 20px padding
-
-                                  scrollContainer.scrollTo({
-                                    left: currentScrollLeft - scrollAmount,
-                                    behavior: "smooth",
-                                  });
-                                }
-                              }
-                            }
+                            adjacentVideo?.scrollIntoView({
+                              behavior: "smooth",
+                              block: "nearest",
+                              inline: "nearest",
+                            });
                           }}
                           data-video-index={index}
-                          className={`w-[100px] sm:w-[140px] md:w-[310px] flex-shrink-0 pt-1 pb-3 md:pt-2 md:pb-5 transition-colors flex flex-col items-start gap-1 md:gap-2 text-left relative bg-background text-muted-foreground hover:text-foreground ${index > 0 ? "pl-2" : ""}`}
+                          className={`w-[100px] sm:w-[140px] md:w-[310px] flex-shrink-0 pt-1 pb-3 md:pt-2 md:pb-5 transition-colors flex flex-col items-start gap-1 md:gap-2 text-start relative bg-background text-muted-foreground hover:text-foreground ${index > 0 ? "ps-2" : ""}`}
                         >
                           <span
-                            className={`font-sans text-sm md:text-base leading-tight text-left ${activeVideoId === video.id ? "text-primary" : ""}`}
+                            className={`font-sans text-sm md:text-base leading-tight text-start ${activeVideoId === video.id ? "text-primary" : ""}`}
                           >
                             {video.title}
                           </span>
                           {video.subtitle && (
-                            <span className="hidden md:block font-sans text-xs text-muted-foreground leading-tight text-left">
+                            <span className="hidden md:block font-sans text-xs text-muted-foreground leading-tight text-start">
                               {video.subtitle}
                             </span>
                           )}
                           {activeVideoId === video.id && (
                             <div
-                              className="absolute bottom-0 left-0 h-0.5 bg-primary transition-all duration-150"
+                              className="absolute bottom-0 start-0 h-0.5 bg-primary transition-all duration-150"
                               style={{ width: `${videoProgress}%` }}
                             />
                           )}
@@ -530,11 +498,7 @@ export function StartPage() {
               </div>
               {/* Gradient fade-out on the right */}
               <div
-                className="absolute top-0 right-0 bottom-0 w-24 pointer-events-none z-10"
-                style={{
-                  background:
-                    "linear-gradient(to left, hsl(var(--background)) 0%, hsl(var(--background)) 30%, hsla(var(--background), 0.8) 50%, hsla(var(--background), 0.4) 70%, transparent 100%)",
-                }}
+                className="marketing-inline-end-gradient absolute top-0 end-0 bottom-0 w-24 pointer-events-none z-10"
               />
             </div>
           </div>

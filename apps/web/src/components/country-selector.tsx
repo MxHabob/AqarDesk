@@ -64,7 +64,7 @@ export function CountrySelector({ defaultValue, onSelect, className }: Props) {
           )}
         >
           {value ? selected?.name : "Select country"}
-          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
+          <ChevronsUpDown className="ms-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
       </PopoverTrigger>
       <PopoverContent
@@ -94,7 +94,7 @@ export function CountrySelector({ defaultValue, onSelect, className }: Props) {
                   {country.name}
                   <Check
                     className={cn(
-                      "ml-auto h-4 w-4",
+                      "ms-auto h-4 w-4",
                       value === country.code ? "opacity-100" : "opacity-0"
                     )}
                   />

@@ -44,7 +44,7 @@ export function InputColor({
         autoFocus={autoFocus}
         autoCorrect="off"
         spellCheck="false"
-        className="pl-7"
+        className="ps-7"
         value={value}
         onChange={(evt) => {
           const newName = evt.target.value

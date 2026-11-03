@@ -31,7 +31,7 @@ export const columns: ColumnDef<TeamInvite>[] = [
     filterFn: emailFilterFn,
     cell: ({ row }) => {
       return (
-        <div className="flex items-center space-x-4">
+        <div className="flex items-center gap-x-4">
           <Avatar className="rounded-full w-8 h-8">
             <AvatarFallback>
               <span className="text-xs">
@@ -66,7 +66,7 @@ export const columns: ColumnDef<TeamInvite>[] = [
 
       return (
         <div className="flex justify-end">
-          <div className="flex space-x-2 items-center">
+          <div className="flex gap-x-2 items-center">
             <span className="text-[#606060]">
               {t(`roles.${row.original.role || "member"}`)}
             </span>
@@ -96,7 +96,7 @@ export const columns: ColumnDef<TeamInvite>[] = [
       )
     },
     meta: {
-      className: "text-right",
+      className: "text-end",
     },
   },
 ]

@@ -56,7 +56,7 @@ export const columns: ColumnDef<TeamMember>[] = [
     cell: ({ row }) => {
       return (
         <div>
-          <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-x-4">
             <Avatar className="rounded-full w-8 h-8">
               <AvatarImageNext
                 src={row.original.user?.avatarUrl ?? ""}
@@ -130,7 +130,7 @@ export const columns: ColumnDef<TeamMember>[] = [
 
       return (
         <div className="flex justify-end">
-          <div className="flex space-x-2 items-center">
+          <div className="flex gap-x-2 items-center">
             {(meta?.currentUser?.role === "owner" &&
               meta?.currentUser?.user?.id !== row.original.user?.id) ||
             (meta?.currentUser?.role === "owner" &&
@@ -258,7 +258,7 @@ export const columns: ColumnDef<TeamMember>[] = [
       )
     },
     meta: {
-      className: "text-right",
+      className: "text-end",
     },
   },
 ]

@@ -110,7 +110,7 @@ export function SelectCustomer() {
                       e.stopPropagation();
                       setCustomerParams({ customerId: item.id });
                     }}
-                    className="ml-auto text-xs opacity-0 group-hover:opacity-50 hover:opacity-100"
+                    className="ms-auto text-xs opacity-0 group-hover:opacity-50 hover:opacity-100"
                   >
                     Edit
                   </button>

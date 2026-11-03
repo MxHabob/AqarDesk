@@ -19,7 +19,7 @@ function ReviewCount() {
   }
 
   return (
-    <span className="ml-1 text-xs text-[#878787]">
+    <span className="ms-1 text-xs text-[#878787]">
       ({transactionIds.length})
     </span>
   );

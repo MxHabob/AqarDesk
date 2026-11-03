@@ -21,12 +21,12 @@ export function MobileMenu() {
           <Icons.Menu size={16} />
         </Button>
       </div>
-      <SheetContent side="left" className="border-none rounded-none -ml-4">
-        <div className="ml-2 mb-8">
+      <SheetContent side="start" className="border-none rounded-none -ms-4">
+        <div className="ms-2 mb-8">
           <Icons.LogoSmall />
         </div>
 
-        <div className="-ml-2">
+        <div className="-ms-2">
           <MainMenu onSelect={() => setOpen(false)} isExpanded={true} />
         </div>
       </SheetContent>

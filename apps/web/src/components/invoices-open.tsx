@@ -23,7 +23,7 @@ export function InvoicesOpen() {
           statuses: ["draft", "scheduled", "unpaid"],
         })
       }
-      className="hidden sm:block text-left"
+      className="hidden sm:block text-start"
     >
       <InvoiceSummary data={data} title="Open" />
     </button>

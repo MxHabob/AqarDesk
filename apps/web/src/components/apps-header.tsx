@@ -6,7 +6,7 @@ const totalApps = officialApps.filter((app) => !app.id.endsWith("-mcp")).length;
 
 export function AppsHeader() {
   return (
-    <div className="flex space-x-4">
+    <div className="flex gap-x-4">
       <AppsTabs />
       <SearchField placeholder={`Search ${totalApps} apps`} shallow />
     </div>

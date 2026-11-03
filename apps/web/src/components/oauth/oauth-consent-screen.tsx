@@ -281,7 +281,7 @@ export function OAuthConsentScreen() {
                 className={cn(
                   "space-y-4",
                   applicationInfo.scopes.length > 3 &&
-                    "max-h-[92px] overflow-y-auto pr-2 pb-2",
+                    "max-h-[92px] overflow-y-auto pe-2 pb-2",
                 )}
               >
                 {applicationInfo.scopes.map((scope) => {
@@ -299,7 +299,7 @@ export function OAuthConsentScreen() {
                 })}
               </div>
               {applicationInfo.scopes.length > 3 && (
-                <div className="absolute bottom-0 left-0 right-0 h-5 bg-gradient-to-t from-card to-transparent pointer-events-none" />
+                <div className="absolute bottom-0 start-0 end-0 h-5 bg-gradient-to-t from-card to-transparent pointer-events-none" />
               )}
             </div>
           </div>

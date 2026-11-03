@@ -95,7 +95,7 @@ export function InvoiceSearchFilter() {
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-      <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-4 sm:space-y-0 items-start sm:items-center w-full">
+      <div className="flex flex-col sm:flex-row sm:gap-x-4 space-y-4 sm:space-y-0 items-start sm:items-center w-full">
         <form
           className="relative w-full sm:w-auto"
           onSubmit={(e) => {
@@ -103,11 +103,11 @@ export function InvoiceSearchFilter() {
             handleSubmit();
           }}
         >
-          <Icons.Search className="absolute pointer-events-none left-3 top-[11px]" />
+          <Icons.Search className="absolute pointer-events-none start-3 top-[11px]" />
           <Input
             ref={inputRef}
             placeholder="Search invoices..."
-            className="pl-9 w-full sm:w-[350px] pr-8"
+            className="ps-9 w-full sm:w-[350px] pe-8"
             value={input}
             onChange={handleSearch}
             autoComplete="off"
@@ -121,7 +121,7 @@ export function InvoiceSearchFilter() {
               onClick={() => setIsOpen((prev) => !prev)}
               type="button"
               className={cn(
-                "absolute z-10 right-3 top-[10px] opacity-50 transition-opacity duration-300 hover:opacity-100",
+                "absolute z-10 end-3 top-[10px] opacity-50 transition-opacity duration-300 hover:opacity-100",
                 hasValidFilters && "opacity-100",
                 isOpen && "opacity-100",
               )}
@@ -149,7 +149,7 @@ export function InvoiceSearchFilter() {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.CalendarMonth className="mr-2 h-4 w-4" />
+              <Icons.CalendarMonth className="me-2 h-4 w-4" />
               <span>Due Date</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -171,7 +171,7 @@ export function InvoiceSearchFilter() {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Face className="mr-2 h-4 w-4" />
+              <Icons.Face className="me-2 h-4 w-4" />
               <span>Customer</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -209,7 +209,7 @@ export function InvoiceSearchFilter() {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Status className="mr-2 h-4 w-4" />
+              <Icons.Status className="me-2 h-4 w-4" />
               <span>Status</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>
@@ -241,7 +241,7 @@ export function InvoiceSearchFilter() {
         <DropdownMenuGroup>
           <DropdownMenuSub>
             <DropdownMenuSubTrigger>
-              <Icons.Repeat className="mr-2 h-4 w-4" />
+              <Icons.Repeat className="me-2 h-4 w-4" />
               <span>Type</span>
             </DropdownMenuSubTrigger>
             <DropdownMenuPortal>

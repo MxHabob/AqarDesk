@@ -23,7 +23,7 @@ export function Header() {
 
       <OpenSearchButton />
 
-      <div className="flex space-x-2 ml-auto">
+      <div className="flex gap-2 ms-auto">
         <NotificationCenter />
         <Suspense fallback={<UserMenuSkeleton />}>
           <UserMenu />

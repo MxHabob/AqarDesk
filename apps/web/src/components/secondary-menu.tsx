@@ -18,7 +18,7 @@ export function SecondaryMenu({ items }: Props) {
 
   return (
     <nav className="py-4">
-      <ul className="flex space-x-6 text-sm overflow-auto scrollbar-hide">
+      <ul className="flex gap-x-6 text-sm overflow-auto scrollbar-hide">
         {items.map((item) => (
           <Link
             key={item.path}

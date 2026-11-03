@@ -26,7 +26,7 @@ export function BottomBar({
   return (
     <Portal>
       <motion.div
-        className="h-12 fixed bottom-6 left-0 right-0 pointer-events-none flex justify-center z-50"
+        className="h-12 fixed bottom-6 start-0 end-0 pointer-events-none flex justify-center z-50"
         initial={{ y: 100 }}
         animate={{ y: 0 }}
         exit={{ y: 100 }}
@@ -41,10 +41,10 @@ export function BottomBar({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
           />
-          <div className="relative h-12 justify-between items-center flex pl-4 pr-2">
+          <div className="relative h-12 justify-between items-center flex ps-4 pe-2">
             <span className="text-sm">{selectedCount} selected</span>
 
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-x-2">
               <Button
                 variant="ghost"
                 className="text-muted-foreground"

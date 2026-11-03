@@ -173,7 +173,7 @@ export function SelectAttachment({
 
   return (
     <Combobox
-      className="border border-border p-2 pl-10"
+      className="border border-border p-2 ps-10"
       placeholder={placeholder}
       onValueChange={(query) => {
         setDebouncedValue(query)

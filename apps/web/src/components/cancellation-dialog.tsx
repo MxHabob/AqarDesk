@@ -280,7 +280,7 @@ function StepOne({
             type="button"
             onClick={() => onSelect(value)}
             className={cn(
-              "w-full text-left text-sm p-3 border transition-colors hover:bg-accent",
+              "w-full text-start text-sm p-3 border transition-colors hover:bg-accent",
               reason === value ? "border-primary bg-accent" : "border-border",
             )}
           >

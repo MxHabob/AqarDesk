@@ -120,7 +120,7 @@ export function SelectAccount({
       }}
       renderOnCreate={(value) => {
         return (
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-x-2">
             <span>{`Create "${value}"`}</span>
           </div>
         );

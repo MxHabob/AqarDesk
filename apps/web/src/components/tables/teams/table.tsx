@@ -47,7 +47,7 @@ export function DataTable() {
                   <TableCell
                     key={cell.id}
                     className={cn(
-                      "border-r-[0px] py-4",
+                      "border-e-[0px] py-4",
                       cell.column.columnDef.meta?.className
                     )}
                   >

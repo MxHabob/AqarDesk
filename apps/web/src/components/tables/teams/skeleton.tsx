@@ -12,8 +12,8 @@ export function TeamsSkeleton() {
         <TableBody>
           {[...Array(6)].map((_, index) => (
             <TableRow key={index.toString()} className="hover:bg-transparent">
-              <TableCell className={cn("border-r-[0px] py-4")}>
-                <div className="flex items-center space-x-4">
+              <TableCell className={cn("border-e-[0px] py-4")}>
+                <div className="flex items-center gap-x-4">
                   <Skeleton className="rounded-full w-8 h-8" />
 
                   <div className="flex flex-col space-y-2">

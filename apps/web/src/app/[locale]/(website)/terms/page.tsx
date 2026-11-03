@@ -117,7 +117,7 @@ export default function TermsPage() {
                   <p className="text-muted-foreground leading-relaxed">
                     You warrant that:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                     <li>You own or have rights to the Content,</li>
                     <li>
                       Posting the Content does not violate any rights of others.
@@ -148,7 +148,7 @@ export default function TermsPage() {
                   <p className="text-muted-foreground leading-relaxed">
                     You may not use a username that:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                     <li>Belongs to someone else without authorization,</li>
                     <li>Is not lawfully available,</li>
                     <li>Is offensive, vulgar, or obscene.</li>
@@ -190,7 +190,7 @@ export default function TermsPage() {
                   <p className="text-muted-foreground leading-relaxed">
                     You acknowledge and agree that:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                     <li>
                       You are solely responsible for the accuracy, legality, and
                       compliance of all invoices you create or send using the
@@ -227,7 +227,7 @@ export default function TermsPage() {
                   <p className="text-muted-foreground leading-relaxed">
                     You acknowledge and agree that:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                     <li>
                       All financial and transactional data—whether sourced
                       externally or entered by users—is displayed "as is",
@@ -265,7 +265,7 @@ export default function TermsPage() {
                   <p className="text-muted-foreground leading-relaxed">
                     You acknowledge and agree that:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                     <li>
                       Midday Labs AB acts solely as a technical facilitator of
                       data transfer and does not control, verify, or validate
@@ -303,7 +303,7 @@ export default function TermsPage() {
                     If you believe your work has been used in a way that
                     constitutes infringement, please email dmca@midday.ai with:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                     <li>A detailed description of the material,</li>
                     <li>Identification of the copyrighted work,</li>
                     <li>Your contact details,</li>
@@ -374,7 +374,7 @@ export default function TermsPage() {
                     suppliers shall not be liable for any indirect, incidental,
                     special, consequential, or punitive damages, including:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                     <li>Loss of profits, data, or goodwill,</li>
                     <li>Errors or delays in third-party data,</li>
                     <li>Unauthorized access or use of your Content,</li>
@@ -398,7 +398,7 @@ export default function TermsPage() {
                   <p className="text-muted-foreground leading-relaxed">
                     We do not warrant that:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                     <li>The Service will be secure, timely, or error-free,</li>
                     <li>Any defects will be corrected,</li>
                     <li>

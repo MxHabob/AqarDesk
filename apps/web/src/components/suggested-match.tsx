@@ -140,7 +140,7 @@ export function SuggestedMatch({
   if (isLoading) {
     return (
       <div className={cn("space-y-4", className)}>
-        <div className="flex items-center space-x-2 text-sm">
+        <div className="flex items-center gap-x-2 text-sm">
           <Skeleton className="h-4 w-24" />
           <Skeleton className="h-3 w-20" />
         </div>
@@ -172,7 +172,7 @@ export function SuggestedMatch({
 
   return (
     <div className={cn("space-y-4", className)}>
-      <div className="flex items-center space-x-2 text-sm">
+      <div className="flex items-center gap-x-2 text-sm">
         <span>Suggested match</span>
         <span className="text-xs text-[#878787]">
           ({Math.round((suggestion?.confidenceScore || 0) * 100)}% confidence)
@@ -189,7 +189,7 @@ export function SuggestedMatch({
           onClick={filePath ? handleExpandDocument : undefined}
         >
           {filePath && (
-            <div className="absolute top-2 right-2 z-10 h-8 w-8 flex items-center justify-center opacity-60 group-hover:opacity-100 transition-opacity">
+            <div className="absolute top-2 end-2 z-10 h-8 w-8 flex items-center justify-center opacity-60 group-hover:opacity-100 transition-opacity">
               <Icons.ExpandContent className="h-4 w-4 text-[#878787]" />
             </div>
           )}
@@ -225,7 +225,7 @@ export function SuggestedMatch({
                 </p>
               )}
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-x-2">
               <SubmitButton
                 variant="outline"
                 size="sm"

@@ -172,7 +172,7 @@ export function TaxAmount({
             step="0.01"
             min="0"
             max="100"
-            className="pr-16 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
+            className="pe-16 [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none"
             value={localTaxRate}
             onWheel={(e) => e.currentTarget.blur()}
             onChange={(e) => {
@@ -205,7 +205,7 @@ export function TaxAmount({
         ) : (
           <CurrencyInput
             placeholder="0"
-            className="pr-16"
+            className="pe-16"
             value={localTaxAmount ?? undefined}
             onValueChange={(values) => {
               const value = values.floatValue ?? 0;
@@ -250,7 +250,7 @@ export function TaxAmount({
             }
           }}
         >
-          <SelectTrigger className="absolute right-0 top-0 h-full w-[70px] border-0 bg-transparent text-xs justify-end gap-1">
+          <SelectTrigger className="absolute end-0 top-0 h-full w-[70px] border-0 bg-transparent text-xs justify-end gap-1">
             <SelectValue />
           </SelectTrigger>
           <SelectContent>

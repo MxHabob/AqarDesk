@@ -39,7 +39,7 @@ export function ConnectInboxStep() {
       </motion.p>
 
       <motion.ul
-        className="space-y-2 pl-0 list-none"
+        className="space-y-2 ps-0 list-none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.35, delay: 0.3 }}
@@ -101,7 +101,7 @@ export function ConnectInboxStep() {
         {inboxEmail && (
           <Accordion type="single" collapsible className="border-t pt-2 mt-4">
             <AccordionItem value="more-options" className="border-0">
-              <AccordionTrigger className="justify-center space-x-2 flex text-sm">
+              <AccordionTrigger className="justify-center gap-x-2 flex text-sm">
                 <span>More options</span>
               </AccordionTrigger>
               <AccordionContent className="mt-4">

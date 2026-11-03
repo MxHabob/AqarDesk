@@ -366,12 +366,12 @@ export function CustomerDetails() {
               <DropdownMenuContent align="end">
                 {isEnriching ? (
                   <DropdownMenuItem onClick={handleCancelEnrich}>
-                    <Icons.Close className="size-4 mr-2" />
+                    <Icons.Close className="size-4 me-2" />
                     Cancel enrichment
                   </DropdownMenuItem>
                 ) : (
                   <DropdownMenuItem onClick={handleStartEnrich}>
-                    <Icons.RefreshOutline className="size-4 mr-2" />
+                    <Icons.RefreshOutline className="size-4 me-2" />
                     {hasEnrichmentData ? "Refresh data" : "Enrich company"}
                   </DropdownMenuItem>
                 )}
@@ -380,7 +380,7 @@ export function CustomerDetails() {
                     onClick={handleClearEnrichment}
                     className="text-destructive"
                   >
-                    <Icons.Delete className="size-4 mr-2" />
+                    <Icons.Delete className="size-4 me-2" />
                     Clear enrichment
                   </DropdownMenuItem>
                 )}
@@ -878,7 +878,7 @@ export function CustomerDetails() {
                           {customer.website && (
                             <Button
                               variant="link"
-                              className="p-0 h-auto text-[14px] ml-1"
+                              className="p-0 h-auto text-[14px] ms-1"
                               onClick={handleStartEnrich}
                             >
                               Try again
@@ -1076,9 +1076,9 @@ export function CustomerDetails() {
                   <div className="mb-6 relative">
                     <CopyInput
                       value={`${window.location.origin}/p/${customer.portalId}`}
-                      className="font-mono text-xs pr-14"
+                      className="font-mono text-xs pe-14"
                     />
-                    <div className="absolute right-10 top-2.5 border-r border-border pr-2 text-base">
+                    <div className="absolute end-10 top-2.5 border-e border-border pe-2 text-base">
                       <OpenURL
                         href={`${window.location.origin}/p/${customer.portalId}`}
                       >

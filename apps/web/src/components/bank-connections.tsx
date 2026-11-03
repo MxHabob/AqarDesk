@@ -53,7 +53,7 @@ function ConnectionState({
 
   if (isSyncing) {
     return (
-      <div className="text-xs font-normal flex items-center space-x-1">
+      <div className="text-xs font-normal flex items-center gap-x-1">
         <span>Syncing...</span>
       </div>
     );
@@ -62,7 +62,7 @@ function ConnectionState({
   if (connection.status === "disconnected") {
     return (
       <>
-        <div className="text-xs font-normal flex items-center space-x-1 text-[#c33839]">
+        <div className="text-xs font-normal flex items-center gap-x-1 text-[#c33839]">
           <Icons.AlertCircle />
           <span>Connection issue</span>
         </div>
@@ -70,7 +70,7 @@ function ConnectionState({
         <TooltipContent
           className="px-3 py-1.5 text-xs max-w-[430px]"
           sideOffset={20}
-          side="left"
+          side="inline-start"
         >
           Please reconnect to restore the connection to a good state.
         </TooltipContent>
@@ -81,7 +81,7 @@ function ConnectionState({
   if (show && !expired) {
     return (
       <>
-        <div className="text-xs font-normal flex items-center space-x-1 text-[#FFD02B]">
+        <div className="text-xs font-normal flex items-center gap-x-1 text-[#FFD02B]">
           <Icons.AlertCircle />
           <span>Connection expires soon</span>
         </div>
@@ -90,7 +90,7 @@ function ConnectionState({
           <TooltipContent
             className="px-3 py-1.5 text-xs max-w-[430px]"
             sideOffset={20}
-            side="left"
+            side="inline-start"
           >
             We only have access to your bank for another{" "}
             {differenceInDays(new Date(connection.expiresAt), new Date())} days.
@@ -103,7 +103,7 @@ function ConnectionState({
 
   if (expired) {
     return (
-      <div className="text-xs font-normal flex items-center space-x-1 text-[#c33839]">
+      <div className="text-xs font-normal flex items-center gap-x-1 text-[#c33839]">
         <Icons.Error />
         <span>Connection expired</span>
       </div>
@@ -112,7 +112,7 @@ function ConnectionState({
 
   if (connection.lastAccessed) {
     return (
-      <div className="text-xs font-normal flex items-center space-x-1">
+      <div className="text-xs font-normal flex items-center gap-x-1">
         <span className="text-xs font-normal">{`Updated ${formatDistanceToNow(
           new Date(connection.lastAccessed),
           {
@@ -151,7 +151,7 @@ export function BankConnection({ connection }: { connection: BankConnection }) {
   return (
     <div className="py-4">
       <div className="flex justify-between items-center">
-        <div className="flex space-x-4 items-center w-full">
+        <div className="flex gap-x-4 items-center w-full">
           <BankLogo src={connection.logoUrl} alt={connection.name} />
 
           <div className="flex flex-col">
@@ -172,7 +172,7 @@ export function BankConnection({ connection }: { connection: BankConnection }) {
           </div>
         </div>
 
-        <div className="ml-auto flex space-x-2 items-center">
+        <div className="ms-auto flex gap-x-2 items-center">
           {connection.status === "disconnected" || show ? (
             <>
               <ReconnectProvider

@@ -25,7 +25,7 @@ function RowsSkeleton() {
     <div className="space-y-6">
       {Array.from({ length: 3 }).map((_, index) => (
         <div key={index.toString()} className="flex justify-between">
-          <div className="flex items-center space-x-4 mr-8 flex-1 min-w-0">
+          <div className="flex items-center gap-x-4 me-8 flex-1 min-w-0">
             <Skeleton className="size-[34px] rounded-full shrink-0" />
             <div className="flex flex-col flex-1 min-w-0">
               <div className="flex items-center justify-between">
@@ -227,7 +227,7 @@ export function AddBankAccountsModal({
                 key={account.id}
                 className="flex justify-between items-center"
               >
-                <div className="flex items-center space-x-4 mr-8 flex-1 min-w-0">
+                <div className="flex items-center gap-x-4 me-8 flex-1 min-w-0">
                   <Avatar className="size-[34px]">
                     <AvatarFallback className="text-[11px]">
                       {getInitials(account.name)}

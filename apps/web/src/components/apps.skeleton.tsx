@@ -17,7 +17,7 @@ export function AppsSkeleton() {
               <Skeleton className="h-4 w-[70%]" />
               <Skeleton className="h-4 w-[160px]" />
             </div>
-            <div className="flex items-center justify-between space-x-2 mt-4">
+            <div className="flex items-center justify-between gap-x-2 mt-4">
               <Skeleton className="h-10 w-full" />
               <Skeleton className="h-10 w-full" />
             </div>

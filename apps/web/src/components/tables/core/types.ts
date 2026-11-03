@@ -104,7 +104,7 @@ export const ACTIONS_FULL_WIDTH_HEADER_CLASS =
  * Actions column class when sticky to the right
  */
 export const ACTIONS_STICKY_HEADER_CLASS =
-  "group/header relative h-full px-4 !border-t !border-l !border-border flex items-center justify-center md:sticky md:right-0 bg-background z-10"
+  "group/header relative h-full px-4 !border-t !border-s !border-border flex items-center justify-center md:sticky md:end-0 bg-background z-10"
 
 /**
  * Actions cell class when it should be full width

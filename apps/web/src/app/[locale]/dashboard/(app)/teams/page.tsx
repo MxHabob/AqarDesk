@@ -28,14 +28,14 @@ export default async function Teams() {
 
   return (
     <HydrateClient>
-      <header className="w-full absolute left-0 right-0 flex justify-between items-center">
+      <header className="w-full absolute start-0 end-0 flex justify-between items-center">
         <div className="p-6">
           <Link href="/">
             <Icons.LogoSmall className="h-6 w-auto" />
           </Link>
         </div>
 
-        <div className="mr-6 mt-4">
+        <div className="me-6 mt-4">
           <UserMenu onlySignOut />
         </div>
       </header>
@@ -73,7 +73,7 @@ export default async function Teams() {
           {invites?.length > 0 && <TeamInvites />}
 
           <div className="text-center mt-12 border-t-[1px] border-border pt-6 w-full relative border-dashed">
-            <span className="absolute left-1/2 -translate-x-1/2 text-sm text-[#878787] bg-background -top-3 px-4">
+            <span className="absolute start-1/2 ltr:-translate-x-1/2 rtl:translate-x-1/2 text-sm text-[#878787] bg-background -top-3 px-4">
               Or
             </span>
             <Link href="/onboarding" className="w-full">

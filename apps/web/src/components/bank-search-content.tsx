@@ -28,7 +28,7 @@ function SearchSkeleton() {
         >
           <div className="flex items-center">
             <Skeleton className="h-[34px] w-[34px] rounded-full shrink-0" />
-            <div className="flex flex-col space-y-1.5 ml-3">
+            <div className="flex flex-col space-y-1.5 ms-3">
               <Skeleton
                 className="h-2.5 rounded-none"
                 style={{ width: nameWidths[index] }}
@@ -89,7 +89,7 @@ function SearchResult({
       <div className="flex items-center min-w-0">
         <BankLogo src={logo} alt={name} />
 
-        <div className="ml-3 min-w-0">
+        <div className="ms-3 min-w-0">
           <p className="text-sm font-medium leading-none truncate">{name}</p>
           <span className="text-[#878787] text-xs capitalize mt-0.5 block">
             Via {formatProvider(provider)}
@@ -217,7 +217,7 @@ export function BankSearchContent({
 
   return (
     <div>
-      <div className="flex space-x-2 relative">
+      <div className="flex gap-x-2 relative">
         <Input
           placeholder="Search bank..."
           type="search"
@@ -230,7 +230,7 @@ export function BankSearchContent({
           value={query ?? ""}
         />
 
-        <div className="absolute right-0">
+        <div className="absolute end-0">
           <CountrySelector
             defaultValue={countryCode}
             onSelect={(countryCode) => {
@@ -288,7 +288,7 @@ export function BankSearchContent({
                   <br /> Let us know, or start with manual import.
                 </p>
 
-                <div className="mt-4 flex space-x-2">
+                <div className="mt-4 flex gap-x-2">
                   <Button
                     variant="outline"
                     onClick={() => setParams({ step: "import" })}
@@ -309,7 +309,7 @@ export function BankSearchContent({
         </div>
         {fadeGradientClass && (
           <div
-            className={`pointer-events-none absolute bottom-0 left-0 right-0 h-16 ${fadeGradientClass}`}
+            className={`pointer-events-none absolute bottom-0 start-0 end-0 h-16 ${fadeGradientClass}`}
           />
         )}
       </div>

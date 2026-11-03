@@ -29,7 +29,7 @@ export function GlobalTimerIndicator({ className }: GlobalTimerIndicatorProps) {
             size={14}
             className="text-green-600 dark:text-green-400"
           />
-          <span className="absolute -top-0.5 -right-0.5 h-2 w-2 bg-green-500 rounded-full animate-pulse" />
+          <span className="absolute -top-0.5 -end-0.5 h-2 w-2 bg-green-500 rounded-full animate-pulse" />
         </div>
         <span className="text-green-700 dark:text-green-300">
           {secondsToHoursAndMinutes(elapsedTime)}

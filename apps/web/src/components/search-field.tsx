@@ -29,10 +29,10 @@ export function SearchField({ placeholder }: Props) {
 
   return (
     <div className="w-full md:max-w-[380px] relative">
-      <Icons.Search className="absolute pointer-events-none left-3 top-[11px]" />
+      <Icons.Search className="absolute pointer-events-none start-3 top-[11px]" />
       <Input
         placeholder={placeholder}
-        className="pl-9 w-full"
+        className="ps-9 w-full"
         value={search ?? ""}
         onChange={handleSearch}
         autoComplete="off"

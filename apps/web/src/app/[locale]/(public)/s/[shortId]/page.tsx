@@ -47,7 +47,7 @@ export default async function Page({ params }: Props) {
 
   return (
     <div className="h-screen p-2">
-      <header className="absolute top-0 left-0 z-30 w-full">
+      <header className="absolute top-0 inset-x-0 z-30 w-full">
         <div className="p-6">
           <Icons.LogoSmall className="h-6 w-auto" />
         </div>
@@ -77,7 +77,7 @@ export default async function Page({ params }: Props) {
 
             <a href={shortLink.url} rel="noreferrer" download>
               <Button className="w-full mt-6" size="lg">
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-2">
                   <span>Download File</span>
                   <Icons.ArrowCoolDown className="size-4" />
                 </div>

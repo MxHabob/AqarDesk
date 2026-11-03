@@ -278,7 +278,7 @@ export function ExportTransactionsModal({
                                     onValueChange={field.onChange}
                                     className="flex gap-4"
                                   >
-                                    <div className="flex items-center space-x-2">
+                                    <div className="flex items-center gap-x-2">
                                       <RadioGroupItem value="," id="comma" />
                                       <Label
                                         htmlFor="comma"
@@ -287,7 +287,7 @@ export function ExportTransactionsModal({
                                         Comma (,)
                                       </Label>
                                     </div>
-                                    <div className="flex items-center space-x-2">
+                                    <div className="flex items-center gap-x-2">
                                       <RadioGroupItem
                                         value=";"
                                         id="semicolon"
@@ -299,7 +299,7 @@ export function ExportTransactionsModal({
                                         Semicolon (;)
                                       </Label>
                                     </div>
-                                    <div className="flex items-center space-x-2">
+                                    <div className="flex items-center gap-x-2">
                                       <RadioGroupItem value="\t" id="tab" />
                                       <Label
                                         htmlFor="tab"
@@ -435,7 +435,7 @@ export function ExportTransactionsModal({
                   }
                 >
                   {isExporting ? (
-                    <div className="flex items-center space-x-2">
+                    <div className="flex items-center gap-x-2">
                       <Spinner className="size-4" />
                       <span>Exporting...</span>
                     </div>

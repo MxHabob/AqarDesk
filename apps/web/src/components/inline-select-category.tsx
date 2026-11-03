@@ -31,7 +31,7 @@ export function InlineSelectCategory({ selected, onChange }: Props) {
       <PopoverTrigger asChild>
         <button
           type="button"
-          className="w-full text-left hover:opacity-70 transition-opacity"
+          className="w-full text-start hover:opacity-70 transition-opacity"
           onClick={(e) => {
             e.stopPropagation();
           }}

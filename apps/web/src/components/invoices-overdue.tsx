@@ -22,7 +22,7 @@ export function InvoicesOverdue() {
           statuses: ["overdue"],
         })
       }
-      className="hidden sm:block text-left"
+      className="hidden sm:block text-start"
     >
       <InvoiceSummary data={data} title="Overdue" />
     </button>

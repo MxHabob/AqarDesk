@@ -203,7 +203,7 @@ export function SearchAddressInput({
         </div>
 
         {isOpen && (
-          <CommandList className="absolute top-full left-0 right-0 z-10 mt-1 bg-background">
+          <CommandList className="absolute top-full start-0 end-0 z-10 mt-1 bg-background">
             {options.length > 0 ? (
               <CommandGroup className="border border-border max-h-[165px] overflow-auto">
                 {options.map((option) => {
@@ -220,7 +220,7 @@ export function SearchAddressInput({
                       onSelect={() => handleSelectOption(option)}
                       className={cn(
                         "flex w-full items-center gap-2",
-                        !isSelected ? "pl-8" : null
+                        !isSelected ? "ps-8" : null
                       )}
                     >
                       {option.label}

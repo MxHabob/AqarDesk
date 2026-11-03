@@ -83,7 +83,7 @@ export function NotificationItem({
       recordId={recordId}
       metadata={metadata}
       onNavigate={() => setOpen(false)}
-      className="flex items-between space-x-4 flex-1 text-left"
+      className="flex items-between gap-x-4 flex-1 text-start"
       actionButton={actionButton}
     >
       {notificationContent}

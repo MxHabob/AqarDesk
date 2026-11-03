@@ -145,9 +145,9 @@ export function SelectCategory({
         },
       })}
       renderSelectedItem={(selectedItem) => (
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center gap-x-2">
           <CategoryColor color={selectedItem.color} />
-          <span className="text-left truncate max-w-[90%]">
+          <span className="text-start truncate max-w-[90%]">
             {selectedItem.label}
           </span>
         </div>
@@ -155,7 +155,7 @@ export function SelectCategory({
       renderOnCreate={(value) => {
         if (!headless) {
           return (
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center gap-x-2">
               <CategoryColor color={getColorFromName(value)} />
               <span>{`Create "${value}"`}</span>
             </div>
@@ -164,7 +164,7 @@ export function SelectCategory({
       }}
       renderListItem={({ item }) => {
         return (
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-x-2">
             <CategoryColor color={item.color} />
             <span className="line-clamp-1">{item.label}</span>
           </div>

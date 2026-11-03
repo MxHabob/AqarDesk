@@ -35,12 +35,12 @@ export default async function Image({ params }: Props) {
     >
       {/* Header with logo */}
       <div tw="flex items-center justify-between mb-12">
-        <div tw="flex items-center">
+        <div tw="flex items-center gap-4">
           {customer.team.logoUrl && (
             <img
               src={customer.team.logoUrl}
               alt=""
-              tw="w-16 h-16 mr-4"
+              tw="w-16 h-16"
               style={{ objectFit: "contain" }}
             />
           )}
@@ -56,8 +56,8 @@ export default async function Image({ params }: Props) {
         <span tw="text-white text-5xl font-bold mb-12">{customer.name}</span>
 
         {/* Summary stats */}
-        <div tw="flex mt-auto">
-          <div tw="flex flex-col mr-16">
+        <div tw="flex mt-auto gap-16">
+          <div tw="flex flex-col">
             <span tw="text-[#606060] text-lg mb-1">Total</span>
             <span tw="text-white text-3xl">
               {formatAmount({
@@ -67,7 +67,7 @@ export default async function Image({ params }: Props) {
             </span>
           </div>
 
-          <div tw="flex flex-col mr-16">
+          <div tw="flex flex-col">
             <span tw="text-[#606060] text-lg mb-1">Paid</span>
             <span tw="text-white text-3xl">
               {formatAmount({
@@ -77,7 +77,7 @@ export default async function Image({ params }: Props) {
             </span>
           </div>
 
-          <div tw="flex flex-col mr-16">
+          <div tw="flex flex-col">
             <span tw="text-[#606060] text-lg mb-1">Outstanding</span>
             <span tw="text-white text-3xl">
               {formatAmount({

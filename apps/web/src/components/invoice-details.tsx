@@ -94,7 +94,7 @@ export function InvoiceDetails() {
   return (
     <div className="h-full">
       <div className="flex justify-between items-center">
-        <div className="flex space-x-2 mt-1 items-center">
+        <div className="flex gap-x-2 mt-1 items-center">
           <Avatar className="size-5">
             {customer?.website && (
               <AvatarImageNext
@@ -127,7 +127,7 @@ export function InvoiceDetails() {
             )}
           </span>
 
-          <div className="h-3 space-x-2">
+          <div className="h-3 gap-x-2">
             {vat !== 0 && vat != null && currency && (
               <span className="text-[#606060] text-xs select-text">
                 {template?.vatLabel}{" "}
@@ -418,9 +418,9 @@ export function InvoiceDetails() {
             <span className="text-sm text-[#606060]">Invoice link</span>
             <div className="flex w-full gap-2">
               <div className="flex-1 min-w-0 relative">
-                <CopyInput value={`${getUrl()}/i/${token}`} className="pr-14" />
+                <CopyInput value={`${getUrl()}/i/${token}`} className="pe-14" />
 
-                <div className="absolute right-10 top-[11px] border-r border-border pr-2">
+                <div className="absolute end-10 top-[11px] border-e border-border pe-2">
                   <OpenURL href={`${getUrl()}/i/${token}`}>
                     <Icons.OpenInNew />
                   </OpenURL>

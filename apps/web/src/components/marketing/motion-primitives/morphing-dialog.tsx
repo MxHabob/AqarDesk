@@ -490,7 +490,7 @@ function MorphingDialogClose({
       style={{
         position: "absolute",
         top: "1.5rem",
-        right: "1.5rem",
+        insetInlineEnd: "1.5rem",
         zIndex: 50,
         pointerEvents: "auto",
       }}
@@ -510,7 +510,7 @@ function MorphingDialogClose({
         style={{
           position: "absolute",
           top: "1.5rem",
-          right: "1.5rem",
+          insetInlineEnd: "1.5rem",
           zIndex: 50,
           pointerEvents: "none",
         }}

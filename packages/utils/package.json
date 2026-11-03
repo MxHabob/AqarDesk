@@ -13,6 +13,8 @@
     ".": "./src/index.ts",
     "./currency": "./src/currency.ts",
     "./date": "./src/date.ts",
+    "./fiscal-year": "./src/fiscal-year.ts",
+    "./filename": "./src/filename.ts",
     "./format": "./src/format.ts",
     "./number": "./src/number.ts"
   },

@@ -136,7 +136,7 @@ export function NotificationLink({
 
   if (isClickable) {
     return (
-      <div className="flex items-between justify-between space-x-4 px-3 py-3 hover:bg-secondary">
+      <div className="flex items-between justify-between gap-x-4 px-3 py-3 hover:bg-secondary">
         <button className={className} onClick={handleClick} type="button">
           {children}
         </button>
@@ -147,8 +147,8 @@ export function NotificationLink({
 
   // Non-clickable notification
   return (
-    <div className="flex items-between space-x-4 px-3 py-3">
-      <div className="flex items-between justify-between space-x-4 flex-1">
+    <div className="flex items-between gap-x-4 px-3 py-3">
+      <div className="flex items-between justify-between gap-x-4 flex-1">
         {children}
       </div>
       {actionButton}

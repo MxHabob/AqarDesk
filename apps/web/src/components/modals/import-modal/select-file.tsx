@@ -134,7 +134,7 @@ export function SelectFile() {
                   <input {...getInputProps()} onBlur={onBlur} />
 
                   {isLoading ? (
-                    <div className="flex space-x-1 items-center">
+                    <div className="flex gap-x-1 items-center">
                       <Spinner />
                       <span>Loading...</span>
                     </div>

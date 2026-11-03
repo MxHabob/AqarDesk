@@ -101,7 +101,7 @@ export function InviteForm({ onSuccess, skippable = true }: InviteFormProps) {
       <form onSubmit={onSubmit}>
         {fields.map((field, index) => (
           <div
-            className="flex items-center justify-between mt-3 space-x-4"
+            className="flex items-center justify-between mt-3 gap-x-4"
             key={index.toString()}
           >
             <FormField

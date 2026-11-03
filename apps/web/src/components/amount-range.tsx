@@ -72,7 +72,7 @@ export function AmountRange() {
           onValueChange={(value) => setTypeValue(value as TypeValue)}
           className="space-y-2"
         >
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-x-2">
             <RadioGroupItem value="income" id="type-in" />
             <Label
               htmlFor="type-in"
@@ -82,7 +82,7 @@ export function AmountRange() {
               <span className="text-[#878787]">(e.g. deposits, refunds)</span>
             </Label>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-x-2">
             <RadioGroupItem value="expense" id="type-out" />
             <Label
               htmlFor="type-out"
@@ -92,7 +92,7 @@ export function AmountRange() {
               <span className="text-[#878787]">(e.g. purchases, charges)</span>
             </Label>
           </div>
-          <div className="flex items-center space-x-2">
+          <div className="flex items-center gap-x-2">
             <RadioGroupItem value="any" id="type-any" />
             <Label
               htmlFor="type-any"
@@ -108,11 +108,11 @@ export function AmountRange() {
       <div className="space-y-2">
         <Label className="text-xs text-[#878787]">At least...</Label>
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#878787] text-sm">
+          <span className="absolute start-3 top-1/2 -translate-y-1/2 text-[#878787] text-sm">
             ≥
           </span>
           <CurrencyInput
-            className="w-full pl-7 text-sm"
+            className="w-full ps-7 text-sm"
             type="text"
             inputMode="decimal"
             placeholder="0.00"
@@ -128,11 +128,11 @@ export function AmountRange() {
       <div className="space-y-2">
         <Label className="text-xs text-[#878787]">No more than...</Label>
         <div className="relative">
-          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-[#878787] text-sm">
+          <span className="absolute start-3 top-1/2 -translate-y-1/2 text-[#878787] text-sm">
             ≤
           </span>
           <CurrencyInput
-            className="w-full pl-7 text-sm"
+            className="w-full ps-7 text-sm"
             type="text"
             inputMode="decimal"
             placeholder="0.00"

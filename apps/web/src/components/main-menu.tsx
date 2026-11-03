@@ -55,10 +55,12 @@ const ChildItem = ({
         {/* Child item text */}
         <div
           className={cn(
-            "ml-[35px] mr-[15px] h-[32px] flex items-center",
-            "border-l border-[#e6e6e6] dark:border-[#1d1d1d] pl-3",
+            "ms-[35px] me-[15px] h-[32px] flex items-center",
+            "border-s border-[#e6e6e6] dark:border-[#1d1d1d] ps-3",
             "transition-all duration-200 ease-out",
-            showChild ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"
+            showChild
+              ? "opacity-100 translate-x-0"
+              : "opacity-0 ltr:-translate-x-2 rtl:translate-x-2"
           )}
           style={{
             transitionDelay: showChild
@@ -115,7 +117,7 @@ const Item = ({
           {/* Background that expands */}
           <div
             className={cn(
-              "border border-transparent h-[40px] transition-all duration-200 ease-&lsqb;cubic-bezier(0.4,0,0.2,1)&rsqb; ml-[15px] mr-[15px]",
+              "border border-transparent h-[40px] transition-all duration-200 ease-&lsqb;cubic-bezier(0.4,0,0.2,1)&rsqb; ms-[15px] me-[15px]",
               isActive &&
                 "bg-[#f7f7f7] dark:bg-[#131313] border-[#e6e6e6] dark:border-[#1d1d1d]",
               isExpanded ? "w-[calc(100%-30px)]" : "w-[40px]"
@@ -123,19 +125,19 @@ const Item = ({
           />
 
           {/* Icon - always in same position from sidebar edge */}
-          <div className="absolute top-0 left-[15px] w-[40px] h-[40px] flex items-center justify-center dark:text-[#666666] text-black group-hover:!text-primary pointer-events-none">
+          <div className="absolute top-0 start-[15px] w-[40px] h-[40px] flex items-center justify-center dark:text-[#666666] text-black group-hover:!text-primary pointer-events-none">
             <div className={cn(isActive && "dark:!text-white")}>
               <Icon />
             </div>
           </div>
 
           {isExpanded && (
-            <div className="absolute top-0 left-[55px] right-[4px] h-[40px] flex items-center pointer-events-none">
+            <div className="absolute top-0 start-[55px] end-[4px] h-[40px] flex items-center pointer-events-none">
               <span
                 className={cn(
                   "text-sm font-medium transition-opacity duration-200 ease-in-out text-[#666] group-hover:text-primary",
                   "whitespace-nowrap overflow-hidden",
-                  hasChildren ? "pr-2" : "",
+                  hasChildren ? "pe-2" : "",
                   isActive && "text-primary"
                 )}
               >
@@ -146,7 +148,7 @@ const Item = ({
                   type="button"
                   onClick={handleChevronClick}
                   className={cn(
-                    "w-8 h-8 flex items-center justify-center transition-all duration-200 ml-auto mr-3",
+                    "w-8 h-8 flex items-center justify-center transition-all duration-200 ms-auto me-3",
                     "text-[#888] hover:text-primary pointer-events-auto",
                     isActive && "text-primary/60",
                     shouldShowChildren && "rotate-180"

@@ -256,13 +256,13 @@ export function ExportStatus() {
                 : `Your export is ready based on ${exportResult.totalItems} transactions. It's stored in your Vault.`,
             variant: "success",
             footer: (
-              <div className="mt-4 flex space-x-4">
+              <div className="mt-4 flex gap-x-4">
                 <DropdownMenu>
                   <DropdownMenuTrigger asChild>
                     <Button
                       size="sm"
                       variant="secondary"
-                      className="border space-x-2"
+                      className="border gap-x-2"
                     >
                       <span>Share URL</span>
                       <Icons.ChevronDown />

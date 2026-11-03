@@ -29,7 +29,7 @@ export function ResizeHandle<TData>({
       }}
       onPointerDown={(e) => e.stopPropagation()} // Stop dnd-kit from capturing
       className={cn(
-        "absolute right-0 top-0 h-full w-1 cursor-col-resize select-none touch-none",
+        "absolute end-0 top-0 h-full w-1 cursor-col-resize select-none touch-none",
         "bg-transparent",
         className
       )}

@@ -6,7 +6,7 @@ export function InvoiceDetailsSkeleton() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <div className="flex space-x-2 mt-1 items-center">
+        <div className="flex gap-x-2 mt-1 items-center">
           <Skeleton className="size-5 rounded-full" />
           <Skeleton className="h-4 w-32" />
         </div>

@@ -52,9 +52,9 @@ export function Invites() {
     <div className="border divide-y">
       {invites?.map((invite) => (
         <div key={invite.id} className="px-4 align-middle py-4">
-          <div className="flex items-center space-x-4 justify-between">
-            <div className="flex items-center space-x-4">
-              <div className="flex items-center space-x-4">
+          <div className="flex items-center gap-x-4 justify-between">
+            <div className="flex items-center gap-x-4">
+              <div className="flex items-center gap-x-4">
                 <Avatar className="rounded-full w-8 h-8">
                   <AvatarImageNext
                     src={invite.team?.logoUrl ?? ""}
@@ -80,7 +80,7 @@ export function Invites() {
               </div>
             </div>
             <div className="flex justify-end">
-              <div className="flex space-x-3 items-center">
+              <div className="flex gap-x-3 items-center">
                 <SubmitButton
                   variant="outline"
                   onClick={() => {

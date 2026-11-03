@@ -93,7 +93,7 @@ export function MetricsFilter() {
                 <DropdownMenuSub key={option.value}>
                   <DropdownMenuSubTrigger
                     className={cn(
-                      "text-xs py-1.5 pl-4 pr-12 relative [&>svg]:hidden",
+                      "text-xs py-1.5 ps-4 pe-12 relative [&>svg]:hidden",
                       isCustomPeriod
                         ? "dark:bg-[#131313] dark:data-[state=open]:bg-[#131313] text-primary"
                         : "text-[#666]",
@@ -107,7 +107,7 @@ export function MetricsFilter() {
                     }}
                   >
                     {option.label}
-                    <span className="absolute right-2 flex items-center justify-center shrink-0">
+                    <span className="absolute end-2 flex items-center justify-center shrink-0">
                       {isCustomPeriod && <Check className="h-4 w-4 shrink-0" />}
                     </span>
                   </DropdownMenuSubTrigger>

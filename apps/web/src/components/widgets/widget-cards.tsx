@@ -22,7 +22,7 @@ function WidgetCard({ label, href, value, detail }: WidgetCardProps) {
       <div className="mt-3">
         <span className="text-xl font-medium">{value}</span>
         {detail ? (
-          <span className="text-xs text-muted-foreground ml-2">{detail}</span>
+          <span className="text-xs text-muted-foreground ms-2">{detail}</span>
         ) : null}
       </div>
     </Link>

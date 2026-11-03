@@ -326,7 +326,7 @@ export function OnboardingPage({
 
   return (
     <div className="h-screen overflow-hidden flex relative">
-      <nav className="fixed top-0 left-0 right-0 z-50 w-full pointer-events-none">
+      <nav className="fixed top-0 start-0 end-0 z-50 w-full pointer-events-none">
         <div className="relative py-3 xl:py-4 px-4 sm:px-4 md:px-4 lg:px-4 xl:px-6 2xl:px-8 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <div className="w-6 h-6">

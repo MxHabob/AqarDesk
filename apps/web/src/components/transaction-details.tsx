@@ -244,7 +244,7 @@ export function TransactionDetails() {
         <div className="flex justify-between mb-8">
           <div className="flex-1 flex-col">
             <div className="flex items-center justify-between">
-              <div className="flex space-x-2 items-center">
+              <div className="flex gap-x-2 items-center">
                 <Skeleton className="size-5 rounded-full" />
                 <Skeleton className="w-[100px] h-[14px]" />
               </div>
@@ -299,7 +299,7 @@ export function TransactionDetails() {
         <div className="flex-1 flex-col">
           {isLoading ? (
             <div className="flex items-center justify-between  mt-1 mb-6">
-              <div className="flex space-x-2 items-center">
+              <div className="flex gap-x-2 items-center">
                 <Skeleton className="h-5 w-5 rounded-full" />
                 <Skeleton className="w-[100px] h-[14px] rounded-full" />
               </div>
@@ -396,7 +396,7 @@ export function TransactionDetails() {
 
           {isLoading ? (
             <div className="h-[36px] border">
-              <Skeleton className="h-[14px] w-[60%] absolute left-3 top-[39px]" />
+              <Skeleton className="h-[14px] w-[60%] absolute start-3 top-[39px]" />
             </div>
           ) : (
             <AssignUser
@@ -473,7 +473,7 @@ export function TransactionDetails() {
                 Exclude from reports
               </Label>
               <div className="flex flex-row items-center justify-between">
-                <div className="space-y-0.5 pr-4">
+                <div className="space-y-0.5 pe-4">
                   <p className="text-xs text-muted-foreground">
                     Exclude this transaction from reports like profit, expense
                     and revenue. This is useful for internal transfers between
@@ -558,8 +558,8 @@ export function TransactionDetails() {
                       title: "AqarDesk AI",
                       description: `We found ${similarTransactions?.length} similar transactions to "${data?.name}". Mark them as recurring (${value}) too?`,
                       footer: (
-                        <div className="flex space-x-2 mt-4">
-                          <ToastAction altText="Cancel" className="pl-5 pr-5">
+                        <div className="flex gap-x-2 mt-4">
+                          <ToastAction altText="Cancel" className="ps-5 pe-5">
                             Cancel
                           </ToastAction>
                           <ToastAction
@@ -578,7 +578,7 @@ export function TransactionDetails() {
                                   | "irregular",
                               });
                             }}
-                            className="pl-5 pr-5 bg-primary text-primary-foreground hover:bg-primary/90"
+                            className="ps-5 pe-5 bg-primary text-primary-foreground hover:bg-primary/90"
                           >
                             Yes
                           </ToastAction>

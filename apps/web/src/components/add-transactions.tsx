@@ -29,21 +29,21 @@ export function AddTransactions() {
       <DropdownMenuContent sideOffset={10} align="end">
         <DropdownMenuItem
           onClick={() => setParams({ step: "connect" })}
-          className="space-x-2"
+          className="gap-x-2"
         >
           <Icons.Accounts size={18} />
           <span>Connect account</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setParams({ step: "import", hide: true })}
-          className="space-x-2"
+          className="gap-x-2"
         >
           <Icons.Import size={18} />
           <span>Import/backfill</span>
         </DropdownMenuItem>
         <DropdownMenuItem
           onClick={() => setTransactionParams({ createTransaction: true })}
-          className="space-x-2"
+          className="gap-x-2"
         >
           <Icons.CreateTransaction size={18} />
           <span>Create transaction</span>
@@ -52,7 +52,7 @@ export function AddTransactions() {
           onClick={() =>
             document.getElementById("upload-transaction-files")?.click()
           }
-          className="space-x-2"
+          className="gap-x-2"
         >
           <Icons.ReceiptLong size={18} />
           <span>Upload receipts</span>

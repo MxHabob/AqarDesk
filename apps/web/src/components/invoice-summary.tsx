@@ -65,7 +65,7 @@ export function InvoiceSummary({ data, title }: Props) {
           <TooltipProvider delayDuration={0}>
             <Tooltip>
               <TooltipTrigger asChild>
-                <span className="ml-2 text-xs text-muted-foreground">
+                <span className="ms-2 text-xs text-muted-foreground">
                   <Icons.InfoOutline className="size-3.5 mb-1" />
                 </span>
               </TooltipTrigger>
@@ -83,7 +83,7 @@ export function InvoiceSummary({ data, title }: Props) {
                           <span className="font-medium">{item.currency}</span>
                           <span className="text-[#878787]">({item.count})</span>
                         </div>
-                        <div className="text-right">
+                        <div className="text-end">
                           <FormatAmount
                             amount={item.originalAmount}
                             currency={item.currency}

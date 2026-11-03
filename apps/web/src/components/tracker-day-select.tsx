@@ -44,10 +44,10 @@ export function TrackerDaySelect({ className }: Props) {
       <Button
         variant="ghost"
         size="icon"
-        className="p-0 w-6 h-6 hover:bg-transparent mr-4 ml-2"
+        className="p-0 w-6 h-6 hover:bg-transparent me-4 ms-2"
         onClick={selectPrevDay}
       >
-        <Icons.ChevronLeft className="w-6 h-6" />
+        <Icons.ChevronLeft className="w-6 h-6 rtl:rotate-180" />
       </Button>
       <span className="w-full text-center">
         {formatDateRange(
@@ -65,10 +65,10 @@ export function TrackerDaySelect({ className }: Props) {
       <Button
         variant="ghost"
         size="icon"
-        className="p-0 w-6 h-6 hover:bg-transparent ml-4 mr-2"
+        className="p-0 w-6 h-6 hover:bg-transparent ms-4 me-2"
         onClick={selectNextDay}
       >
-        <Icons.ChevronRight className="w-6 h-6" />
+        <Icons.ChevronRight className="w-6 h-6 rtl:rotate-180" />
       </Button>
     </div>
   );

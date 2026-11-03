@@ -12,10 +12,7 @@ export function SetupMfa() {
   const t = useI18n()
 
   return (
-    <main
-      dir={locale === "ar" ? "rtl" : "ltr"}
-      className="flex min-h-screen items-center justify-center p-6"
-    >
+    <main className="flex min-h-screen items-center justify-center p-6">
       <section className="w-full max-w-md space-y-6">
         <header className="space-y-2 text-center">
           <h1 className="text-xl font-semibold">{t("auth.twoFactorTitle")}</h1>

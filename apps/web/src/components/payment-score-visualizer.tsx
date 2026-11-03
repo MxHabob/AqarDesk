@@ -24,7 +24,7 @@ export function PaymentScoreVisualizer({
             <div className="w-[3px] h-[27px] bg-[#666] relative z-10" />
             {shouldFill && (
               <motion.div
-                className="w-[3px] h-[27px] bg-primary absolute top-0 left-0 z-20"
+                className="w-[3px] h-[27px] bg-primary absolute top-0 start-0 z-20"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{

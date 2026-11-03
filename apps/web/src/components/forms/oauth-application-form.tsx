@@ -759,7 +759,7 @@ export function OAuthApplicationForm({ data }: Props) {
                               type="button"
                               variant="destructive"
                               size="sm"
-                              className="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                              className="absolute top-2 end-2 opacity-0 group-hover:opacity-100 transition-opacity"
                               onClick={() => removeScreenshot(index)}
                             >
                               Remove
@@ -791,7 +791,7 @@ export function OAuthApplicationForm({ data }: Props) {
                     control={form.control}
                     name="isPublic"
                     render={({ field }) => (
-                      <FormItem className="flex items-center justify-between space-x-2">
+                      <FormItem className="flex items-center justify-between gap-x-2">
                         <div className="space-y-1">
                           <FormLabel className="!mt-0">Allow PKCE</FormLabel>
                           <FormDescription>
@@ -815,7 +815,7 @@ export function OAuthApplicationForm({ data }: Props) {
                       control={form.control}
                       name="active"
                       render={({ field }) => (
-                        <FormItem className="flex items-center justify-between space-x-2">
+                        <FormItem className="flex items-center justify-between gap-x-2">
                           <div className="space-y-1">
                             <FormLabel className="!mt-0">Active</FormLabel>
                             <FormDescription>

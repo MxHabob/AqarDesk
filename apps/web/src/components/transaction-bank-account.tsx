@@ -15,7 +15,7 @@ export function TransactionBankAccount({
   className,
 }: Props) {
   return (
-    <div className="flex space-x-2 mt-1 items-center">
+    <div className="flex gap-x-2 mt-1 items-center">
       {logoUrl && (
         <div
           className="rounded-full overflow-hidden flex-shrink-0"

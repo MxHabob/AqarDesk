@@ -422,7 +422,7 @@ function FieldRow({
                   <SelectValue placeholder={`Select ${label}`} />
 
                   {isLoading && (
-                    <div className="absolute top-2 right-2">
+                    <div className="absolute top-2 end-2">
                       <Spinner size={16} />
                     </div>
                   )}
@@ -449,7 +449,7 @@ function FieldRow({
         />
 
         <div className="flex items-center justify-end">
-          <Icons.ArrowRightAlt className="size-4 text-[#878787]" />
+          <Icons.ArrowRightAlt className="size-4 text-[#878787] rtl:rotate-180" />
         </div>
       </div>
 

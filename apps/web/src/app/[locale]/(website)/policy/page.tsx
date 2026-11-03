@@ -167,7 +167,7 @@ export default function PrivacyPage() {
                         Data"). Personally identifiable information may include,
                         but is not limited to:
                       </p>
-                      <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4 mt-2">
+                      <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4 mt-2">
                         <li>Email address</li>
                         <li>First name and last name</li>
                         <li>Cookies and Usage Data</li>
@@ -219,7 +219,7 @@ export default function PrivacyPage() {
                       <p className="text-muted-foreground leading-relaxed mt-2">
                         Examples of Cookies we use:
                       </p>
-                      <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4 mt-2">
+                      <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4 mt-2">
                         <li>
                           <strong>Session Cookies.</strong> We use Session
                           Cookies to operate our Service.
@@ -245,7 +245,7 @@ export default function PrivacyPage() {
                   <p className="text-muted-foreground leading-relaxed">
                     Midday Labs AB uses the collected data for various purposes:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                     <li>To provide and maintain our Service</li>
                     <li>To notify you about changes to our Service</li>
                     <li>
@@ -308,7 +308,7 @@ export default function PrivacyPage() {
                   <p className="text-muted-foreground leading-relaxed">
                     Midday Labs AB may process your Personal Data because:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                     <li>We need to perform a contract with you</li>
                     <li>You have given us permission to do so</li>
                     <li>
@@ -414,7 +414,7 @@ export default function PrivacyPage() {
                         Midday Labs AB may disclose your Personal Data in the
                         good faith belief that such action is necessary to:
                       </p>
-                      <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                      <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                         <li>To comply with a legal obligation</li>
                         <li>
                           To protect and defend the rights or property of Midday
@@ -483,7 +483,7 @@ export default function PrivacyPage() {
                     In certain circumstances, you have the following data
                     protection rights:
                   </p>
-                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4">
+                  <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4">
                     <li>
                       <strong>
                         The right to access, update or delete the information we
@@ -631,7 +631,7 @@ export default function PrivacyPage() {
                       <p className="text-muted-foreground leading-relaxed mt-2">
                         The payment processors we work with are:
                       </p>
-                      <ul className="list-disc list-inside space-y-2 text-muted-foreground ml-4 mt-2">
+                      <ul className="list-disc list-inside space-y-2 text-muted-foreground ms-4 mt-2">
                         <li>
                           <strong>Apple Store In-App Payments</strong>
                           <br />

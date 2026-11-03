@@ -56,7 +56,7 @@ function VirtualRowInner<TData>({
         "group cursor-pointer select-text",
         "hover:bg-[#F2F1EF] hover:dark:bg-[#0f0f0f]",
         "flex items-center border-0",
-        "absolute top-0 left-0 w-full min-w-full"
+        "absolute top-0 start-0 w-full min-w-full"
       )}
       style={{
         height: rowHeight,

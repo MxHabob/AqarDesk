@@ -85,7 +85,7 @@ export function TransactionShortcuts({ isFulfilled, status }: Props) {
   };
 
   return (
-    <div className="absolute bottom-4 right-4 left-4 bg-[#FAFAF9] dark:bg-[#0C0C0C]">
+    <div className="absolute bottom-4 end-4 start-4 bg-[#FAFAF9] dark:bg-[#0C0C0C]">
       <div className="flex justify-between">
         {!isFulfilled && (
           <button
@@ -103,7 +103,7 @@ export function TransactionShortcuts({ isFulfilled, status }: Props) {
           </button>
         )}
 
-        <div className="flex gap-2 ml-auto">
+        <div className="flex gap-2 ms-auto">
           <button
             type="button"
             className="flex h-6 w-6 items-center justify-center border border-border text-[#666] cursor-pointer hover:bg-accent"

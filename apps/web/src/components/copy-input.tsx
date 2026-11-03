@@ -35,10 +35,10 @@ export function CopyInput({ value, className }: Props) {
         className
       )}
     >
-      <div className="pr-8 text-[#878787] text-sm truncate">{value}</div>
+      <div className="pe-8 text-[#878787] text-sm truncate">{value}</div>
 
       <motion.div
-        className="absolute right-4 top-2.5"
+        className="absolute end-4 top-2.5"
         initial={{ opacity: 1, scale: 1 }}
         animate={{ opacity: isCopied ? 0 : 1, scale: isCopied ? 0 : 1 }}
       >
@@ -46,7 +46,7 @@ export function CopyInput({ value, className }: Props) {
       </motion.div>
 
       <motion.div
-        className="absolute right-4 top-2.5"
+        className="absolute end-4 top-2.5"
         initial={{ opacity: 0, scale: 0 }}
         animate={{ opacity: isCopied ? 1 : 0, scale: isCopied ? 1 : 0 }}
       >

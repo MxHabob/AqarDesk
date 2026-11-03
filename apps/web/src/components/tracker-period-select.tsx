@@ -95,19 +95,19 @@ export function TrackerPeriodSelect({ className, dateFormat = "MMM" }: Props) {
       <Button
         variant="ghost"
         size="icon"
-        className="p-0 w-6 h-6 hover:bg-transparent mr-4 ml-2"
+        className="p-0 w-6 h-6 hover:bg-transparent me-4 ms-2"
         onClick={selectPrevPeriod}
       >
-        <Icons.ChevronLeft className="w-6 h-6" />
+        <Icons.ChevronLeft className="w-6 h-6 rtl:rotate-180" />
       </Button>
       <span className="w-full text-center text-sm">{getPeriodLabel()}</span>
       <Button
         variant="ghost"
         size="icon"
-        className="p-0 w-6 h-6 hover:bg-transparent ml-4 mr-2"
+        className="p-0 w-6 h-6 hover:bg-transparent ms-4 me-2"
         onClick={selectNextPeriod}
       >
-        <Icons.ChevronRight className="w-6 h-6" />
+        <Icons.ChevronRight className="w-6 h-6 rtl:rotate-180" />
       </Button>
     </div>
   );

@@ -23,7 +23,7 @@ export function AppSunsetBanner() {
 
   return (
     <div className="relative w-full bg-secondary border-b border-border text-foreground">
-      <div className="px-4 py-2 pr-10 flex items-center justify-center gap-2 text-xs sm:text-sm font-sans text-center">
+      <div className="px-4 py-2 pe-10 flex items-center justify-center gap-2 text-xs sm:text-sm font-sans text-center">
         <span>
           Midday is joining Ramp. Your account stays active while we wind down.
         </span>
@@ -40,7 +40,7 @@ export function AppSunsetBanner() {
         aria-label="Dismiss"
         data-track="Sunset Banner Dismissed"
         onClick={() => setDismissed(true)}
-        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 transition-colors"
+        className="absolute end-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground p-1 transition-colors"
       >
         <Icons.Close size={14} />
       </button>

@@ -21,10 +21,7 @@ export default async function Verify({
   }
 
   return (
-    <main
-      dir={locale === "ar" ? "rtl" : "ltr"}
-      className="flex min-h-screen items-center justify-center p-6"
-    >
+    <main className="flex min-h-screen items-center justify-center p-6">
       <div className="w-full max-w-md">
         <VerifyMfa />
       </div>

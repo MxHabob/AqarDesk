@@ -16,7 +16,7 @@ export function DataTableHeader({ table }: Props) {
   const [isOpen, onOpenChange] = useState(false)
 
   return (
-    <div className="flex items-center pb-4 space-x-4">
+    <div className="flex items-center pb-4 gap-x-4">
       <Input
         className="flex-1"
         placeholder="Search..."

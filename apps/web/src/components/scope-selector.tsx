@@ -58,7 +58,7 @@ export function ScopeSelector({
                   onResourceScopeChange(resource.key, value)
                 }
               >
-                <div className="flex items-center space-x-2">
+                <div className="flex items-center gap-x-2">
                   <RadioGroupItem value="" id={`${resource.key}-none`} />
                   <label htmlFor={`${resource.key}-none`} className="text-sm">
                     None
@@ -66,7 +66,7 @@ export function ScopeSelector({
                 </div>
                 {resource.scopes.map((scope) => (
                   <div
-                    className="flex items-center space-x-2"
+                    className="flex items-center gap-x-2"
                     key={scope.scope}
                   >
                     <RadioGroupItem

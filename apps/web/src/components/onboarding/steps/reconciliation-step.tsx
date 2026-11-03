@@ -25,7 +25,7 @@ export function ReconciliationStep() {
       </motion.p>
 
       <motion.ul
-        className="space-y-2 mt-4 pl-0 list-none"
+        className="space-y-2 mt-4 ps-0 list-none"
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         transition={{ duration: 0.35, delay: 0.3 }}

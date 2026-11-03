@@ -39,7 +39,7 @@ export function AttachmentItem({ file, onDelete }: Props) {
     <div className="flex items-center justify-between">
       <button
         onClick={handleClick}
-        className="flex space-x-4 items-center flex-1 text-left hover:opacity-80 transition-opacity"
+        className="flex gap-x-4 items-center flex-1 text-start hover:opacity-80 transition-opacity"
         type="button"
         disabled={file.isUploading || !file?.path}
       >

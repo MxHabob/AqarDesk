@@ -102,7 +102,7 @@ export function InboxSheetDetails() {
               </div>
             </div>
           </div>
-          <div className="grid gap-1 ml-auto text-right">
+          <div className="grid gap-1 ms-auto text-end">
             <div className="text-xs text-muted-foreground select-text">
               {isProcessing && !data.date && (
                 <Skeleton className="h-3 w-[50px]" />
@@ -127,7 +127,7 @@ export function InboxSheetDetails() {
           </div>
         )}
 
-        <div className="absolute bottom-4 z-10 left-4 right-4">
+        <div className="absolute bottom-4 z-10 start-4 end-4">
           <InboxActions data={data} key={data.id} />
         </div>
       </div>

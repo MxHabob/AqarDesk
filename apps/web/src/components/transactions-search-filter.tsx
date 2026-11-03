@@ -111,7 +111,7 @@ function FilterMenuItem({ icon: Icon, label, children }: FilterMenuItemProps) {
     <DropdownMenuGroup>
       <DropdownMenuSub>
         <DropdownMenuSubTrigger>
-          <Icon className="mr-2 size-4" />
+          <Icon className="me-2 size-4" />
           <span>{label}</span>
         </DropdownMenuSubTrigger>
         <DropdownMenuPortal>
@@ -307,7 +307,7 @@ export function TransactionsSearchFilter() {
 
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
-      <div className="flex flex-col sm:flex-row sm:space-x-4 space-y-2 sm:space-y-0 items-stretch sm:items-center w-full md:w-auto">
+      <div className="flex flex-col sm:flex-row sm:gap-x-4 space-y-2 sm:space-y-0 items-stretch sm:items-center w-full md:w-auto">
         <form
           className="relative flex-1 sm:flex-initial"
           onSubmit={(e) => {
@@ -315,11 +315,11 @@ export function TransactionsSearchFilter() {
             handleSubmit();
           }}
         >
-          <Icons.Search className="absolute pointer-events-none left-3 top-[11px]" />
+          <Icons.Search className="absolute pointer-events-none start-3 top-[11px]" />
           <Input
             ref={inputRef}
             placeholder="Search transactions..."
-            className="pl-9 w-full sm:w-[350px] pr-8"
+            className="ps-9 w-full sm:w-[350px] pe-8"
             value={input}
             onChange={handleSearch}
             onFocus={() => setIsFocused(true)}
@@ -335,7 +335,7 @@ export function TransactionsSearchFilter() {
               onClick={() => setIsOpen((prev) => !prev)}
               type="button"
               className={cn(
-                "absolute z-10 right-3 top-[10px] opacity-50 transition-opacity duration-300 hover:opacity-100",
+                "absolute z-10 end-3 top-[10px] opacity-50 transition-opacity duration-300 hover:opacity-100",
                 hasValidFilters && "opacity-100",
                 isOpen && "opacity-100",
               )}

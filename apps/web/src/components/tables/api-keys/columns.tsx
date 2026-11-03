@@ -35,7 +35,7 @@ export const columns: ColumnDef<ApiKey>[] = [
       if (!user) return <span className="text-muted-foreground">-</span>
 
       return (
-        <div className="flex space-x-2 items-center">
+        <div className="flex gap-x-2 items-center">
           <Avatar className="h-6 w-6">
             {user.avatarUrl && (
               <AvatarImageNext
@@ -89,7 +89,7 @@ export const columns: ColumnDef<ApiKey>[] = [
     accessorKey: "lastUsedAt",
     header: "Last used",
     meta: {
-      className: "border-r-[0px]",
+      className: "border-e-[0px]",
     },
     cell: ({ row }) => {
       const lastUsedAt = row.original.lastUsedAt
@@ -112,7 +112,7 @@ export const columns: ColumnDef<ApiKey>[] = [
 
       return (
         <div className="flex justify-end">
-          <div className="flex space-x-2 items-center">
+          <div className="flex gap-x-2 items-center">
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button size="icon" variant="ghost">
@@ -137,7 +137,7 @@ export const columns: ColumnDef<ApiKey>[] = [
       )
     },
     meta: {
-      className: "text-right",
+      className: "text-end",
     },
   },
 ]

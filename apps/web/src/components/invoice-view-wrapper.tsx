@@ -73,7 +73,7 @@ export function InvoiceViewWrapper({
       <div
         className={cn(
           "transition-all duration-300 ease-in-out",
-          isDesktop && paymentOpen && !useOverlay && "md:mr-[520px]",
+          isDesktop && paymentOpen && !useOverlay && "md:me-[520px]",
         )}
       >
         <div className="flex flex-col justify-center items-center min-h-screen dotted-bg p-4 sm:p-6 md:p-0">

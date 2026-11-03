@@ -39,7 +39,7 @@ function RowsSkeleton() {
     <div className="space-y-6">
       {Array.from({ length: 3 }).map((_, index) => (
         <div key={index.toString()} className="flex justify-between">
-          <div className="flex items-center space-x-4 mr-8 flex-1 min-w-0">
+          <div className="flex items-center gap-x-4 me-8 flex-1 min-w-0">
             <Skeleton className="size-[34px] rounded-full shrink-0" />
             <div className="flex flex-col flex-1 min-w-0">
               <div className="flex items-center justify-between">
@@ -375,7 +375,7 @@ export function SelectBankAccountsContent({
                             key={account.id}
                             className="flex justify-between"
                           >
-                            <FormLabel className="flex items-center space-x-4 w-full mr-8">
+                            <FormLabel className="flex items-center gap-x-4 w-full me-8">
                               <Avatar className="size-[34px]">
                                 <AvatarFallback className="text-[11px]">
                                   {getInitials(account.name)}
@@ -449,7 +449,7 @@ export function SelectBankAccountsContent({
               </div>
               {fadeGradientClass && (
                 <div
-                  className={`pointer-events-none absolute bottom-0 left-0 right-0 h-16 ${fadeGradientClass}`}
+                  className={`pointer-events-none absolute bottom-0 start-0 end-0 h-16 ${fadeGradientClass}`}
                 />
               )}
             </div>
@@ -457,7 +457,7 @@ export function SelectBankAccountsContent({
             <div
               className={
                 stickySubmit
-                  ? "fixed bottom-0 left-0 right-0 z-10 bg-background pt-4 px-6 pb-6"
+                  ? "fixed bottom-0 start-0 end-0 z-10 bg-background pt-4 px-6 pb-6"
                   : "pt-4"
               }
             >
@@ -498,13 +498,13 @@ export function SelectBankAccountsContent({
       </TabsContent>
 
       <TabsContent value="support">
-        <div className="flex items-center space-x-3 mb-6">
+        <div className="flex items-center gap-x-3 mb-6">
           <button
             type="button"
             className="items-center border bg-accent p-1"
             onClick={() => setActiveTab("select-accounts")}
           >
-            <Icons.ArrowBack />
+            <Icons.ArrowBack className="rtl:rotate-180" />
           </button>
           <h2>Support</h2>
         </div>
