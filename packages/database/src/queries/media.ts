@@ -1,7 +1,9 @@
-import { asc, eq } from "drizzle-orm"
+import { and, asc, count, eq, ilike, or } from "drizzle-orm"
 import { getDatabase, schema } from "../index"
 import { writeAuditLog } from "../utils/audit-log"
 import { withTransaction } from "../utils/database"
+import { normalizePagination } from "../utils/pagination"
+import { escapeLikePattern } from "../utils/search"
 import type { DatabaseOrTransaction } from "./types"
 
 export async function listListingMedia(
@@ -22,6 +24,66 @@ export async function listListingMedia(
     .from(schema.listingMedia)
     .where(eq(schema.listingMedia.listingId, listingId))
     .orderBy(asc(schema.listingMedia.position))
+}
+
+export async function listAllListingMedia(
+  options: { page?: number; pageSize?: number; query?: string } = {},
+  database = getDatabase()
+) {
+  const { limit, offset } = normalizePagination(options)
+  const query = options.query?.trim()
+  const where = query
+    ? or(
+        ilike(schema.properties.title, `%${escapeLikePattern(query)}%`),
+        ilike(schema.listingMedia.originalFilename, `%${escapeLikePattern(query)}%`),
+        ilike(schema.listingMedia.type, `%${escapeLikePattern(query)}%`)
+      )
+    : undefined
+  const [totalRows, rows] = await Promise.all([
+    database
+      .select({ total: count() })
+      .from(schema.listingMedia)
+      .innerJoin(
+        schema.listings,
+        eq(schema.listingMedia.listingId, schema.listings.id)
+      )
+      .innerJoin(
+        schema.properties,
+        eq(schema.listings.propertyId, schema.properties.id)
+      )
+      .where(where),
+    database
+      .select({
+        id: schema.listingMedia.id,
+        listingId: schema.listingMedia.listingId,
+        type: schema.listingMedia.type,
+        storageProvider: schema.listingMedia.storageProvider,
+        objectKey: schema.listingMedia.objectKey,
+        originalFilename: schema.listingMedia.originalFilename,
+        contentType: schema.listingMedia.contentType,
+        sizeBytes: schema.listingMedia.sizeBytes,
+        position: schema.listingMedia.position,
+        isPrimary: schema.listingMedia.isPrimary,
+        createdAt: schema.listingMedia.createdAt,
+        listingType: schema.listings.type,
+        propertyId: schema.properties.id,
+        propertyTitle: schema.properties.title,
+      })
+      .from(schema.listingMedia)
+      .innerJoin(
+        schema.listings,
+        eq(schema.listingMedia.listingId, schema.listings.id)
+      )
+      .innerJoin(
+        schema.properties,
+        eq(schema.listings.propertyId, schema.properties.id)
+      )
+      .where(where)
+      .orderBy(asc(schema.listings.createdAt), asc(schema.listingMedia.position))
+      .limit(limit)
+      .offset(offset),
+  ])
+  return { rows, total: totalRows[0]?.total ?? 0 }
 }
 
 export async function createListingMedia(

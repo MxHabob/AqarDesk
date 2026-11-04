@@ -338,8 +338,7 @@ export default {
       "Explore the latest properties available for sale and rent.",
     aboutEyebrow: "About Ali Shoban's Office",
     aboutTitle: "We know the market and care about the details",
-    aboutDescription:
-      "Ali Shoban's Office helps you find clear property options and organized information, using AqarDesk to manage listings and serve you better.",
+    aboutDescription: "Trusted real estate expertise, tailored to you.",
     aboutApproachTitle: "Service that starts with listening",
     aboutApproachDescription:
       "We understand what you are looking for and help you compare options and follow property details until you find the right fit.",

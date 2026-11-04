@@ -1,7 +1,6 @@
 import { resolveShortLink } from "@aqardesk/database/queries"
 import type { Metadata } from "next"
 import { notFound, redirect } from "next/navigation"
-import { z } from "zod"
 import { getPublicListingById } from "@/lib/listings/public-queries"
 import { createPageMetadata } from "@/lib/marketing/metadata"
 
@@ -9,10 +8,7 @@ type Props = {
   params: Promise<{ locale: string; shortId: string }>
 }
 
-const shortIdSchema = z.string().regex(/^[A-Za-z0-9_-]{20,50}$/)
-
 async function getSharedListing(shortId: string) {
-  if (!shortIdSchema.safeParse(shortId).success) return null
   const shortLink = await resolveShortLink(shortId)
   if (shortLink?.resourceType !== "listing") return null
   return getPublicListingById(shortLink.resourceId)

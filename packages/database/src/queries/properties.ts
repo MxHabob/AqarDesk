@@ -1,4 +1,13 @@
-import { and, desc, eq, ilike, isNull, or } from "drizzle-orm"
+import {
+  and,
+  count,
+  desc,
+  eq,
+  ilike,
+  isNotNull,
+  isNull,
+  or,
+} from "drizzle-orm"
 import { getDatabase, schema } from "../index"
 import { writeAuditLog } from "../utils/audit-log"
 import { withTransaction } from "../utils/database"
@@ -74,6 +83,42 @@ export async function listProperties(
     .offset(offset)
 }
 
+export async function listArchivedProperties(
+  options: { page?: number; pageSize?: number; query?: string } = {},
+  database = getDatabase()
+) {
+  const { limit, offset } = normalizePagination(options)
+  const query = options.query?.trim()
+  const where = and(
+    isNotNull(schema.properties.archivedAt),
+    query
+      ? or(
+          ilike(schema.properties.title, `%${escapeLikePattern(query)}%`),
+          ilike(schema.properties.city, `%${escapeLikePattern(query)}%`),
+          ilike(schema.properties.district, `%${escapeLikePattern(query)}%`)
+        )
+      : undefined
+  )
+  const [totalRows, rows] = await Promise.all([
+    database.select({ total: count() }).from(schema.properties).where(where),
+    database
+      .select({
+        id: schema.properties.id,
+        type: schema.properties.type,
+        title: schema.properties.title,
+        city: schema.properties.city,
+        district: schema.properties.district,
+        archivedAt: schema.properties.archivedAt,
+      })
+      .from(schema.properties)
+      .where(where)
+      .orderBy(desc(schema.properties.archivedAt))
+      .limit(limit)
+      .offset(offset),
+  ])
+  return { rows, total: totalRows[0]?.total ?? 0 }
+}
+
 export async function createProperty(
   values: typeof schema.properties.$inferInsert,
   actor: { id: string; name?: string | null; email?: string | null },
@@ -141,7 +186,12 @@ export async function updateProperty(
           actorId: actor.id,
           actorName: actor.name,
           actorEmail: actor.email,
-          action: "property.updated",
+          action:
+            values.archivedAt === undefined
+              ? "property.updated"
+              : values.archivedAt
+                ? "property.archived"
+                : "property.restored",
           entityType: "property",
           entityId: id,
           before,
@@ -210,6 +260,14 @@ export async function archiveProperty(
   database: DatabaseOrTransaction = getDatabase()
 ) {
   return updateProperty(id, { archivedAt: new Date() }, actor, database)
+}
+
+export async function restoreProperty(
+  id: string,
+  actor: { id: string; name?: string | null; email?: string | null },
+  database: DatabaseOrTransaction = getDatabase()
+) {
+  return updateProperty(id, { archivedAt: null }, actor, database)
 }
 
 export async function deleteProperty(

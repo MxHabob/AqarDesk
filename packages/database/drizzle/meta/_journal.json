@@ -78,6 +78,13 @@
       "when": 1793746975596,
       "tag": "0010_real_estate_delete_permissions",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1793772363951,
+      "tag": "0011_third_selene",
+      "breakpoints": true
     }
   ]
 }

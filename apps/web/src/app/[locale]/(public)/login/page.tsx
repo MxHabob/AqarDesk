@@ -23,11 +23,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 type Props = {
   params: Promise<{ locale: string }>
-  searchParams: Promise<{ error?: string }>
+  searchParams: Promise<{ error?: string; next?: string }>
 }
 
 export default async function Page({ params, searchParams }: Props) {
-  const [{ locale }, { error }] = await Promise.all([params, searchParams])
+  const [{ locale }, { error, next }] = await Promise.all([params, searchParams])
   setStaticParamsLocale(locale)
   const t = await getScopedI18n("auth")
   const session = await auth.api.getSession({ headers: await headers() })
@@ -80,7 +80,7 @@ export default async function Page({ params, searchParams }: Props) {
             )}
 
             <LoginForm
-              callbackURL={`/${locale}/login/callback`}
+              callbackURL={`/${locale}/login/callback${next ? `?next=${encodeURIComponent(next)}` : ""}`}
               googleEnabled={isGoogleAuthConfigured}
               emailOtpEnabled={isEmailOtpConfigured}
             />

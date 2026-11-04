@@ -1,4 +1,13 @@
-import { and, asc, eq, ilike, isNull } from "drizzle-orm"
+import {
+  and,
+  asc,
+  count,
+  desc,
+  eq,
+  ilike,
+  isNotNull,
+  isNull,
+} from "drizzle-orm"
 import { getDatabase, schema } from "../index"
 import { writeAuditLog } from "../utils/audit-log"
 import { withTransaction } from "../utils/database"
@@ -48,6 +57,36 @@ export async function listOwners(
     .orderBy(asc(schema.owners.name))
     .limit(limit)
     .offset(offset)
+}
+
+export async function listArchivedOwners(
+  options: { page?: number; pageSize?: number; query?: string } = {},
+  database = getDatabase()
+) {
+  const { limit, offset } = normalizePagination(options)
+  const query = options.query?.trim()
+  const where = and(
+    isNotNull(schema.owners.archivedAt),
+    query
+      ? ilike(schema.owners.name, `%${escapeLikePattern(query)}%`)
+      : undefined
+  )
+  const [totalRows, rows] = await Promise.all([
+    database.select({ total: count() }).from(schema.owners).where(where),
+    database
+      .select({
+        id: schema.owners.id,
+        name: schema.owners.name,
+        notes: schema.owners.notes,
+        archivedAt: schema.owners.archivedAt,
+      })
+      .from(schema.owners)
+      .where(where)
+      .orderBy(desc(schema.owners.archivedAt))
+      .limit(limit)
+      .offset(offset),
+  ])
+  return { rows, total: totalRows[0]?.total ?? 0 }
 }
 
 export async function createOwner(
@@ -111,7 +150,12 @@ export async function updateOwner(
           actorId: actor.id,
           actorName: actor.name,
           actorEmail: actor.email,
-          action: values.archivedAt ? "owner.archived" : "owner.updated",
+          action:
+            values.archivedAt === undefined
+              ? "owner.updated"
+              : values.archivedAt
+                ? "owner.archived"
+                : "owner.restored",
           entityType: "owner",
           entityId: id,
           before,
@@ -214,4 +258,12 @@ export async function deleteOwner(
 
     return { deleted: true as const }
   }, database)
+}
+
+export async function restoreOwner(
+  id: string,
+  actor: { id: string; name?: string | null; email?: string | null },
+  database: DatabaseOrTransaction = getDatabase()
+) {
+  return updateOwner(id, { archivedAt: null }, actor, database)
 }

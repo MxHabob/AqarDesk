@@ -1,7 +1,18 @@
-import { and, desc, eq, gt, isNull } from "drizzle-orm"
+import {
+  and,
+  count,
+  desc,
+  eq,
+  gt,
+  ilike,
+  isNull,
+  or,
+} from "drizzle-orm"
 import { getDatabase, schema } from "../index"
 import { writeAuditLog } from "../utils/audit-log"
 import { withTransaction } from "../utils/database"
+import { normalizePagination } from "../utils/pagination"
+import { escapeLikePattern } from "../utils/search"
 import {
   createShortLinkToken,
   getShortLinkExpiration,
@@ -136,6 +147,66 @@ export async function listShortLinks(
       )
     )
     .orderBy(desc(schema.shortLinks.createdAt))
+}
+
+export async function listAllShortLinks(
+  options: { page?: number; pageSize?: number; query?: string } = {},
+  database = getDatabase()
+) {
+  const { limit, offset } = normalizePagination(options)
+  const query = options.query?.trim()
+  const where = query
+    ? or(
+        ilike(schema.shortLinks.resourceType, `%${escapeLikePattern(query)}%`),
+        ilike(schema.shortLinks.resourceId, `%${escapeLikePattern(query)}%`),
+        ilike(schema.properties.title, `%${escapeLikePattern(query)}%`)
+      )
+    : undefined
+  const [totalRows, rows] = await Promise.all([
+    database
+      .select({ total: count() })
+      .from(schema.shortLinks)
+      .leftJoin(
+        schema.listings,
+        and(
+          eq(schema.shortLinks.resourceType, "listing"),
+          eq(schema.shortLinks.resourceId, schema.listings.id)
+        )
+      )
+      .leftJoin(
+        schema.properties,
+        eq(schema.listings.propertyId, schema.properties.id)
+      )
+      .where(where),
+    database
+      .select({
+        id: schema.shortLinks.id,
+        resourceType: schema.shortLinks.resourceType,
+        resourceId: schema.shortLinks.resourceId,
+        createdById: schema.shortLinks.createdById,
+        expiresAt: schema.shortLinks.expiresAt,
+        revokedAt: schema.shortLinks.revokedAt,
+        createdAt: schema.shortLinks.createdAt,
+        propertyTitle: schema.properties.title,
+      })
+      .from(schema.shortLinks)
+      .leftJoin(
+        schema.listings,
+        and(
+          eq(schema.shortLinks.resourceType, "listing"),
+          eq(schema.shortLinks.resourceId, schema.listings.id)
+        )
+      )
+      .leftJoin(
+        schema.properties,
+        eq(schema.listings.propertyId, schema.properties.id)
+      )
+      .where(where)
+      .orderBy(desc(schema.shortLinks.createdAt))
+      .limit(limit)
+      .offset(offset),
+  ])
+  return { rows, total: totalRows[0]?.total ?? 0 }
 }
 
 export async function revokeShortLink(
