@@ -156,7 +156,7 @@ export async function setRolePermissions(
 
 export async function getUserRoleKeys(
   userId: string,
-  database = getDatabase()
+  database: DatabaseOrTransaction = getDatabase()
 ) {
   const rows = await database
     .select({ key: schema.roles.key })

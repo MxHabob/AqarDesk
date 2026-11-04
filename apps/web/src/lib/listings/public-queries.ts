@@ -121,7 +121,12 @@ export async function getPublicListingCoverPhotos(listingIds: string[]) {
       )
       return [
         listingId,
-        { url, altText: photo.altText, contentType: photo.contentType },
+        {
+          url,
+          mediaId: photo.mediaId,
+          altText: photo.altText,
+          contentType: photo.contentType,
+        },
       ] as const
     })
   )

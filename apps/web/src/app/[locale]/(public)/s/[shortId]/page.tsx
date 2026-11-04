@@ -1,8 +1,11 @@
 import { resolveShortLink } from "@aqardesk/database/queries"
 import type { Metadata } from "next"
 import { notFound, redirect } from "next/navigation"
-import { getPublicListingById } from "@/lib/listings/public-queries"
-import { createPageMetadata } from "@/lib/marketing/metadata"
+import {
+  getPublicListingById,
+  getPublicListingCoverPhotos,
+} from "@/lib/listings/public-queries"
+import { createPageMetadata, getSiteUrl } from "@/lib/marketing/metadata"
 
 type Props = {
   params: Promise<{ locale: string; shortId: string }>
@@ -24,6 +27,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
+  const coverPhotos = await getPublicListingCoverPhotos([listing.id])
+  const coverPhoto = coverPhotos[listing.id]
+
   return {
     ...(await createPageMetadata({
       title: listing.title,
@@ -33,7 +39,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         "View this property on AqarDesk.",
       locale,
       path: `/s/${shortId}`,
-      ogImagePath: `/listings/${listing.id}/opengraph-image`,
+      ...(coverPhoto && {
+        ogImageUrl: getSiteUrl(
+          `/api/public/listing-images/${coverPhoto.mediaId}`
+        ),
+      }),
       type: "article",
       canonical: false,
     })),

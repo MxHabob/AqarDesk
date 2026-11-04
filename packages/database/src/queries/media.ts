@@ -1,4 +1,4 @@
-import { and, asc, count, eq, ilike, or } from "drizzle-orm"
+import { asc, count, eq, ilike, or } from "drizzle-orm"
 import { getDatabase, schema } from "../index"
 import { writeAuditLog } from "../utils/audit-log"
 import { withTransaction } from "../utils/database"
@@ -26,6 +26,23 @@ export async function listListingMedia(
     .orderBy(asc(schema.listingMedia.position))
 }
 
+export async function getListingMediaById(
+  id: string,
+  database = getDatabase()
+) {
+  const [media] = await database
+    .select({
+      id: schema.listingMedia.id,
+      listingId: schema.listingMedia.listingId,
+      storageProvider: schema.listingMedia.storageProvider,
+      objectKey: schema.listingMedia.objectKey,
+    })
+    .from(schema.listingMedia)
+    .where(eq(schema.listingMedia.id, id))
+    .limit(1)
+  return media
+}
+
 export async function listAllListingMedia(
   options: { page?: number; pageSize?: number; query?: string } = {},
   database = getDatabase()
@@ -35,7 +52,10 @@ export async function listAllListingMedia(
   const where = query
     ? or(
         ilike(schema.properties.title, `%${escapeLikePattern(query)}%`),
-        ilike(schema.listingMedia.originalFilename, `%${escapeLikePattern(query)}%`),
+        ilike(
+          schema.listingMedia.originalFilename,
+          `%${escapeLikePattern(query)}%`
+        ),
         ilike(schema.listingMedia.type, `%${escapeLikePattern(query)}%`)
       )
     : undefined
@@ -79,7 +99,10 @@ export async function listAllListingMedia(
         eq(schema.listings.propertyId, schema.properties.id)
       )
       .where(where)
-      .orderBy(asc(schema.listings.createdAt), asc(schema.listingMedia.position))
+      .orderBy(
+        asc(schema.listings.createdAt),
+        asc(schema.listingMedia.position)
+      )
       .limit(limit)
       .offset(offset),
   ])

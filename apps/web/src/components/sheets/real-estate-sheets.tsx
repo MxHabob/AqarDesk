@@ -27,6 +27,7 @@ import { PropertyForm } from "@/components/forms/property-form"
 import { RealEstateSubmitButton } from "@/components/forms/real-estate-fields"
 import { ShareListingDialog } from "@/components/real-estate/share-listing-dialog"
 import { useRealEstateParams } from "@/hooks/use-real-estate-params"
+import { useCurrentLocale, useScopedI18n } from "@/locales/client"
 
 function CloseButton({ onClose }: { onClose: () => void }) {
   return (
@@ -68,6 +69,105 @@ function RealEstateFormSkeleton({ fields = 8 }: { fields?: number }) {
 
 function getLoadErrorMessage(error: unknown, fallback: string) {
   return error instanceof Error ? error.message : fallback
+}
+
+function ListingHistory({
+  history,
+}: {
+  history: NonNullable<
+    Awaited<ReturnType<typeof getListingFormData>>
+  >["history"]
+}) {
+  const t = useScopedI18n("operationsManagement")
+  const locale = useCurrentLocale()
+  const dateFormatter = new Intl.DateTimeFormat(locale, {
+    dateStyle: "medium",
+    timeStyle: "short",
+  })
+  const priceFormatter = new Intl.NumberFormat(locale, {
+    maximumFractionDigits: 2,
+  })
+  const statusLabels: Record<string, string> = {
+    draft: t("draft"),
+    active: t("active"),
+    reserved: t("reserved"),
+    sold: t("sold"),
+    rented: t("rented"),
+    expired: t("expiredListing"),
+    withdrawn: t("withdrawn"),
+  }
+  const priceRows = history.prices.map((entry) => ({
+    id: entry.id,
+    date: entry.changedAt,
+    value: entry.salePrice ?? entry.monthlyRent,
+  }))
+  const statusRows = history.statuses.map((entry) => ({
+    id: entry.id,
+    date: entry.changedAt,
+    value: statusLabels[entry.status] ?? entry.status,
+    note: entry.note,
+  }))
+
+  return (
+    <section className="space-y-5 border-t border-border pt-6">
+      <h2 className="text-lg font-medium">{t("listingHistory")}</h2>
+      {priceRows.length === 0 && statusRows.length === 0 ? (
+        <p className="text-sm text-muted-foreground">{t("noHistory")}</p>
+      ) : (
+        <>
+          {priceRows.length > 0 && (
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium">{t("priceHistory")}</h3>
+              <ul className="divide-y divide-border border-y border-border">
+                {priceRows.map((entry) => (
+                  <li
+                    key={entry.id}
+                    className="flex items-center justify-between gap-4 py-3 text-sm"
+                  >
+                    <span>
+                      {entry.value
+                        ? priceFormatter.format(Number(entry.value))
+                        : "—"}
+                    </span>
+                    <time
+                      dateTime={entry.date.toISOString()}
+                      className="text-xs text-muted-foreground"
+                    >
+                      {dateFormatter.format(entry.date)}
+                    </time>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+          {statusRows.length > 0 && (
+            <div className="space-y-2">
+              <h3 className="text-sm font-medium">{t("statusHistory")}</h3>
+              <ul className="divide-y divide-border border-y border-border">
+                {statusRows.map((entry) => (
+                  <li
+                    key={entry.id}
+                    className="flex flex-wrap items-center justify-between gap-2 py-3 text-sm"
+                  >
+                    <span>
+                      {entry.value}
+                      {entry.note ? ` — ${entry.note}` : ""}
+                    </span>
+                    <time
+                      dateTime={entry.date.toISOString()}
+                      className="text-xs text-muted-foreground"
+                    >
+                      {dateFormatter.format(entry.date)}
+                    </time>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </>
+      )}
+    </section>
+  )
 }
 
 export function PropertySheet() {
@@ -341,6 +441,9 @@ export function ListingSheet() {
                 listingId={data.listing.id}
                 readOnly={readOnly}
               />
+            )}
+            {readOnly && data?.history && (
+              <ListingHistory history={data.history} />
             )}
           </div>
         )}

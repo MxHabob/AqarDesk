@@ -22,6 +22,7 @@ import {
   getPropertyById,
   getPropertyDetails,
   getPublicListingById,
+  listListingHistory,
   listListingMedia,
   listListings,
   listOwners,
@@ -713,7 +714,10 @@ export async function getListingFormData(id: string) {
   const actor = await getActor()
   await assertPermission(actor.id, "listings.read")
   const parsedId = idSchema.parse(id)
-  return getListingById(parsedId)
+  const listing = await getListingById(parsedId)
+  if (!listing) return null
+  const history = await listListingHistory(parsedId)
+  return { ...listing, history }
 }
 
 export async function saveListingAction(

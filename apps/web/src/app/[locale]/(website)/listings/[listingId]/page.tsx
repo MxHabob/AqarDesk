@@ -14,6 +14,7 @@ import { ListingPhotoCarousel } from "@/components/marketing/listing-photo-carou
 import { ShareListingDialog } from "@/components/real-estate/share-listing-dialog"
 import {
   getPublicListingById,
+  getPublicListingCoverPhotos,
   getPublicListingMedia,
   getPublicListingPhotos,
   getSimilarPublicListings,
@@ -84,13 +85,20 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
+  const coverPhotos = await getPublicListingCoverPhotos([listing.id])
+  const coverPhoto = coverPhotos[listing.id]
+
   return createPageMetadata({
     title: listing.title,
     description:
       listing.description ?? listing.publicNotes ?? t("metadataDescription"),
     locale,
     path: `/listings/${listing.id}`,
-    ogImagePath: `/listings/${listing.id}/opengraph-image`,
+    ...(coverPhoto && {
+      ogImageUrl: getSiteUrl(
+        `/api/public/listing-images/${coverPhoto.mediaId}`
+      ),
+    }),
     type: "article",
   })
 }

@@ -2,6 +2,7 @@ import { and, count, desc, eq, ilike, or } from "drizzle-orm"
 import { getDatabase, schema } from "../index"
 import { type AuditLogInput, writeAuditLog } from "../utils/audit-log"
 import { normalizePagination } from "../utils/pagination"
+import { escapeLikePattern } from "../utils/search"
 import type { DatabaseOrTransaction } from "./types"
 
 export async function createAuditLog(
@@ -30,14 +31,16 @@ export async function listAuditLogs(
     options.entityType
       ? eq(schema.auditLogs.entityType, options.entityType)
       : undefined,
-    options.entityId ? eq(schema.auditLogs.entityId, options.entityId) : undefined,
+    options.entityId
+      ? eq(schema.auditLogs.entityId, options.entityId)
+      : undefined,
     query
       ? or(
-          ilike(schema.auditLogs.action, `%${query}%`),
-          ilike(schema.auditLogs.entityType, `%${query}%`),
-          ilike(schema.auditLogs.entityId, `%${query}%`),
-          ilike(schema.auditLogs.actorName, `%${query}%`),
-          ilike(schema.auditLogs.actorEmail, `%${query}%`)
+          ilike(schema.auditLogs.action, `%${escapeLikePattern(query)}%`),
+          ilike(schema.auditLogs.entityType, `%${escapeLikePattern(query)}%`),
+          ilike(schema.auditLogs.entityId, `%${escapeLikePattern(query)}%`),
+          ilike(schema.auditLogs.actorName, `%${escapeLikePattern(query)}%`),
+          ilike(schema.auditLogs.actorEmail, `%${escapeLikePattern(query)}%`)
         )
       : undefined
   )

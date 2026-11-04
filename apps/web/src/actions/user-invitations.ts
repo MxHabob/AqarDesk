@@ -1,23 +1,25 @@
 "use server"
 
-import { randomBytes, randomUUID, createHash } from "node:crypto"
+import { createHash, randomBytes, randomUUID } from "node:crypto"
 import { auth } from "@aqardesk/auth/server"
-import { createStaffInvitationEmail } from "@aqardesk/email"
 import { getDatabase } from "@aqardesk/database"
 import {
   acceptUserInvitation,
   createUser,
   createUserInvitation,
+  getOfficeSettings,
+  getPermissionKeysForRoles,
   getUserByEmail,
   getUserById,
   getUserInvitationByTokenHash,
-  getPermissionKeysForRoles,
+  getUserRoleKeys,
   listRoles,
   listUserInvitations,
   replaceUserInvitationToken,
   revokeUserInvitation,
   setUserRoles,
 } from "@aqardesk/database/queries"
+import { createStaffInvitationEmail } from "@aqardesk/email"
 import { revalidatePath } from "next/cache"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
@@ -50,7 +52,9 @@ function getInvitationUrl(locale: string, token: string) {
     process.env.NEXT_PUBLIC_APP_URL?.trim() ||
     process.env.BETTER_AUTH_URL?.trim()
   if (!configuredOrigin) {
-    throw new Error("Set NEXT_PUBLIC_APP_URL or BETTER_AUTH_URL to send invitations.")
+    throw new Error(
+      "Set NEXT_PUBLIC_APP_URL or BETTER_AUTH_URL to send invitations."
+    )
   }
   const origin = new URL(configuredOrigin).origin
   const url = new URL(`/${locale}/invite/accept`, origin)
@@ -62,18 +66,21 @@ async function sendInvitationEmail(input: {
   email: string
   name: string
   locale: string
+  officeName: string
   token: string
   expiresAt: Date
 }) {
   const apiKey = process.env.RESEND_API_KEY?.trim()
   const from = process.env.EMAIL_FROM?.trim()
   if (!apiKey || !from) {
-    throw new Error("Invitation email is not configured. Set RESEND_API_KEY and EMAIL_FROM.")
+    throw new Error(
+      "Invitation email is not configured. Set RESEND_API_KEY and EMAIL_FROM."
+    )
   }
   const email = await createStaffInvitationEmail({
     to: input.email,
     recipientName: input.name,
-    officeName: "AqarDesk",
+    officeName: input.officeName,
     invitationUrl: getInvitationUrl(input.locale, input.token),
     expiresInHours: Math.max(
       1,
@@ -123,7 +130,9 @@ async function validateInvitedRoles(roleIds: string[], actorId: string) {
     permissions.some((key) => ["roles.manage", "users.manage"].includes(key)) &&
     !(await hasPermission(actorId, "roles.manage"))
   ) {
-    throw new Error("Only a role administrator can invite account administrators.")
+    throw new Error(
+      "Only a role administrator can invite account administrators."
+    )
   }
   return roles
 }
@@ -137,13 +146,18 @@ export async function createUserInvitationAction(formData: FormData) {
     roleIds: getRoleIds(formData),
   })
   const roles = await validateInvitedRoles(values.roleIds, actor.id)
-  if (await getUserByEmail(values.email)) {
-    throw new Error("An account already exists for this email address.")
-  }
-
   const customerRole = roles.find((role) => role.key === "customer")
   if (!customerRole) {
     throw new Error("The default customer role is missing.")
+  }
+  const existingUser = await getUserByEmail(values.email)
+  if (existingUser) {
+    const currentRoles = await getUserRoleKeys(existingUser.id)
+    if (currentRoles.some((key) => key !== "customer")) {
+      throw new Error(
+        "This account already has access. Manage its roles from the users page."
+      )
+    }
   }
 
   const token = createToken()
@@ -151,29 +165,35 @@ export async function createUserInvitationAction(formData: FormData) {
   const database = getDatabase()
   let invitationId: string | undefined
   await database.transaction(async (transaction) => {
-    const user = await createUser(
-      {
-        id: randomUUID(),
-        name: values.name,
-        email: values.email,
-        emailVerified: false,
-        locale: values.locale,
-        timezone: "Asia/Riyadh",
-        timezoneAutoSync: true,
-        dateFormat: "dd/MM/yyyy",
-        timeFormat: 24,
-        weekStartsOnMonday: true,
-      },
-      actor,
-      transaction
-    )
-    if (!user) throw new Error("The invited account could not be created.")
-    await setUserRoles(user.id, [customerRole.id], actor, transaction)
+    let userId = existingUser?.id
+    if (!userId) {
+      const user = await createUser(
+        {
+          id: randomUUID(),
+          name: values.name,
+          email: values.email,
+          emailVerified: false,
+          locale: values.locale,
+          timezone: "Asia/Riyadh",
+          timezoneAutoSync: true,
+          dateFormat: "dd/MM/yyyy",
+          timeFormat: 24,
+          weekStartsOnMonday: true,
+        },
+        actor,
+        transaction
+      )
+      if (!user) throw new Error("The invited account could not be created.")
+      userId = user.id
+      await setUserRoles(userId, [customerRole.id], actor, transaction)
+    } else if ((await getUserRoleKeys(userId, transaction)).length === 0) {
+      await setUserRoles(userId, [customerRole.id], actor, transaction)
+    }
     const invitation = await createUserInvitation(
       {
         email: values.email,
         name: values.name,
-        userId: user.id,
+        userId,
         tokenHash: hashToken(token),
         roleIds: values.roleIds,
         expiresAt,
@@ -185,10 +205,12 @@ export async function createUserInvitationAction(formData: FormData) {
   })
 
   try {
+    const officeSettings = await getOfficeSettings()
     await sendInvitationEmail({
       email: values.email,
       name: values.name,
       locale: values.locale,
+      officeName: officeSettings.name,
       token,
       expiresAt,
     })
@@ -199,6 +221,7 @@ export async function createUserInvitationAction(formData: FormData) {
     )
   }
   revalidatePath("/[locale]/dashboard/users", "page")
+  revalidatePath("/[locale]/dashboard/users/invitations", "page")
 }
 
 export async function resendUserInvitationAction(formData: FormData) {
@@ -223,6 +246,7 @@ export async function resendUserInvitationAction(formData: FormData) {
     email: invitation.email,
     name: invitation.name,
     locale: invitedUser.locale,
+    officeName: (await getOfficeSettings()).name,
     token,
     expiresAt,
   })
@@ -234,6 +258,7 @@ export async function resendUserInvitationAction(formData: FormData) {
   )
   if (!updated) throw new Error("The invitation could not be renewed.")
   revalidatePath("/[locale]/dashboard/users", "page")
+  revalidatePath("/[locale]/dashboard/users/invitations", "page")
 }
 
 export async function revokeUserInvitationAction(formData: FormData) {
@@ -242,6 +267,7 @@ export async function revokeUserInvitationAction(formData: FormData) {
   const invitation = await revokeUserInvitation(id, actor)
   if (!invitation) throw new Error("This invitation is no longer active.")
   revalidatePath("/[locale]/dashboard/users", "page")
+  revalidatePath("/[locale]/dashboard/users/invitations", "page")
 }
 
 export async function acceptUserInvitationAction(formData: FormData) {
@@ -265,16 +291,15 @@ export async function acceptUserInvitationAction(formData: FormData) {
     invitation.userId !== session.user.id ||
     invitation.email !== session.user.email.toLowerCase()
   ) {
-    throw new Error("Sign in with the email address that received this invitation.")
+    throw new Error(
+      "Sign in with the email address that received this invitation."
+    )
   }
-  const accepted = await acceptUserInvitation(
-    hashToken(token),
-    {
-      id: session.user.id,
-      name: session.user.name,
-      email: session.user.email,
-    }
-  )
+  const accepted = await acceptUserInvitation(hashToken(token), {
+    id: session.user.id,
+    name: session.user.name,
+    email: session.user.email,
+  })
   if (!accepted) throw new Error("This invitation is no longer active.")
   revalidatePath("/[locale]/dashboard/users", "page")
   redirect(`/${locale}/dashboard`)

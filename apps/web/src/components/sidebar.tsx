@@ -48,7 +48,10 @@ export function Sidebar() {
       </div>
 
       <div className="flex flex-col w-full pt-[70px] flex-1 border-b border-border mb-3">
-        <MainMenu isExpanded={isExpanded} />
+        <MainMenu
+          key={isExpanded ? "expanded" : "collapsed"}
+          isExpanded={isExpanded}
+        />
       </div>
       <Suspense fallback={<TeamDropdownSkeleton isExpanded={isExpanded} />}>
         <TeamDropdown isExpanded={isExpanded} />

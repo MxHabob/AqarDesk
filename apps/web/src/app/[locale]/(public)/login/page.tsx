@@ -27,7 +27,10 @@ type Props = {
 }
 
 export default async function Page({ params, searchParams }: Props) {
-  const [{ locale }, { error, next }] = await Promise.all([params, searchParams])
+  const [{ locale }, { error, next }] = await Promise.all([
+    params,
+    searchParams,
+  ])
   setStaticParamsLocale(locale)
   const t = await getScopedI18n("auth")
   const session = await auth.api.getSession({ headers: await headers() })

@@ -5,7 +5,7 @@ import { cn } from "@aqardesk/ui/lib/utils"
 import { Building2, Tag, UsersRound } from "lucide-react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import { useCurrentLocale, useI18n } from "@/locales/client"
 
 const icons = {
@@ -211,7 +211,13 @@ export function MainMenu({ onSelect, isExpanded = false }: Props) {
     { path: "/properties", name: t("common.properties") },
     { path: "/listings", name: t("common.listings") },
     { path: "/owners", name: t("common.owners") },
-    { path: "/users", name: t("navigation.users") },
+    {
+      path: "/users",
+      name: t("navigation.users"),
+      children: [
+        { path: "/users/invitations", name: t("invitationManagement.title") },
+      ],
+    },
     {
       path: "/settings",
       name: t("common.settings"),
@@ -219,15 +225,14 @@ export function MainMenu({ onSelect, isExpanded = false }: Props) {
         { path: "/settings", name: t("navigation.general") },
         { path: "/settings/members", name: t("navigation.members") },
         { path: "/settings/roles", name: t("navigation.permissions") },
+        { path: "/audit", name: t("operationsManagement.auditTitle") },
+        { path: "/archive", name: t("operationsManagement.archiveTitle") },
+        { path: "/media", name: t("operationsManagement.mediaTitle") },
+        { path: "/share-links", name: t("operationsManagement.linksTitle") },
       ],
     },
   ]
   const [expandedItem, setExpandedItem] = useState<string | null>(null)
-
-  // Reset expanded item when sidebar expands/collapses
-  useEffect(() => {
-    setExpandedItem(null)
-  }, [isExpanded])
 
   return (
     <div className="mt-4 w-full">

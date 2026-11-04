@@ -136,7 +136,7 @@ type PageMetadataOptions = {
   description: string
   path: string
   locale: string
-  ogImagePath?: string
+  ogImageUrl?: string
   og?: { title: string; description: string }
   keywords?: string[]
   type?: "website" | "article"
@@ -168,9 +168,8 @@ export async function createPageMetadata(
     .trimEnd()
   const imageParams = new URLSearchParams({ title: ogTitle })
   if (ogDesc) imageParams.set("description", ogDesc)
-  const imageUrl = opts.ogImagePath
-    ? getSiteUrl(`/${locale}${opts.ogImagePath}`)
-    : getSiteUrl(`/api/og?${imageParams.toString()}`)
+  const imageUrl =
+    opts.ogImageUrl ?? getSiteUrl(`/api/og?${imageParams.toString()}`)
   const images = [{ url: imageUrl, width: 1200, height: 630, alt: ogTitle }]
 
   return {
