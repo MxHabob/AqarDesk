@@ -3,8 +3,7 @@ import { Suspense } from "react"
 import { AccountSettings } from "@/components/account-settings"
 import { SettingsLoading } from "@/components/settings-loading"
 import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
-import { getQueryClient, HydrateClient } from "@/queries/server"
-import { userSettingsQueryOptions } from "@/queries/user-settings"
+import { UserSettingsHydration } from "@/queries/user-settings-hydration"
 
 export async function generateMetadata({
   params,
@@ -29,18 +28,17 @@ export default async function AccountPage({
   const { locale } = await params
   setStaticParamsLocale(locale)
   const t = await getScopedI18n("account")
-  void getQueryClient().prefetchQuery(userSettingsQueryOptions())
 
   return (
     <section className="space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">{t("title")}</h1>
       </header>
-      <HydrateClient>
-        <Suspense fallback={<SettingsLoading />}>
+      <Suspense fallback={<SettingsLoading />}>
+        <UserSettingsHydration>
           <AccountSettings />
-        </Suspense>
-      </HydrateClient>
+        </UserSettingsHydration>
+      </Suspense>
     </section>
   )
 }

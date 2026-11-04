@@ -7,8 +7,7 @@ import { SettingsLoading } from "@/components/settings-loading"
 import { TimeFormatSettings } from "@/components/time-format-settings"
 import { WeekSettings } from "@/components/week-settings"
 import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
-import { getQueryClient, HydrateClient } from "@/queries/server"
-import { userSettingsQueryOptions } from "@/queries/user-settings"
+import { UserSettingsHydration } from "@/queries/user-settings-hydration"
 
 export async function generateMetadata({
   params,
@@ -33,11 +32,10 @@ export default async function DateAndLocalePage({
   const { locale } = await params
   setStaticParamsLocale(locale)
   const t = await getScopedI18n("accountSettings")
-  void getQueryClient().prefetchQuery(userSettingsQueryOptions())
 
   return (
-    <HydrateClient>
-      <Suspense fallback={<SettingsLoading />}>
+    <Suspense fallback={<SettingsLoading />}>
+      <UserSettingsHydration>
         <section className="space-y-8">
           <h1 className="text-2xl font-semibold">{t("dateAndLocale")}</h1>
           <LocaleSettings />
@@ -46,7 +44,7 @@ export default async function DateAndLocalePage({
           <DateFormatSettings />
           <WeekSettings />
         </section>
-      </Suspense>
-    </HydrateClient>
+      </UserSettingsHydration>
+    </Suspense>
   )
 }
