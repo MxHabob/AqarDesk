@@ -6,7 +6,7 @@ export function LoginVideoBackground() {
       <div
         aria-hidden="true"
         className="absolute inset-0 bg-cover bg-center"
-        style={{ backgroundImage: "url('/assets/bg-login-dark.jpg')" }}
+        style={{ backgroundImage: "url('/assets/bg-login-indigo.jpg')" }}
       />
       <div aria-hidden="true" className="absolute inset-0 bg-black/20" />
       <div className="relative z-10 flex h-full w-full items-center justify-center p-8 text-center">

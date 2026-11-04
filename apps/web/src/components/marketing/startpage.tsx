@@ -372,8 +372,8 @@ export function StartPage() {
                 }}
               >
                 <Image
-                  src="https://cdn.midday.ai/video-poster-v2.jpg"
-                  alt="AqarDesk dashboard preview"
+                  src="/assets/aqardesk-brand-showcase-poster.jpg"
+                  alt={t("homepageDashboardPreview")}
                   fill
                   fetchPriority="high"
                   quality={50}
@@ -398,9 +398,10 @@ export function StartPage() {
                 muted
                 playsInline
                 preload="none"
+                poster="/assets/aqardesk-brand-showcase-poster.jpg"
               >
                 <source
-                  src="https://cdn.midday.ai/videos/login-video.mp4"
+                  src="/assets/aqardesk-brand-showcase.mp4"
                   type="video/mp4"
                 />
               </video>

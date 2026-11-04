@@ -132,6 +132,7 @@ export default {
     openingOfferSectionTitle: "Services for every step",
     openingOfferSectionDescription:
       "Explore properties, learn about our services, and contact the office team to discuss your next step.",
+    homepageDashboardPreview: "AqarDesk dashboard preview",
     browse: "Browse properties",
     browseListings: "Browse listings",
     viewListing: "View property details",

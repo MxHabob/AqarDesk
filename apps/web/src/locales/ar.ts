@@ -450,6 +450,7 @@ export default {
     openingOfferSectionTitle: "خدمات تجمع احتياجك في مكان واحد",
     openingOfferSectionDescription:
       "استكشف العقارات، وتعرّف على خدماتنا، وتواصل مع فريق المكتب للبدء بخطوتك التالية.",
+    homepageDashboardPreview: "معاينة لوحة تحكم AqarDesk",
     heroEyebrow: "عقارات للبيع والإيجار في اليمن",
     heroTitleBefore: "اكتشف العقار الذي",
     heroTitleAccent: "يناسب احتياجك",
