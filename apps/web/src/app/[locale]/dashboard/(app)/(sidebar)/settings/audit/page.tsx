@@ -65,7 +65,7 @@ export default async function AuditPage({
         <p className="text-sm text-muted-foreground">{t("auditDescription")}</p>
       </header>
       <form
-        action={`/${locale}/dashboard/audit`}
+        action={`/${locale}/dashboard/settings/audit`}
         method="get"
         className="flex gap-2"
       >
@@ -133,7 +133,7 @@ export default async function AuditPage({
         <div className="flex gap-3">
           {page > 1 && (
             <Link
-              href={`/${locale}/dashboard/audit?q=${encodeURIComponent(query)}&page=${page - 1}`}
+              href={`/${locale}/dashboard/settings/audit?q=${encodeURIComponent(query)}&page=${page - 1}`}
               className="underline underline-offset-4"
             >
               {t("previous")}
@@ -144,7 +144,7 @@ export default async function AuditPage({
           </span>
           {page < totalPages && (
             <Link
-              href={`/${locale}/dashboard/audit?q=${encodeURIComponent(query)}&page=${page + 1}`}
+              href={`/${locale}/dashboard/settings/audit?q=${encodeURIComponent(query)}&page=${page + 1}`}
               className="underline underline-offset-4"
             >
               {t("next")}

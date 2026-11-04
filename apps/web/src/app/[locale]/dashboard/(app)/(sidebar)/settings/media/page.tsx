@@ -1,9 +1,10 @@
 import { auth } from "@aqardesk/auth/server"
-import { listAllShortLinks } from "@aqardesk/database/queries"
+import { listAllListingMedia } from "@aqardesk/database/queries"
+import { createReadUrl, storageProvider } from "@aqardesk/storage/server"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { revokeManagedShortLinkAction } from "@/actions/operations"
+import { deleteManagedMediaAction } from "@/actions/operations"
 import { RecordActionButton } from "@/components/operations/record-action-button"
 import { hasPermission } from "@/lib/auth/permissions"
 import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
@@ -18,10 +19,10 @@ export async function generateMetadata({
   const { locale } = await params
   setStaticParamsLocale(locale)
   const t = await getScopedI18n("operationsManagement")
-  return { title: t("linksTitle") }
+  return { title: t("mediaTitle") }
 }
 
-export default async function ShareLinksPage({
+export default async function MediaPage({
   params,
   searchParams,
 }: {
@@ -35,7 +36,7 @@ export default async function ShareLinksPage({
     getScopedI18n("operationsManagement"),
   ])
   if (!session) redirect(`/${locale}/login`)
-  if (!(await hasPermission(session.user.id, "listings.share"))) {
+  if (!(await hasPermission(session.user.id, "media.manage"))) {
     return (
       <p role="alert" className="py-12 text-center">
         {t("accessDenied")}
@@ -47,7 +48,7 @@ export default async function ShareLinksPage({
   const pageNumber = Number(search.page ?? 1)
   const requestedPage =
     Number.isInteger(pageNumber) && pageNumber > 0 ? pageNumber : 1
-  const firstResult = await listAllShortLinks({
+  const firstResult = await listAllListingMedia({
     query,
     page: requestedPage,
     pageSize,
@@ -57,25 +58,33 @@ export default async function ShareLinksPage({
   const result =
     page === requestedPage
       ? firstResult
-      : await listAllShortLinks({ query, page, pageSize })
+      : await listAllListingMedia({ query, page, pageSize })
+  const media = await Promise.all(
+    result.rows.map(async (item) => ({
+      ...item,
+      readUrl:
+        item.storageProvider === storageProvider
+          ? (await createReadUrl(item.objectKey)).url
+          : null,
+    }))
+  )
 
   return (
     <main className="space-y-5 py-6">
       <header className="space-y-1">
-        <h1 className="text-2xl font-semibold">{t("linksTitle")}</h1>
-        <p className="text-sm text-muted-foreground">{t("linksDescription")}</p>
-        <p className="text-xs text-muted-foreground">{t("linksTokenNote")}</p>
+        <h1 className="text-2xl font-semibold">{t("mediaTitle")}</h1>
+        <p className="text-sm text-muted-foreground">{t("mediaDescription")}</p>
       </header>
       <form
-        action={`/${locale}/dashboard/share-links`}
+        action={`/${locale}/dashboard/settings/media`}
         method="get"
         className="flex gap-2"
       >
         <input
           name="q"
           defaultValue={query}
-          placeholder={t("searchLinks")}
-          aria-label={t("searchLinks")}
+          placeholder={t("searchMedia")}
+          aria-label={t("searchMedia")}
           className="h-9 w-full max-w-sm border border-input bg-background px-3 text-sm"
         />
         <button className="h-9 border border-border px-4 text-sm" type="submit">
@@ -86,61 +95,66 @@ export default async function ShareLinksPage({
         <table className="w-full min-w-[780px] text-sm">
           <thead>
             <tr className="border-b border-border">
-              <th className="p-3 text-start">{t("resource")}</th>
+              <th className="p-3 text-start">{t("file")}</th>
+              <th className="p-3 text-start">{t("property")}</th>
+              <th className="p-3 text-start">{t("type")}</th>
+              <th className="p-3 text-start">{t("size")}</th>
               <th className="p-3 text-start">{t("createdAt")}</th>
-              <th className="p-3 text-start">{t("expiresAt")}</th>
-              <th className="p-3 text-start">{t("status")}</th>
               <th className="p-3 text-end">{t("action")}</th>
             </tr>
           </thead>
           <tbody>
-            {result.rows.map((link) => {
-              const isExpired = link.expiresAt <= new Date()
-              const status = link.revokedAt
-                ? t("revoked")
-                : isExpired
-                  ? t("expired")
-                  : t("active")
-              return (
-                <tr
-                  key={link.id}
-                  className="border-b border-border last:border-0"
-                >
-                  <td className="p-3">
-                    <div>{link.propertyTitle ?? link.resourceType}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {link.resourceType} · {link.resourceId}
-                    </div>
-                  </td>
-                  <td className="p-3 whitespace-nowrap">
-                    {new Intl.DateTimeFormat(locale, {
-                      dateStyle: "medium",
-                    }).format(link.createdAt)}
-                  </td>
-                  <td className="p-3 whitespace-nowrap">
-                    {new Intl.DateTimeFormat(locale, {
-                      dateStyle: "medium",
-                    }).format(link.expiresAt)}
-                  </td>
-                  <td className="p-3">{status}</td>
-                  <td className="p-3">
-                    {!link.revokedAt && !isExpired && (
-                      <RecordActionButton
-                        id={link.id}
-                        label={t("revoke")}
-                        action={revokeManagedShortLinkAction}
-                        destructive
-                        confirmMessage={t("confirmRevokeLink")}
-                      />
-                    )}
-                  </td>
-                </tr>
-              )
-            })}
-            {result.rows.length === 0 && (
+            {media.map((item) => (
+              <tr
+                key={item.id}
+                className="border-b border-border last:border-0"
+              >
+                <td className="max-w-64 truncate p-3">
+                  {item.readUrl ? (
+                    <a
+                      href={item.readUrl}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="underline underline-offset-4"
+                    >
+                      {item.originalFilename ?? item.id}
+                    </a>
+                  ) : (
+                    (item.originalFilename ?? item.id)
+                  )}
+                  {item.isPrimary && (
+                    <span className="ms-2 text-xs text-muted-foreground">
+                      {t("primary")}
+                    </span>
+                  )}
+                </td>
+                <td className="p-3">{item.propertyTitle}</td>
+                <td className="p-3">{item.type}</td>
+                <td className="p-3 whitespace-nowrap">
+                  {item.sizeBytes
+                    ? `${(item.sizeBytes / (1024 * 1024)).toFixed(1)} MB`
+                    : "—"}
+                </td>
+                <td className="p-3 whitespace-nowrap">
+                  {new Intl.DateTimeFormat(locale, {
+                    dateStyle: "medium",
+                  }).format(item.createdAt)}
+                </td>
+                <td className="p-3">
+                  <RecordActionButton
+                    id={item.id}
+                    label={t("delete")}
+                    action={deleteManagedMediaAction}
+                    destructive
+                    confirmMessage={t("confirmDeleteMedia")}
+                  />
+                </td>
+              </tr>
+            ))}
+            {media.length === 0 && (
               <tr>
                 <td
-                  colSpan={5}
+                  colSpan={6}
                   className="p-8 text-center text-muted-foreground"
                 >
                   {t("noResults")}
@@ -156,7 +170,7 @@ export default async function ShareLinksPage({
           {page > 1 && (
             <a
               className="underline"
-              href={`/${locale}/dashboard/share-links?q=${encodeURIComponent(query)}&page=${page - 1}`}
+              href={`/${locale}/dashboard/settings/media?q=${encodeURIComponent(query)}&page=${page - 1}`}
             >
               {t("previous")}
             </a>
@@ -167,7 +181,7 @@ export default async function ShareLinksPage({
           {page < totalPages && (
             <a
               className="underline"
-              href={`/${locale}/dashboard/share-links?q=${encodeURIComponent(query)}&page=${page + 1}`}
+              href={`/${locale}/dashboard/settings/media?q=${encodeURIComponent(query)}&page=${page + 1}`}
             >
               {t("next")}
             </a>

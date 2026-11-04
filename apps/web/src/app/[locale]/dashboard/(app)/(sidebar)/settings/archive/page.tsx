@@ -88,7 +88,7 @@ export default async function ArchivePage({
         </p>
       </header>
       <form
-        action={`/${locale}/dashboard/archive`}
+        action={`/${locale}/dashboard/settings/archive`}
         method="get"
         className="flex gap-2"
       >
@@ -216,7 +216,7 @@ export default async function ArchivePage({
       <div className="flex items-center justify-end gap-3 text-sm text-muted-foreground">
         {page > 1 && (
           <Link
-            href={`/${locale}/dashboard/archive?q=${encodeURIComponent(query)}&page=${page - 1}`}
+            href={`/${locale}/dashboard/settings/archive?q=${encodeURIComponent(query)}&page=${page - 1}`}
             className="underline underline-offset-4"
           >
             {t("previous")}
@@ -227,7 +227,7 @@ export default async function ArchivePage({
         </span>
         {page < totalPages && (
           <Link
-            href={`/${locale}/dashboard/archive?q=${encodeURIComponent(query)}&page=${page + 1}`}
+            href={`/${locale}/dashboard/settings/archive?q=${encodeURIComponent(query)}&page=${page + 1}`}
             className="underline underline-offset-4"
           >
             {t("next")}

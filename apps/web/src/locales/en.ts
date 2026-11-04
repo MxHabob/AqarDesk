@@ -28,6 +28,7 @@ export default {
       "Sign in with the email address that received this invitation.",
   },
   operationsManagement: {
+    invitationsTitle: "User invitations",
     auditTitle: "Audit log",
     auditDescription: "Review changes and operations performed in the system.",
     searchAudit: "Search the audit log",

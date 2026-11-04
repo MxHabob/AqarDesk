@@ -20,7 +20,7 @@ export function SecondaryMenu({ items }: Props) {
 
   return (
     <nav className="py-4">
-      <ul className="flex gap-6 text-sm overflow-auto scrollbar-hide">
+      <ul className="flex flex-wrap gap-x-6 gap-y-4 text-sm">
         {items.map((item) => {
           const href = `/${locale}${item.path}`
 

@@ -32,7 +32,7 @@ export async function restoreArchivedPropertyAction(idInput: string) {
   }
   const restored = await restoreProperty(id, actor)
   if (!restored) throw new Error("The property could not be restored.")
-  revalidatePath("/[locale]/dashboard/archive", "page")
+  revalidatePath("/[locale]/dashboard/settings/archive", "page")
   revalidatePath("/[locale]/dashboard/properties", "page")
 }
 
@@ -44,7 +44,7 @@ export async function restoreArchivedOwnerAction(idInput: string) {
   if (!owner?.archivedAt) throw new Error("This owner is not archived.")
   const restored = await restoreOwner(id, actor)
   if (!restored) throw new Error("The owner could not be restored.")
-  revalidatePath("/[locale]/dashboard/archive", "page")
+  revalidatePath("/[locale]/dashboard/settings/archive", "page")
   revalidatePath("/[locale]/dashboard/owners", "page")
 }
 
@@ -64,12 +64,12 @@ export async function deleteManagedMediaAction(idInput: string) {
     await deleteStorageObject(media.objectKey)
   } catch (error) {
     console.error("Failed to remove a managed listing media object.", error)
-    revalidatePath("/[locale]/dashboard/media", "page")
+    revalidatePath("/[locale]/dashboard/settings/media", "page")
     throw new Error(
       "The media record was removed, but its storage object could not be deleted."
     )
   }
-  revalidatePath("/[locale]/dashboard/media", "page")
+  revalidatePath("/[locale]/dashboard/settings/media", "page")
 }
 
 export async function revokeManagedShortLinkAction(idInput: string) {
@@ -78,5 +78,5 @@ export async function revokeManagedShortLinkAction(idInput: string) {
   const id = z.uuid().parse(idInput)
   const revoked = await revokeShortLink(id, actor)
   if (!revoked) throw new Error("This link has already been revoked.")
-  revalidatePath("/[locale]/dashboard/share-links", "page")
+  revalidatePath("/[locale]/dashboard/settings/share-links", "page")
 }

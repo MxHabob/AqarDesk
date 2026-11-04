@@ -27,6 +27,7 @@ export default {
     wrongAccount: "سجّل الدخول بالبريد الإلكتروني الذي استلم الدعوة.",
   },
   operationsManagement: {
+    invitationsTitle: "دعوات المستخدمين",
     auditTitle: "سجل التدقيق",
     auditDescription: "مراجعة التغييرات والعمليات المنفذة على النظام.",
     searchAudit: "ابحث في السجل",

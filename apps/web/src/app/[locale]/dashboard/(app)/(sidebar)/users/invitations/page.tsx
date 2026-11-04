@@ -4,6 +4,7 @@ import type { Metadata } from "next"
 import { headers } from "next/headers"
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { UserManagementNavigation } from "@/components/management-navigation"
 import { UserInvitations } from "@/components/tables/users/invitations"
 import { hasPermission } from "@/lib/auth/permissions"
 import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
@@ -51,12 +52,7 @@ export default async function UserInvitationsPage({
   ])
   return (
     <div className="space-y-6 py-6">
-      <Link
-        href={`/${locale}/dashboard/users`}
-        className="text-sm text-muted-foreground underline underline-offset-4"
-      >
-        {t("usersTitle")}
-      </Link>
+      <UserManagementNavigation />
       <UserInvitations
         locale={locale}
         roles={roles.map(({ id, key, name }) => ({ id, key, name }))}

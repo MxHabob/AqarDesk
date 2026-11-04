@@ -1,10 +1,10 @@
 "use client"
 
+import { NuqsAdapter } from "nuqs/adapters/next/app"
 import type { ReactNode } from "react"
 import { ThemeProvider } from "@/components/theme-provider"
-import type { AppLocale } from "@/locales/config"
 import { I18nProviderClient } from "@/locales/client"
-import { NuqsAdapter } from "nuqs/adapters/next/app"
+import type { AppLocale } from "@/locales/config"
 import { QueryProvider } from "@/queries/query-provider"
 
 export function Providers({
@@ -22,6 +22,7 @@ export function Providers({
             attribute="class"
             defaultTheme="system"
             enableSystem
+            enableColorScheme={false}
             disableTransitionOnChange
           >
             {children}

@@ -225,10 +225,22 @@ export function MainMenu({ onSelect, isExpanded = false }: Props) {
         { path: "/settings", name: t("navigation.general") },
         { path: "/settings/members", name: t("navigation.members") },
         { path: "/settings/roles", name: t("navigation.permissions") },
-        { path: "/audit", name: t("operationsManagement.auditTitle") },
-        { path: "/archive", name: t("operationsManagement.archiveTitle") },
-        { path: "/media", name: t("operationsManagement.mediaTitle") },
-        { path: "/share-links", name: t("operationsManagement.linksTitle") },
+        {
+          path: "/settings/audit",
+          name: t("operationsManagement.auditTitle"),
+        },
+        {
+          path: "/settings/archive",
+          name: t("operationsManagement.archiveTitle"),
+        },
+        {
+          path: "/settings/media",
+          name: t("operationsManagement.mediaTitle"),
+        },
+        {
+          path: "/settings/share-links",
+          name: t("operationsManagement.linksTitle"),
+        },
       ],
     },
   ]

@@ -1,4 +1,4 @@
-import { and, count, desc, eq, gt, ilike, isNull, or } from "drizzle-orm"
+import { and, count, desc, eq, gt, ilike, isNull, or, sql } from "drizzle-orm"
 import { getDatabase, schema } from "../index"
 import { writeAuditLog } from "../utils/audit-log"
 import { withTransaction } from "../utils/database"
@@ -153,17 +153,15 @@ export async function listAllShortLinks(
         ilike(schema.properties.title, `%${escapeLikePattern(query)}%`)
       )
     : undefined
+  const listingJoinCondition = and(
+    eq(schema.shortLinks.resourceType, "listing"),
+    sql`${schema.shortLinks.resourceId} = ${schema.listings.id}::text`
+  )
   const [totalRows, rows] = await Promise.all([
     database
       .select({ total: count() })
       .from(schema.shortLinks)
-      .leftJoin(
-        schema.listings,
-        and(
-          eq(schema.shortLinks.resourceType, "listing"),
-          eq(schema.shortLinks.resourceId, schema.listings.id)
-        )
-      )
+      .leftJoin(schema.listings, listingJoinCondition)
       .leftJoin(
         schema.properties,
         eq(schema.listings.propertyId, schema.properties.id)
@@ -181,13 +179,7 @@ export async function listAllShortLinks(
         propertyTitle: schema.properties.title,
       })
       .from(schema.shortLinks)
-      .leftJoin(
-        schema.listings,
-        and(
-          eq(schema.shortLinks.resourceType, "listing"),
-          eq(schema.shortLinks.resourceId, schema.listings.id)
-        )
-      )
+      .leftJoin(schema.listings, listingJoinCondition)
       .leftJoin(
         schema.properties,
         eq(schema.listings.propertyId, schema.properties.id)

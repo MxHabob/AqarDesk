@@ -8,6 +8,7 @@ import type { Metadata } from "next"
 import { headers } from "next/headers"
 import Link from "next/link"
 import { redirect } from "next/navigation"
+import { UserManagementNavigation } from "@/components/management-navigation"
 import { UsersTable } from "@/components/tables/users"
 import { hasPermission } from "@/lib/auth/permissions"
 import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
@@ -71,21 +72,24 @@ export default async function UsersPage({
   }
 
   return (
-    <UsersTable
-      locale={locale}
-      query={query}
-      users={usersPage.rows.map((user) => ({
-        ...user,
-        createdAt: user.createdAt.toISOString(),
-        updatedAt: user.updatedAt.toISOString(),
-        roleIds: roleIdsByUser.get(user.id) ?? [],
-      }))}
-      roles={roles.map(({ id, key, name }) => ({ id, key, name }))}
-      currentUserId={session.user.id}
-      page={safePage}
-      totalPages={totalPages}
-      totalUsers={usersPage.total}
-      initialSettings={await getInitialTableSettings("users")}
-    />
+    <div className="flex h-full min-h-0 flex-col">
+      <UserManagementNavigation />
+      <UsersTable
+        locale={locale}
+        query={query}
+        users={usersPage.rows.map((user) => ({
+          ...user,
+          createdAt: user.createdAt.toISOString(),
+          updatedAt: user.updatedAt.toISOString(),
+          roleIds: roleIdsByUser.get(user.id) ?? [],
+        }))}
+        roles={roles.map(({ id, key, name }) => ({ id, key, name }))}
+        currentUserId={session.user.id}
+        page={safePage}
+        totalPages={totalPages}
+        totalUsers={usersPage.total}
+        initialSettings={await getInitialTableSettings("users")}
+      />
+    </div>
   )
 }
