@@ -3,6 +3,7 @@ import {
   storageProvider,
   uploadStorageObject,
 } from "@aqardesk/storage/server"
+import { sql } from "drizzle-orm"
 import { closeDatabase, getDatabase } from "./index"
 import * as schema from "./schema"
 import { permissions, rolePermissions, roles } from "./schema"
@@ -13,118 +14,126 @@ const testProperties = [
   {
     id: "00000000-0000-4000-8000-000000000101",
     type: "building",
-    title: "عمارة سكنية للاختبار - حي الياسمين",
-    description: "عرض تجريبي لعمارة سكنية.",
-    city: "الرياض",
-    district: "الياسمين",
-    neighborhood: "شمال الرياض",
-    primaryStreet: "طريق أنس بن مالك",
-    secondaryStreet: "شارع فرعي",
+    title: "عمارة سكنية حديثة في حدة",
+    description: "عمارة سكنية واسعة في حي هادئ ومخدوم في صنعاء.",
+    countryCode: "YE",
+    city: "صنعاء",
+    district: "حدة",
+    neighborhood: "حدة",
+    primaryStreet: "شارع حدة",
+    secondaryStreet: "جوار جولة المصباحي",
     lotAreaM2: "600",
     frontageM: "20",
     depthM: "30",
     buildingAreaM2: "1450",
-    latitude: "24.850000",
-    longitude: "46.650000",
+    latitude: "15.305000",
+    longitude: "44.191000",
   },
   {
     id: "00000000-0000-4000-8000-000000000102",
     type: "land",
-    title: "أرض سكنية للاختبار - حي النرجس",
-    description: "أرض تجريبية مناسبة للسكن.",
-    city: "الرياض",
-    district: "النرجس",
-    neighborhood: "شمال الرياض",
-    primaryStreet: "شارع عثمان بن عفان",
-    secondaryStreet: "شارع 20",
+    title: "أرض سكنية في بيت بوس",
+    description: "أرض مناسبة للبناء في منطقة بيت بوس جنوب صنعاء.",
+    countryCode: "YE",
+    city: "صنعاء",
+    district: "بيت بوس",
+    neighborhood: "بيت بوس",
+    primaryStreet: "شارع بيت بوس الرئيسي",
+    secondaryStreet: "قرب جولة بيت بوس",
     lotAreaM2: "750",
     frontageM: "25",
     depthM: "30",
-    latitude: "24.900000",
-    longitude: "46.630000",
+    latitude: "15.286000",
+    longitude: "44.201000",
   },
   {
     id: "00000000-0000-4000-8000-000000000103",
     type: "house_villa",
-    title: "فيلا للاختبار - حي الملقا",
-    description: "فيلا تجريبية مع حوش.",
-    city: "الرياض",
-    district: "الملقا",
-    neighborhood: "شمال الرياض",
-    primaryStreet: "شارع الخير",
+    title: "فيلا عائلية في المنصورة",
+    description: "فيلا عائلية بتصميم عملي وحوش واسع في مدينة عدن.",
+    countryCode: "YE",
+    city: "عدن",
+    district: "المنصورة",
+    neighborhood: "المنصورة",
+    primaryStreet: "شارع التسعين",
     lotAreaM2: "420",
     frontageM: "14",
     depthM: "30",
     buildingAreaM2: "510",
-    latitude: "24.820000",
-    longitude: "46.610000",
+    latitude: "12.879000",
+    longitude: "44.998000",
   },
   {
     id: "00000000-0000-4000-8000-000000000104",
     type: "investment",
-    title: "مبنى استثماري للاختبار - حي العليا",
-    description: "عرض تجريبي لعقار استثماري.",
-    city: "الرياض",
-    district: "العليا",
-    neighborhood: "وسط الرياض",
-    primaryStreet: "طريق الملك فهد",
+    title: "مبنى استثماري في شارع جمال",
+    description: "مبنى متعدد الاستخدامات في موقع حيوي وسط مدينة تعز.",
+    countryCode: "YE",
+    city: "تعز",
+    district: "القاهرة",
+    neighborhood: "شارع جمال",
+    primaryStreet: "شارع جمال",
     lotAreaM2: "900",
     buildingAreaM2: "2200",
-    latitude: "24.700000",
-    longitude: "46.680000",
+    latitude: "13.579000",
+    longitude: "44.020000",
   },
   {
     id: "00000000-0000-4000-8000-000000000105",
     type: "commercial",
-    title: "محل تجاري للاختبار - حي الروضة",
-    description: "محل تجريبي على شارع تجاري.",
-    city: "الرياض",
-    district: "الروضة",
-    neighborhood: "شرق الرياض",
-    primaryStreet: "شارع خالد بن الوليد",
+    title: "محل تجاري في شارع تعز",
+    description: "محل مناسب للأنشطة التجارية في منطقة حيوية بمدينة إب.",
+    countryCode: "YE",
+    city: "إب",
+    district: "الظهار",
+    neighborhood: "شارع تعز",
+    primaryStreet: "شارع تعز",
     lotAreaM2: "120",
-    latitude: "24.750000",
-    longitude: "46.750000",
+    latitude: "13.966000",
+    longitude: "44.183000",
   },
   {
     id: "00000000-0000-4000-8000-000000000106",
     type: "warehouse",
-    title: "مستودع للاختبار - المدينة الصناعية",
-    description: "مستودع تجريبي للإيجار.",
-    city: "الرياض",
-    district: "المدينة الصناعية",
-    neighborhood: "جنوب الرياض",
-    primaryStreet: "شارع المصانع",
+    title: "مستودع للإيجار في المنطقة الصناعية",
+    description: "مستودع واسع بمدخل مناسب للتحميل في مدينة الحديدة.",
+    countryCode: "YE",
+    city: "الحديدة",
+    district: "المنطقة الصناعية",
+    neighborhood: "المنطقة الصناعية",
+    primaryStreet: "شارع الميناء",
     lotAreaM2: "1000",
     buildingAreaM2: "800",
-    latitude: "24.580000",
-    longitude: "46.820000",
+    latitude: "14.797000",
+    longitude: "42.954000",
   },
   {
     id: "00000000-0000-4000-8000-000000000107",
     type: "yard",
-    title: "أرض مسورة للاختبار - حي السلي",
-    description: "أرض تجريبية مسورة ومناسبة للتخزين.",
-    city: "الرياض",
-    district: "السلي",
-    neighborhood: "شرق الرياض",
-    primaryStreet: "شارع هارون الرشيد",
+    title: "أرض مسورة في فوة",
+    description: "أرض مسورة مناسبة للتخزين أو الاستخدام التجاري في المكلا.",
+    countryCode: "YE",
+    city: "المكلا",
+    district: "فوة",
+    neighborhood: "فوة",
+    primaryStreet: "شارع فوة الرئيسي",
     lotAreaM2: "1500",
-    latitude: "24.650000",
-    longitude: "46.820000",
+    latitude: "14.558000",
+    longitude: "49.130000",
   },
   {
     id: "00000000-0000-4000-8000-000000000108",
     type: "apartment",
-    title: "شقة للاختبار - حي قرطبة",
-    description: "شقة تجريبية مناسبة للعائلة.",
-    city: "الرياض",
-    district: "قرطبة",
-    neighborhood: "شرق الرياض",
-    primaryStreet: "شارع سعيد بن زيد",
+    title: "شقة عائلية في السحيل",
+    description: "شقة عائلية في حي السحيل بمدينة سيئون.",
+    countryCode: "YE",
+    city: "سيئون",
+    district: "السحيل",
+    neighborhood: "السحيل",
+    primaryStreet: "شارع السحيل",
     lotAreaM2: "160",
-    latitude: "24.810000",
-    longitude: "46.730000",
+    latitude: "15.957000",
+    longitude: "48.787000",
   },
 ] as const
 
@@ -133,64 +142,64 @@ const testListings = [
     id: "00000000-0000-4000-8000-000000000201",
     propertyId: testProperties[0].id,
     type: "sale",
-    salePrice: "2800000",
-    expectedMonthlyIncome: "24000",
+    salePrice: "85000000",
+    expectedMonthlyIncome: "650000",
   },
   {
     id: "00000000-0000-4000-8000-000000000202",
     propertyId: testProperties[1].id,
     type: "sale",
-    salePrice: "1200000",
+    salePrice: "18000000",
   },
   {
     id: "00000000-0000-4000-8000-000000000203",
     propertyId: testProperties[2].id,
     type: "sale",
-    salePrice: "1950000",
+    salePrice: "42000000",
   },
   {
     id: "00000000-0000-4000-8000-000000000204",
     propertyId: testProperties[3].id,
     type: "rent",
-    monthlyRent: "45000",
+    monthlyRent: "350000",
     keyMoney: "0",
-    advanceAmount: "45000",
+    advanceAmount: "350000",
     leaseDurationMonths: 12,
   },
   {
     id: "00000000-0000-4000-8000-000000000205",
     propertyId: testProperties[4].id,
     type: "rent",
-    monthlyRent: "8500",
-    keyMoney: "25000",
-    advanceAmount: "8500",
+    monthlyRent: "85000",
+    keyMoney: "250000",
+    advanceAmount: "85000",
     leaseDurationMonths: 12,
   },
   {
     id: "00000000-0000-4000-8000-000000000206",
     propertyId: testProperties[5].id,
     type: "rent",
-    monthlyRent: "18000",
+    monthlyRent: "180000",
     keyMoney: "0",
-    advanceAmount: "18000",
+    advanceAmount: "180000",
     leaseDurationMonths: 12,
   },
   {
     id: "00000000-0000-4000-8000-000000000207",
     propertyId: testProperties[6].id,
     type: "rent",
-    monthlyRent: "7000",
+    monthlyRent: "70000",
     keyMoney: "0",
-    advanceAmount: "7000",
+    advanceAmount: "70000",
     leaseDurationMonths: 12,
   },
   {
     id: "00000000-0000-4000-8000-000000000208",
     propertyId: testProperties[7].id,
     type: "rent",
-    monthlyRent: "4200",
+    monthlyRent: "45000",
     keyMoney: "0",
-    advanceAmount: "4200",
+    advanceAmount: "45000",
     leaseDurationMonths: 12,
   },
 ] as const
@@ -198,43 +207,75 @@ const testListings = [
 const testListingPhotos = [
   {
     listingId: testListings[0].id,
-    photoId: "photo-1486406146926-c627a92ad1ab",
-    altText: "واجهة مبنى سكني حديث",
+    photos: [
+      "photo-1486406146926-c627a92ad1ab",
+      "photo-1600607687920-4e2a09cf159d",
+      "photo-1600566753086-00f18fb6b3ea",
+    ],
+    altText: "صور عمارة سكنية حديثة",
   },
   {
     listingId: testListings[1].id,
-    photoId: "photo-1509316785289-025f5b846b35",
-    altText: "أرض طبيعية مفتوحة",
+    photos: [
+      "photo-1509316785289-025f5b846b35",
+      "photo-1500382017468-9049fed747ef",
+      "photo-1500530855697-b586d89ba3ee",
+    ],
+    altText: "صور أرض سكنية",
   },
   {
     listingId: testListings[2].id,
-    photoId: "photo-1600585154340-be6161a56a0c",
-    altText: "فيلا عصرية بحديقة",
+    photos: [
+      "photo-1600585154340-be6161a56a0c",
+      "photo-1600585154526-990dced4db0d",
+      "photo-1600047509807-ba8f99d2cdde",
+    ],
+    altText: "صور فيلا عصرية",
   },
   {
     listingId: testListings[3].id,
-    photoId: "photo-1600607687939-ce8a6c25118c",
-    altText: "مساحة داخلية بتصميم معاصر",
+    photos: [
+      "photo-1600607687939-ce8a6c25118c",
+      "photo-1600607687920-4e2a09cf159d",
+      "photo-1600566753190-17f0baa2a6c3",
+    ],
+    altText: "صور مبنى استثماري",
   },
   {
     listingId: testListings[4].id,
-    photoId: "photo-1517248135467-4c7edcad34c4",
-    altText: "مساحة تجارية داخلية",
+    photos: [
+      "photo-1517248135467-4c7edcad34c4",
+      "photo-1555529669-e69e7aa0ba9a",
+      "photo-1497366754035-f200968a6e72",
+    ],
+    altText: "صور محل تجاري",
   },
   {
     listingId: testListings[5].id,
-    photoId: "photo-1586528116311-ad8dd3c8310d",
-    altText: "مستودع واسع ومنظم",
+    photos: [
+      "photo-1586528116311-ad8dd3c8310d",
+      "photo-1586864387967-d02ef85d93e8",
+      "photo-1565610222536-ef125c59da2e",
+    ],
+    altText: "صور مستودع واسع",
   },
   {
     listingId: testListings[6].id,
-    photoId: "photo-1504307651254-35680f356dfd",
-    altText: "مساحة خارجية مفتوحة",
+    photos: [
+      "photo-1504307651254-35680f356dfd",
+      "photo-1511818966892-d7d671e672a2",
+      "photo-1500534623283-312aade485b7",
+    ],
+    altText: "صور أرض مسورة",
   },
   {
     listingId: testListings[7].id,
-    photoId: "photo-1600210492486-724fe5c67fb0",
-    altText: "شقة عصرية بتصميم داخلي أنيق",
+    photos: [
+      "photo-1600210492486-724fe5c67fb0",
+      "photo-1600607687939-ce8a6c25118c",
+      "photo-1600566753086-00f18fb6b3ea",
+    ],
+    altText: "صور شقة عصرية",
   },
 ] as const
 
@@ -244,63 +285,68 @@ async function seedListingPhotos() {
   const media: (typeof schema.listingMedia.$inferInsert)[] = []
 
   for (const photo of testListingPhotos) {
-    const url = new URL(
-      `${photo.photoId}?auto=format&fit=crop&w=1600&q=82`,
-      "https://images.unsplash.com/"
-    )
-    const response = await fetch(url, {
-      headers: { Accept: "image/jpeg" },
-      signal: AbortSignal.timeout(15_000),
-    })
-
-    if (!response.ok) {
-      throw new Error(
-        `Unable to download seed photo ${photo.photoId}: HTTP ${response.status}.`
+    for (const [index, photoId] of photo.photos.entries()) {
+      const url = new URL(
+        `${photoId}?auto=format&fit=crop&w=1600&q=82`,
+        "https://images.unsplash.com/"
       )
+      const response = await fetch(url, {
+        headers: { Accept: "image/jpeg" },
+        signal: AbortSignal.timeout(15_000),
+      })
+
+      if (!response.ok) {
+        throw new Error(
+          `Unable to download seed photo ${photoId}: HTTP ${response.status}.`
+        )
+      }
+
+      const contentType = response.headers
+        .get("content-type")
+        ?.split(";")[0]
+        ?.trim()
+        .toLowerCase()
+      if (contentType !== "image/jpeg") {
+        throw new Error(
+          `Seed photo ${photoId} returned an unsupported content type.`
+        )
+      }
+
+      const contentLength = Number(response.headers.get("content-length"))
+      if (contentLength > maximumSeedPhotoBytes) {
+        throw new Error(`Seed photo ${photoId} exceeds the 10 MiB limit.`)
+      }
+
+      const body = new Uint8Array(await response.arrayBuffer())
+      if (body.byteLength === 0 || body.byteLength > maximumSeedPhotoBytes) {
+        throw new Error(
+          `Seed photo ${photoId} has an invalid size or exceeds the 10 MiB limit.`
+        )
+      }
+
+      const objectKey =
+        index === 0
+          ? `listings/${photo.listingId}/photo/seed-cover-v1.jpg`
+          : `listings/${photo.listingId}/photo/seed-gallery-v1-${index}.jpg`
+      await uploadStorageObject({
+        objectKey,
+        contentType: "image/jpeg",
+        body,
+      })
+
+      media.push({
+        listingId: photo.listingId,
+        type: "photo",
+        storageProvider,
+        objectKey,
+        originalFilename: `unsplash-${photoId}.jpg`,
+        contentType: "image/jpeg",
+        sizeBytes: body.byteLength,
+        altText: photo.altText,
+        position: index,
+        isPrimary: index === 0,
+      })
     }
-
-    const contentType = response.headers
-      .get("content-type")
-      ?.split(";")[0]
-      ?.trim()
-      .toLowerCase()
-    if (contentType !== "image/jpeg") {
-      throw new Error(
-        `Seed photo ${photo.photoId} returned an unsupported content type.`
-      )
-    }
-
-    const contentLength = Number(response.headers.get("content-length"))
-    if (contentLength > maximumSeedPhotoBytes) {
-      throw new Error(`Seed photo ${photo.photoId} exceeds the 10 MiB limit.`)
-    }
-
-    const body = new Uint8Array(await response.arrayBuffer())
-    if (body.byteLength === 0 || body.byteLength > maximumSeedPhotoBytes) {
-      throw new Error(
-        `Seed photo ${photo.photoId} has an invalid size or exceeds the 10 MiB limit.`
-      )
-    }
-
-    const objectKey = `listings/${photo.listingId}/photo/seed-cover-v1.jpg`
-    await uploadStorageObject({
-      objectKey,
-      contentType: "image/jpeg",
-      body,
-    })
-
-    media.push({
-      listingId: photo.listingId,
-      type: "photo",
-      storageProvider,
-      objectKey,
-      originalFilename: `unsplash-${photo.photoId}.jpg`,
-      contentType: "image/jpeg",
-      sizeBytes: body.byteLength,
-      altText: photo.altText,
-      position: 0,
-      isPrimary: true,
-    })
   }
 
   return media
@@ -438,26 +484,50 @@ async function seed() {
 
     await tx
       .insert(schema.officeSettings)
-      .values({ id: "default", name: "عقار دِسك" })
-      .onConflictDoNothing()
+      .values({
+        id: "default",
+        name: "عقار دِسك",
+        countryCode: "YE",
+        defaultCurrency: "YER",
+        timezone: "Asia/Aden",
+        city: "صنعاء",
+      })
+      .onConflictDoUpdate({
+        target: schema.officeSettings.id,
+        set: {
+          countryCode: "YE",
+          defaultCurrency: "YER",
+          timezone: "Asia/Aden",
+          city: "صنعاء",
+        },
+      })
 
     await tx
       .insert(schema.owners)
       .values({
         id: testOwnerId,
         name: "مالك تجريبي",
-        notes: "سجل تجريبي أُنشئ بواسطة seed.",
+        notes: "مالك تجريبي لعقارات في اليمن.",
       })
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.owners.id,
+        set: {
+          name: "مالك تجريبي",
+          notes: "مالك تجريبي لعقارات في اليمن.",
+        },
+      })
 
     await tx
       .insert(schema.ownerPhones)
       .values({
         ownerId: testOwnerId,
-        phoneNumber: "0500000000",
-        label: "رقم تجريبي",
+        phoneNumber: "+967777000001",
+        label: "رقم يمني تجريبي",
       })
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: [schema.ownerPhones.ownerId, schema.ownerPhones.phoneNumber],
+        set: { label: "رقم يمني تجريبي" },
+      })
 
     await tx
       .insert(schema.properties)
@@ -467,7 +537,27 @@ async function seed() {
           createdById: null,
         }))
       )
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.properties.id,
+        set: {
+          type: sql`excluded.type`,
+          title: sql`excluded.title`,
+          countryCode: sql`excluded.country_code`,
+          description: sql`excluded.description`,
+          city: sql`excluded.city`,
+          district: sql`excluded.district`,
+          neighborhood: sql`excluded.neighborhood`,
+          primaryStreet: sql`excluded.primary_street`,
+          secondaryStreet: sql`excluded.secondary_street`,
+          lotAreaM2: sql`excluded.lot_area_m2`,
+          frontageM: sql`excluded.frontage_m`,
+          depthM: sql`excluded.depth_m`,
+          buildingAreaM2: sql`excluded.building_area_m2`,
+          latitude: sql`excluded.latitude`,
+          longitude: sql`excluded.longitude`,
+          updatedAt: new Date(),
+        },
+      })
 
     await tx
       .insert(schema.propertyOwners)
@@ -486,17 +576,29 @@ async function seed() {
         propertyId: testProperties[0].id,
         currentFloors: 4,
         constructionDesign: "تصميم حديث",
-        deedIssuer: "كاتب بصيرة تجريبي",
+        deedIssuer: "الهيئة العامة للأراضي والمساحة والتخطيط العمراني",
       })
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.buildingDetails.propertyId,
+        set: {
+          currentFloors: 4,
+          constructionDesign: "تصميم حديث",
+          deedIssuer: "الهيئة العامة للأراضي والمساحة والتخطيط العمراني",
+        },
+      })
 
     await tx
       .insert(schema.landDetails)
       .values({
         propertyId: testProperties[1].id,
-        deedIssuer: "كاتب بصيرة تجريبي",
+        deedIssuer: "الهيئة العامة للأراضي والمساحة والتخطيط العمراني",
       })
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.landDetails.propertyId,
+        set: {
+          deedIssuer: "الهيئة العامة للأراضي والمساحة والتخطيط العمراني",
+        },
+      })
 
     await tx
       .insert(schema.houseVillaDetails)
@@ -507,9 +609,19 @@ async function seed() {
         finish: "excellent",
         hasYard: true,
         hasReception: true,
-        deedIssuer: "كاتب بصيرة تجريبي",
+        deedIssuer: "الهيئة العامة للأراضي والمساحة والتخطيط العمراني",
       })
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.houseVillaDetails.propertyId,
+        set: {
+          currentFloors: 2,
+          constructionDesign: "تصميم حديث",
+          finish: "excellent",
+          hasYard: true,
+          hasReception: true,
+          deedIssuer: "الهيئة العامة للأراضي والمساحة والتخطيط العمراني",
+        },
+      })
 
     await tx
       .insert(schema.investmentDetails)
@@ -519,7 +631,14 @@ async function seed() {
         additionalDetails: "مبنى استثماري تجريبي.",
         finish: "good",
       })
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.investmentDetails.propertyId,
+        set: {
+          investmentType: "commercial_building",
+          additionalDetails: "مبنى استثماري تجريبي.",
+          finish: "good",
+        },
+      })
 
     await tx
       .insert(schema.commercialDetails)
@@ -531,7 +650,16 @@ async function seed() {
         hasStorage: true,
         storageDetails: "مخزن خلفي تجريبي.",
       })
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.commercialDetails.propertyId,
+        set: {
+          previousActivity: "مطعم",
+          openingCount: 2,
+          toiletCount: 1,
+          hasStorage: true,
+          storageDetails: "مخزن خلفي تجريبي.",
+        },
+      })
 
     await tx
       .insert(schema.warehouseDetails)
@@ -541,7 +669,14 @@ async function seed() {
         toiletCount: 2,
         additionalDetails: "بوابة تحميل تجريبية.",
       })
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.warehouseDetails.propertyId,
+        set: {
+          openingCount: 2,
+          toiletCount: 2,
+          additionalDetails: "بوابة تحميل تجريبية.",
+        },
+      })
 
     await tx
       .insert(schema.yardDetails)
@@ -553,7 +688,16 @@ async function seed() {
         toiletCount: 1,
         hasGuardRoom: true,
       })
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.yardDetails.propertyId,
+        set: {
+          requestedActivity: "تخزين",
+          hasFence: true,
+          hasRoof: false,
+          toiletCount: 1,
+          hasGuardRoom: true,
+        },
+      })
 
     await tx
       .insert(schema.apartmentDetails)
@@ -569,7 +713,20 @@ async function seed() {
         buildingType: "سكني",
         preferredTenant: "family",
       })
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.apartmentDetails.propertyId,
+        set: {
+          roomCount: 4,
+          toiletCount: 3,
+          kitchenDetails: "مطبخ مستقل",
+          hasSeparateMajlis: true,
+          entranceCount: 1,
+          floorNumber: "الثاني",
+          isFurnished: false,
+          buildingType: "سكني",
+          preferredTenant: "family",
+        },
+      })
 
     await tx
       .insert(schema.listings)
@@ -577,29 +734,60 @@ async function seed() {
         testListings.map((listing) => ({
           ...listing,
           status: "active" as const,
-          currencyCode: "SAR",
+          currencyCode: "YER",
           source: "office" as const,
           publishedAt: new Date("2026-01-01T00:00:00.000Z"),
         }))
       )
-      .onConflictDoNothing()
+      .onConflictDoUpdate({
+        target: schema.listings.id,
+        set: {
+          propertyId: sql`excluded.property_id`,
+          type: sql`excluded.type`,
+          status: sql`excluded.status`,
+          salePrice: sql`excluded.sale_price`,
+          monthlyRent: sql`excluded.monthly_rent`,
+          keyMoney: sql`excluded.key_money`,
+          advanceAmount: sql`excluded.advance_amount`,
+          expectedMonthlyIncome: sql`excluded.expected_monthly_income`,
+          currencyCode: "YER",
+          leaseDurationMonths: sql`excluded.lease_duration_months`,
+          source: "office",
+          publishedAt: sql`excluded.published_at`,
+          updatedAt: new Date(),
+        },
+      })
 
     await tx
       .insert(schema.listingMedia)
       .values(testMedia)
-      .onConflictDoNothing({
+      .onConflictDoUpdate({
         target: [
           schema.listingMedia.storageProvider,
           schema.listingMedia.objectKey,
         ],
+        set: {
+          listingId: sql`excluded.listing_id`,
+          type: sql`excluded.type`,
+          originalFilename: sql`excluded.original_filename`,
+          contentType: sql`excluded.content_type`,
+          sizeBytes: sql`excluded.size_bytes`,
+          altText: sql`excluded.alt_text`,
+          position: sql`excluded.position`,
+          isPrimary: sql`excluded.is_primary`,
+        },
       })
   })
 }
 
 try {
   await seed()
+  const photoCount = testListingPhotos.reduce(
+    (count, listing) => count + listing.photos.length,
+    0
+  )
   console.info(
-    `Seeded default roles, permissions, ${testListings.length} test listings, and ${testListingPhotos.length} listing photos.`
+    `Seeded default roles, permissions, ${testListings.length} test listings, and ${photoCount} listing photos.`
   )
 } finally {
   try {

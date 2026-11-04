@@ -19,14 +19,20 @@ type MediaRows = Awaited<ReturnType<typeof getListingMedia>>
 export function ListingMediaForm({
   listingId,
   readOnly = false,
+  onPendingChange,
 }: {
   listingId: string
   readOnly?: boolean
+  onPendingChange?: (pending: boolean) => void
 }) {
   const [media, setMedia] = useState<MediaRows>([])
   const [file, setFile] = useState<File | null>(null)
   const [error, setError] = useState<string>()
   const [isPending, startTransition] = useTransition()
+
+  useEffect(() => {
+    onPendingChange?.(isPending)
+  }, [isPending, onPendingChange])
 
   useEffect(() => {
     let active = true

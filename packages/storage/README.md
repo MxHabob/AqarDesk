@@ -13,6 +13,20 @@ Never store presigned URLs in the database; generate them when needed.
 For browser uploads, configure bucket CORS to allow `PUT` from the web
 application origin and the `Content-Type` request header.
 
+Public listing photos can optionally use Cloudflare image resizing without
+making the R2 bucket public. Set `NEXT_PUBLIC_IMAGE_CDN_URL` to the HTTPS
+origin of the Cloudflare-proxied application domain with image resizing
+enabled. The application serves a short-cache, public-only image redirect
+endpoint that validates each photo against an active listing before
+redirecting to a presigned R2 read URL. The CDN origin must serve the
+application's `/api/public/listing-images/*` route. Without this setting,
+public pages continue using short-lived presigned R2 URLs directly.
+
+Do not point this setting at an R2 public bucket domain or expose private
+listing media through the image loader. Only media of type `photo` on active
+listings is eligible for the public image endpoint; other media continues to
+use signed URLs.
+
 The package allows JPEG, PNG, WebP, AVIF, HEIC, PDF, MP4, and QuickTime
 uploads with size limits (20 MiB for images, 25 MiB for PDFs, and 250 MiB for
 videos). SVG is intentionally excluded. Uploads whose stored type or size

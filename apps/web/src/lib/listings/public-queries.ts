@@ -13,6 +13,24 @@ import type { PublicListingSearchParams } from "./public-search-loader"
 
 const countryCookieName = "Next-Country"
 
+async function getPublicPhotoUrl(
+  mediaId: string,
+  objectKey: string,
+  contentType: string | null
+) {
+  if (
+    process.env.NEXT_PUBLIC_IMAGE_CDN_URL &&
+    ["image/avif", "image/jpeg", "image/png", "image/webp"].includes(
+      contentType ?? ""
+    )
+  ) {
+    return `/api/public/listing-images/${mediaId}`
+  }
+
+  const { url } = await createReadUrl(objectKey)
+  return url
+}
+
 export const getSelectedPublicCountryCode = cache(async () => {
   const cookieStore = await cookies()
   const selectedCountry = cookieStore.get(countryCookieName)?.value
@@ -41,6 +59,7 @@ export async function getPublicListingCoverPhotos(listingIds: string[]) {
 
   const rows = await getDatabase()
     .select({
+      mediaId: schema.listingMedia.id,
       listingId: schema.listingMedia.listingId,
       objectKey: schema.listingMedia.objectKey,
       altText: schema.listingMedia.altText,
@@ -77,6 +96,7 @@ export async function getPublicListingCoverPhotos(listingIds: string[]) {
     string,
     {
       objectKey: string
+      mediaId: string
       altText: string | null
       contentType: string | null
     }
@@ -85,6 +105,7 @@ export async function getPublicListingCoverPhotos(listingIds: string[]) {
     if (!coverPhotos.has(row.listingId)) {
       coverPhotos.set(row.listingId, {
         objectKey: row.objectKey,
+        mediaId: row.mediaId,
         altText: row.altText,
         contentType: row.contentType,
       })
@@ -93,7 +114,11 @@ export async function getPublicListingCoverPhotos(listingIds: string[]) {
 
   const signedPhotos = await Promise.all(
     [...coverPhotos].map(async ([listingId, photo]) => {
-      const { url } = await createReadUrl(photo.objectKey)
+      const url = await getPublicPhotoUrl(
+        photo.mediaId,
+        photo.objectKey,
+        photo.contentType
+      )
       return [
         listingId,
         { url, altText: photo.altText, contentType: photo.contentType },
@@ -102,6 +127,64 @@ export async function getPublicListingCoverPhotos(listingIds: string[]) {
   )
 
   return Object.fromEntries(signedPhotos)
+}
+
+export async function getPublicListingPhotos(listingIds: string[]) {
+  if (listingIds.length === 0) return {}
+
+  const rows = await getDatabase()
+    .select({
+      listingId: schema.listingMedia.listingId,
+      mediaId: schema.listingMedia.id,
+      objectKey: schema.listingMedia.objectKey,
+      altText: schema.listingMedia.altText,
+      contentType: schema.listingMedia.contentType,
+      isPrimary: schema.listingMedia.isPrimary,
+      position: schema.listingMedia.position,
+    })
+    .from(schema.listingMedia)
+    .innerJoin(
+      schema.listings,
+      eq(schema.listingMedia.listingId, schema.listings.id)
+    )
+    .innerJoin(
+      schema.properties,
+      eq(schema.listings.propertyId, schema.properties.id)
+    )
+    .where(
+      and(
+        inArray(schema.listingMedia.listingId, listingIds),
+        eq(schema.listingMedia.type, "photo"),
+        eq(schema.listings.status, "active"),
+        isNull(schema.properties.archivedAt),
+        or(
+          isNull(schema.listings.expiresAt),
+          gt(schema.listings.expiresAt, new Date())
+        )
+      )
+    )
+    .orderBy(
+      asc(schema.listingMedia.listingId),
+      desc(schema.listingMedia.isPrimary),
+      asc(schema.listingMedia.position)
+    )
+
+  const signedPhotos = await Promise.all(
+    rows.map(
+      async ({ listingId, mediaId, objectKey, altText, contentType }) => {
+        const url = await getPublicPhotoUrl(mediaId, objectKey, contentType)
+        return { listingId, photo: { url, altText } }
+      }
+    )
+  )
+
+  return signedPhotos.reduce<
+    Record<string, Array<{ url: string; altText: string | null }>>
+  >((galleries, { listingId, photo }) => {
+    galleries[listingId] ??= []
+    galleries[listingId].push(photo)
+    return galleries
+  }, {})
 }
 
 export const getPublicHomepageData = cache(async () => {
@@ -160,7 +243,10 @@ export async function getPublicListingMedia(listingId: string) {
 
   return Promise.all(
     rows.map(async ({ objectKey, ...media }) => {
-      const { url } = await createReadUrl(objectKey)
+      const url =
+        media.type === "photo"
+          ? await getPublicPhotoUrl(media.id, objectKey, media.contentType)
+          : (await createReadUrl(objectKey)).url
       return { ...media, url }
     })
   )

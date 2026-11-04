@@ -1,6 +1,9 @@
-import { StartPage } from "@/components/marketing/startpage"
 import type { HomepageListing } from "@/components/marketing/sections/featured-listings-section"
-import { getPublicHomepageData } from "@/lib/listings/public-queries"
+import { StartPage } from "@/components/marketing/startpage"
+import {
+  getPublicHomepageData,
+  getPublicListingPhotos,
+} from "@/lib/listings/public-queries"
 import {
   createPageMetadata,
   getMarketingPageCopy,
@@ -10,9 +13,7 @@ import { getI18n, setStaticParamsLocale } from "@/locales/server"
 
 type Props = { params: Promise<{ locale: AppLocale }> }
 
-export async function generateMetadata({
-  params,
-}: Props) {
+export async function generateMetadata({ params }: Props) {
   const { locale } = await params
   const copy = getMarketingPageCopy("home", locale)
   return createPageMetadata({ ...copy, locale, path: "/" })
@@ -42,8 +43,12 @@ export default async function Page({ params }: Props) {
     ...listingsWithPhotos,
     ...results.rows.filter((listing) => !coverPhotos[listing.id]),
   ].slice(0, 3)
+  const listingPhotos = await getPublicListingPhotos(
+    featuredListings.map((listing) => listing.id)
+  )
   const listings: HomepageListing[] = featuredListings.map((listing) => {
     const coverPhoto = coverPhotos[listing.id]
+    const photos = listingPhotos[listing.id] ?? []
 
     return {
       ...listing,
@@ -51,6 +56,7 @@ export default async function Page({ params }: Props) {
       ...(coverPhoto && {
         coverPhoto: { url: coverPhoto.url, altText: coverPhoto.altText },
       }),
+      photos,
     }
   })
 

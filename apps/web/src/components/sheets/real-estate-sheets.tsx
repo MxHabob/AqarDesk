@@ -11,7 +11,7 @@ import {
 import { Skeleton } from "@aqardesk/ui/components/skeleton"
 import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { X } from "lucide-react"
-import { useState } from "react"
+import { useCallback, useState } from "react"
 import {
   getListingFormData,
   getOwnerFormData,
@@ -174,13 +174,22 @@ export function ListingSheet() {
     useRealEstateParams()
   const queryClient = useQueryClient()
   const [isSaving, setIsSaving] = useState(false)
+  const [isMediaPending, setIsMediaPending] = useState(false)
+  const [workflowListingId, setWorkflowListingId] = useState<string | null>(
+    null
+  )
+  const [workflowStep, setWorkflowStep] = useState<
+    "details" | "media" | "review"
+  >("details")
   const isOpen = Boolean(createListing || listingId)
+  const isCreateWorkflow = Boolean(createListing && !listingId)
+  const formListingId = listingId ?? workflowListingId
   const readOnly = listingMode === "details"
   const listingQuery = useQuery({
-    queryKey: ["real-estate-sheet", "listing", listingId],
+    queryKey: ["real-estate-sheet", "listing", formListingId],
     queryFn: () =>
-      listingId ? getListingFormData(listingId) : Promise.resolve(null),
-    enabled: isOpen && Boolean(listingId),
+      formListingId ? getListingFormData(formListingId) : Promise.resolve(null),
+    enabled: isOpen && Boolean(formListingId),
     staleTime: 30_000,
   })
   const propertiesQuery = useQuery({
@@ -192,21 +201,35 @@ export function ListingSheet() {
   const data = listingQuery.data
   const properties = propertiesQuery.data ?? []
   const error = listingQuery.error ?? propertiesQuery.error
-  const close = () =>
+  const close = useCallback(() => {
+    setWorkflowListingId(null)
+    setWorkflowStep("details")
+    setIsMediaPending(false)
     setParams({ createListing: null, listingId: null, listingMode: null })
+  }, [setParams])
   const isFormLoading =
     isOpen &&
-    ((Boolean(listingId) && listingQuery.isLoading) ||
+    ((Boolean(formListingId) && listingQuery.isLoading) ||
       propertiesQuery.isLoading)
 
-  const handleSaved = () => {
-    if (listingId) {
+  const handleSaved = useCallback(
+    (savedListingId: string) => {
+      if (isCreateWorkflow && !workflowListingId) {
+        setWorkflowListingId(savedListingId)
+        setWorkflowStep("media")
+        return
+      }
       void queryClient.invalidateQueries({
-        queryKey: ["real-estate-sheet", "listing", listingId],
+        queryKey: ["real-estate-sheet", "listing", savedListingId],
       })
-    }
-    close()
-  }
+      close()
+    },
+    [close, isCreateWorkflow, queryClient, workflowListingId]
+  )
+  const isMediaStep =
+    isCreateWorkflow && Boolean(workflowListingId) && workflowStep === "media"
+  const isReviewStep =
+    isCreateWorkflow && Boolean(workflowListingId) && workflowStep === "review"
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
@@ -218,11 +241,15 @@ export function ListingSheet() {
       >
         <SheetHeader className="mb-6 flex-row items-center justify-between">
           <SheetTitle className="text-xl font-normal">
-            {readOnly
-              ? "تفاصيل الإعلان"
-              : listingId
-                ? "تعديل الإعلان"
-                : "إنشاء إعلان"}
+            {isMediaStep
+              ? "إضافة صور وملفات الإعلان"
+              : isReviewStep
+                ? "مراجعة الإعلان ونشره"
+                : readOnly
+                  ? "تفاصيل الإعلان"
+                  : listingId
+                    ? "تعديل الإعلان"
+                    : "إنشاء إعلان"}
           </SheetTitle>
           <div className="flex items-center gap-2">
             {readOnly && data && (
@@ -246,28 +273,70 @@ export function ListingSheet() {
             <CloseButton onClose={close} />
           </div>
         </SheetHeader>
+        {isCreateWorkflow && (
+          <ol
+            aria-label="خطوات إنشاء الإعلان"
+            className="mb-5 grid grid-cols-3 gap-2 text-center text-xs"
+          >
+            {[
+              { step: "details", label: "البيانات" },
+              { step: "media", label: "الصور" },
+              { step: "review", label: "المراجعة والنشر" },
+            ].map(({ step, label }, index) => {
+              const isCurrent = workflowStep === step
+              const isComplete =
+                (workflowStep === "media" && index === 0) ||
+                (workflowStep === "review" && index < 2)
+              return (
+                <li
+                  key={step}
+                  aria-current={isCurrent ? "step" : undefined}
+                  className={`border-b-2 pb-2 ${
+                    isCurrent || isComplete
+                      ? "border-foreground font-medium text-foreground"
+                      : "border-border text-muted-foreground"
+                  }`}
+                >
+                  {index + 1}. {label}
+                </li>
+              )
+            })}
+          </ol>
+        )}
         {error ? (
           <p className="text-sm text-destructive" role="alert">
             {getLoadErrorMessage(error, "تعذر تحميل الإعلان.")}
           </p>
         ) : isFormLoading ? (
           <RealEstateFormSkeleton />
-        ) : listingId && !data ? (
+        ) : formListingId && !data ? (
           <p className="text-sm text-destructive" role="alert">
             تعذر العثور على الإعلان.
           </p>
+        ) : isMediaStep && workflowListingId ? (
+          <div className="scrollbar-hide min-h-0 flex-1 space-y-4 overflow-y-auto">
+            <p className="text-sm leading-6 text-muted-foreground">
+              ارفع صور العقار ومخططاته الآن، أو تابع وأضفها لاحقًا من تعديل
+              الإعلان.
+            </p>
+            <ListingMediaForm
+              listingId={workflowListingId}
+              onPendingChange={setIsMediaPending}
+            />
+          </div>
         ) : (
           <div className="scrollbar-hide min-h-0 flex-1 space-y-8 overflow-y-auto">
             <ListingForm
-              key={data?.listing.id ?? "new-listing"}
+              key={`${data?.listing.id ?? "new-listing"}-${workflowStep}`}
               data={data ?? undefined}
               properties={properties}
               readOnly={readOnly}
               onSaved={handleSaved}
               showSubmitButton={false}
               onPendingChange={setIsSaving}
+              createAsDraft={isCreateWorkflow && !workflowListingId}
             />
-            {data?.listing.id && (
+            {listingId && data?.listing.id && (
               <ListingMediaForm
                 listingId={data.listing.id}
                 readOnly={readOnly}
@@ -277,12 +346,42 @@ export function ListingSheet() {
         )}
         {!readOnly && !isFormLoading && !error && (
           <SheetFooter className="-mx-6 mt-4 border-t bg-[#fafaf9] px-6 pb-2 pt-4 dark:bg-[#0c0c0c]">
-            <RealEstateSubmitButton
-              label={listingId ? "حفظ الإعلان" : "إنشاء الإعلان"}
-              form="listing-form"
-              className="w-full"
-              pending={isSaving}
-            />
+            {isMediaStep ? (
+              <Button
+                type="button"
+                className="w-full"
+                disabled={isMediaPending}
+                onClick={() => setWorkflowStep("review")}
+              >
+                متابعة للمراجعة والنشر
+              </Button>
+            ) : (
+              <div className="flex w-full gap-2">
+                {isReviewStep && (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    onClick={() => setWorkflowStep("media")}
+                  >
+                    رجوع للصور
+                  </Button>
+                )}
+                <RealEstateSubmitButton
+                  label={
+                    isReviewStep
+                      ? "حفظ وإنهاء"
+                      : isCreateWorkflow
+                        ? "حفظ كمسودة ومتابعة للصور"
+                        : listingId
+                          ? "حفظ الإعلان"
+                          : "إنشاء الإعلان"
+                  }
+                  form="listing-form"
+                  className="w-full"
+                  pending={isSaving}
+                />
+              </div>
+            )}
           </SheetFooter>
         )}
       </SheetContent>

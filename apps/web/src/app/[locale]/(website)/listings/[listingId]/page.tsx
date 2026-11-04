@@ -5,17 +5,17 @@ import {
 } from "@aqardesk/database/queries"
 import { ArrowUpRight, MapPin, Ruler } from "lucide-react"
 import type { Metadata } from "next"
-import Image from "next/image"
 import Link from "next/link"
 import { notFound } from "next/navigation"
 import type { SearchParams } from "nuqs"
 import { z } from "zod"
 import { ListingCard } from "@/components/marketing/listing-card"
+import { ListingPhotoCarousel } from "@/components/marketing/listing-photo-carousel"
 import { ShareListingDialog } from "@/components/real-estate/share-listing-dialog"
 import {
   getPublicListingById,
-  getPublicListingCoverPhotos,
   getPublicListingMedia,
+  getPublicListingPhotos,
   getSimilarPublicListings,
 } from "@/lib/listings/public-queries"
 import {
@@ -127,8 +127,16 @@ export default async function ListingDetailsPage({
     getScopedI18n("publicListings"),
     getSimilarPublicListings(listing),
   ])
-  const similarCoverPhotos = await getPublicListingCoverPhotos(
+  const similarPhotos = await getPublicListingPhotos(
     similarListings.map((similarListing) => similarListing.id)
+  )
+  const listingPhotos = media
+    .filter(
+      (item) => item.contentType?.startsWith("image/") || item.type === "photo"
+    )
+    .map(({ url, altText }) => ({ url, altText }))
+  const otherMedia = media.filter(
+    (item) => !item.contentType?.startsWith("image/") && item.type !== "photo"
   )
   const contactUrl = getWhatsAppUrl(
     officeSettings.phone,
@@ -365,78 +373,41 @@ export default async function ListingDetailsPage({
           {media.length ? (
             <section aria-label={t("photosAndMedia")} className="space-y-4">
               <h2 className="text-lg font-medium">{t("photosAndMedia")}</h2>
-              <div className="space-y-3">
-                {media.slice(0, 1).map((item) => (
-                  <div
-                    key={item.id}
-                    className="overflow-hidden border border-border bg-muted"
-                  >
-                    {item.contentType?.startsWith("image/") ||
-                    item.type === "photo" ? (
-                      <div className="relative aspect-[16/9]">
-                        <Image
-                          src={item.url}
-                          alt={item.altText || listing.title}
-                          fill
-                          unoptimized
-                          sizes="(max-width: 1024px) 100vw, 900px"
-                          className="object-cover"
-                          priority
-                        />
-                      </div>
-                    ) : (
-                      <a
-                        href={item.url}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="flex aspect-[16/9] items-center justify-center p-6 text-center text-sm font-medium text-primary hover:underline"
-                      >
-                        {item.altText ||
-                          (item.type === "video"
-                            ? t("watchVideo")
-                            : t("openMedia"))}
-                        <ArrowUpRight aria-hidden className="ms-2 size-4" />
-                      </a>
-                    )}
-                  </div>
-                ))}
-                {media.length > 1 && (
-                  <div className="grid grid-cols-2 gap-3 sm:grid-cols-3">
-                    {media.slice(1).map((item) => (
-                      <div
-                        key={item.id}
-                        className="overflow-hidden border border-border bg-muted"
-                      >
-                        {item.contentType?.startsWith("image/") ||
-                        item.type === "photo" ? (
-                          <div className="relative aspect-[4/3]">
-                            <Image
-                              src={item.url}
-                              alt={item.altText || listing.title}
-                              fill
-                              unoptimized
-                              sizes="(max-width: 640px) 50vw, 300px"
-                              className="object-cover"
-                            />
-                          </div>
-                        ) : (
-                          <a
-                            href={item.url}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="flex aspect-[4/3] items-center justify-center p-3 text-center text-xs font-medium text-primary hover:underline"
-                          >
-                            {item.altText ||
-                              (item.type === "video"
-                                ? t("watchVideo")
-                                : t("openMedia"))}
-                          </a>
-                        )}
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              {listingPhotos.length > 0 && (
+                <ListingPhotoCarousel
+                  photos={listingPhotos}
+                  title={listing.title}
+                  noImageLabel={listingT("noImage")}
+                  zoomLabel={listingT("zoomImage")}
+                  zoomInLabel={listingT("zoomIn")}
+                  zoomOutLabel={listingT("zoomOut")}
+                  previousLabel={listingT("previousImage")}
+                  nextLabel={listingT("nextImage")}
+                  imagePositionLabel={listingT("imagePosition")}
+                  playSlideshowLabel={listingT("playSlideshow")}
+                  pauseSlideshowLabel={listingT("pauseSlideshow")}
+                  presentation="detail"
+                />
+              )}
+              {otherMedia.length > 0 && (
+                <div className="grid gap-3 sm:grid-cols-2">
+                  {otherMedia.map((item) => (
+                    <a
+                      key={item.id}
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="flex min-h-24 items-center justify-center border border-border bg-muted p-6 text-center text-sm font-medium text-primary hover:underline"
+                    >
+                      {item.altText ||
+                        (item.type === "video"
+                          ? t("watchVideo")
+                          : t("openMedia"))}
+                      <ArrowUpRight aria-hidden className="ms-2 size-4" />
+                    </a>
+                  ))}
+                </div>
+              )}
             </section>
           ) : (
             <div className="flex aspect-[16/9] items-center justify-center border border-dashed border-border bg-muted px-6 text-center text-sm text-muted-foreground">
@@ -564,7 +535,8 @@ export default async function ListingDetailsPage({
               <ListingCard
                 key={similarListing.id}
                 listing={similarListing}
-                coverPhoto={similarCoverPhotos[similarListing.id]}
+                coverPhoto={similarPhotos[similarListing.id]?.[0]}
+                photos={similarPhotos[similarListing.id]}
                 propertyTypeLabel={
                   propertyTypeLabels[similarListing.propertyType]
                 }
@@ -585,6 +557,14 @@ export default async function ListingDetailsPage({
                   buildingArea: listingT("buildingArea"),
                   squareMeters: listingT("squareMeters"),
                   close: listingT("close"),
+                  zoomImage: listingT("zoomImage"),
+                  zoomIn: listingT("zoomIn"),
+                  zoomOut: listingT("zoomOut"),
+                  previousImage: listingT("previousImage"),
+                  nextImage: listingT("nextImage"),
+                  imagePosition: listingT("imagePosition"),
+                  playSlideshow: listingT("playSlideshow"),
+                  pauseSlideshow: listingT("pauseSlideshow"),
                 }}
               />
             ))}

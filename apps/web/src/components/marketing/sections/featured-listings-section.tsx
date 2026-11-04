@@ -4,6 +4,7 @@ import type { PropertyType } from "@aqardesk/categories"
 import { ArrowUpLeft, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
 import { ListingCard } from "@/components/marketing/listing-card"
+import type { ListingPhoto } from "@/components/marketing/listing-photo-carousel"
 import { useCurrentLocale, useScopedI18n } from "@/locales/client"
 
 export type HomepageListing = {
@@ -20,6 +21,7 @@ export type HomepageListing = {
   lotAreaM2: string | null
   buildingAreaM2: string | null
   coverPhoto?: { url: string; altText: string | null }
+  photos?: ListingPhoto[]
 }
 
 export function FeaturedListingsSection({
@@ -47,6 +49,14 @@ export function FeaturedListingsSection({
     buildingArea: tListings("buildingArea"),
     squareMeters: tListings("squareMeters"),
     close: tListings("close"),
+    zoomImage: tListings("zoomImage"),
+    zoomIn: tListings("zoomIn"),
+    zoomOut: tListings("zoomOut"),
+    previousImage: tListings("previousImage"),
+    nextImage: tListings("nextImage"),
+    imagePosition: tListings("imagePosition"),
+    playSlideshow: tListings("playSlideshow"),
+    pauseSlideshow: tListings("pauseSlideshow"),
   }
 
   return (
@@ -82,6 +92,7 @@ export function FeaturedListingsSection({
             {listings.map((listing) => (
               <ListingCard
                 coverPhoto={listing.coverPhoto}
+                photos={listing.photos}
                 key={listing.id}
                 labels={labels}
                 listing={listing}

@@ -1,7 +1,7 @@
 "use client"
 
 import { useRouter } from "next/navigation"
-import { useActionState, useEffect, useState } from "react"
+import { useActionState, useEffect, useRef, useState } from "react"
 import type { getListingFormData } from "@/actions/real-estate"
 import { saveListingAction } from "@/actions/real-estate"
 import {
@@ -45,27 +45,31 @@ export function ListingForm({
   onSaved,
   showSubmitButton = true,
   onPendingChange,
+  createAsDraft = false,
 }: {
   data?: ListingData
   properties: PropertyOption[]
   readOnly?: boolean
-  onSaved?: () => void
+  onSaved?: (listingId: string) => void
   showSubmitButton?: boolean
   onPendingChange?: (pending: boolean) => void
+  createAsDraft?: boolean
 }) {
   const router = useRouter()
   const [state, formAction, isPending] = useActionState(saveListingAction, {})
   const [listingType, setListingType] = useState(data?.listing.type ?? "sale")
+  const handledSavedId = useRef<string | null>(null)
   const joined = data
   const propertyId = joined?.listing.propertyId ?? joined?.property.id
   const isEditing = Boolean(joined?.listing.id)
 
   useEffect(() => {
-    if (state.saved) {
+    if (state.saved && state.id && handledSavedId.current !== state.id) {
+      handledSavedId.current = state.id
       router.refresh()
-      onSaved?.()
+      onSaved?.(state.id)
     }
-  }, [onSaved, router, state.saved])
+  }, [onSaved, router, state.id, state.saved])
 
   useEffect(() => {
     onPendingChange?.(isPending)
@@ -85,6 +89,7 @@ export function ListingForm({
       {isEditing && (
         <input type="hidden" name="propertyId" value={propertyId ?? ""} />
       )}
+      {createAsDraft && <input type="hidden" name="status" value="draft" />}
       <div
         className={
           showSubmitButton
@@ -125,15 +130,17 @@ export function ListingForm({
             ]}
             required
           />
-          <RealEstateField
-            label="الحالة"
-            name="status"
-            type="select"
-            defaultValue={joined?.listing.status ?? "draft"}
-            disabled={readOnly}
-            options={listingStatusOptions[listingType]}
-            required
-          />
+          {!createAsDraft && (
+            <RealEstateField
+              label="الحالة"
+              name="status"
+              type="select"
+              defaultValue={joined?.listing.status ?? "draft"}
+              disabled={readOnly}
+              options={listingStatusOptions[listingType]}
+              required
+            />
+          )}
           <RealEstateField
             label={listingType === "sale" ? "سعر البيع" : "الإيجار الشهري"}
             name="price"

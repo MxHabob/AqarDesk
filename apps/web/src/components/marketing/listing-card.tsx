@@ -16,7 +16,12 @@ import {
 import { ArrowUpRight, Building2, MapPin, Ruler } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import {
+  type ListingPhoto,
+  ListingPhotoCarousel,
+} from "@/components/marketing/listing-photo-carousel"
 import { SaveListingButton } from "@/components/marketing/save-listing-button"
+import listingImageLoader from "@/lib/listings/image-loader"
 
 type Listing = {
   id: string
@@ -48,12 +53,21 @@ type ListingCardLabels = {
   buildingArea: string
   squareMeters: string
   close: string
+  zoomImage: string
+  zoomIn: string
+  zoomOut: string
+  previousImage: string
+  nextImage: string
+  imagePosition: string
+  playSlideshow: string
+  pauseSlideshow: string
 }
 
 type ListingCardProps = {
   listing: Listing
   returnTo?: string
   coverPhoto?: { url: string; altText: string | null }
+  photos?: ListingPhoto[]
   propertyTypeLabel: string
   locale: string
   labels: ListingCardLabels
@@ -63,6 +77,7 @@ export function ListingCard({
   listing,
   returnTo,
   coverPhoto,
+  photos = [],
   propertyTypeLabel,
   locale,
   labels,
@@ -85,6 +100,8 @@ export function ListingCard({
   const detailsHref = returnTo
     ? `/listings/${listing.id}?returnTo=${encodeURIComponent(returnTo)}`
     : `/listings/${listing.id}`
+  const galleryPhotos =
+    photos.length > 0 ? photos : coverPhoto ? [coverPhoto] : []
 
   return (
     <article id={`listing-${listing.id}`} className="h-full scroll-mt-4">
@@ -105,7 +122,7 @@ export function ListingCard({
                   src={coverPhoto.url}
                   alt={coverPhoto.altText || listing.title}
                   fill
-                  unoptimized
+                  loader={listingImageLoader}
                   sizes="(max-width: 639px) 100vw, (max-width: 1279px) 50vw, 33vw"
                   className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                 />
@@ -178,35 +195,23 @@ export function ListingCard({
 
         <SheetContent
           side="right"
-          className="sm:max-w-xl"
+          className="!w-full sm:!w-[520px]"
+          panelClassName="p-4 sm:p-6"
           closeLabel={labels.close}
         >
-          <div className="relative -mx-6 -mt-6 flex h-[200px] items-center justify-center overflow-hidden border-b border-border bg-background">
-            <div
-              aria-hidden
-              className="absolute inset-0 opacity-80"
-              style={{
-                backgroundImage:
-                  "radial-gradient(circle, var(--border) 1px, transparent 1px)",
-                backgroundSize: "10px 10px",
-              }}
-            />
-            {coverPhoto ? (
-              <Image
-                src={coverPhoto.url}
-                alt={coverPhoto.altText || listing.title}
-                fill
-                unoptimized
-                sizes="(max-width: 640px) 100vw, 520px"
-                className="object-cover p-2"
-              />
-            ) : (
-              <div className="relative z-10 flex flex-col items-center gap-2 text-muted-foreground">
-                <Building2 aria-hidden className="size-16" />
-                <span className="text-xs">{labels.noImage}</span>
-              </div>
-            )}
-          </div>
+          <ListingPhotoCarousel
+            photos={galleryPhotos}
+            title={listing.title}
+            noImageLabel={labels.noImage}
+            zoomLabel={labels.zoomImage}
+            zoomInLabel={labels.zoomIn}
+            zoomOutLabel={labels.zoomOut}
+            previousLabel={labels.previousImage}
+            nextLabel={labels.nextImage}
+            imagePositionLabel={labels.imagePosition}
+            playSlideshowLabel={labels.playSlideshow}
+            pauseSlideshowLabel={labels.pauseSlideshow}
+          />
 
           <SheetHeader className="gap-0 border-b border-border py-4">
             <div className="flex items-start justify-between gap-4">

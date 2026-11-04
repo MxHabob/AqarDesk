@@ -16,7 +16,7 @@ import { ListingsPageViewport } from "@/components/marketing/listings-page-viewp
 import { ListingsResultsScroller } from "@/components/marketing/listings-results-scroller"
 import {
   getFilteredPublicListings,
-  getPublicListingCoverPhotos,
+  getPublicListingPhotos,
 } from "@/lib/listings/public-queries"
 import { loadPublicListingSearchParams } from "@/lib/listings/public-search-loader"
 import { createPageMetadata } from "@/lib/marketing/metadata"
@@ -66,7 +66,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
       filters.page > 1
   )
   const results = await getFilteredPublicListings(filters)
-  const coverPhotos = await getPublicListingCoverPhotos(
+  const listingPhotos = await getPublicListingPhotos(
     results.rows.map((listing) => listing.id)
   )
   const propertyTypeLabels = {
@@ -329,7 +329,8 @@ export default async function ListingsPage({ params, searchParams }: Props) {
             {results.rows.length ? (
               <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
                 {results.rows.map((listing) => {
-                  const coverPhoto = coverPhotos[listing.id]
+                  const photos = listingPhotos[listing.id] ?? []
+                  const coverPhoto = photos[0]
                   return (
                     <ListingCard
                       key={listing.id}
@@ -339,6 +340,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
                         `#listing-${listing.id}`
                       )}
                       coverPhoto={coverPhoto}
+                      photos={photos}
                       propertyTypeLabel={
                         propertyTypeLabels[listing.propertyType]
                       }
@@ -359,6 +361,14 @@ export default async function ListingsPage({ params, searchParams }: Props) {
                         buildingArea: t("buildingArea"),
                         squareMeters: t("squareMeters"),
                         close: t("close"),
+                        zoomImage: t("zoomImage"),
+                        zoomIn: t("zoomIn"),
+                        zoomOut: t("zoomOut"),
+                        previousImage: t("previousImage"),
+                        nextImage: t("nextImage"),
+                        imagePosition: t("imagePosition"),
+                        playSlideshow: t("playSlideshow"),
+                        pauseSlideshow: t("pauseSlideshow"),
                       }}
                     />
                   )

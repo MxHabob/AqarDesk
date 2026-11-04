@@ -49,7 +49,10 @@ function SheetContent({
   closeLabel?: string
   panelClassName?: string
 }) {
-  const className = cn("md:p-4 bg-transparent shadow-none", popupClassName)
+  const className = cn(
+    "max-sm:!inset-0 max-sm:!h-dvh max-sm:!max-h-none max-sm:!w-full max-sm:!max-w-none max-sm:p-3 md:p-4 bg-transparent shadow-none",
+    popupClassName
+  )
 
   return (
     <SheetPortal>
@@ -65,7 +68,7 @@ function SheetContent({
       >
         <div
           className={cn(
-            "scrollbar-hide relative size-full overflow-y-auto rounded-none border border-border bg-[#fafaf9] p-6 dark:bg-[#0c0c0c]",
+            "scrollbar-hide relative size-full overflow-y-auto rounded-none border border-border bg-[#fafaf9] p-6 dark:bg-[#0c0c0c] max-sm:rounded-lg max-sm:p-4",
             panelClassName
           )}
         >
