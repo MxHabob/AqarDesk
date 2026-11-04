@@ -25,6 +25,9 @@ export async function getRealEstateDashboardSummary(
             active: count(
               sql`case when ${schema.listings.status} = 'active' then 1 end`
             ),
+            draft: count(
+              sql`case when ${schema.listings.status} = 'draft' then 1 end`
+            ),
             sale: count(
               sql`case when ${schema.listings.status} = 'active' and ${schema.listings.type} = 'sale' then 1 end`
             ),
@@ -38,7 +41,7 @@ export async function getRealEstateDashboardSummary(
             eq(schema.listings.propertyId, schema.properties.id)
           )
           .where(isNull(schema.properties.archivedAt))
-      : Promise.resolve([{ total: 0, active: 0, sale: 0, rent: 0 }]),
+      : Promise.resolve([{ total: 0, active: 0, draft: 0, sale: 0, rent: 0 }]),
     access.owners
       ? database
           .select({ total: count() })
@@ -51,6 +54,7 @@ export async function getRealEstateDashboardSummary(
     propertyCount: propertyCount[0]?.total ?? 0,
     listingCount: listingCounts[0]?.total ?? 0,
     activeListingCount: listingCounts[0]?.active ?? 0,
+    draftListingCount: listingCounts[0]?.draft ?? 0,
     saleListingCount: listingCounts[0]?.sale ?? 0,
     rentalListingCount: listingCounts[0]?.rent ?? 0,
     ownerCount: ownerCount[0]?.total ?? 0,

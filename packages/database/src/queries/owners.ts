@@ -172,3 +172,46 @@ export async function setOwnerPhones(
     )
   }, database)
 }
+
+export async function deleteOwner(
+  id: string,
+  actor: { id: string; name?: string | null; email?: string | null },
+  database: DatabaseOrTransaction = getDatabase()
+) {
+  return withTransaction(async (transaction) => {
+    const [owner] = await transaction
+      .select({ id: schema.owners.id, name: schema.owners.name })
+      .from(schema.owners)
+      .where(eq(schema.owners.id, id))
+      .limit(1)
+    if (!owner) return { deleted: false as const, reason: "not_found" as const }
+
+    const [property] = await transaction
+      .select({ propertyId: schema.propertyOwners.propertyId })
+      .from(schema.propertyOwners)
+      .where(eq(schema.propertyOwners.ownerId, id))
+      .limit(1)
+    if (property) {
+      return {
+        deleted: false as const,
+        reason: "has_properties" as const,
+      }
+    }
+
+    await transaction.delete(schema.owners).where(eq(schema.owners.id, id))
+    await writeAuditLog(
+      {
+        actorId: actor.id,
+        actorName: actor.name,
+        actorEmail: actor.email,
+        action: "owner.deleted",
+        entityType: "owner",
+        entityId: id,
+        before: owner,
+      },
+      transaction
+    )
+
+    return { deleted: true as const }
+  }, database)
+}

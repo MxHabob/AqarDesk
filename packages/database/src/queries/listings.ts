@@ -251,6 +251,63 @@ export async function updateListing(
   }, database)
 }
 
+export async function deleteListing(
+  id: string,
+  actor: { id: string; name?: string | null; email?: string | null },
+  database: DatabaseOrTransaction = getDatabase()
+) {
+  return withTransaction(async (transaction) => {
+    const [listing] = await transaction
+      .select({
+        id: schema.listings.id,
+        propertyId: schema.listings.propertyId,
+        status: schema.listings.status,
+        type: schema.listings.type,
+      })
+      .from(schema.listings)
+      .where(eq(schema.listings.id, id))
+      .limit(1)
+
+    if (!listing) return null
+
+    const media = await transaction
+      .select({
+        storageProvider: schema.listingMedia.storageProvider,
+        objectKey: schema.listingMedia.objectKey,
+      })
+      .from(schema.listingMedia)
+      .where(eq(schema.listingMedia.listingId, id))
+
+    await transaction
+      .update(schema.shortLinks)
+      .set({ revokedAt: new Date() })
+      .where(
+        and(
+          eq(schema.shortLinks.resourceType, "listing"),
+          eq(schema.shortLinks.resourceId, id),
+          isNull(schema.shortLinks.revokedAt)
+        )
+      )
+
+    await transaction.delete(schema.listings).where(eq(schema.listings.id, id))
+
+    await writeAuditLog(
+      {
+        actorId: actor.id,
+        actorName: actor.name,
+        actorEmail: actor.email,
+        action: "listing.deleted",
+        entityType: "listing",
+        entityId: id,
+        before: listing,
+      },
+      transaction
+    )
+
+    return { id, media }
+  }, database)
+}
+
 export async function getPublicListingById(
   id: string,
   database = getDatabase(),

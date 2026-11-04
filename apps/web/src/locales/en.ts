@@ -132,6 +132,123 @@ export default {
     member: "Member",
     removeMember: "Remove",
   },
+  settingsNavigation: {
+    general: "General",
+    members: "Team members",
+    users: "Users",
+    permissions: "Roles & permissions",
+  },
+  accessManagement: {
+    usersTitle: "Users",
+    usersDescription:
+      "Create accounts, update their details and roles, and manage sign-in sessions.",
+    rolesTitle: "Roles and permissions",
+    rolesDescription:
+      "Create roles and choose which permissions each role grants.",
+    accessDenied: "You don't have permission to access this page.",
+    backToDashboard: "Back to dashboard",
+    createUser: "Create account",
+    createUserDescription:
+      "Accounts use the sign-in methods enabled for the system. No password is created here.",
+    name: "Name",
+    email: "Email address",
+    locale: "Account language",
+    arabic: "Arabic",
+    english: "English",
+    emailVerified: "Email verified",
+    roles: "Roles",
+    noRole: "No role",
+    saveUser: "Save changes",
+    deleteUser: "Delete account",
+    revokeSessions: "Sign out all sessions",
+    createdAt: "Created",
+    updatedAt: "Last updated",
+    twoFactor: "Two-factor authentication",
+    enabled: "Enabled",
+    disabled: "Disabled",
+    verified: "Verified",
+    unverified: "Unverified",
+    currentUser: "You",
+    noUsers: "No matching accounts.",
+    searchUsers: "Search by name or email",
+    search: "Search",
+    clearSearch: "Clear search",
+    page: "Page",
+    of: "of",
+    previous: "Previous",
+    next: "Next",
+    confirmDeleteUser:
+      "Permanently delete this account? This cannot be undone.",
+    confirmRevokeSessions: "Sign out all sessions for this user?",
+    newRole: "Create role",
+    roleKey: "Key",
+    roleName: "Role name",
+    roleDescription: "Description",
+    selectPermissions: "Granted permissions",
+    saveRole: "Save role",
+    deleteRole: "Delete role",
+    builtInRole: "Built-in role",
+    noRoles: "No roles have been defined.",
+    noPermissions: "No permissions have been defined.",
+    confirmDeleteRole: "Delete this role?",
+    protectedRole: "Built-in roles cannot be deleted.",
+    resourceProperties: "Properties",
+    resourceListings: "Listings",
+    resourceOwners: "Owners",
+    resourceTeams: "Teams",
+    resourceUsers: "Users",
+    resourceRoles: "Roles",
+    resourceMedia: "Media",
+    resourceFavorites: "Favorites",
+    resourceAudit: "Audit log",
+    resourceOfficeSettings: "Office settings",
+    actionRead: "View",
+    actionCreate: "Create",
+    actionUpdate: "Update",
+    actionDelete: "Delete permanently",
+    actionArchive: "Archive",
+    actionPublish: "Publish",
+    actionClose: "Close",
+    actionShare: "Share",
+    actionManage: "Manage",
+    details: "Details",
+    edit: "Edit",
+    editUser: "Edit user",
+    userDetails: "User details",
+    editRole: "Edit role",
+    roleDetails: "Role details",
+    save: "Save",
+    saving: "Saving...",
+    actionError:
+      "The action could not be completed. Check the details and permissions, then try again.",
+    image: "Image",
+    timezone: "Time zone",
+    dateFormat: "Date format",
+    timeFormat: "Time format",
+    time12: "12-hour",
+    time24: "24-hour",
+    automaticTimezone: "Automatically sync time zone",
+    weekStartsOnMonday: "Week starts on Monday",
+    permissionCount: "{count} permissions",
+    actions: "Actions",
+    bulkActions: "Bulk actions",
+    deleteSelected: "Delete selected",
+    revokeSelectedSessions: "Sign out selected users",
+    confirmDeleteTitle: "Confirm account deletion",
+    confirmDeleteDescription:
+      "Permanently delete {count} accounts. This cannot be undone.",
+    typeToConfirm: "Type {keyword} to confirm.",
+    deleteKeyword: "DELETE",
+    usersDeleted: "Deleted {count} accounts.",
+    sessionsRevoked: "Signed out {count} accounts.",
+    bulkPartial: "Action partially completed",
+    bulkPartialDescription:
+      "Completed for {affected} accounts; {skipped} could not be processed.",
+    bulkError: "Unable to complete the bulk action.",
+    recordCount: "{count} accounts",
+    pagination: "User pages",
+    notAvailable: "Not available",
+  },
   homeCategories: {
     title: "Explore properties by category",
     description:
@@ -241,6 +358,9 @@ export default {
     servicesDescription:
       "We offer real estate and investment services, engineering design and consultation, contracting and construction, alongside property management and contract preparation.",
     serviceSelectionTitle: "Support for every step of your property journey",
+    serviceGroupProperty: "Buying, renting, and investing",
+    serviceGroupManagement: "Property care and advisory",
+    serviceGroupDevelopment: "Design and construction",
     serviceCopy: {
       sale: {
         title: "Buying and selling",
@@ -249,10 +369,7 @@ export default {
         description:
           "Explore available properties and get help coordinating between owners and interested buyers.",
         details:
-          "Whether you are looking for a new property or preparing to list one, our office helps you review options and follow each listing.",
-        point1: "Browse and compare published properties for sale.",
-        point2: "Help owners present clear property information.",
-        point3: "Follow up on inquiries and coordinate next steps.",
+          "Whether you are looking for a new property or preparing to list one, our office helps you review options and follow each listing.\n\n## What you get\n\n- **Explore sale listings**: Browse available properties and compare their details.\n- **Present with clarity**: Help owners share useful property information.\n- **Coordinate next steps**: Follow inquiries between owners and buyers.",
       },
       rent: {
         title: "Rentals",
@@ -261,10 +378,7 @@ export default {
         description:
           "Find available rentals, review their details, and get support from our office with questions and coordination.",
         details:
-          "We organize published rental options so you can compare locations and details and contact the office about the right fit.",
-        point1: "Browse available residential and commercial rentals.",
-        point2: "Review the location and key details for each property.",
-        point3: "Contact the office team to arrange follow-up.",
+          "We organize published rental options so you can compare locations and details and contact the office about the right fit.\n\n## What you get\n\n- **Explore rental options**: Browse available residential and commercial properties.\n- **Compare key details**: Review each property's location and essentials.\n- **Arrange follow-up**: Contact our team about a property and next steps.",
       },
       investment: {
         title: "Investment opportunities",
@@ -273,10 +387,7 @@ export default {
         description:
           "Explore land and buildings listed for investment and discuss your needs with our office team.",
         details:
-          "Review published investment opportunities in one place, with property details and locations to make comparing and getting in touch easier.",
-        point1: "Explore available land and building opportunities.",
-        point2: "Compare property information and locations before deciding.",
-        point3: "Contact the office to discuss an opportunity.",
+          "Review published investment opportunities in one place, with property details and locations to make comparing and getting in touch easier.\n\n## What you get\n\n- **Discover opportunities**: Explore land and buildings listed for investment.\n- **Compare with context**: Review property details and locations before deciding.\n- **Discuss next steps**: Contact our team to learn more about an opportunity.",
       },
       propertyManagement: {
         title: "Property management",
@@ -285,10 +396,7 @@ export default {
         description:
           "Help owners organize property information and keep track of listings and inquiries in one place.",
         details:
-          "From organizing property details to following listings and inquiries, our office helps owners manage property communication.",
-        point1: "Organize property information and listing details.",
-        point2: "Keep track of listing status and inquiries.",
-        point3: "Coordinate communication with interested clients.",
+          "From organizing property details to following listings and inquiries, our office helps owners manage property communication.\n\n## What you get\n\n- **Organize property details**: Keep listing information clear and up to date.\n- **Track listing activity**: Follow listing status and inquiries.\n- **Stay in touch**: Coordinate with people interested in a property.",
       },
       propertyMarketing: {
         title: "Property marketing",
@@ -297,10 +405,7 @@ export default {
         description:
           "Present properties with clear details and imagery so interested clients can find available options.",
         details:
-          "We prepare listing information and publish it alongside available properties, making key details and photos easy to review.",
-        point1: "Highlight essential property information.",
-        point2: "Include available photos, location, and details.",
-        point3: "Connect interested clients with the listing and office.",
+          "We prepare listing information and publish it alongside available properties, making key details and photos easy to review.\n\n## What you get\n\n- **Highlight key information**: Make essential property details easy to scan.\n- **Show the full picture**: Include available photos and location details.\n- **Connect with clients**: Direct interested people to the listing and our office.",
       },
       propertyConsultation: {
         title: "Real estate guidance",
@@ -309,10 +414,7 @@ export default {
         description:
           "Talk with our office team to review your needs and discuss available property options.",
         details:
-          "Our team can help you review published options and answer questions about properties and next steps.",
-        point1: "Review your needs and available options.",
-        point2: "Get answers to questions about listings.",
-        point3: "Coordinate communication and follow-up.",
+          "Our team can help you review published options and answer questions about properties and next steps.\n\n## What you get\n\n- **Review your options**: Compare available properties against your needs.\n- **Get clear answers**: Ask questions about listings and their details.\n- **Plan the next step**: Coordinate follow-up with our office.",
       },
       realEstateContracts: {
         title: "Real estate contracts",
@@ -321,10 +423,7 @@ export default {
         description:
           "Prepare and draft property sale, rental, and investment contracts, and organize the details for all parties.",
         details:
-          "Our office helps prepare real estate contracts and coordinate information and requirements between the parties before an agreement is completed.",
-        point1: "Prepare sale, rental, and property investment contracts.",
-        point2: "Organize property and involved-party information.",
-        point3: "Follow up on contract requirements with the parties.",
+          "Our office helps prepare real estate contracts and coordinate information and requirements between the parties before an agreement is completed.\n\n## What you get\n\n- **Prepare property contracts**: Draft sale, rental, and investment agreements.\n- **Organize the details**: Gather property and party information.\n- **Coordinate requirements**: Follow up with the parties before an agreement.",
       },
       engineeringDesign: {
         title: "Engineering design and consultation",
@@ -333,10 +432,7 @@ export default {
         description:
           "Engineering designs and consultations for buildings and projects, shaped around client needs and site conditions.",
         details:
-          "We coordinate engineering design and consultation services for projects, from understanding requirements to developing concepts and following up on details.",
-        point1: "Prepare engineering designs and project concepts.",
-        point2: "Provide consultation on buildings and sites.",
-        point3: "Coordinate design requirements with the client.",
+          "We coordinate engineering design and consultation services for projects, from understanding requirements to developing concepts and following up on details.\n\n## What you get\n\n- **Develop a project concept**: Prepare designs shaped around your requirements.\n- **Review the site**: Discuss building and location considerations.\n- **Align on design needs**: Coordinate project details with the client.",
       },
       contracting: {
         title: "Contracting and general agencies",
@@ -345,10 +441,7 @@ export default {
         description:
           "Contracting and project coordination services, alongside follow-up on agreed general agency matters.",
         details:
-          "We coordinate contracting work and project execution requirements, and follow up on general agency matters agreed with the client.",
-        point1: "Coordinate contracting work for buildings and projects.",
-        point2: "Follow up on project requirements with relevant parties.",
-        point3: "Provide agreed general agency services.",
+          "We coordinate contracting work and project execution requirements, and follow up on general agency matters agreed with the client.\n\n## What you get\n\n- **Coordinate contracting work**: Organize work for buildings and projects.\n- **Follow project requirements**: Stay aligned with relevant parties.\n- **Handle agreed agencies**: Follow up on general agency matters.",
       },
       tenders: {
         title: "Tenders",
@@ -357,10 +450,7 @@ export default {
         description:
           "Track tender opportunities and requirements, organize documents, and coordinate participation.",
         details:
-          "We help follow tender announcements and submission requirements, organize documents, and coordinate the related next steps.",
-        point1: "Track relevant tender opportunities.",
-        point2: "Organize submission documents and requirements.",
-        point3: "Coordinate participation and follow-up.",
+          "We help follow tender announcements and submission requirements, organize documents, and coordinate the related next steps.\n\n## What you get\n\n- **Find relevant tenders**: Follow opportunities that fit the project.\n- **Prepare submissions**: Organize required documents and information.\n- **Coordinate participation**: Track submission and follow-up steps.",
       },
       constructionFinishing: {
         title: "Construction, finishing, and maintenance",
@@ -369,10 +459,7 @@ export default {
         description:
           "Building construction, finishing, and maintenance, including hangars and interior decoration.",
         details:
-          "We coordinate construction, finishing, and maintenance work for buildings, as well as hangar construction and decoration.",
-        point1: "Carry out building construction and finishing work.",
-        point2: "Maintain buildings and construct hangars.",
-        point3: "Complete decoration work to project requirements.",
+          "We coordinate construction, finishing, and maintenance work for buildings, as well as hangar construction and decoration.\n\n## What you get\n\n- **Build and finish**: Carry out building construction and finishing work.\n- **Maintain and expand**: Maintain buildings and construct hangars.\n- **Complete the interior**: Deliver decoration to project requirements.",
       },
     },
     testimonialsTitle: "Property client experiences",
@@ -679,6 +766,8 @@ export default {
   navigation: {
     overview: "Overview",
     reports: "Reports",
+    users: "Users",
+    permissions: "Roles & permissions",
     general: "General",
     billing: "Billing",
     accounts: "Accounts",
@@ -800,8 +889,45 @@ export default {
     noProperties: "No matching properties.",
     noListings: "No matching listings.",
     noOwners: "No matching owners.",
+    emptyListings: "There are no office listings yet.",
+    emptyProperties: "There are no office properties yet.",
+    emptyOwners: "There are no owner records yet.",
+    clearFilters: "Clear search and filters",
     recordCount: "{count} records",
     squareMeters: "m²",
+    allStatuses: "All statuses",
+    allListingTypes: "All listing types",
+    allPropertyTypes: "All property types",
+    filterStatus: "Filter by status",
+    filterListingType: "Filter by listing type",
+    filterPropertyType: "Filter by property type",
+    bulkActions: "Bulk actions",
+    changeStatus: "Change status",
+    saveAsDraft: "Save as draft",
+    archiveSelected: "Archive selected",
+    deleteSelected: "Delete permanently",
+    deleteTitle: "Confirm permanent deletion",
+    deleteDescription:
+      "{count} records will be permanently deleted. This cannot be undone.",
+    deletePrompt: "Type {keyword} to confirm.",
+    deleteKeyword: "DELETE",
+    confirmDelete: "Delete permanently",
+    bulkSuccess: "Action completed for {count} records.",
+    bulkPartial: "Action partially completed",
+    bulkPartialDescription:
+      "Completed for {affected} records; {skipped} could not be processed.",
+    cleanupFailedDescription: "Media cleanup failed for {count} listings.",
+    bulkError: "Unable to complete the bulk action.",
+    archivedProperties: "Selected properties were archived.",
+    archivedOwners: "Selected owners were archived.",
+    deletedListings: "Selected listings were deleted.",
+    deletedProperties: "Selected properties were deleted.",
+    deletedOwners: "Selected owners were deleted.",
+    listingBlockedByProperty:
+      "Some properties could not be deleted because they have listings.",
+    ownerBlockedByProperty:
+      "Some owners could not be deleted because they are linked to properties.",
+    bulkNotFound: "Some selected records are no longer available.",
   },
   metrics: {
     noData: "No data for this period.",
@@ -1397,5 +1523,13 @@ export default {
     activeListings: "Active listings",
     saleListings: "Active sale listings",
     rentalListings: "Active rental listings",
+    draftListings: "Draft listings",
+    recentListings: "Recent listings",
+    noRecentListings: "No listings yet.",
+    quickActions: "Quick actions",
+    createProperty: "Add property",
+    createListing: "Create listing",
+    createOwner: "Add owner",
+    viewAll: "View all",
   },
 } as const

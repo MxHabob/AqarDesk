@@ -33,7 +33,7 @@ export function BottomBar({
         exit={{ y: 100 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
       >
-        <div className="relative pointer-events-auto h-12 w-[min(100%-2rem,520px)]">
+        <div className="relative pointer-events-auto h-12 w-[min(100%-2rem,720px)]">
           {/* Blur layer fades in separately to avoid backdrop-filter animation issues */}
           <motion.div
             className="absolute inset-0 backdrop-filter backdrop-blur-lg bg-[rgba(247,247,247,0.85)] dark:bg-[rgba(19,19,19,0.7)]"
@@ -42,12 +42,12 @@ export function BottomBar({
             exit={{ opacity: 0 }}
             transition={{ duration: 0.15 }}
           />
-          <div className="relative flex h-12 items-center justify-between gap-2 ps-4 pe-2">
+          <div className="relative flex h-12 items-center justify-between gap-2 overflow-hidden ps-4 pe-2">
             <span className="shrink-0 text-sm">
               {selectedCount} {selectedLabel}
             </span>
 
-            <div className="flex min-w-0 items-center gap-x-1 sm:gap-x-2">
+            <div className="flex min-w-0 items-center gap-x-1 overflow-x-auto scrollbar-hide sm:gap-x-2">
               <Button
                 variant="ghost"
                 size="sm"

@@ -13,6 +13,7 @@ const icons = {
   "/properties": () => <Building2 size={20} />,
   "/listings": () => <Tag size={20} />,
   "/owners": () => <UsersRound size={20} />,
+  "/users": () => <UsersRound size={20} />,
   "/reports": () => <Icons.Monitoring size={20} />,
   "/settings": () => <Icons.Settings size={20} />,
 } as const
@@ -210,12 +211,14 @@ export function MainMenu({ onSelect, isExpanded = false }: Props) {
     { path: "/properties", name: t("common.properties") },
     { path: "/listings", name: t("common.listings") },
     { path: "/owners", name: t("common.owners") },
+    { path: "/users", name: t("navigation.users") },
     {
       path: "/settings",
       name: t("common.settings"),
       children: [
         { path: "/settings", name: t("navigation.general") },
         { path: "/settings/members", name: t("navigation.members") },
+        { path: "/settings/roles", name: t("navigation.permissions") },
       ],
     },
   ]

@@ -12,7 +12,10 @@ import {
   createOwner,
   createProperty,
   createShortLink,
+  deleteListing,
   deleteListingMedia,
+  deleteOwner,
+  deleteProperty,
   getListingById,
   getOfficeSettings,
   getOwnerById,
@@ -33,13 +36,14 @@ import {
 import {
   createListingMediaObjectKey,
   createUploadUrl,
+  deleteStorageObject,
   storageProvider,
   verifyUploadedObject,
 } from "@aqardesk/storage/server"
-import { and, eq, gt, isNull, or } from "drizzle-orm"
+import { and, eq, gt, inArray, isNull, or } from "drizzle-orm"
 import { headers } from "next/headers"
 import { z } from "zod"
-import { assertPermission } from "@/lib/auth/permissions"
+import { assertPermission, hasPermission } from "@/lib/auth/permissions"
 import { isCountryCode } from "@/lib/countries"
 
 export type FormActionState = {
@@ -50,6 +54,20 @@ export type FormActionState = {
 
 const emptyState: FormActionState = {}
 const idSchema = z.uuid()
+const bulkIdsSchema = z
+  .array(idSchema)
+  .min(1)
+  .max(100)
+  .refine((ids) => new Set(ids).size === ids.length)
+const listingStatusSchema = z.enum([
+  "draft",
+  "active",
+  "reserved",
+  "sold",
+  "rented",
+  "expired",
+  "withdrawn",
+])
 const propertyTypeSchema = z.enum([
   "building",
   "land",
@@ -184,6 +202,245 @@ export async function getOwnersTableData() {
   const actor = await getActor()
   await assertPermission(actor.id, "owners.read")
   return listOwners({ pageSize: 100 })
+}
+
+export async function getRealEstateBulkCapabilities() {
+  const actor = await getActor()
+  const [
+    listingUpdate,
+    listingPublish,
+    listingClose,
+    listingDelete,
+    propertyArchive,
+    propertyDelete,
+    ownerUpdate,
+    ownerDelete,
+  ] = await Promise.all([
+    hasPermission(actor.id, "listings.update"),
+    hasPermission(actor.id, "listings.publish"),
+    hasPermission(actor.id, "listings.close"),
+    hasPermission(actor.id, "listings.delete"),
+    hasPermission(actor.id, "properties.archive"),
+    hasPermission(actor.id, "properties.delete"),
+    hasPermission(actor.id, "owners.update"),
+    hasPermission(actor.id, "owners.delete"),
+  ])
+
+  return {
+    listings: {
+      update: listingUpdate,
+      publish: listingPublish,
+      close: listingClose,
+      delete: listingDelete,
+    },
+    properties: { archive: propertyArchive, delete: propertyDelete },
+    owners: { archive: ownerUpdate, delete: ownerDelete },
+  }
+}
+
+export async function bulkUpdateListingStatusAction(input: {
+  ids: string[]
+  status: string
+}) {
+  const actor = await getActor()
+  const parsedInput = z
+    .object({ ids: bulkIdsSchema, status: listingStatusSchema })
+    .parse(input)
+  const { ids, status } = parsedInput
+  await assertPermission(actor.id, "listings.update")
+  if (status === "active") {
+    await assertPermission(actor.id, "listings.publish")
+  }
+  if (["sold", "rented", "expired", "withdrawn"].includes(status)) {
+    await assertPermission(actor.id, "listings.close")
+  }
+
+  const database = getDatabase()
+  const selected = await database
+    .select({
+      id: schema.listings.id,
+      type: schema.listings.type,
+      salePrice: schema.listings.salePrice,
+      monthlyRent: schema.listings.monthlyRent,
+      publishedAt: schema.listings.publishedAt,
+    })
+    .from(schema.listings)
+    .where(inArray(schema.listings.id, ids))
+
+  if (selected.length !== ids.length) {
+    throw new Error("Some selected listings are no longer available.")
+  }
+  if (
+    selected.some(
+      (listing) =>
+        (status === "sold" && listing.type !== "sale") ||
+        (status === "rented" && listing.type !== "rent") ||
+        ((status === "active" || status === "reserved") &&
+          (listing.type === "sale" ? !listing.salePrice : !listing.monthlyRent))
+    )
+  ) {
+    throw new Error(
+      "The selected listings cannot all be changed to this status."
+    )
+  }
+
+  await database.transaction(async (transaction) => {
+    for (const listing of selected) {
+      const updated = await updateListing(
+        listing.id,
+        {
+          status,
+          publishedAt:
+            status === "active"
+              ? (listing.publishedAt ?? new Date())
+              : listing.publishedAt,
+          closedAt: ["sold", "rented", "expired", "withdrawn"].includes(status)
+            ? new Date()
+            : null,
+        },
+        actor,
+        transaction
+      )
+      if (!updated) throw new Error("A selected listing could not be updated.")
+    }
+  })
+
+  return { affectedCount: selected.length, skippedCount: 0 }
+}
+
+export async function bulkArchivePropertiesAction(idsInput: string[]) {
+  const actor = await getActor()
+  const ids = bulkIdsSchema.parse(idsInput)
+  await assertPermission(actor.id, "properties.archive")
+
+  const database = getDatabase()
+  await database.transaction(async (transaction) => {
+    for (const id of ids) {
+      const updated = await updateProperty(
+        id,
+        { archivedAt: new Date() },
+        actor,
+        transaction
+      )
+      if (!updated)
+        throw new Error("A selected property could not be archived.")
+    }
+  })
+
+  return { affectedCount: ids.length, skippedCount: 0 }
+}
+
+export async function bulkArchiveOwnersAction(idsInput: string[]) {
+  const actor = await getActor()
+  const ids = bulkIdsSchema.parse(idsInput)
+  await assertPermission(actor.id, "owners.update")
+
+  const database = getDatabase()
+  await database.transaction(async (transaction) => {
+    for (const id of ids) {
+      const updated = await updateOwner(
+        id,
+        { archivedAt: new Date() },
+        actor,
+        transaction
+      )
+      if (!updated) throw new Error("A selected owner could not be archived.")
+    }
+  })
+
+  return { affectedCount: ids.length, skippedCount: 0 }
+}
+
+export async function bulkDeleteListingsAction(idsInput: string[]) {
+  const actor = await getActor()
+  const ids = bulkIdsSchema.parse(idsInput)
+  await assertPermission(actor.id, "listings.delete")
+
+  let affectedCount = 0
+  let cleanupFailedCount = 0
+  let notFoundCount = 0
+  const failedIds: string[] = []
+  for (const id of ids) {
+    const deleted = await deleteListing(id, actor)
+    if (!deleted) {
+      notFoundCount += 1
+      failedIds.push(id)
+      continue
+    }
+    affectedCount += 1
+    for (const media of deleted.media) {
+      if (media.storageProvider !== storageProvider) {
+        cleanupFailedCount += 1
+        continue
+      }
+      try {
+        await deleteStorageObject(media.objectKey)
+      } catch (error) {
+        console.error("Failed to delete media for a removed listing.", error)
+        cleanupFailedCount += 1
+      }
+    }
+  }
+
+  return {
+    affectedCount,
+    skippedCount: ids.length - affectedCount,
+    cleanupFailedCount,
+    skippedReasons: Array.from({ length: notFoundCount }, () => "not_found"),
+    failedIds,
+  }
+}
+
+export async function bulkDeletePropertiesAction(idsInput: string[]) {
+  const actor = await getActor()
+  const ids = bulkIdsSchema.parse(idsInput)
+  await assertPermission(actor.id, "properties.delete")
+
+  let affectedCount = 0
+  const skippedReasons: string[] = []
+  const failedIds: string[] = []
+  for (const id of ids) {
+    const result = await deleteProperty(id, actor)
+    if (result.deleted) {
+      affectedCount += 1
+    } else {
+      skippedReasons.push(result.reason)
+      failedIds.push(id)
+    }
+  }
+
+  return {
+    affectedCount,
+    skippedCount: ids.length - affectedCount,
+    skippedReasons,
+    failedIds,
+  }
+}
+
+export async function bulkDeleteOwnersAction(idsInput: string[]) {
+  const actor = await getActor()
+  const ids = bulkIdsSchema.parse(idsInput)
+  await assertPermission(actor.id, "owners.delete")
+
+  let affectedCount = 0
+  const skippedReasons: string[] = []
+  const failedIds: string[] = []
+  for (const id of ids) {
+    const result = await deleteOwner(id, actor)
+    if (result.deleted) {
+      affectedCount += 1
+    } else {
+      skippedReasons.push(result.reason)
+      failedIds.push(id)
+    }
+  }
+
+  return {
+    affectedCount,
+    skippedCount: ids.length - affectedCount,
+    skippedReasons,
+    failedIds,
+  }
 }
 
 export async function savePropertyAction(

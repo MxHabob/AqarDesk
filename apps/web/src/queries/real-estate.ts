@@ -3,6 +3,7 @@ import {
   getListingsTableData,
   getOwnersTableData,
   getPropertiesTableData,
+  getRealEstateBulkCapabilities,
 } from "@/actions/real-estate"
 
 export const realEstateQueries = {
@@ -20,5 +21,11 @@ export const realEstateQueries = {
     queryOptions({
       queryKey: ["real-estate", "owners"],
       queryFn: getOwnersTableData,
+    }),
+  bulkCapabilities: () =>
+    queryOptions({
+      queryKey: ["real-estate", "bulk-capabilities"],
+      queryFn: getRealEstateBulkCapabilities,
+      staleTime: 60_000,
     }),
 }

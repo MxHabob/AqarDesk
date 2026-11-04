@@ -14,7 +14,7 @@ import {
   horizontalListSortingStrategy,
   SortableContext,
 } from "@dnd-kit/sortable"
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import {
   flexRender,
   getCoreRowModel,
@@ -27,7 +27,17 @@ import { useVirtualizer, type VirtualItem } from "@tanstack/react-virtual"
 import { AnimatePresence } from "framer-motion"
 import { Download } from "lucide-react"
 import { useCallback, useMemo, useRef, useState } from "react"
-import { BottomBar, VirtualRow } from "@/components/tables/core"
+import {
+  bulkDeleteListingsAction,
+  bulkUpdateListingStatusAction,
+  type getRealEstateBulkCapabilities,
+} from "@/actions/real-estate"
+import {
+  type BulkActionOption,
+  BulkActions,
+  TableEmptyState,
+  VirtualRow,
+} from "@/components/tables/core"
 import { DraggableHeader } from "@/components/tables/draggable-header"
 import { ResizeHandle } from "@/components/tables/resize-handle"
 import { useRealEstateParams } from "@/hooks/use-real-estate-params"
@@ -39,22 +49,96 @@ import { realEstateQueries } from "@/queries/real-estate"
 import { exportTableSelection } from "@/utils/export-table-selection"
 import { NON_REORDERABLE_COLUMNS, STICKY_COLUMNS } from "@/utils/table-configs"
 import { getColumnIds, type TableSettings } from "@/utils/table-settings"
-import { getListingsColumns } from "./columns"
+import { getListingsColumns, type ListingRow } from "./columns"
 import { ListingsTableHeader } from "./table-header"
 
 const NON_CLICKABLE_COLUMNS = new Set(["select", "actions"])
+
+function getListingBulkActions(
+  rows: ListingRow[],
+  capabilities: Awaited<ReturnType<typeof getRealEstateBulkCapabilities>>,
+  t: ReturnType<typeof useI18n>
+): BulkActionOption[] {
+  if (rows.length === 0) return []
+
+  const allSale = rows.every((row) => row.listingType === "sale")
+  const allRent = rows.every((row) => row.listingType === "rent")
+  const allHavePrice = rows.every((row) =>
+    row.listingType === "sale"
+      ? row.salePrice !== null
+      : row.monthlyRent !== null
+  )
+  const actions: BulkActionOption[] = []
+
+  if (capabilities.listings.update) {
+    actions.push({
+      id: "status:draft",
+      label: t("realEstateTables.saveAsDraft"),
+    })
+    if (allHavePrice && capabilities.listings.publish) {
+      actions.push({
+        id: "status:active",
+        label: t("realEstateTables.statusActive"),
+      })
+    }
+    if (allHavePrice) {
+      actions.push({
+        id: "status:reserved",
+        label: t("realEstateTables.statusReserved"),
+      })
+    }
+    if (capabilities.listings.close) {
+      if (allSale) {
+        actions.push({
+          id: "status:sold",
+          label: t("realEstateTables.statusSold"),
+        })
+      }
+      if (allRent) {
+        actions.push({
+          id: "status:rented",
+          label: t("realEstateTables.statusRented"),
+        })
+      }
+      actions.push(
+        {
+          id: "status:expired",
+          label: t("realEstateTables.statusExpired"),
+        },
+        {
+          id: "status:withdrawn",
+          label: t("realEstateTables.statusWithdrawn"),
+        }
+      )
+    }
+  }
+
+  return actions
+}
 
 export function ListingsTable({
   initialSettings,
 }: {
   initialSettings?: Partial<TableSettings>
 }) {
-  const { setParams } = useRealEstateParams()
+  const { setParams, listingStatus, listingTypeFilter } = useRealEstateParams()
   const locale = useCurrentLocale()
   const t = useI18n()
+  const queryClient = useQueryClient()
   const parentRef = useRef<HTMLDivElement>(null)
   const { data: result } = useSuspenseQuery(realEstateQueries.listings())
-  const data = result.rows
+  const { data: capabilities } = useSuspenseQuery(
+    realEstateQueries.bulkCapabilities()
+  )
+  const data = useMemo(
+    () =>
+      result.rows.filter(
+        (row) =>
+          (!listingStatus || row.status === listingStatus) &&
+          (!listingTypeFilter || row.listingType === listingTypeFilter)
+      ),
+    [listingStatus, listingTypeFilter, result.rows]
+  )
   const [globalFilter, setGlobalFilter] = useState("")
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const columns = useMemo(
@@ -157,6 +241,9 @@ export function ListingsTable({
     [setParams]
   )
   const selectedCount = table.getSelectedRowModel().rows.length
+  const selectedListings = table
+    .getSelectedRowModel()
+    .rows.map((row) => row.original)
   const virtualItems = rowVirtualizer.getVirtualItems()
 
   return (
@@ -166,6 +253,18 @@ export function ListingsTable({
         onSearchChange={setGlobalFilter}
         onCreate={() => setParams({ createListing: true })}
         table={table}
+        statusFilter={listingStatus}
+        listingTypeFilter={listingTypeFilter}
+        onStatusFilterChange={(value) => {
+          setRowSelection({})
+          void setParams({ listingStatus: value as typeof listingStatus })
+        }}
+        onListingTypeFilterChange={(value) => {
+          setRowSelection({})
+          void setParams({
+            listingTypeFilter: value as typeof listingTypeFilter,
+          })
+        }}
       />
       <div
         ref={parentRef}
@@ -256,30 +355,61 @@ export function ListingsTable({
           <TableBody
             className="block border-x-0"
             style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
+              height: `${rows.length ? rowVirtualizer.getTotalSize() : 180}px`,
               position: "relative",
             }}
           >
-            {virtualItems.map((virtualRow: VirtualItem) => {
-              const row = rows[virtualRow.index]
-              if (!row) return null
-              return (
-                <VirtualRow
-                  key={row.id}
-                  row={row}
-                  virtualStart={virtualRow.start}
-                  rowHeight={45}
-                  getStickyStyle={getStickyStyle}
-                  getStickyClassName={getRowStickyClassName}
-                  nonClickableColumns={NON_CLICKABLE_COLUMNS}
-                  onCellClick={handleCellClick}
-                  columnSizing={columnSizing}
-                  columnOrder={columnOrder}
-                  columnVisibility={columnVisibility}
-                  isSelected={rowSelection[row.id] ?? false}
-                />
-              )
-            })}
+            {rows.length === 0 ? (
+              <TableEmptyState
+                title={
+                  globalFilter || listingStatus || listingTypeFilter
+                    ? t("realEstateTables.noListings")
+                    : t("realEstateTables.emptyListings")
+                }
+                description={
+                  globalFilter || listingStatus || listingTypeFilter
+                    ? t("common.noResults")
+                    : t("common.emptyDescription")
+                }
+                actionLabel={
+                  globalFilter || listingStatus || listingTypeFilter
+                    ? t("realEstateTables.clearFilters")
+                    : t("realEstateTables.addListing")
+                }
+                onAction={() => {
+                  if (globalFilter || listingStatus || listingTypeFilter) {
+                    setGlobalFilter("")
+                    void setParams({
+                      listingStatus: null,
+                      listingTypeFilter: null,
+                    })
+                  } else {
+                    void setParams({ createListing: true })
+                  }
+                }}
+              />
+            ) : (
+              virtualItems.map((virtualRow: VirtualItem) => {
+                const row = rows[virtualRow.index]
+                if (!row) return null
+                return (
+                  <VirtualRow
+                    key={row.id}
+                    row={row}
+                    virtualStart={virtualRow.start}
+                    rowHeight={45}
+                    getStickyStyle={getStickyStyle}
+                    getStickyClassName={getRowStickyClassName}
+                    nonClickableColumns={NON_CLICKABLE_COLUMNS}
+                    onCellClick={handleCellClick}
+                    columnSizing={columnSizing}
+                    columnOrder={columnOrder}
+                    columnVisibility={columnVisibility}
+                    isSelected={rowSelection[row.id] ?? false}
+                  />
+                )
+              })
+            )}
           </TableBody>
         </Table>
       </div>
@@ -290,11 +420,79 @@ export function ListingsTable({
       </p>
       <AnimatePresence>
         {selectedCount > 0 && (
-          <BottomBar
+          <BulkActions
             selectedCount={selectedCount}
             selectedLabel={t("common.selectedRows")}
             deselectLabel={t("common.deselectAll")}
             onDeselect={() => table.toggleAllRowsSelected(false)}
+            onComplete={(result) =>
+              setRowSelection(
+                Object.fromEntries(
+                  (result.failedIds ?? []).map((id) => [id, true])
+                )
+              )
+            }
+            actionLabel={t("realEstateTables.bulkActions")}
+            deleteLabel={
+              capabilities.listings.delete
+                ? t("realEstateTables.deleteSelected")
+                : ""
+            }
+            deleteTitle={t("realEstateTables.deleteTitle")}
+            deleteDescription={t("realEstateTables.deleteDescription", {
+              count: selectedCount,
+            })}
+            deletePrompt={t("realEstateTables.deletePrompt", {
+              keyword: "{keyword}",
+            })}
+            confirmationKeyword={t("realEstateTables.deleteKeyword")}
+            confirmLabel={t("realEstateTables.confirmDelete")}
+            cancelLabel={t("common.cancel")}
+            successLabel={(actionId, count) =>
+              actionId === "delete"
+                ? t("realEstateTables.deletedListings")
+                : t("realEstateTables.bulkSuccess", { count })
+            }
+            partialLabel={t("realEstateTables.bulkPartial")}
+            partialDescription={t("realEstateTables.bulkPartialDescription", {
+              affected: "{affected}",
+              skipped: "{skipped}",
+            })}
+            cleanupFailedDescription={t(
+              "realEstateTables.cleanupFailedDescription",
+              { count: "{count}" }
+            )}
+            actionErrorLabel={t("realEstateTables.bulkError")}
+            actions={getListingBulkActions(selectedListings, capabilities, t)}
+            onAction={async (actionId) => {
+              const ids = table
+                .getSelectedRowModel()
+                .rows.map((row) => row.original.id)
+              const result =
+                actionId === "delete"
+                  ? await bulkDeleteListingsAction(ids)
+                  : await bulkUpdateListingStatusAction({
+                      ids,
+                      status: actionId.replace("status:", ""),
+                    })
+              await Promise.all([
+                queryClient.invalidateQueries({
+                  queryKey: ["real-estate", "listings"],
+                }),
+                queryClient.invalidateQueries({
+                  queryKey: ["dashboard-summary"],
+                }),
+              ])
+              return {
+                ...result,
+                details:
+                  "skippedReasons" in result &&
+                  Array.isArray(result.skippedReasons) &&
+                  result.skippedReasons.includes("not_found")
+                    ? t("realEstateTables.bulkNotFound")
+                    : undefined,
+              }
+            }}
           >
             <Button
               size="sm"
@@ -305,7 +503,7 @@ export function ListingsTable({
               <Download aria-hidden="true" />
               {t("common.exportSelected")}
             </Button>
-          </BottomBar>
+          </BulkActions>
         )}
       </AnimatePresence>
     </section>

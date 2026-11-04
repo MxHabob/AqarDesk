@@ -9,6 +9,13 @@ import {
   DropdownMenuTrigger,
 } from "@aqardesk/ui/components/dropdown-menu"
 import { Input } from "@aqardesk/ui/components/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@aqardesk/ui/components/select"
 import type { Table } from "@tanstack/react-table"
 import { Columns3 } from "lucide-react"
 import Link from "next/link"
@@ -19,11 +26,19 @@ export function ListingsTableHeader<TData>({
   onSearchChange,
   onCreate,
   table,
+  statusFilter,
+  listingTypeFilter,
+  onStatusFilterChange,
+  onListingTypeFilterChange,
 }: {
   searchValue: string
   onSearchChange: (value: string) => void
   onCreate: () => void
   table: Table<TData>
+  statusFilter: string | null
+  listingTypeFilter: string | null
+  onStatusFilterChange: (value: string | null) => void
+  onListingTypeFilterChange: (value: string | null) => void
 }) {
   const locale = useCurrentLocale()
   const t = useI18n()
@@ -49,6 +64,65 @@ export function ListingsTableHeader<TData>({
             value={searchValue}
             onChange={(event) => onSearchChange(event.target.value)}
           />
+          <Select
+            value={listingTypeFilter ?? "all"}
+            onValueChange={(value) =>
+              onListingTypeFilterChange(value === "all" ? null : value)
+            }
+          >
+            <SelectTrigger
+              className="h-9 w-auto min-w-36"
+              aria-label={t("realEstateTables.filterListingType")}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">
+                {t("realEstateTables.allListingTypes")}
+              </SelectItem>
+              <SelectItem value="sale">{t("realEstateTables.sale")}</SelectItem>
+              <SelectItem value="rent">{t("realEstateTables.rent")}</SelectItem>
+            </SelectContent>
+          </Select>
+          <Select
+            value={statusFilter ?? "all"}
+            onValueChange={(value) =>
+              onStatusFilterChange(value === "all" ? null : value)
+            }
+          >
+            <SelectTrigger
+              className="h-9 w-auto min-w-36"
+              aria-label={t("realEstateTables.filterStatus")}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">
+                {t("realEstateTables.allStatuses")}
+              </SelectItem>
+              <SelectItem value="draft">
+                {t("realEstateTables.statusDraft")}
+              </SelectItem>
+              <SelectItem value="active">
+                {t("realEstateTables.statusActive")}
+              </SelectItem>
+              <SelectItem value="reserved">
+                {t("realEstateTables.statusReserved")}
+              </SelectItem>
+              <SelectItem value="sold">
+                {t("realEstateTables.statusSold")}
+              </SelectItem>
+              <SelectItem value="rented">
+                {t("realEstateTables.statusRented")}
+              </SelectItem>
+              <SelectItem value="expired">
+                {t("realEstateTables.statusExpired")}
+              </SelectItem>
+              <SelectItem value="withdrawn">
+                {t("realEstateTables.statusWithdrawn")}
+              </SelectItem>
+            </SelectContent>
+          </Select>
           <DropdownMenu>
             <DropdownMenuTrigger
               render={

@@ -1,4 +1,4 @@
-import { and, eq } from "drizzle-orm"
+import { and, count, eq, inArray } from "drizzle-orm"
 import { getDatabase, schema } from "../index"
 import { writeAuditLog } from "../utils/audit-log"
 import { withTransaction } from "../utils/database"
@@ -13,6 +13,21 @@ export async function listPermissions(database = getDatabase()) {
     .select()
     .from(schema.permissions)
     .orderBy(schema.permissions.key)
+}
+
+export async function listRolePermissionAssignments(
+  roleIds: string[],
+  database = getDatabase()
+) {
+  if (roleIds.length === 0) return []
+
+  return database
+    .select({
+      roleId: schema.rolePermissions.roleId,
+      permissionId: schema.rolePermissions.permissionId,
+    })
+    .from(schema.rolePermissions)
+    .where(inArray(schema.rolePermissions.roleId, roleIds))
 }
 
 export async function createRole(
@@ -238,5 +253,79 @@ export async function setUserRoles(
       },
       transaction
     )
+  }, database)
+}
+
+export async function getPermissionKeysForRoles(
+  roleIds: string[],
+  database = getDatabase()
+) {
+  if (roleIds.length === 0) return []
+
+  const rows = await database
+    .select({ key: schema.permissions.key })
+    .from(schema.rolePermissions)
+    .innerJoin(
+      schema.permissions,
+      eq(schema.rolePermissions.permissionId, schema.permissions.id)
+    )
+    .where(inArray(schema.rolePermissions.roleId, roleIds))
+
+  return [...new Set(rows.map(({ key }) => key))]
+}
+
+export async function countUsersWithRole(
+  roleId: string,
+  database = getDatabase()
+) {
+  const [result] = await database
+    .select({ total: count() })
+    .from(schema.userRoles)
+    .where(eq(schema.userRoles.roleId, roleId))
+
+  return result?.total ?? 0
+}
+
+export async function deleteRole(
+  id: string,
+  actor: { id: string; name?: string | null; email?: string | null },
+  database: DatabaseOrTransaction = getDatabase()
+) {
+  return withTransaction(async (transaction) => {
+    const [role] = await transaction
+      .select({
+        id: schema.roles.id,
+        key: schema.roles.key,
+        name: schema.roles.name,
+      })
+      .from(schema.roles)
+      .where(eq(schema.roles.id, id))
+      .limit(1)
+
+    if (!role) return { deleted: false, reason: "not_found" as const }
+
+    const [assignment] = await transaction
+      .select({ userId: schema.userRoles.userId })
+      .from(schema.userRoles)
+      .where(eq(schema.userRoles.roleId, id))
+      .limit(1)
+
+    if (assignment) return { deleted: false, reason: "assigned" as const }
+
+    await writeAuditLog(
+      {
+        actorId: actor.id,
+        actorName: actor.name,
+        actorEmail: actor.email,
+        action: "role.deleted",
+        entityType: "role",
+        entityId: role.id,
+        before: role,
+      },
+      transaction
+    )
+
+    await transaction.delete(schema.roles).where(eq(schema.roles.id, id))
+    return { deleted: true as const }
   }, database)
 }

@@ -16,6 +16,7 @@ export type TableId =
   | "properties"
   | "listings"
   | "owners"
+  | "users"
 
 /**
  * Settings for a single table
@@ -66,6 +67,7 @@ export const defaultHiddenColumns: Record<TableId, string[]> = {
   properties: [],
   listings: [],
   owners: [],
+  users: [],
 }
 
 /**

@@ -1,5 +1,6 @@
 "use client"
 
+import { propertyCategories } from "@aqardesk/categories"
 import { Button } from "@aqardesk/ui/components/button"
 import {
   DropdownMenu,
@@ -9,21 +10,33 @@ import {
   DropdownMenuTrigger,
 } from "@aqardesk/ui/components/dropdown-menu"
 import { Input } from "@aqardesk/ui/components/input"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@aqardesk/ui/components/select"
 import type { Table } from "@tanstack/react-table"
 import { Columns3 } from "lucide-react"
-import { useI18n } from "@/locales/client"
+import { useCurrentLocale, useI18n } from "@/locales/client"
 
 export function PropertiesTableHeader<TData>({
   searchValue,
   onSearchChange,
   onCreate,
   table,
+  propertyTypeFilter,
+  onPropertyTypeFilterChange,
 }: {
   searchValue: string
   onSearchChange: (value: string) => void
   onCreate: () => void
   table: Table<TData>
+  propertyTypeFilter: string | null
+  onPropertyTypeFilterChange: (value: string | null) => void
 }) {
+  const locale = useCurrentLocale()
   const t = useI18n()
   const columns = table
     .getAllLeafColumns()
@@ -47,6 +60,29 @@ export function PropertiesTableHeader<TData>({
             value={searchValue}
             onChange={(event) => onSearchChange(event.target.value)}
           />
+          <Select
+            value={propertyTypeFilter ?? "all"}
+            onValueChange={(value) =>
+              onPropertyTypeFilterChange(value === "all" ? null : value)
+            }
+          >
+            <SelectTrigger
+              className="h-9 w-auto min-w-40"
+              aria-label={t("realEstateTables.filterPropertyType")}
+            >
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="all">
+                {t("realEstateTables.allPropertyTypes")}
+              </SelectItem>
+              {propertyCategories.map((category) => (
+                <SelectItem key={category.type} value={category.type}>
+                  {locale === "ar" ? category.nameAr : category.nameEn}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
           <DropdownMenu>
             <DropdownMenuTrigger
               render={

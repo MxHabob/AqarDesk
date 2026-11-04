@@ -7,7 +7,7 @@ import { WidgetCards } from "./widget-cards"
 
 export function OverviewView() {
   return (
-    <div className="mt-2 pb-16 flex flex-col justify-center min-h-[calc(100vh-120px)] max-w-3xl mx-auto w-full">
+    <div className="mx-auto mt-2 flex min-h-[calc(100vh-120px)] w-full max-w-5xl flex-col justify-center pb-16">
       <div className="flex flex-col items-center text-center pt-6 pb-10 w-full">
         <WelcomeGreeting />
         <Suspense fallback={<SummarySkeleton />}>

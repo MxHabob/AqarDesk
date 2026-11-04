@@ -211,3 +211,50 @@ export async function archiveProperty(
 ) {
   return updateProperty(id, { archivedAt: new Date() }, actor, database)
 }
+
+export async function deleteProperty(
+  id: string,
+  actor: { id: string; name?: string | null; email?: string | null },
+  database: DatabaseOrTransaction = getDatabase()
+) {
+  return withTransaction(async (transaction) => {
+    const [property] = await transaction
+      .select({
+        id: schema.properties.id,
+        title: schema.properties.title,
+        type: schema.properties.type,
+      })
+      .from(schema.properties)
+      .where(eq(schema.properties.id, id))
+      .limit(1)
+    if (!property)
+      return { deleted: false as const, reason: "not_found" as const }
+
+    const [listing] = await transaction
+      .select({ id: schema.listings.id })
+      .from(schema.listings)
+      .where(eq(schema.listings.propertyId, id))
+      .limit(1)
+    if (listing) {
+      return { deleted: false as const, reason: "has_listings" as const }
+    }
+
+    await transaction
+      .delete(schema.properties)
+      .where(eq(schema.properties.id, id))
+    await writeAuditLog(
+      {
+        actorId: actor.id,
+        actorName: actor.name,
+        actorEmail: actor.email,
+        action: "property.deleted",
+        entityType: "property",
+        entityId: id,
+        before: property,
+      },
+      transaction
+    )
+
+    return { deleted: true as const }
+  }, database)
+}

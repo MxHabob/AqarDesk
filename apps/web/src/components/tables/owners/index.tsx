@@ -14,7 +14,7 @@ import {
   horizontalListSortingStrategy,
   SortableContext,
 } from "@dnd-kit/sortable"
-import { useSuspenseQuery } from "@tanstack/react-query"
+import { useQueryClient, useSuspenseQuery } from "@tanstack/react-query"
 import {
   flexRender,
   getCoreRowModel,
@@ -27,7 +27,15 @@ import { useVirtualizer, type VirtualItem } from "@tanstack/react-virtual"
 import { AnimatePresence } from "framer-motion"
 import { Download } from "lucide-react"
 import { useCallback, useMemo, useRef, useState } from "react"
-import { BottomBar, VirtualRow } from "@/components/tables/core"
+import {
+  bulkArchiveOwnersAction,
+  bulkDeleteOwnersAction,
+} from "@/actions/real-estate"
+import {
+  BulkActions,
+  TableEmptyState,
+  VirtualRow,
+} from "@/components/tables/core"
 import { DraggableHeader } from "@/components/tables/draggable-header"
 import { ResizeHandle } from "@/components/tables/resize-handle"
 import { useRealEstateParams } from "@/hooks/use-real-estate-params"
@@ -52,8 +60,12 @@ export function OwnersTable({
   const { setParams } = useRealEstateParams()
   const locale = useCurrentLocale()
   const t = useI18n()
+  const queryClient = useQueryClient()
   const parentRef = useRef<HTMLDivElement>(null)
   const { data } = useSuspenseQuery(realEstateQueries.owners())
+  const { data: capabilities } = useSuspenseQuery(
+    realEstateQueries.bulkCapabilities()
+  )
   const [globalFilter, setGlobalFilter] = useState("")
   const [rowSelection, setRowSelection] = useState<RowSelectionState>({})
   const columns = useMemo(
@@ -144,6 +156,9 @@ export function OwnersTable({
     [setParams]
   )
   const selectedCount = table.getSelectedRowModel().rows.length
+  const selectedIds = table
+    .getSelectedRowModel()
+    .rows.map((row) => row.original.id)
   const virtualItems = rowVirtualizer.getVirtualItems()
 
   return (
@@ -243,30 +258,57 @@ export function OwnersTable({
           <TableBody
             className="block border-x-0"
             style={{
-              height: `${rowVirtualizer.getTotalSize()}px`,
+              height: `${rows.length ? rowVirtualizer.getTotalSize() : 180}px`,
               position: "relative",
             }}
           >
-            {virtualItems.map((virtualRow: VirtualItem) => {
-              const row = rows[virtualRow.index]
-              if (!row) return null
-              return (
-                <VirtualRow
-                  key={row.id}
-                  row={row}
-                  virtualStart={virtualRow.start}
-                  rowHeight={45}
-                  getStickyStyle={getStickyStyle}
-                  getStickyClassName={getRowStickyClassName}
-                  nonClickableColumns={NON_CLICKABLE_COLUMNS}
-                  onCellClick={handleCellClick}
-                  columnSizing={columnSizing}
-                  columnOrder={columnOrder}
-                  columnVisibility={columnVisibility}
-                  isSelected={rowSelection[row.id] ?? false}
-                />
-              )
-            })}
+            {rows.length === 0 ? (
+              <TableEmptyState
+                title={
+                  globalFilter
+                    ? t("realEstateTables.noOwners")
+                    : t("realEstateTables.emptyOwners")
+                }
+                description={
+                  globalFilter
+                    ? t("common.noResults")
+                    : t("common.emptyDescription")
+                }
+                actionLabel={
+                  globalFilter
+                    ? t("realEstateTables.clearFilters")
+                    : t("realEstateTables.addOwner")
+                }
+                onAction={() => {
+                  if (globalFilter) {
+                    setGlobalFilter("")
+                  } else {
+                    void setParams({ createOwner: true })
+                  }
+                }}
+              />
+            ) : (
+              virtualItems.map((virtualRow: VirtualItem) => {
+                const row = rows[virtualRow.index]
+                if (!row) return null
+                return (
+                  <VirtualRow
+                    key={row.id}
+                    row={row}
+                    virtualStart={virtualRow.start}
+                    rowHeight={45}
+                    getStickyStyle={getStickyStyle}
+                    getStickyClassName={getRowStickyClassName}
+                    nonClickableColumns={NON_CLICKABLE_COLUMNS}
+                    onCellClick={handleCellClick}
+                    columnSizing={columnSizing}
+                    columnOrder={columnOrder}
+                    columnVisibility={columnVisibility}
+                    isSelected={rowSelection[row.id] ?? false}
+                  />
+                )
+              })
+            )}
           </TableBody>
         </Table>
       </div>
@@ -277,11 +319,94 @@ export function OwnersTable({
       </p>
       <AnimatePresence>
         {selectedCount > 0 && (
-          <BottomBar
+          <BulkActions
             selectedCount={selectedCount}
             selectedLabel={t("common.selectedRows")}
             deselectLabel={t("common.deselectAll")}
             onDeselect={() => table.toggleAllRowsSelected(false)}
+            onComplete={(result) =>
+              setRowSelection(
+                Object.fromEntries(
+                  (result.failedIds ?? []).map((id) => [id, true])
+                )
+              )
+            }
+            actionLabel={t("realEstateTables.bulkActions")}
+            deleteLabel={
+              capabilities.owners.delete
+                ? t("realEstateTables.deleteSelected")
+                : ""
+            }
+            deleteTitle={t("realEstateTables.deleteTitle")}
+            deleteDescription={t("realEstateTables.deleteDescription", {
+              count: selectedCount,
+            })}
+            deletePrompt={t("realEstateTables.deletePrompt", {
+              keyword: "{keyword}",
+            })}
+            confirmationKeyword={t("realEstateTables.deleteKeyword")}
+            confirmLabel={t("realEstateTables.confirmDelete")}
+            cancelLabel={t("common.cancel")}
+            successLabel={(actionId, count) => {
+              if (actionId === "delete") {
+                return t("realEstateTables.deletedOwners")
+              }
+              if (actionId === "archive") {
+                return t("realEstateTables.archivedOwners")
+              }
+              return t("realEstateTables.bulkSuccess", { count })
+            }}
+            partialLabel={t("realEstateTables.bulkPartial")}
+            partialDescription={t("realEstateTables.bulkPartialDescription", {
+              affected: "{affected}",
+              skipped: "{skipped}",
+            })}
+            cleanupFailedDescription={t(
+              "realEstateTables.cleanupFailedDescription",
+              { count: "{count}" }
+            )}
+            actionErrorLabel={t("realEstateTables.bulkError")}
+            actions={
+              capabilities.owners.archive
+                ? [
+                    {
+                      id: "archive",
+                      label: t("realEstateTables.archiveSelected"),
+                    },
+                  ]
+                : []
+            }
+            onAction={async (actionId) => {
+              const result =
+                actionId === "delete"
+                  ? await bulkDeleteOwnersAction(selectedIds)
+                  : await bulkArchiveOwnersAction(selectedIds)
+              await Promise.all([
+                queryClient.invalidateQueries({
+                  queryKey: ["real-estate", "owners"],
+                }),
+                queryClient.invalidateQueries({
+                  queryKey: ["dashboard-summary"],
+                }),
+              ])
+              return {
+                ...result,
+                details:
+                  "skippedReasons" in result &&
+                  Array.isArray(result.skippedReasons)
+                    ? [
+                        result.skippedReasons.includes("has_properties")
+                          ? t("realEstateTables.ownerBlockedByProperty")
+                          : undefined,
+                        result.skippedReasons.includes("not_found")
+                          ? t("realEstateTables.bulkNotFound")
+                          : undefined,
+                      ]
+                        .filter(Boolean)
+                        .join(" ")
+                    : undefined,
+              }
+            }}
           >
             <Button
               size="sm"
@@ -290,7 +415,7 @@ export function OwnersTable({
               <Download aria-hidden="true" />
               {t("common.exportSelected")}
             </Button>
-          </BottomBar>
+          </BulkActions>
         )}
       </AnimatePresence>
     </section>

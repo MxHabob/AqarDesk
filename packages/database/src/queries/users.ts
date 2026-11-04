@@ -1,4 +1,4 @@
-import { count, desc, eq, ilike, lt, or } from "drizzle-orm"
+import { count, desc, eq, ilike, inArray, lt, or } from "drizzle-orm"
 import { getDatabase, schema } from "../index"
 import { writeAuditLog } from "../utils/audit-log"
 import { withTransaction } from "../utils/database"
@@ -81,8 +81,16 @@ export async function listUsers(
         name: schema.users.name,
         email: schema.users.email,
         emailVerified: schema.users.emailVerified,
+        twoFactorEnabled: schema.users.twoFactorEnabled,
         image: schema.users.image,
+        locale: schema.users.locale,
+        timezone: schema.users.timezone,
+        timezoneAutoSync: schema.users.timezoneAutoSync,
+        dateFormat: schema.users.dateFormat,
+        timeFormat: schema.users.timeFormat,
+        weekStartsOnMonday: schema.users.weekStartsOnMonday,
         createdAt: schema.users.createdAt,
+        updatedAt: schema.users.updatedAt,
       })
       .from(schema.users)
       .where(where)
@@ -95,6 +103,7 @@ export async function listUsers(
 
 export async function createUser(
   values: typeof schema.users.$inferInsert,
+  actor: { id: string; name?: string | null; email?: string | null },
   database: DatabaseOrTransaction = getDatabase()
 ) {
   return withTransaction(async (transaction) => {
@@ -113,9 +122,9 @@ export async function createUser(
     if (user) {
       await writeAuditLog(
         {
-          actorId: user.id,
-          actorName: user.name,
-          actorEmail: user.email,
+          actorId: actor.id,
+          actorName: actor.name,
+          actorEmail: actor.email,
           action: "user.created",
           entityType: "user",
           entityId: user.id,
@@ -130,6 +139,49 @@ export async function createUser(
     }
 
     return user
+  }, database)
+}
+
+export async function listUserRoleAssignments(
+  userIds: string[],
+  database: Database = getDatabase()
+) {
+  if (userIds.length === 0) return []
+
+  return database
+    .select({
+      userId: schema.userRoles.userId,
+      roleId: schema.userRoles.roleId,
+    })
+    .from(schema.userRoles)
+    .where(inArray(schema.userRoles.userId, userIds))
+}
+
+export async function revokeUserSessions(
+  userId: string,
+  actor: { id: string; name?: string | null; email?: string | null },
+  database: DatabaseOrTransaction = getDatabase()
+) {
+  return withTransaction(async (transaction) => {
+    const sessions = await transaction
+      .delete(schema.sessions)
+      .where(eq(schema.sessions.userId, userId))
+      .returning({ id: schema.sessions.id })
+
+    await writeAuditLog(
+      {
+        actorId: actor.id,
+        actorName: actor.name,
+        actorEmail: actor.email,
+        action: "user.sessions_revoked",
+        entityType: "user",
+        entityId: userId,
+        after: { revokedCount: sessions.length },
+      },
+      transaction
+    )
+
+    return sessions.length
   }, database)
 }
 

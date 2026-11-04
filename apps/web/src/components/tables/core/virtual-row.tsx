@@ -28,6 +28,7 @@ interface VirtualRowProps<TData> {
   columnVisibility?: VisibilityState
   isSelected?: boolean
   isExporting?: boolean
+  rowClickable?: boolean
 }
 
 function VirtualRowInner<TData>({
@@ -38,6 +39,7 @@ function VirtualRowInner<TData>({
   getStickyStyle,
   getStickyClassName,
   isSelected,
+  rowClickable = true,
   nonClickableColumns = new Set(["select", "actions"]),
 }: VirtualRowProps<TData>) {
   const cells = row.getVisibleCells()
@@ -55,7 +57,8 @@ function VirtualRowInner<TData>({
       data-index={row.index}
       data-state={isSelected ? "selected" : undefined}
       className={cn(
-        "group cursor-pointer select-text data-[state=selected]:bg-muted/50",
+        "group select-text data-[state=selected]:bg-muted/50",
+        rowClickable && "cursor-pointer",
         "hover:bg-[#F2F1EF] hover:dark:bg-[#0f0f0f]",
         "flex items-center border-0",
         "absolute top-0 start-0 w-full min-w-full"
@@ -121,6 +124,7 @@ function arePropsEqual<TData>(
     prevProps.row.id === nextProps.row.id &&
     prevProps.virtualStart === nextProps.virtualStart &&
     prevProps.rowHeight === nextProps.rowHeight &&
+    prevProps.rowClickable === nextProps.rowClickable &&
     // Check if row selection state changed (use prop for reliable comparison)
     prevProps.isSelected === nextProps.isSelected &&
     // Check if exporting state changed (for showing loading spinners)
