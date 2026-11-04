@@ -10,7 +10,7 @@ import {
   createPageMetadata,
   getMarketingPageCopy,
 } from "@/lib/marketing/metadata"
-import { getScopedI18n } from "@/locales/server"
+import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
 type Props = { params: Promise<{ locale: string }> }
 
@@ -23,7 +23,9 @@ export async function generateMetadata({ params }: Props) {
   })
 }
 
-export default async function AboutPage() {
+export default async function AboutPage({ params }: Props) {
+  const { locale } = await params
+  setStaticParamsLocale(locale)
   const t = await getScopedI18n("site")
 
   return (

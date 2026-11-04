@@ -21,7 +21,7 @@ import {
   getSiteUrl,
 } from "@/lib/marketing/metadata"
 import { locales } from "@/locales/config"
-import { getScopedI18n } from "@/locales/server"
+import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
 export async function generateMetadata({
   params,
@@ -29,6 +29,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string }>
 }): Promise<Metadata> {
   const { locale } = await params
+  setStaticParamsLocale(locale)
   const t = await getScopedI18n("site")
   const copy = getMarketingPageCopy("home", locale)
   const localizedUrl = getSiteUrl(`/${locale}`)

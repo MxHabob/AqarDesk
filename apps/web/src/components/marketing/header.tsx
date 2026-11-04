@@ -171,7 +171,7 @@ export function Header({
                   />
                 ) : (
                   <Link
-                    className="text-sm text-primary transition-colors hover:text-primary/80"
+                    className="inline-flex min-h-10 items-center justify-center bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                     href="/login"
                   >
                     {t("login")}
@@ -226,7 +226,7 @@ export function Header({
                 />
               ) : (
                 <Link
-                  className="text-sm text-primary transition-colors hover:text-primary/80"
+                  className="inline-flex min-h-10 items-center justify-center bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
                   href="/login"
                 >
                   {t("login")}
