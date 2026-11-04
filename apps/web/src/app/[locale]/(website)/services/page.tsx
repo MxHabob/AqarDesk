@@ -3,6 +3,10 @@ import {
   ArrowUpRight,
   Building2,
   ChartNoAxesCombined,
+  ClipboardList,
+  DraftingCompass,
+  FileText,
+  Hammer,
   Handshake,
   KeyRound,
   Megaphone,
@@ -11,6 +15,11 @@ import {
 import type { Metadata } from "next"
 import Image from "next/image"
 import Link from "next/link"
+import {
+  defaultTestimonials,
+  localizeTestimonial,
+} from "@/components/marketing/sections/testimonials-data"
+import { ServicesFeaturedPreview } from "@/components/marketing/services-featured-preview"
 import {
   getFilteredPublicListings,
   getPublicListingCoverPhotos,
@@ -31,6 +40,11 @@ const serviceIcons = {
   "property-management": Handshake,
   "property-marketing": Megaphone,
   "property-consultation": MessagesSquare,
+  "real-estate-contracts": FileText,
+  "engineering-design": DraftingCompass,
+  contracting: Handshake,
+  tenders: ClipboardList,
+  "construction-finishing": Hammer,
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
@@ -81,19 +95,30 @@ export default async function ServicesPage({ params }: Props) {
     })
   )
 
-  const featuredListing = listings[0] ?? null
   const listingIds = [
     ...new Set([
-      ...(featuredListing ? [featuredListing.id] : []),
+      ...listings.map((listing) => listing.id),
       ...[...listingsByService.values()]
         .filter((listing) => listing !== null)
         .map((listing) => listing.id),
     ]),
   ]
   const coverPhotos = await getPublicListingCoverPhotos(listingIds)
-  const featuredPhoto = featuredListing
-    ? coverPhotos[featuredListing.id]
-    : undefined
+  const featuredListings = listings.map((listing) => ({
+    id: listing.id,
+    title: listing.title,
+    photo: coverPhotos[listing.id],
+  }))
+  const listingsWithPhotos = featuredListings.filter((listing) => listing.photo)
+  const localizedQuotes = defaultTestimonials.map((testimonial) => {
+    const quote = localizeTestimonial(testimonial, locale)
+    return {
+      name: quote.name,
+      title: quote.title,
+      country: quote.country,
+      content: quote.content,
+    }
+  })
 
   return (
     <article className="mx-auto max-w-6xl py-8 sm:py-12 lg:py-16">
@@ -118,53 +143,18 @@ export default async function ServicesPage({ params }: Props) {
           </Link>
         </div>
 
-        <Link
-          aria-label={featuredListing?.title ?? t("featuredTitle")}
-          className="group relative block min-h-64 overflow-hidden border-t border-border bg-background lg:min-h-full lg:border-s lg:border-t-0"
-          href={
-            featuredListing ? `/listings/${featuredListing.id}` : "/portfolio"
+        <ServicesFeaturedPreview
+          demoNotice={t("testimonialsDemoNotice")}
+          featuredLabel={t("featuredTitle")}
+          listings={
+            listingsWithPhotos.length
+              ? listingsWithPhotos
+              : featuredListings.slice(0, 1)
           }
-        >
-          {featuredPhoto ? (
-            <Image
-              alt={
-                featuredPhoto.altText ||
-                featuredListing?.title ||
-                t("featuredTitle")
-              }
-              className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-              fill
-              priority
-              sizes="(max-width: 1023px) 100vw, 45vw"
-              src={featuredPhoto.url}
-              unoptimized
-            />
-          ) : (
-            <span className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle,var(--border)_1px,transparent_1px)] bg-[size:16px_16px]">
-              <Building2
-                aria-hidden
-                className="size-16 text-muted-foreground"
-                strokeWidth={1}
-              />
-            </span>
-          )}
-          {featuredListing && (
-            <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-background/90 p-4 backdrop-blur-sm sm:p-5">
-              <span>
-                <span className="block text-xs text-muted-foreground">
-                  {t("featuredTitle")}
-                </span>
-                <span className="mt-1 block font-medium text-foreground">
-                  {featuredListing.title}
-                </span>
-              </span>
-              <ArrowUpRight
-                aria-hidden
-                className="size-5 shrink-0 text-foreground rtl:-scale-x-100"
-              />
-            </span>
-          )}
-        </Link>
+          locale={locale}
+          quotes={localizedQuotes}
+          quotesLabel={t("testimonialsTitle")}
+        />
       </header>
 
       <section
@@ -231,11 +221,11 @@ export default async function ServicesPage({ params }: Props) {
                     <Icon aria-hidden className="size-4" />
                     {t("servicesEyebrow")}
                   </span>
-                  <span className="mt-4 font-serif text-2xl text-foreground">
-                    {t(`serviceCopy.${service.copyKey}.title`)}
+                  <span className="mt-3 line-clamp-2 font-serif text-lg font-normal leading-snug text-foreground sm:text-xl">
+                    {t(`serviceCopy.${service.copyKey}.cardTitle`)}
                   </span>
-                  <span className="mt-3 flex-1 text-sm leading-7 text-muted-foreground">
-                    {t(`serviceCopy.${service.copyKey}.description`)}
+                  <span className="mt-2 line-clamp-3 flex-1 text-xs leading-6 text-muted-foreground">
+                    {t(`serviceCopy.${service.copyKey}.summary`)}
                   </span>
                   <span className="mt-6 inline-flex items-center gap-2 border-t border-border pt-4 text-sm font-medium text-foreground">
                     {t("serviceDetails")}

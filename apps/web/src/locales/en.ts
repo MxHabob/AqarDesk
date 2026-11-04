@@ -125,6 +125,7 @@ export default {
     customerAccount: "My account",
     arabic: "Arabic",
     english: "English",
+    openingOffer: "Opening offer",
     browse: "Browse properties",
     browseListings: "Browse listings",
     viewListing: "View property details",
@@ -156,11 +157,13 @@ export default {
     servicesEyebrow: "Our services",
     servicesTitle: "Real estate services for your needs",
     servicesDescription:
-      "We help you explore properties for sale and rent, review investment opportunities, and get support from the office team.",
+      "We offer real estate and investment services, engineering design and consultation, contracting and construction, alongside property management and contract preparation.",
     serviceSelectionTitle: "Support for every step of your property journey",
     serviceCopy: {
       sale: {
         title: "Buying and selling",
+        cardTitle: "Buying and selling",
+        summary: "Explore listings and connect with ease.",
         description:
           "Explore available properties and get help coordinating between owners and interested buyers.",
         details:
@@ -171,6 +174,8 @@ export default {
       },
       rent: {
         title: "Rentals",
+        cardTitle: "Rentals",
+        summary: "Rental options for your needs.",
         description:
           "Find available rentals, review their details, and get support from our office with questions and coordination.",
         details:
@@ -181,6 +186,8 @@ export default {
       },
       investment: {
         title: "Investment opportunities",
+        cardTitle: "Property investment",
+        summary: "Discover promising property opportunities.",
         description:
           "Explore land and buildings listed for investment and discuss your needs with our office team.",
         details:
@@ -191,6 +198,8 @@ export default {
       },
       propertyManagement: {
         title: "Property management",
+        cardTitle: "Property management",
+        summary: "Stay on top of your properties.",
         description:
           "Help owners organize property information and keep track of listings and inquiries in one place.",
         details:
@@ -201,6 +210,8 @@ export default {
       },
       propertyMarketing: {
         title: "Property marketing",
+        cardTitle: "Property marketing",
+        summary: "Clear listings that reach interested clients.",
         description:
           "Present properties with clear details and imagery so interested clients can find available options.",
         details:
@@ -211,6 +222,8 @@ export default {
       },
       propertyConsultation: {
         title: "Real estate guidance",
+        cardTitle: "Property guidance",
+        summary: "Guidance to find the right option.",
         description:
           "Talk with our office team to review your needs and discuss available property options.",
         details:
@@ -218,6 +231,66 @@ export default {
         point1: "Review your needs and available options.",
         point2: "Get answers to questions about listings.",
         point3: "Coordinate communication and follow-up.",
+      },
+      realEstateContracts: {
+        title: "Real estate contracts",
+        cardTitle: "Property contracts",
+        summary: "Sale, rental, and investment contracts.",
+        description:
+          "Prepare and draft property sale, rental, and investment contracts, and organize the details for all parties.",
+        details:
+          "Our office helps prepare real estate contracts and coordinate information and requirements between the parties before an agreement is completed.",
+        point1: "Prepare sale, rental, and property investment contracts.",
+        point2: "Organize property and involved-party information.",
+        point3: "Follow up on contract requirements with the parties.",
+      },
+      engineeringDesign: {
+        title: "Engineering design and consultation",
+        cardTitle: "Engineering design",
+        summary: "Design and guidance for your project.",
+        description:
+          "Engineering designs and consultations for buildings and projects, shaped around client needs and site conditions.",
+        details:
+          "We coordinate engineering design and consultation services for projects, from understanding requirements to developing concepts and following up on details.",
+        point1: "Prepare engineering designs and project concepts.",
+        point2: "Provide consultation on buildings and sites.",
+        point3: "Coordinate design requirements with the client.",
+      },
+      contracting: {
+        title: "Contracting and general agencies",
+        cardTitle: "Contracting and agencies",
+        summary: "Contracting and general agency services.",
+        description:
+          "Contracting and project coordination services, alongside follow-up on agreed general agency matters.",
+        details:
+          "We coordinate contracting work and project execution requirements, and follow up on general agency matters agreed with the client.",
+        point1: "Coordinate contracting work for buildings and projects.",
+        point2: "Follow up on project requirements with relevant parties.",
+        point3: "Provide agreed general agency services.",
+      },
+      tenders: {
+        title: "Tenders",
+        cardTitle: "Tenders",
+        summary: "Follow tender opportunities.",
+        description:
+          "Track tender opportunities and requirements, organize documents, and coordinate participation.",
+        details:
+          "We help follow tender announcements and submission requirements, organize documents, and coordinate the related next steps.",
+        point1: "Track relevant tender opportunities.",
+        point2: "Organize submission documents and requirements.",
+        point3: "Coordinate participation and follow-up.",
+      },
+      constructionFinishing: {
+        title: "Construction, finishing, and maintenance",
+        cardTitle: "Construction and finishing",
+        summary: "Construction, finishing, and maintenance.",
+        description:
+          "Building construction, finishing, and maintenance, including hangars and interior decoration.",
+        details:
+          "We coordinate construction, finishing, and maintenance work for buildings, as well as hangar construction and decoration.",
+        point1: "Carry out building construction and finishing work.",
+        point2: "Maintain buildings and construct hangars.",
+        point3: "Complete decoration work to project requirements.",
       },
     },
     testimonialsTitle: "Property client experiences",

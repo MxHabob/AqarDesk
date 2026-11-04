@@ -35,6 +35,36 @@ export const marketingServices = [
     listingType: null,
     propertyType: undefined,
   },
+  {
+    slug: "real-estate-contracts",
+    copyKey: "realEstateContracts",
+    listingType: null,
+    propertyType: undefined,
+  },
+  {
+    slug: "engineering-design",
+    copyKey: "engineeringDesign",
+    listingType: null,
+    propertyType: undefined,
+  },
+  {
+    slug: "contracting",
+    copyKey: "contracting",
+    listingType: null,
+    propertyType: undefined,
+  },
+  {
+    slug: "tenders",
+    copyKey: "tenders",
+    listingType: null,
+    propertyType: undefined,
+  },
+  {
+    slug: "construction-finishing",
+    copyKey: "constructionFinishing",
+    listingType: null,
+    propertyType: undefined,
+  },
 ] as const
 
 export type MarketingService = (typeof marketingServices)[number]

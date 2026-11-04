@@ -3,13 +3,13 @@
 import { cn } from "@aqardesk/ui/cn"
 import { Icons } from "@aqardesk/ui/icons"
 import { motion } from "motion/react"
-import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useRef, useState } from "react"
 import { marketingServices } from "@/lib/marketing/services"
 import { useScopedI18n } from "@/locales/client"
 import { MarketingAccountMenu } from "./account-menu"
 import { HeaderPreferences } from "./header-preferences"
+import { ServicesFeaturedPreview } from "./services-featured-preview"
 
 interface HeaderProps {
   transparent?: boolean
@@ -19,10 +19,17 @@ interface HeaderProps {
   listingPreviews: Array<{
     id: string
     title: string
-    listingType: "sale" | "rent"
-    location: string
-    image: { url: string; altText: string | null } | null
+    photo: { url: string; altText: string | null } | null
   }>
+  quotes: Array<{
+    name: string
+    title: string
+    country: string
+    content: string
+  }>
+  featuredLabel: string
+  quotesLabel: string
+  demoNotice: string
   user?: {
     name: string
     email: string
@@ -31,54 +38,66 @@ interface HeaderProps {
   roleDestination?: string | null
 }
 
-const ANNOUNCEMENT_BAR_HEIGHT = 36
-
 export function Header({
   transparent = false,
   hideMenuItems = false,
   locale,
   countryCode,
   listingPreviews,
+  quotes,
+  featuredLabel,
+  quotesLabel,
+  demoNotice,
   user = null,
   roleDestination = null,
 }: HeaderProps) {
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [isServicesOpen, setIsServicesOpen] = useState(false)
   const [isMobileServicesOpen, setIsMobileServicesOpen] = useState(false)
-  const [headerHeight, setHeaderHeight] = useState(68)
-  const headerRef = useRef<HTMLDivElement>(null)
+  const servicesCloseTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(
+    null
+  )
   const t = useScopedI18n("site")
 
-  useEffect(() => {
-    const header = headerRef.current
-    if (!header) return
-
-    const resizeObserver = new ResizeObserver(() => {
-      setHeaderHeight(header.getBoundingClientRect().height)
-    })
-    resizeObserver.observe(header)
-
-    return () => resizeObserver.disconnect()
-  }, [])
+  useEffect(
+    () => () => {
+      if (servicesCloseTimeoutRef.current) {
+        clearTimeout(servicesCloseTimeoutRef.current)
+      }
+    },
+    []
+  )
 
   return (
     <>
       <button
         aria-label={t("closeServicesMenu")}
         className={cn(
-          "fixed inset-x-0 bottom-0 z-40 border-0 bg-black/40 p-0 transition-opacity duration-150",
+          "fixed inset-0 z-40 border-0 bg-black/40 p-0 transition-opacity duration-150",
           isServicesOpen
             ? "visible opacity-100"
             : "pointer-events-none invisible opacity-0"
         )}
         onClick={() => setIsServicesOpen(false)}
-        style={{ top: ANNOUNCEMENT_BAR_HEIGHT + headerHeight }}
         type="button"
       />
 
-      <nav className="fixed inset-x-0 top-9 z-50 w-full">
+      <nav
+        className="fixed inset-x-0 top-9 z-50 w-full"
+        onMouseEnter={() => {
+          if (servicesCloseTimeoutRef.current) {
+            clearTimeout(servicesCloseTimeoutRef.current)
+            servicesCloseTimeoutRef.current = null
+          }
+        }}
+        onMouseLeave={() => {
+          servicesCloseTimeoutRef.current = setTimeout(() => {
+            servicesCloseTimeoutRef.current = null
+            setIsServicesOpen(false)
+          }, 180)
+        }}
+      >
         <div
-          ref={headerRef}
           className={cn(
             "relative flex items-center justify-between px-4 py-3 sm:px-4 md:px-4 lg:px-4 xl:gap-6 xl:px-6 xl:py-4 2xl:px-8",
             isMenuOpen && "border-b border-border",
@@ -107,7 +126,13 @@ export function Header({
                   aria-expanded={isServicesOpen}
                   className="flex items-center gap-1 px-3 py-2 text-sm text-muted-foreground transition-colors hover:text-foreground"
                   onClick={() => setIsServicesOpen(true)}
-                  onMouseEnter={() => setIsServicesOpen(true)}
+                  onMouseEnter={() => {
+                    if (servicesCloseTimeoutRef.current) {
+                      clearTimeout(servicesCloseTimeoutRef.current)
+                      servicesCloseTimeoutRef.current = null
+                    }
+                    setIsServicesOpen(true)
+                  }}
                   type="button"
                 >
                   {t("services")}
@@ -118,111 +143,6 @@ export function Header({
                     )}
                   />
                 </button>
-                {isServicesOpen && (
-                  <>
-                    <span
-                      aria-hidden="true"
-                      className="absolute inset-x-0 top-full h-4"
-                    />
-                    <div
-                      className="fixed inset-x-0 z-50 overflow-hidden border-y border-border bg-background shadow-lg"
-                      style={{ top: ANNOUNCEMENT_BAR_HEIGHT + headerHeight }}
-                    >
-                      <div className="p-6 xl:p-8 2xl:p-10">
-                        <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-4 xl:gap-6">
-                          <div className="lg:col-span-2 lg:max-w-md xl:max-w-xl">
-                            <div className="grid grid-cols-2 gap-x-4">
-                              {[0, 1].map((column) => (
-                                <div key={column}>
-                                  {marketingServices
-                                    .filter((_, index) => index % 2 === column)
-                                    .map((service) => (
-                                      <Link
-                                        className="group flex items-center py-3 transition-colors duration-200 hover:bg-secondary"
-                                        href={`/services/${service.slug}`}
-                                        key={service.slug}
-                                        onClick={() => setIsServicesOpen(false)}
-                                      >
-                                        <span className="flex flex-col ps-2">
-                                          <span className="mb-1 font-sans text-base text-foreground">
-                                            {t(
-                                              `serviceCopy.${service.copyKey}.title`
-                                            )}
-                                          </span>
-                                          <span className="font-sans text-xs text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
-                                            {t(
-                                              `serviceCopy.${service.copyKey}.description`
-                                            )}
-                                          </span>
-                                        </span>
-                                      </Link>
-                                    ))}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-
-                          <div className="lg:col-span-2 flex items-start justify-end gap-4">
-                            {listingPreviews.slice(0, 2).map((listing) => (
-                              <Link
-                                className="group flex h-[277px] w-full max-w-[320px] shrink-0 flex-col overflow-hidden border border-border transition-all duration-200 hover:scale-[1.02] hover:border-foreground/20 hover:opacity-90 lg:w-[320px] lg:max-w-none xl:w-[350px] 2xl:w-[400px]"
-                                href={`/listings/${listing.id}`}
-                                key={listing.id}
-                                onClick={() => setIsServicesOpen(false)}
-                              >
-                                <span className="relative flex-1 overflow-hidden bg-secondary">
-                                  {listing.image ? (
-                                    <Image
-                                      alt={
-                                        listing.image.altText || listing.title
-                                      }
-                                      className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
-                                      fill
-                                      sizes="(max-width: 1279px) 320px, 400px"
-                                      src={listing.image.url}
-                                      unoptimized
-                                    />
-                                  ) : (
-                                    <span className="flex h-full items-center justify-center bg-[radial-gradient(circle,var(--border)_1px,transparent_1px)] bg-[size:16px_16px] font-serif text-2xl text-muted-foreground">
-                                      {listing.title}
-                                    </span>
-                                  )}
-                                </span>
-                                <span className="border-t border-border bg-background p-3">
-                                  <span className="block font-sans text-xs text-foreground">
-                                    {listing.title}
-                                  </span>
-                                  <span className="mt-1 block font-sans text-xs text-muted-foreground transition-colors group-hover:text-foreground">
-                                    {listing.location ||
-                                      (listing.listingType === "sale"
-                                        ? t("forSale")
-                                        : t("forRent"))}
-                                  </span>
-                                </span>
-                              </Link>
-                            ))}
-                            {listingPreviews.length === 0 && (
-                              <Link
-                                className="group flex h-[277px] w-full max-w-[400px] shrink-0 flex-col overflow-hidden border border-border transition-all duration-200 hover:scale-[1.02] hover:border-foreground/20 hover:opacity-90"
-                                href="/portfolio"
-                                onClick={() => setIsServicesOpen(false)}
-                              >
-                                <span className="flex flex-1 items-center justify-center bg-secondary">
-                                  <span className="font-serif text-2xl text-muted-foreground">
-                                    {t("portfolio")}
-                                  </span>
-                                </span>
-                                <span className="border-t border-border bg-background p-3 font-sans text-xs text-foreground">
-                                  {t("latestProperties")}
-                                </span>
-                              </Link>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </>
-                )}
               </div>
 
               <Link
@@ -315,6 +235,48 @@ export function Header({
             </div>
           )}
         </div>
+        {isServicesOpen && (
+          <div className="absolute inset-x-0 top-full z-50 overflow-hidden border-y border-border bg-background shadow-lg">
+            <div className="p-6 xl:p-8 2xl:p-10">
+              <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-5 xl:gap-6">
+                <div className="min-w-0 lg:col-span-3">
+                  <div className="grid grid-cols-3 gap-x-4 gap-y-1">
+                    {marketingServices.map((service) => (
+                      <Link
+                        className="group flex items-center py-2 transition-colors duration-200 hover:bg-secondary"
+                        href={`/services/${service.slug}`}
+                        key={service.slug}
+                        onClick={() => setIsServicesOpen(false)}
+                      >
+                        <span className="flex flex-col ps-2">
+                          <span className="mb-1 font-sans text-sm text-foreground">
+                            {t(`serviceCopy.${service.copyKey}.title`)}
+                          </span>
+                          <span className="line-clamp-1 font-sans text-[11px] text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
+                            {t(`serviceCopy.${service.copyKey}.summary`)}
+                          </span>
+                        </span>
+                      </Link>
+                    ))}
+                  </div>
+                </div>
+
+                <div className="flex min-w-0 justify-end lg:col-span-2">
+                  <ServicesFeaturedPreview
+                    className="h-[277px] w-full max-w-[400px]"
+                    demoNotice={demoNotice}
+                    featuredLabel={featuredLabel}
+                    listings={listingPreviews}
+                    locale={locale}
+                    onClick={() => setIsServicesOpen(false)}
+                    quotes={quotes}
+                    quotesLabel={quotesLabel}
+                  />
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
       </nav>
 
       {isMenuOpen && !hideMenuItems && (

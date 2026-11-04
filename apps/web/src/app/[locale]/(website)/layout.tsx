@@ -5,6 +5,10 @@ import { headers } from "next/headers"
 import type { ReactNode } from "react"
 import { Footer } from "@/components/marketing/footer"
 import { Header } from "@/components/marketing/header"
+import {
+  defaultTestimonials,
+  localizeTestimonial,
+} from "@/components/marketing/sections/testimonials-data"
 import { SunsetBanner } from "@/components/sunset-banner"
 import { getRoleDestination, getUserRoleKeys } from "@/lib/auth/roles"
 import {
@@ -100,18 +104,31 @@ export default async function Layout({
     maxArea: null,
     sort: "newest",
     page: 1,
-    pageSize: 2,
+    pageSize: 12,
   })
   const latestListingPhotos = await getPublicListingCoverPhotos(
     latestListings.rows.map((listing) => listing.id)
   )
-  const listingPreviews = latestListings.rows.map((listing) => ({
+  const allListingPreviews = latestListings.rows.map((listing) => ({
     id: listing.id,
     title: listing.title,
-    listingType: listing.type,
-    location: [listing.city, listing.district].filter(Boolean).join("، "),
-    image: latestListingPhotos[listing.id] ?? null,
+    photo: latestListingPhotos[listing.id] ?? null,
   }))
+  const listingsWithPhotos = allListingPreviews.filter(
+    (listing) => listing.photo
+  )
+  const listingPreviews = listingsWithPhotos.length
+    ? listingsWithPhotos
+    : allListingPreviews
+  const quotes = defaultTestimonials.map((testimonial) => {
+    const quote = localizeTestimonial(testimonial, locale)
+    return {
+      name: quote.name,
+      title: quote.title,
+      country: quote.country,
+      content: quote.content,
+    }
+  })
   const organizationJsonLd = {
     "@context": "https://schema.org",
     "@type": "Organization",
@@ -155,8 +172,12 @@ export default async function Layout({
       <SunsetBanner locale={locale} />
       <Header
         countryCode={countryCode}
+        demoNotice={t("testimonialsDemoNotice")}
+        featuredLabel={t("featuredTitle")}
         listingPreviews={listingPreviews}
         locale={locale}
+        quotes={quotes}
+        quotesLabel={t("testimonialsTitle")}
         user={
           session
             ? {

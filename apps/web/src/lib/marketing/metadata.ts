@@ -36,7 +36,7 @@ const pageCopy = {
     services: {
       title: "خدماتنا العقارية",
       description:
-        "اكتشف خدمات مكتب علي شوبان في بيع العقارات وشرائها وتأجيرها والفرص الاستثمارية، وتواصل معنا لمتابعة العقارات المتاحة.",
+        "اكتشف خدمات مكتب علي شوبان في العقارات والاستثمار، والتصميم والاستشارات الهندسية، والمقاولات والمناقصات وتنفيذ أعمال المباني.",
     },
     testimonials: {
       title: "آراء وتجارب العملاء",
@@ -80,7 +80,7 @@ const pageCopy = {
     services: {
       title: "Real Estate Services",
       description:
-        "Explore Ali Shoban's Office services for buying, selling, rentals, and investment opportunities in Yemen.",
+        "Explore Ali Shoban's Office services in property and investment, engineering design, contracting, tenders, and building construction in Yemen.",
     },
     testimonials: {
       title: "Customer Stories",
