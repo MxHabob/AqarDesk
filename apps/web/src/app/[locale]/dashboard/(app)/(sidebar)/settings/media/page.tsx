@@ -73,7 +73,6 @@ export default async function MediaPage({
     <main className="space-y-5 py-6">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold">{t("mediaTitle")}</h1>
-        <p className="text-sm text-muted-foreground">{t("mediaDescription")}</p>
       </header>
       <form
         action={`/${locale}/dashboard/settings/media`}

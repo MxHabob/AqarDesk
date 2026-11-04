@@ -63,8 +63,6 @@ export default async function ShareLinksPage({
     <main className="space-y-5 py-6">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold">{t("linksTitle")}</h1>
-        <p className="text-sm text-muted-foreground">{t("linksDescription")}</p>
-        <p className="text-xs text-muted-foreground">{t("linksTokenNote")}</p>
       </header>
       <form
         action={`/${locale}/dashboard/settings/share-links`}

@@ -62,7 +62,6 @@ export default async function AuditPage({
     <main className="space-y-5 py-6">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold">{t("auditTitle")}</h1>
-        <p className="text-sm text-muted-foreground">{t("auditDescription")}</p>
       </header>
       <form
         action={`/${locale}/dashboard/settings/audit`}

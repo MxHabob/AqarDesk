@@ -83,9 +83,6 @@ export default async function ArchivePage({
     <main className="space-y-8 py-6">
       <header className="space-y-1">
         <h1 className="text-2xl font-semibold">{t("archiveTitle")}</h1>
-        <p className="text-sm text-muted-foreground">
-          {t("archiveDescription")}
-        </p>
       </header>
       <form
         action={`/${locale}/dashboard/settings/archive`}
