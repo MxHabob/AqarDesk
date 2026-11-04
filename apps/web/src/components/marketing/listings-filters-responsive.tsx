@@ -61,7 +61,9 @@ export function ListingsFiltersResponsive({
         </p>
       </div>
 
-      <aside className="hidden min-w-0 lg:block">{children}</aside>
+      <aside className="hidden min-w-0 self-start lg:sticky lg:top-32 lg:block">
+        {children}
+      </aside>
     </>
   )
 }

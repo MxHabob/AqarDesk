@@ -13,7 +13,7 @@ export function ListingsPageViewport({ children }: { children: ReactNode }) {
   }, [])
 
   return (
-    <div className="mx-auto max-w-[1400px] space-y-6 py-6 sm:space-y-8 sm:py-10">
+    <div className="mx-auto max-w-[1400px] space-y-6 pt-24 pb-6 sm:space-y-8 sm:pt-28 sm:pb-10">
       {children}
     </div>
   )
