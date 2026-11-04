@@ -126,6 +126,12 @@ export default {
     arabic: "Arabic",
     english: "English",
     openingOffer: "Opening offer",
+    openingOfferTitle: "Celebrating the opening of Ali Shoban's Office",
+    openingOfferDescription:
+      "To celebrate our office opening in Yemen, discover our real estate and engineering services and explore properties available for sale and rent.",
+    openingOfferSectionTitle: "Services for every step",
+    openingOfferSectionDescription:
+      "Explore properties, learn about our services, and contact the office team to discuss your next step.",
     browse: "Browse properties",
     browseListings: "Browse listings",
     viewListing: "View property details",

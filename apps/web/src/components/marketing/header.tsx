@@ -235,48 +235,53 @@ export function Header({
             </div>
           )}
         </div>
-        {isServicesOpen && (
-          <div className="absolute inset-x-0 top-full z-50 overflow-hidden border-y border-border bg-background shadow-lg">
-            <div className="p-6 xl:p-8 2xl:p-10">
-              <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-5 xl:gap-6">
-                <div className="min-w-0 lg:col-span-3">
-                  <div className="grid grid-cols-3 gap-x-4 gap-y-1">
-                    {marketingServices.map((service) => (
-                      <Link
-                        className="group flex items-center py-2 transition-colors duration-200 hover:bg-secondary"
-                        href={`/services/${service.slug}`}
-                        key={service.slug}
-                        onClick={() => setIsServicesOpen(false)}
-                      >
-                        <span className="flex flex-col ps-2">
-                          <span className="mb-1 font-sans text-sm text-foreground">
-                            {t(`serviceCopy.${service.copyKey}.title`)}
-                          </span>
-                          <span className="line-clamp-1 font-sans text-[11px] text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
-                            {t(`serviceCopy.${service.copyKey}.summary`)}
-                          </span>
+        <div
+          aria-hidden={!isServicesOpen}
+          className={cn(
+            "absolute inset-x-0 top-full z-50 overflow-hidden border-y border-border bg-background shadow-lg",
+            !isServicesOpen && "pointer-events-none invisible"
+          )}
+        >
+          <div className="p-6 xl:p-8 2xl:p-10">
+            <div className="grid grid-cols-1 items-start gap-4 lg:grid-cols-5 xl:gap-6">
+              <div className="min-w-0 lg:col-span-3">
+                <div className="grid grid-cols-3 gap-x-4 gap-y-1">
+                  {marketingServices.map((service) => (
+                    <Link
+                      className="group flex items-center py-2 transition-colors duration-200 hover:bg-secondary"
+                      href={`/services/${service.slug}`}
+                      key={service.slug}
+                      onClick={() => setIsServicesOpen(false)}
+                    >
+                      <span className="flex flex-col ps-2">
+                        <span className="mb-1 font-sans text-sm text-foreground">
+                          {t(`serviceCopy.${service.copyKey}.title`)}
                         </span>
-                      </Link>
-                    ))}
-                  </div>
+                        <span className="line-clamp-1 font-sans text-[11px] text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
+                          {t(`serviceCopy.${service.copyKey}.summary`)}
+                        </span>
+                      </span>
+                    </Link>
+                  ))}
                 </div>
+              </div>
 
-                <div className="flex min-w-0 justify-end lg:col-span-2">
-                  <ServicesFeaturedPreview
-                    className="h-[277px] w-full max-w-[400px]"
-                    demoNotice={demoNotice}
-                    featuredLabel={featuredLabel}
-                    listings={listingPreviews}
-                    locale={locale}
-                    onClick={() => setIsServicesOpen(false)}
-                    quotes={quotes}
-                    quotesLabel={quotesLabel}
-                  />
-                </div>
+              <div className="flex min-w-0 justify-end lg:col-span-2">
+                <ServicesFeaturedPreview
+                  className="h-[277px] w-full max-w-[400px] lg:min-h-0"
+                  demoNotice={demoNotice}
+                  featuredLabel={featuredLabel}
+                  isOpen={isServicesOpen}
+                  listings={listingPreviews}
+                  locale={locale}
+                  onClick={() => setIsServicesOpen(false)}
+                  quotes={quotes}
+                  quotesLabel={quotesLabel}
+                />
               </div>
             </div>
           </div>
-        )}
+        </div>
       </nav>
 
       {isMenuOpen && !hideMenuItems && (

@@ -84,7 +84,7 @@ export function HeaderPreferences({
                 : t("english")}
           </SelectValue>
         </SelectTrigger>
-        <SelectContent>
+        <SelectContent positionerClassName="z-[70]">
           <SelectItem value="ar">{t("arabic")}</SelectItem>
           <SelectItem value="en">{t("english")}</SelectItem>
         </SelectContent>
@@ -112,7 +112,7 @@ export function HeaderPreferences({
                 : countryCode}
           </SelectValue>
         </SelectTrigger>
-        <SelectContent className="min-w-56">
+        <SelectContent className="min-w-56" positionerClassName="z-[70]">
           {websiteCountries.map((country) => (
             <SelectItem key={country.code} value={country.code}>
               {countryName(country)}

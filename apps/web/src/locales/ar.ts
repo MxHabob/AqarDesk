@@ -444,6 +444,12 @@ export default {
     arabic: "العربية",
     english: "English",
     openingOffer: "عرض الافتتاح",
+    openingOfferTitle: "نحتفل بافتتاح مكتب علي شوبان",
+    openingOfferDescription:
+      "بمناسبة افتتاح مكتبنا في اليمن، ندعوكم للتعرّف على خدماتنا العقارية والهندسية واستكشاف العقارات المتاحة للبيع والإيجار.",
+    openingOfferSectionTitle: "خدمات تجمع احتياجك في مكان واحد",
+    openingOfferSectionDescription:
+      "استكشف العقارات، وتعرّف على خدماتنا، وتواصل مع فريق المكتب للبدء بخطوتك التالية.",
     heroEyebrow: "عقارات للبيع والإيجار في اليمن",
     heroTitleBefore: "اكتشف العقار الذي",
     heroTitleAccent: "يناسب احتياجك",

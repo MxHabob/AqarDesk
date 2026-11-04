@@ -4,7 +4,7 @@ import { cn } from "@aqardesk/ui/cn"
 import { ArrowUpRight, Building2 } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 
 type FeaturedListing = {
   id: string
@@ -25,6 +25,8 @@ type CustomerQuote = {
 function getRandomNextIndex(currentIndex: number, length: number) {
   if (length < 2) return currentIndex
 
+  if (currentIndex < 0) return Math.floor(Math.random() * length)
+
   const nextIndex = Math.floor(Math.random() * (length - 1))
   return nextIndex >= currentIndex ? nextIndex + 1 : nextIndex
 }
@@ -38,6 +40,7 @@ export function ServicesFeaturedPreview({
   demoNotice,
   className,
   onClick,
+  isOpen,
 }: {
   listings: FeaturedListing[]
   quotes: CustomerQuote[]
@@ -47,11 +50,31 @@ export function ServicesFeaturedPreview({
   demoNotice: string
   className?: string
   onClick?: () => void
+  isOpen?: boolean
 }) {
   const [listingIndex, setListingIndex] = useState(0)
   const [quoteIndex, setQuoteIndex] = useState(0)
+  const lastListingIndexRef = useRef(-1)
+  const lastQuoteIndexRef = useRef(-1)
 
   useEffect(() => {
+    if (isOpen !== undefined) {
+      if (!isOpen) return
+
+      const nextListingIndex = getRandomNextIndex(
+        lastListingIndexRef.current,
+        listings.length
+      )
+      const nextQuoteIndex =
+        quotes.length > 0 ? (lastQuoteIndexRef.current + 1) % quotes.length : 0
+
+      lastListingIndexRef.current = nextListingIndex
+      lastQuoteIndexRef.current = nextQuoteIndex
+      setListingIndex(nextListingIndex)
+      setQuoteIndex(nextQuoteIndex)
+      return
+    }
+
     if (listings.length > 1) {
       setListingIndex(Math.floor(Math.random() * listings.length))
     }
@@ -65,7 +88,7 @@ export function ServicesFeaturedPreview({
     }, 7000)
 
     return () => clearInterval(interval)
-  }, [listings.length, quotes.length])
+  }, [isOpen, listings.length, quotes.length])
 
   const featuredListing = listings[listingIndex] ?? listings[0]
   const quote = quotes[quoteIndex] ?? quotes[0]
@@ -74,74 +97,79 @@ export function ServicesFeaturedPreview({
     <Link
       aria-label={featuredListing?.title ?? featuredLabel}
       className={cn(
-        "group relative block min-h-64 overflow-hidden border-t border-border bg-background lg:min-h-full lg:border-s lg:border-t-0",
+        "group relative flex min-h-64 flex-col overflow-hidden border border-border bg-background transition-all duration-200 hover:scale-[1.02] hover:border-foreground/20 hover:opacity-90 lg:min-h-full",
         className
       )}
       dir={locale === "ar" ? "rtl" : "ltr"}
       href={featuredListing ? `/listings/${featuredListing.id}` : "/portfolio"}
       onClick={onClick}
     >
-      {featuredListing?.photo ? (
-        <Image
-          alt={
-            featuredListing.photo.altText ||
-            featuredListing.title ||
-            featuredLabel
-          }
-          className="object-cover transition-transform duration-700 group-hover:scale-[1.03]"
-          fill
-          priority
-          sizes="(max-width: 1023px) 100vw, 45vw"
-          src={featuredListing.photo.url}
-          unoptimized
-        />
-      ) : (
-        <span className="absolute inset-0 flex items-center justify-center bg-[radial-gradient(circle,var(--border)_1px,transparent_1px)] bg-[size:16px_16px]">
-          <Building2
-            aria-hidden
-            className="size-16 text-muted-foreground"
-            strokeWidth={1}
+      <span className="relative flex flex-1 flex-col items-center justify-center overflow-hidden bg-background p-4 text-center">
+        {featuredListing?.photo ? (
+          <Image
+            alt={
+              featuredListing.photo.altText ||
+              featuredListing.title ||
+              featuredLabel
+            }
+            className="object-cover opacity-30 transition-transform duration-700 group-hover:scale-[1.03]"
+            fill
+            priority
+            sizes="(max-width: 1023px) 100vw, 45vw"
+            src={featuredListing.photo.url}
+            unoptimized
           />
+        ) : (
+          <span className="absolute inset-0 bg-[radial-gradient(circle,var(--border)_1px,transparent_1px)] bg-[size:16px_16px]" />
+        )}
+        <span aria-hidden className="absolute inset-0 bg-background/60" />
+        <span
+          aria-hidden
+          className="pointer-events-none absolute left-1/2 top-[78%] z-0 -translate-x-1/2 -translate-y-1/2 select-none whitespace-nowrap font-serif text-[12rem] leading-none text-foreground opacity-[0.08]"
+        >
+          &rdquo;
         </span>
-      )}
-
-      {quote && (
-        <span className="absolute inset-x-4 top-4 flex flex-col gap-3 border border-border bg-background/90 p-4 backdrop-blur-sm sm:inset-x-5 sm:top-5 sm:p-5">
-          <span className="text-xs font-medium text-muted-foreground">
-            {quotesLabel}
-          </span>
-          <span className="line-clamp-3 font-serif text-sm leading-relaxed text-foreground sm:text-base">
-            &ldquo;{quote.content}&rdquo;
-          </span>
-          <span className="flex flex-wrap items-center justify-between gap-2 border-t border-border pt-3">
-            <span className="text-xs font-medium text-foreground">
+        {quote && (
+          <span className="relative z-10 flex w-full max-w-md flex-col items-center">
+            <span className="mb-3 text-xs text-muted-foreground">
+              {quotesLabel}
+            </span>
+            <span className="line-clamp-3 font-serif text-sm leading-tight text-foreground xl:text-base">
+              &ldquo;{quote.content}&rdquo;
+            </span>
+            <span className="mt-3 text-xs text-foreground">
               {quote.name}
               {quote.title ? ` · ${quote.title}` : ""}
               {quote.country ? ` · ${quote.country}` : ""}
             </span>
-            <span className="text-[10px] leading-4 text-muted-foreground">
+            <span className="mt-2 line-clamp-2 text-[10px] leading-4 text-muted-foreground">
               {demoNotice}
             </span>
           </span>
-        </span>
-      )}
-
-      {featuredListing && (
-        <span className="absolute inset-x-0 bottom-0 flex items-end justify-between gap-4 bg-background/90 p-4 backdrop-blur-sm sm:p-5">
-          <span>
-            <span className="block text-xs text-muted-foreground">
-              {featuredLabel}
-            </span>
-            <span className="mt-1 block font-medium text-foreground">
-              {featuredListing.title}
-            </span>
-          </span>
-          <ArrowUpRight
+        )}
+        {!featuredListing && (
+          <Building2
             aria-hidden
-            className="size-5 shrink-0 text-foreground rtl:-scale-x-100"
+            className="absolute bottom-3 end-3 size-5 text-muted-foreground"
+            strokeWidth={1}
           />
+        )}
+      </span>
+
+      <span className="flex items-center justify-between gap-4 border-t border-border bg-background p-2.5">
+        <span className="min-w-0 flex-1">
+          <span className="block font-sans text-xs text-foreground">
+            {featuredLabel}
+          </span>
+          <span className="block truncate font-sans text-xs text-muted-foreground transition-colors duration-200 group-hover:text-foreground">
+            {featuredListing?.title ?? quotesLabel}
+          </span>
         </span>
-      )}
+        <ArrowUpRight
+          aria-hidden
+          className="size-4 shrink-0 text-foreground rtl:-scale-x-100"
+        />
+      </span>
     </Link>
   )
 }
