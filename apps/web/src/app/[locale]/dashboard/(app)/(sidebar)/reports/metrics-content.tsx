@@ -1,21 +1,21 @@
-"use client";
+"use client"
 
-import { use, useState } from "react";
-import { MetricsView } from "@/components/metrics/metrics-view";
-import type { ChartLayoutItem } from "@/components/metrics/utils/chart-types";
-import { DEFAULT_CHART_LAYOUT } from "@/components/metrics/utils/chart-types";
-import { WidgetsHeader } from "@/components/widgets/header";
+import { use, useState } from "react"
+import { MetricsView } from "@/components/metrics/metrics-view"
+import type { ChartLayoutItem } from "@/components/metrics/utils/chart-types"
+import { DEFAULT_CHART_LAYOUT } from "@/components/metrics/utils/chart-types"
+import { WidgetsHeader } from "@/components/widgets/header"
 
 interface MetricsContentProps {
-  chartLayoutPromise: Promise<ChartLayoutItem[]>;
+  chartLayoutPromise: Promise<ChartLayoutItem[]>
 }
 
 export function MetricsContent({ chartLayoutPromise }: MetricsContentProps) {
   const initialLayout = chartLayoutPromise
     ? use(chartLayoutPromise)
-    : DEFAULT_CHART_LAYOUT;
+    : DEFAULT_CHART_LAYOUT
 
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false)
 
   return (
     <div>
@@ -27,5 +27,5 @@ export function MetricsContent({ chartLayoutPromise }: MetricsContentProps) {
       </div>
       <MetricsView initialLayout={initialLayout} isEditing={isEditing} />
     </div>
-  );
+  )
 }

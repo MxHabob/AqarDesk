@@ -1,7 +1,6 @@
 "use client"
 
 import { Icons } from "@aqardesk/ui/icons"
-import Image from "next/image"
 import Link from "next/link"
 import { useTheme } from "next-themes"
 import { useEffect, useState } from "react"
@@ -83,48 +82,6 @@ export function Footer() {
             <p className="font-sans text-base sm:text-xl text-foreground text-left lg:text-right">
               {t("marketingFooter.tagline")}
             </p>
-
-            {/* Compliance Section */}
-            <div className="flex items-center gap-4">
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-9 h-9">
-                  <Image
-                    src="/images/gdpr.png"
-                    alt={t("marketingFooter.gdprAlt")}
-                    width={36}
-                    height={36}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div className="text-center">
-                  <p className="font-sans text-xs text-foreground">
-                    {t("marketingFooter.gdpr")}
-                  </p>
-                  <p className="font-sans text-xs text-muted-foreground">
-                    {t("marketingFooter.compliant")}
-                  </p>
-                </div>
-              </div>
-              <div className="flex flex-col items-center gap-2">
-                <div className="w-9 h-9">
-                  <Image
-                    src="/images/soc2.png"
-                    alt={t("marketingFooter.soc2Alt")}
-                    width={36}
-                    height={36}
-                    className="w-full h-full object-contain"
-                  />
-                </div>
-                <div className="text-center">
-                  <p className="font-sans text-xs text-foreground">
-                    {t("marketingFooter.soc2")}
-                  </p>
-                  <p className="font-sans text-xs text-muted-foreground">
-                    {t("marketingFooter.inProgress")}
-                  </p>
-                </div>
-              </div>
-            </div>
 
             {/* Theme Toggle */}
             <button

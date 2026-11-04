@@ -180,10 +180,7 @@ function updateFile(filePath) {
       type === "packageNamespace"
         ? text.replace(packageNamespacePattern, "@aqardesk/")
         : text.replace(brandingPattern, "AqarDesk")
-    updated =
-      updated.slice(0, start) +
-      replacement +
-      updated.slice(end)
+    updated = updated.slice(0, start) + replacement + updated.slice(end)
   }
 
   const remainingPackageReferences =

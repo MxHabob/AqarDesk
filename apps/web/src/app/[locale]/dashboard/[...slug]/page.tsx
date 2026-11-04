@@ -6,5 +6,5 @@ export default async function CatchAllPage({
   params: Promise<{ locale: string }>
 }) {
   const { locale } = await params
-  redirect(`/${locale}`)
+  redirect(`/${locale}/dashboard`)
 }

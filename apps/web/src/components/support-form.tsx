@@ -183,9 +183,7 @@ export function SupportForm() {
               <FormLabel>{t("accountSettings.supportMessage")}</FormLabel>
               <FormControl>
                 <Textarea
-                  placeholder={t(
-                    "accountSettings.supportMessagePlaceholder"
-                  )}
+                  placeholder={t("accountSettings.supportMessagePlaceholder")}
                   className="resize-none min-h-[150px]"
                   {...field}
                 />

@@ -1,25 +1,25 @@
-"use client";
+"use client"
 
-import { Avatar, AvatarFallback, AvatarImage } from "@aqardesk/ui/avatar";
-import { Button } from "@aqardesk/ui/button";
-import { Icons } from "@aqardesk/ui/icons";
-import { Skeleton } from "@aqardesk/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@aqardesk/ui/avatar"
+import { Button } from "@aqardesk/ui/button"
+import { Icons } from "@aqardesk/ui/icons"
+import { Skeleton } from "@aqardesk/ui/skeleton"
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
-} from "@aqardesk/ui/tooltip";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AnimatePresence, motion } from "framer-motion";
-import Link from "next/link";
-import { useRef, useState } from "react";
-import { useOnClickOutside } from "usehooks-ts";
-import { getUserTeamsAction, switchActiveTeamAction } from "@/actions/teams";
+} from "@aqardesk/ui/tooltip"
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
+import { AnimatePresence, motion } from "framer-motion"
+import Link from "next/link"
+import { useRef, useState } from "react"
+import { useOnClickOutside } from "usehooks-ts"
+import { getUserTeamsAction, switchActiveTeamAction } from "@/actions/teams"
 
 type Props = {
-  isExpanded?: boolean;
-};
+  isExpanded?: boolean
+}
 
 function TeamDropdownSkeleton({ isExpanded }: { isExpanded: boolean }) {
   return (
@@ -33,27 +33,27 @@ function TeamDropdownSkeleton({ isExpanded }: { isExpanded: boolean }) {
         </div>
       )}
     </div>
-  );
+  )
 }
 
 export function TeamDropdown({ isExpanded = false }: Props) {
-  const ref = useRef<HTMLDivElement>(null);
-  const queryClient = useQueryClient();
+  const ref = useRef<HTMLDivElement>(null)
+  const queryClient = useQueryClient()
 
-  const [isActive, setActive] = useState(false);
-  const [isChangingTeam, setIsChangingTeam] = useState(false);
+  const [isActive, setActive] = useState(false)
+  const [isChangingTeam, setIsChangingTeam] = useState(false)
 
   const changeTeamMutation = useMutation({
     mutationFn: switchActiveTeamAction,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey: ["user-teams"] });
-      setIsChangingTeam(false);
+      await queryClient.invalidateQueries({ queryKey: ["user-teams"] })
+      setIsChangingTeam(false)
     },
     onError: () => {
-      setIsChangingTeam(false);
-      setActive(false);
+      setIsChangingTeam(false)
+      setActive(false)
     },
-  });
+  })
 
   const {
     data: teamData,
@@ -62,31 +62,31 @@ export function TeamDropdown({ isExpanded = false }: Props) {
   } = useQuery({
     queryKey: ["user-teams"],
     queryFn: getUserTeamsAction,
-  });
-  const teams = teamData?.teams;
-  const selectedId = teamData?.selectedTeamId;
+  })
+  const teams = teamData?.teams
+  const selectedId = teamData?.selectedTeamId
 
   const sortedTeams =
     teams?.sort((a, b) => {
-      if (a.id === selectedId) return -1;
-      if (b.id === selectedId) return 1;
+      if (a.id === selectedId) return -1
+      if (b.id === selectedId) return 1
 
-      return (a.id ?? "").localeCompare(b.id ?? "");
-    }) ?? [];
+      return (a.id ?? "").localeCompare(b.id ?? "")
+    }) ?? []
 
   // @ts-expect-error
   useOnClickOutside(ref, () => {
     if (!isChangingTeam) {
-      setActive(false);
+      setActive(false)
     }
-  });
+  })
 
-  const toggleActive = () => setActive((prev) => !prev);
+  const toggleActive = () => setActive((prev) => !prev)
 
   // Show skeleton while teams are loading
   // Note: user loading is handled by Suspense since useUserQuery uses useSuspenseQuery
   if (isTeamsLoading) {
-    return <TeamDropdownSkeleton isExpanded={isExpanded} />;
+    return <TeamDropdownSkeleton isExpanded={isExpanded} />
   }
 
   if (teamsError && !teamData) {
@@ -96,20 +96,20 @@ export function TeamDropdown({ isExpanded = false }: Props) {
           ? teamsError.message
           : "Could not load teams."}
       </p>
-    );
+    )
   }
 
   const handleTeamChange = (teamId: string) => {
     if (teamId === selectedId) {
-      toggleActive();
-      return;
+      toggleActive()
+      return
     }
 
-    setIsChangingTeam(true);
-    setActive(false);
+    setIsChangingTeam(true)
+    setActive(false)
 
-    changeTeamMutation.mutate(teamId);
-  };
+    changeTeamMutation.mutate(teamId)
+  }
 
   return (
     <TooltipProvider delay={50}>
@@ -146,8 +146,8 @@ export function TeamDropdown({ isExpanded = false }: Props) {
                 </motion.div>
               )}
               {sortedTeams.map((team, index) => {
-                const isSelected = team.id === selectedId;
-                const teamInitial = team.name.trim().charAt(0).toUpperCase();
+                const isSelected = team.id === selectedId
+                const teamInitial = team.name.trim().charAt(0).toUpperCase()
 
                 return (
                   <motion.div
@@ -184,9 +184,9 @@ export function TeamDropdown({ isExpanded = false }: Props) {
                               className="w-[32px] h-[32px] rounded-none border border-[#DCDAD2] dark:border-[#2C2C2C] cursor-pointer"
                               onClick={() => {
                                 if (index === 0) {
-                                  toggleActive();
+                                  toggleActive()
                                 } else {
-                                  handleTeamChange(team?.id ?? "");
+                                  handleTeamChange(team?.id ?? "")
                                 }
                               }}
                             >
@@ -216,9 +216,9 @@ export function TeamDropdown({ isExpanded = false }: Props) {
                         className="w-[32px] h-[32px] rounded-none border border-[#DCDAD2] dark:border-[#2C2C2C] cursor-pointer"
                         onClick={() => {
                           if (index === 0) {
-                            toggleActive();
+                            toggleActive()
                           } else {
-                            handleTeamChange(team?.id ?? "");
+                            handleTeamChange(team?.id ?? "")
                           }
                         }}
                       >
@@ -235,7 +235,7 @@ export function TeamDropdown({ isExpanded = false }: Props) {
                       </Avatar>
                     )}
                   </motion.div>
-                );
+                )
               })}
             </AnimatePresence>
           </div>
@@ -249,8 +249,8 @@ export function TeamDropdown({ isExpanded = false }: Props) {
               aria-expanded={isActive}
               className="border-0 bg-transparent p-0 text-start text-sm text-primary truncate transition-opacity duration-200 ease-in-out cursor-pointer hover:opacity-80"
               onClick={(e) => {
-                e.stopPropagation();
-                toggleActive();
+                e.stopPropagation()
+                toggleActive()
               }}
             >
               {sortedTeams[0].name}
@@ -259,5 +259,5 @@ export function TeamDropdown({ isExpanded = false }: Props) {
         )}
       </div>
     </TooltipProvider>
-  );
+  )
 }

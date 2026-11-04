@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Card,
@@ -7,15 +7,15 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
-import { Button } from "@aqardesk/ui/button";
-import { Input } from "@aqardesk/ui/input";
-import { useUserQuery } from "@/hooks/use-user";
-import { useI18n } from "@/locales/client";
+} from "@aqardesk/ui/card"
+import { Button } from "@aqardesk/ui/button"
+import { Input } from "@aqardesk/ui/input"
+import { useUserQuery } from "@/hooks/use-user"
+import { useI18n } from "@/locales/client"
 
 export function ChangeEmail() {
-  const t = useI18n();
-  const { data: user } = useUserQuery();
+  const t = useI18n()
+  const { data: user } = useUserQuery()
 
   return (
     <Card>
@@ -23,7 +23,9 @@ export function ChangeEmail() {
         <CardTitle className="normal-case tracking-normal">
           {t("accountSettings.emailTitle")}
         </CardTitle>
-        <CardDescription>{t("accountSettings.emailDescription")}</CardDescription>
+        <CardDescription>
+          {t("accountSettings.emailDescription")}
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <Input
@@ -41,5 +43,5 @@ export function ChangeEmail() {
         </Button>
       </CardFooter>
     </Card>
-  );
+  )
 }

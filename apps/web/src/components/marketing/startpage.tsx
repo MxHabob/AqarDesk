@@ -1,7 +1,7 @@
-"use client";
+"use client"
 
-import { Button } from "@aqardesk/ui/button";
-import { Icons } from "@aqardesk/ui/icons";
+import { Button } from "@aqardesk/ui/button"
+import { Icons } from "@aqardesk/ui/icons"
 import {
   Building2,
   ClipboardList,
@@ -14,35 +14,33 @@ import {
   Megaphone,
   MessageCircle,
   TrendingUp,
-} from "lucide-react";
-import dynamic from "next/dynamic";
-import Image from "next/image";
-import Link from "next/link";
-import { useEffect, useRef, useState } from "react";
-import { useScopedI18n } from "@/locales/client";
+} from "lucide-react"
+import dynamic from "next/dynamic"
+import Image from "next/image"
+import Link from "next/link"
+import { useEffect, useRef, useState } from "react"
+import { useScopedI18n } from "@/locales/client"
 import type { HomepageListing } from "./sections/featured-listings-section"
-
-
 
 // Dynamic imports for below-the-fold sections (still SSR for SEO)
 const FeaturesGridSection = dynamic(() =>
-  import("./sections/features-grid-section").then((m) => m.FeaturesGridSection),
-);
+  import("./sections/features-grid-section").then((m) => m.FeaturesGridSection)
+)
 const FeaturedListingsSection = dynamic(() =>
   import("./sections/featured-listings-section").then(
-    (m) => m.FeaturedListingsSection,
-  ),
-);
+    (m) => m.FeaturedListingsSection
+  )
+)
 const TimeSavingsSection = dynamic(() =>
-  import("./sections/time-savings-section").then((m) => m.TimeSavingsSection),
-);
+  import("./sections/time-savings-section").then((m) => m.TimeSavingsSection)
+)
 const TestimonialsSection = dynamic(
   () =>
     import("./sections/testimonials-section").then(
-      (m) => m.TestimonialsSection,
+      (m) => m.TestimonialsSection
     ),
-  { ssr: false }, // MorphingDialog generates dynamic IDs that cause hydration mismatch
-);
+  { ssr: false } // MorphingDialog generates dynamic IDs that cause hydration mismatch
+)
 const videos = [
   {
     id: "overview",
@@ -92,106 +90,106 @@ const videos = [
       "Smart storage that automatically organizes and connects files to transactions, invoices, and customers.",
     url: "https://cdn.midday.ai/videos/login-video.mp4", // Replace with actual video URL
   },
-];
+]
 
 export function StartPage({ listings }: { listings: HomepageListing[] }) {
-  const t = useScopedI18n("site");
-  const [isVideoLoaded, setIsVideoLoaded] = useState(false);
-  const [isPosterLoaded, setIsPosterLoaded] = useState(false);
-  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
-  const [activeVideoId, setActiveVideoId] = useState("overview");
-  const [videoProgress, setVideoProgress] = useState(0);
+  const t = useScopedI18n("site")
+  const [isVideoLoaded, setIsVideoLoaded] = useState(false)
+  const [isPosterLoaded, setIsPosterLoaded] = useState(false)
+  const [isVideoModalOpen, setIsVideoModalOpen] = useState(false)
+  const [activeVideoId, setActiveVideoId] = useState("overview")
+  const [videoProgress, setVideoProgress] = useState(0)
 
-  const videoContainerRef = useRef(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
-  const modalVideoRef = useRef<HTMLVideoElement>(null);
-  const videoTagsScrollRef = useRef<HTMLDivElement>(null);
-  const styleSheetRef = useRef<HTMLStyleElement | null>(null);
+  const videoContainerRef = useRef(null)
+  const videoRef = useRef<HTMLVideoElement>(null)
+  const modalVideoRef = useRef<HTMLVideoElement>(null)
+  const videoTagsScrollRef = useRef<HTMLDivElement>(null)
+  const styleSheetRef = useRef<HTMLStyleElement | null>(null)
 
   // Handle video load
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
+    const video = videoRef.current
+    if (!video) return
 
-    const handleLoad = () => setIsVideoLoaded(true);
+    const handleLoad = () => setIsVideoLoaded(true)
 
     if (video.readyState >= 3) {
-      setIsVideoLoaded(true);
+      setIsVideoLoaded(true)
     }
 
-    video.addEventListener("canplay", handleLoad);
-    video.addEventListener("loadeddata", handleLoad);
+    video.addEventListener("canplay", handleLoad)
+    video.addEventListener("loadeddata", handleLoad)
 
     return () => {
-      video.removeEventListener("canplay", handleLoad);
-      video.removeEventListener("loadeddata", handleLoad);
-    };
-  }, []);
+      video.removeEventListener("canplay", handleLoad)
+      video.removeEventListener("loadeddata", handleLoad)
+    }
+  }, [])
 
   // Handle modal video switching
   useEffect(() => {
-    const video = modalVideoRef.current;
-    if (!video || !isVideoModalOpen) return;
+    const video = modalVideoRef.current
+    if (!video || !isVideoModalOpen) return
 
-    const activeVideo = videos.find((v) => v.id === activeVideoId);
+    const activeVideo = videos.find((v) => v.id === activeVideoId)
     if (activeVideo) {
       if (video.src !== activeVideo.url) {
-        video.src = activeVideo.url;
-        video.load();
-        setVideoProgress(0);
+        video.src = activeVideo.url
+        video.load()
+        setVideoProgress(0)
       }
       // Try to play when video is ready
       const handleCanPlay = () => {
-        const playPromise = video.play();
+        const playPromise = video.play()
         if (playPromise !== undefined) {
           playPromise.catch(() => {
             // Autoplay may fail, user can click play
-          });
+          })
         }
-      };
-      video.addEventListener("canplay", handleCanPlay);
+      }
+      video.addEventListener("canplay", handleCanPlay)
       // If already loaded, play immediately
       if (video.readyState >= 3) {
-        handleCanPlay();
+        handleCanPlay()
       }
       return () => {
-        video.removeEventListener("canplay", handleCanPlay);
-      };
+        video.removeEventListener("canplay", handleCanPlay)
+      }
     }
-  }, [activeVideoId, isVideoModalOpen]);
+  }, [activeVideoId, isVideoModalOpen])
 
   // Track video progress
   useEffect(() => {
-    const video = modalVideoRef.current;
-    if (!video || !isVideoModalOpen) return;
+    const video = modalVideoRef.current
+    if (!video || !isVideoModalOpen) return
 
     const updateProgress = () => {
       if (video.duration) {
-        const progress = (video.currentTime / video.duration) * 100;
-        setVideoProgress(progress);
+        const progress = (video.currentTime / video.duration) * 100
+        setVideoProgress(progress)
       }
-    };
+    }
 
-    const handleTimeUpdate = () => updateProgress();
+    const handleTimeUpdate = () => updateProgress()
     const handleLoadedMetadata = () => {
-      setVideoProgress(0);
-      updateProgress();
-    };
+      setVideoProgress(0)
+      updateProgress()
+    }
 
-    video.addEventListener("timeupdate", handleTimeUpdate);
-    video.addEventListener("loadedmetadata", handleLoadedMetadata);
+    video.addEventListener("timeupdate", handleTimeUpdate)
+    video.addEventListener("loadedmetadata", handleLoadedMetadata)
 
     return () => {
-      video.removeEventListener("timeupdate", handleTimeUpdate);
-      video.removeEventListener("loadedmetadata", handleLoadedMetadata);
-    };
-  }, [activeVideoId, isVideoModalOpen]);
+      video.removeEventListener("timeupdate", handleTimeUpdate)
+      video.removeEventListener("loadedmetadata", handleLoadedMetadata)
+    }
+  }, [activeVideoId, isVideoModalOpen])
 
   // Inject video modal styles
   useEffect(() => {
-    if (!isVideoModalOpen) return;
+    if (!isVideoModalOpen) return
 
-    const style = document.createElement("style");
+    const style = document.createElement("style")
     style.textContent = `
       @keyframes fadeIn {
         from { opacity: 0; }
@@ -209,17 +207,17 @@ export function StartPage({ listings }: { listings: HomepageListing[] }) {
         height: 100% !important;
         object-fit: cover !important;
       }
-    `;
-    document.head.appendChild(style);
-    styleSheetRef.current = style;
+    `
+    document.head.appendChild(style)
+    styleSheetRef.current = style
 
     return () => {
       if (styleSheetRef.current) {
-        document.head.removeChild(styleSheetRef.current);
-        styleSheetRef.current = null;
+        document.head.removeChild(styleSheetRef.current)
+        styleSheetRef.current = null
       }
-    };
-  }, [isVideoModalOpen]);
+    }
+  }, [isVideoModalOpen])
 
   return (
     <div className="min-h-screen">
@@ -306,7 +304,10 @@ export function StartPage({ listings }: { listings: HomepageListing[] }) {
                       className="text-muted-foreground opacity-40 hover:opacity-100 hover:text-[#0891b2] transition-all duration-200"
                       href="/services/property-consultation"
                     >
-                      <MessageCircle aria-hidden className="w-[18px] h-[18px]" />
+                      <MessageCircle
+                        aria-hidden
+                        className="w-[18px] h-[18px]"
+                      />
                     </Link>
                     <Link
                       aria-label={t("serviceCopy.realEstateContracts.title")}
@@ -409,9 +410,7 @@ export function StartPage({ listings }: { listings: HomepageListing[] }) {
 
               {/* Dashboard overlay - different styles for mobile vs desktop */}
               <div className="absolute inset-0 flex items-center justify-center p-0 lg:p-4 z-[2]">
-                <Icons.Logo
-                  className="h-24 w-auto text-white drop-shadow-[0_8px_24px_rgba(0,0,0,0.45)] sm:h-32 md:h-40 lg:h-52"
-                />
+                <Icons.Logo className="h-24 w-auto text-white drop-shadow-[0_8px_24px_rgba(0,0,0,0.45)] sm:h-32 md:h-40 lg:h-52" />
               </div>
             </div>
           </div>
@@ -490,36 +489,36 @@ export function StartPage({ listings }: { listings: HomepageListing[] }) {
                         <button
                           type="button"
                           onClick={(e) => {
-                            setActiveVideoId(video.id);
-                            setVideoProgress(0);
+                            setActiveVideoId(video.id)
+                            setVideoProgress(0)
 
-                            const scrollContainer = videoTagsScrollRef.current;
-                            if (!scrollContainer) return;
+                            const scrollContainer = videoTagsScrollRef.current
+                            if (!scrollContainer) return
 
                             const containerRect =
-                              scrollContainer.getBoundingClientRect();
+                              scrollContainer.getBoundingClientRect()
                             const adjacentVideos = [
                               scrollContainer.querySelector<HTMLElement>(
-                                `[data-video-index="${index + 1}"]`,
+                                `[data-video-index="${index + 1}"]`
                               ),
                               scrollContainer.querySelector<HTMLElement>(
-                                `[data-video-index="${index - 1}"]`,
+                                `[data-video-index="${index - 1}"]`
                               ),
-                            ];
+                            ]
                             const adjacentVideo = adjacentVideos.find((tag) => {
-                              if (!tag) return false;
-                              const rect = tag.getBoundingClientRect();
+                              if (!tag) return false
+                              const rect = tag.getBoundingClientRect()
                               return (
                                 rect.left < containerRect.left + 20 ||
                                 rect.right > containerRect.right - 20
-                              );
-                            });
+                              )
+                            })
 
                             adjacentVideo?.scrollIntoView({
                               behavior: "smooth",
                               block: "nearest",
                               inline: "nearest",
-                            });
+                            })
                           }}
                           data-video-index={index}
                           className={`w-[100px] sm:w-[140px] md:w-[310px] flex-shrink-0 pt-1 pb-3 md:pt-2 md:pb-5 transition-colors flex flex-col items-start gap-1 md:gap-2 text-start relative bg-background text-muted-foreground hover:text-foreground ${index > 0 ? "ps-2" : ""}`}
@@ -547,9 +546,7 @@ export function StartPage({ listings }: { listings: HomepageListing[] }) {
                 </div>
               </div>
               {/* Gradient fade-out on the right */}
-              <div
-                className="marketing-inline-end-gradient absolute top-0 end-0 bottom-0 w-24 pointer-events-none z-10"
-              />
+              <div className="marketing-inline-end-gradient absolute top-0 end-0 bottom-0 w-24 pointer-events-none z-10" />
             </div>
           </div>
         </div>
@@ -585,7 +582,6 @@ export function StartPage({ listings }: { listings: HomepageListing[] }) {
       <div className="max-w-[1400px] mx-auto">
         <div className="h-px w-full border-t border-border" />
       </div>
-
     </div>
-  );
+  )
 }

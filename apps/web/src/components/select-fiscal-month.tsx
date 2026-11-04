@@ -1,16 +1,16 @@
-import { ComboboxDropdown } from "@aqardesk/ui/combobox-dropdown";
-import type { PopoverContent } from "@aqardesk/ui/popover";
-import { getFiscalYearLabel } from "@aqardesk/utils";
+import { ComboboxDropdown } from "@aqardesk/ui/combobox-dropdown"
+import type { PopoverContent } from "@aqardesk/ui/popover"
+import { getFiscalYearLabel } from "@aqardesk/utils"
 
 type Props = {
-  value?: number | null;
-  onChange: (value: number | null) => void;
-  className?: string;
-  triggerClassName?: string;
-  headless?: boolean;
-  popoverProps?: React.ComponentProps<typeof PopoverContent>;
-  listClassName?: string;
-};
+  value?: number | null
+  onChange: (value: number | null) => void
+  className?: string
+  triggerClassName?: string
+  headless?: boolean
+  popoverProps?: React.ComponentProps<typeof PopoverContent>
+  listClassName?: string
+}
 
 const fiscalMonthOptions = [
   { id: "null", value: null, label: "Trailing 12 months (default)" },
@@ -26,7 +26,7 @@ const fiscalMonthOptions = [
   { id: "10", value: 10, label: getFiscalYearLabel(10) },
   { id: "11", value: 11, label: getFiscalYearLabel(11) },
   { id: "12", value: 12, label: getFiscalYearLabel(12) },
-];
+]
 
 export function SelectFiscalMonth({
   value,
@@ -38,8 +38,8 @@ export function SelectFiscalMonth({
   listClassName,
 }: Props) {
   const selectedItem = fiscalMonthOptions.find(
-    (item) => item.value === value || (item.value === null && value === null),
-  );
+    (item) => item.value === value || (item.value === null && value === null)
+  )
 
   return (
     <ComboboxDropdown
@@ -53,8 +53,8 @@ export function SelectFiscalMonth({
       popoverProps={popoverProps}
       listClassName={listClassName}
       onSelect={(item) => {
-        onChange(item.value);
+        onChange(item.value)
       }}
     />
-  );
+  )
 }

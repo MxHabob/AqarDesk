@@ -38,7 +38,13 @@ interface ProfitChartProps {
 }
 
 // Custom tooltip component
-const CustomTooltip = ({ active, payload, label, currency = "USD", locale }: any) => {
+const CustomTooltip = ({
+  active,
+  payload,
+  label,
+  currency = "USD",
+  locale,
+}: any) => {
   if (active && Array.isArray(payload) && payload.length > 0) {
     const thisYear = payload.find((p) => p.dataKey === "profit")?.value
     const lastYear = payload.find((p) => p.dataKey === "lastYearProfit")?.value

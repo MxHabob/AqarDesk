@@ -43,15 +43,10 @@ after checking the user's permission to access that listing.
 ## Shared packages
 
 - `@aqardesk/categories` is the canonical Arabic/English property-type catalog
-  shared by the PostgreSQL enum, validators, and UI. Sale/rent remains a
+  shared by the PostgreSQL enum and UI. Sale/rent remains a
   separate listing type.
-- `@aqardesk/validators` provides Zod input schemas for properties and
-  listings.
 - `@aqardesk/utils` formats numbers and currencies by locale and formats dates
   with date-fns and its Arabic locale.
-- `@aqardesk/notifications` stores user-scoped in-app notifications in
-  PostgreSQL. API routes must derive the recipient ID from the authenticated
-  session.
 - `@aqardesk/email` contains provider-neutral Arabic RTL templates; an email
   provider is not configured yet.
 

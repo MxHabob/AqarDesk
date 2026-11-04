@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Card,
@@ -7,41 +7,41 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
+} from "@aqardesk/ui/card"
 import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormMessage,
-} from "@aqardesk/ui/form";
-import { Input } from "@aqardesk/ui/input";
-import { SubmitButton } from "@aqardesk/ui/submit-button";
-import { z } from "zod/v3";
-import { useI18n } from "@/locales/client";
-import { useUserMutation, useUserQuery } from "@/hooks/use-user";
-import { useZodForm } from "@/hooks/use-zod-form";
+} from "@aqardesk/ui/form"
+import { Input } from "@aqardesk/ui/input"
+import { SubmitButton } from "@aqardesk/ui/submit-button"
+import { z } from "zod/v3"
+import { useI18n } from "@/locales/client"
+import { useUserMutation, useUserQuery } from "@/hooks/use-user"
+import { useZodForm } from "@/hooks/use-zod-form"
 
 const formSchema = z.object({
   fullName: z.string().min(1).max(32).optional(),
-});
+})
 
 export function DisplayName() {
-  const t = useI18n();
-  const { data: user } = useUserQuery();
-  const updateUserMutation = useUserMutation();
+  const t = useI18n()
+  const { data: user } = useUserQuery()
+  const updateUserMutation = useUserMutation()
 
   const form = useZodForm(formSchema, {
     defaultValues: {
       fullName: user?.fullName ?? undefined,
     },
-  });
+  })
 
   const onSubmit = form.handleSubmit((data) => {
     updateUserMutation.mutate({
       fullName: data?.fullName,
-    });
-  });
+    })
+  })
 
   return (
     <Form {...form}>
@@ -92,5 +92,5 @@ export function DisplayName() {
         </Card>
       </form>
     </Form>
-  );
+  )
 }

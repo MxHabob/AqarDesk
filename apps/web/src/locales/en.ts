@@ -1,4 +1,79 @@
 export default {
+  legal: {
+    privacyTitle: "Privacy Policy",
+    termsTitle: "Terms of Use",
+    updated: "Last updated: November 4, 2026",
+    privacyIntro:
+      "This policy explains how Ali Shoban's Office handles information when you visit the website or use its services and AqarDesk. Please read it to understand what we collect, why we use it, and the choices available to you.",
+    privacyInfoTitle: "Information we handle",
+    privacyInfo:
+      "Information may include your name, email address, profile image if supplied, authentication and session data, IP address and browser type; support messages and contact details needed to respond; language and country preferences; properties, listings, photos, and files submitted by authorized users; and properties you save as favorites. We may receive some sign-in information from the authentication provider you choose, such as Google when enabled.",
+    privacyUseTitle: "How we use information",
+    privacyUse:
+      "We use information to create and manage accounts, operate the website and display properties, save favorites, respond to inquiries, manage office listings, secure accounts, detect misuse, troubleshoot problems, and meet legal obligations. We process information as needed to provide the service and run our business, or with your consent where required.",
+    privacySharingTitle: "Listings and sharing",
+    privacySharing:
+      "Property details and photos selected by the office for publication are available to website visitors and their links may be shared. Do not put personal information or confidential documents in content intended for publication. We do not sell your account information. We use service providers for hosting, databases, storage, email, and authentication; they process information as needed to provide their services. We may also disclose information when legally required or to protect people, rights, and service security.",
+    privacyTransfersTitle: "Processing outside Yemen",
+    privacyTransfers:
+      "Information may be processed or stored by service providers in other countries, depending on where their systems are located. We select services appropriate to operating the website and take reasonable steps to protect information, subject to applicable law.",
+    privacyCookiesTitle: "Cookies",
+    privacyCookies:
+      "We use cookies needed for sign-in, session security, and preferences such as language and country. The system may use local storage for display preferences. We do not currently use cookies for behavioral advertising or advertising analytics. Disabling necessary storage may prevent some features from working.",
+    privacyRetentionTitle: "How long we keep information",
+    privacyRetention:
+      "We keep information for as long as needed to provide services and manage accounts and listings, then delete it or remove identifying details when it is no longer needed, unless retention is required to comply with law, protect rights, or resolve disputes. Backups and technical logs may remain for a limited period under their operating cycles.",
+    privacySecurityTitle: "Information security",
+    privacySecurity:
+      "We use appropriate administrative and technical safeguards and limit access to information as needed. No electronic transmission or storage method is completely secure, so we cannot guarantee absolute security.",
+    privacyRightsTitle: "Your rights and requests",
+    privacyRights:
+      "You may request access to, correction of, or deletion of your information, object to certain processing, or withdraw consent where applicable. We may verify your identity before acting and may retain information needed to comply with law or protect rights. Stop using the services if you do not agree with this policy.",
+    privacyChildrenTitle: "Children",
+    privacyChildren:
+      "The services are not intended for anyone who is not legally able to use them. If you believe a child provided information without authorization, please contact us.",
+    privacyChangesTitle: "Changes and contact",
+    privacyChanges:
+      "We may update this policy when our services or legal requirements change. The current version and its update date will be posted on this page and take effect when posted.",
+    privacyContact:
+      "For privacy requests or questions, contact the office through support or at:",
+    officeAddress: "Beginning of Shari' Sarwah Street, Marib, Yemen.",
+    termsIntro:
+      "These terms apply to your use of Ali Shoban's Office website, online services, and AqarDesk. By using the website or creating an account, you agree to them. If you do not agree, please do not use the services.",
+    termsEligibilityTitle: "Eligibility and accounts",
+    termsEligibility:
+      "Use the services only if you are legally able to do so. Provide accurate information and keep it current, protect your sign-in details, and do not let others use your account. Notify the office promptly if you suspect unauthorized access. You are responsible for activity through your account unless evidence shows otherwise.",
+    termsListingsTitle: "Properties and information",
+    termsListings:
+      "We make reasonable efforts to provide current information, but prices, details, photos, locations, and availability may change, be incomplete, or be inaccurate. Photos and maps are for reference. Independently verify the property's condition, ownership, authority to list, documents, and price before making a decision or payment. A published listing is not a guarantee that the property remains available.",
+    termsRoleTitle: "The office and property transactions",
+    termsRole:
+      "The website helps introduce listings and office services and facilitates inquiries. Viewing or saving a listing, or contacting the office, does not create a sale, lease, reservation, agency, or obligation to complete a transaction. A transaction requires a separate agreement between the parties after the property, ownership, authority, and terms have been verified.",
+    termsFeesTitle: "Prices, fees, and payments",
+    termsFees:
+      "These terms do not set a commission, deposit, or fee. The price, currency, commissions, taxes, payment dates, and cancellation or refund terms must be agreed in writing in the transaction documents before payment. Do not send card details or confidential payment information through the website or support. Pay only to the party and by the method identified in the written agreement.",
+    termsAccountsTitle: "Acceptable use",
+    termsAccounts:
+      "Do not use the services to break the law or others' rights, publish false or misleading information or unlawful or abusive content, violate privacy, send spam, attempt unauthorized access, disrupt the website, or automatically collect its data without permission.",
+    termsContentTitle: "Content you submit",
+    termsContent:
+      "You are responsible for text, photos, and files you submit and confirm that you have the right to use them and that they do not infringe others' rights. You retain ownership and grant the office a limited right to host, use, and display them as needed to operate the service and manage the listing. Do not upload confidential information or documents to a public listing.",
+    termsOwnershipTitle: "Intellectual property",
+    termsOwnership:
+      "The website, its software, marks, and content belong to the office or its licensors and are protected by law. You may not copy, republish, or use them commercially without permission, except as permitted by law.",
+    termsThirdPartiesTitle: "Third-party services",
+    termsThirdParties:
+      "Some features may rely on third-party services such as sign-in, hosting, or email. Those services are subject to their providers' terms and policies, and the office does not control external websites or services.",
+    termsLiabilityTitle: "Availability and liability",
+    termsLiability:
+      "We work to provide the website and address interruptions, but access may change or stop temporarily. The website and its content are provided as available and are not legal, financial, or engineering advice or a guarantee about a property or listing. To the extent permitted by law, the office is not responsible for loss resulting from relying on information you did not verify. These terms do not exclude rights or liability that cannot legally be excluded.",
+    termsSuspensionTitle: "Account or content suspension",
+    termsSuspension:
+      "The office may restrict an account or remove content for a breach of these terms, a security risk, or a legal requirement. You may contact support to raise a concern or request an explanation. You may stop using the website and request account deletion under the privacy policy.",
+    termsChanges:
+      "We may update these terms when our services or legal requirements change and will publish the revised version and date here. These terms are governed by the laws of the Republic of Yemen, and disputes will be handled by the competent authorities under those laws. For questions:",
+    supportLink: "Contact support",
+  },
   propertyTypes: {
     building: "Buildings",
     land: "Land",
@@ -520,12 +595,6 @@ export default {
     terms: "Terms and conditions",
     privacy: "Privacy policy",
     tagline: "Your next property is closer than you think.",
-    gdprAlt: "Data protection compliance badge",
-    gdpr: "Data protection",
-    compliant: "Compliant",
-    soc2Alt: "SOC 2 badge",
-    soc2: "SOC 2",
-    inProgress: "In progress",
     toggleTheme: "Change appearance",
     lightMode: "Light mode",
     darkMode: "Dark mode",

@@ -238,18 +238,18 @@ export function ListingPhotoCarousel({
                   </div>
                   <fieldset
                     aria-label={zoomLabel}
-                    className="absolute bottom-3 end-3 z-10 inline-flex min-w-0 items-center gap-1 border border-white/30 bg-black/65 p-0 text-white backdrop-blur-sm"
+                    className="absolute bottom-3 end-3 z-10 inline-flex min-w-0 items-center gap-0.5 border border-border bg-background/90 p-0.5 text-foreground shadow-sm backdrop-blur-md"
                   >
                     <button
                       type="button"
                       aria-label={zoomOutLabel}
                       onClick={() => changeImageZoom(imageZoom - 0.25)}
                       disabled={imageZoom <= 0.5}
-                      className="inline-flex size-11 items-center justify-center disabled:opacity-40"
+                      className="inline-flex size-8 items-center justify-center transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
                     >
-                      <ZoomOut aria-hidden className="size-4" />
+                      <ZoomOut aria-hidden className="size-3.5" />
                     </button>
-                    <span className="min-w-10 text-center text-xs tabular-nums">
+                    <span className="min-w-9 text-center text-[11px] tabular-nums text-muted-foreground">
                       {Math.round(imageZoom * 100)}%
                     </span>
                     <button
@@ -257,9 +257,9 @@ export function ListingPhotoCarousel({
                       aria-label={zoomInLabel}
                       onClick={() => changeImageZoom(imageZoom + 0.25)}
                       disabled={imageZoom >= 4}
-                      className="inline-flex size-11 items-center justify-center disabled:opacity-40"
+                      className="inline-flex size-8 items-center justify-center transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:opacity-40"
                     >
-                      <ZoomIn aria-hidden className="size-4" />
+                      <ZoomIn aria-hidden className="size-3.5" />
                     </button>
                   </fieldset>
                 </div>
@@ -286,12 +286,12 @@ export function ListingPhotoCarousel({
                     }
                     setIsAutoplayPlaying(autoplayPlugin.isPlaying())
                   }}
-                  className="absolute end-3 top-3 z-10 inline-flex size-11 items-center justify-center rounded-full border border-white/30 bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                  className="absolute end-3 top-3 z-10 inline-flex size-8 items-center justify-center border border-border bg-background/90 text-foreground shadow-sm backdrop-blur-md transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   {isAutoplayPlaying ? (
-                    <Pause aria-hidden className="size-4" />
+                    <Pause aria-hidden className="size-3.5" />
                   ) : (
-                    <Play aria-hidden className="size-4" />
+                    <Play aria-hidden className="size-3.5" />
                   )}
                 </button>
               )}
@@ -299,19 +299,30 @@ export function ListingPhotoCarousel({
                 type="button"
                 aria-label={previousLabel}
                 onClick={() => api?.scrollPrev()}
-                className="absolute start-3 top-1/2 z-10 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="absolute start-3 top-1/2 z-10 inline-flex size-8 -translate-y-1/2 items-center justify-center border border-border bg-background/90 text-foreground shadow-sm backdrop-blur-md transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <ChevronLeft aria-hidden className="size-5 rtl:rotate-180" />
+                <ChevronLeft aria-hidden className="size-4 rtl:rotate-180" />
               </button>
               <button
                 type="button"
                 aria-label={nextLabel}
                 onClick={() => api?.scrollNext()}
-                className="absolute end-3 top-1/2 z-10 inline-flex size-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/30 bg-black/60 text-white backdrop-blur-sm transition-colors hover:bg-black/80 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                className="absolute end-3 top-1/2 z-10 inline-flex size-8 -translate-y-1/2 items-center justify-center border border-border bg-background/90 text-foreground shadow-sm backdrop-blur-md transition-colors hover:bg-background focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               >
-                <ChevronRight aria-hidden className="size-5 rtl:rotate-180" />
+                <ChevronRight aria-hidden className="size-4 rtl:rotate-180" />
               </button>
-              <div className="absolute inset-x-0 bottom-3 z-10 flex justify-center gap-1">
+              <div className="absolute inset-x-0 bottom-3 z-10 flex items-center justify-center">
+                <div className="inline-flex items-center gap-1.5 border border-border bg-background/90 px-2 py-1 shadow-sm backdrop-blur-md">
+                  <Images
+                    aria-hidden
+                    className="size-3 text-muted-foreground"
+                  />
+                  <span className="text-[11px] tabular-nums text-foreground">
+                    {imagePositionLabel} {activeIndex + 1} / {photos.length}
+                  </span>
+                </div>
+              </div>
+              <div className="absolute inset-x-0 bottom-0 z-10 flex h-0.5">
                 {photos.map((photo, index) => (
                   <button
                     key={`${photo.url}-dot`}
@@ -319,13 +330,13 @@ export function ListingPhotoCarousel({
                     aria-label={`${imagePositionLabel} ${index + 1} / ${photos.length}`}
                     aria-current={index === activeIndex}
                     onClick={() => api?.scrollTo(index)}
-                    className="inline-flex size-11 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white"
+                    className="group/dot flex min-w-0 flex-1 items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   >
                     <span
-                      className={`size-2.5 rounded-full border border-white shadow-sm transition-transform ${
+                      className={`h-0.5 w-full transition-colors ${
                         index === activeIndex
-                          ? "scale-110 bg-white"
-                          : "bg-black/40"
+                          ? "bg-primary"
+                          : "bg-foreground/15 group-hover/dot:bg-foreground/35"
                       }`}
                     />
                   </button>

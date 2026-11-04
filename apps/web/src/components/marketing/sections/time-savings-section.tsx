@@ -1,10 +1,10 @@
-"use client";
+"use client"
 
-import Link from "next/link";
-import { useI18n } from "@/locales/client";
+import Link from "next/link"
+import { useI18n } from "@/locales/client"
 
 export function TimeSavingsSection() {
-  const t = useI18n();
+  const t = useI18n()
 
   return (
     <section className="bg-background py-12 sm:py-16 lg:py-24">
@@ -188,5 +188,5 @@ export function TimeSavingsSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }

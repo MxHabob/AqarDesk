@@ -1,23 +1,23 @@
-import { create } from "zustand";
+import { create } from "zustand"
 
-export type ExportType = "file" | "accounting" | "team-data";
+export type ExportType = "file" | "accounting" | "team-data"
 
 interface ExportData {
-  runId?: string;
-  accessToken?: string;
+  runId?: string
+  accessToken?: string
   /** Type of export: "file" for vault storage, "accounting" for provider sync */
-  exportType?: ExportType;
+  exportType?: ExportType
   /** Provider name for accounting exports (e.g., "Xero", "QuickBooks") */
-  providerName?: string;
+  providerName?: string
 }
 
 interface ExportState {
-  exportData?: ExportData;
-  isExporting: boolean;
-  exportingTransactionIds: string[];
-  setExportData: (exportData?: ExportData) => void;
-  setIsExporting: (isExporting: boolean) => void;
-  setExportingTransactionIds: (ids: string[]) => void;
+  exportData?: ExportData
+  isExporting: boolean
+  exportingTransactionIds: string[]
+  setExportData: (exportData?: ExportData) => void
+  setIsExporting: (isExporting: boolean) => void
+  setExportingTransactionIds: (ids: string[]) => void
 }
 
 export const useExportStore = create<ExportState>()((set) => ({
@@ -28,4 +28,4 @@ export const useExportStore = create<ExportState>()((set) => ({
   setIsExporting: (isExporting) => set({ isExporting }),
   setExportingTransactionIds: (exportingTransactionIds) =>
     set({ exportingTransactionIds }),
-}));
+}))

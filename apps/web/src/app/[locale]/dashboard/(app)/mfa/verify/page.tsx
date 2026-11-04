@@ -2,7 +2,7 @@ import { auth } from "@aqardesk/auth/server"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { VerifyMfa } from "@/components/verify-mfa";
+import { VerifyMfa } from "@/components/verify-mfa"
 
 export const metadata: Metadata = {
   title: "Verify sign in | AqarDesk",

@@ -1,13 +1,13 @@
-import { ComboboxDropdown } from "@aqardesk/ui/combobox-dropdown";
+import { ComboboxDropdown } from "@aqardesk/ui/combobox-dropdown"
 
 type Props = {
-  value?: string;
-  headless?: boolean;
-  className?: string;
-  triggerClassName?: string;
-  currencies: string[];
-  onChange: (value: string) => void;
-};
+  value?: string
+  headless?: boolean
+  className?: string
+  triggerClassName?: string
+  currencies: string[]
+  onChange: (value: string) => void
+}
 
 export function SelectCurrency({
   currencies,
@@ -21,7 +21,7 @@ export function SelectCurrency({
     id: currency.toLowerCase(),
     value: currency.toUpperCase(),
     label: currency,
-  }));
+  }))
 
   return (
     <ComboboxDropdown
@@ -33,8 +33,8 @@ export function SelectCurrency({
       className={className}
       triggerClassName={triggerClassName}
       onSelect={(item) => {
-        onChange(item.value);
+        onChange(item.value)
       }}
     />
-  );
+  )
 }

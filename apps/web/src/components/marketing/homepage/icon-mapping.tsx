@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 // Icon mapping for homepage components
 // Maps Material Icons names to react-icons/md components
@@ -46,7 +46,7 @@ import {
   MdPlayArrow,
   MdSearch,
   MdTrendingDown,
-} from "react-icons/md";
+} from "react-icons/md"
 
 export const IconMap = {
   pause: MdPause,
@@ -93,21 +93,21 @@ export const IconMap = {
   close: MdClose,
   delete: MdDeleteOutline,
   cloud: MdOutlineCloud,
-};
+}
 
 export function MaterialIcon({
   name,
   className,
   size,
 }: {
-  name: keyof typeof IconMap;
-  className?: string;
-  size?: number | string;
+  name: keyof typeof IconMap
+  className?: string
+  size?: number | string
 }) {
-  const IconComponent = IconMap[name];
+  const IconComponent = IconMap[name]
   if (!IconComponent) {
-    console.warn(`Icon "${name}" not found in IconMap`);
-    return null;
+    console.warn(`Icon "${name}" not found in IconMap`)
+    return null
   }
-  return <IconComponent className={className} size={size} />;
+  return <IconComponent className={className} size={size} />
 }

@@ -47,8 +47,12 @@ export function TimeFormatSettings() {
             />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="12">{t("accountSettings.twelveHours")}</SelectItem>
-            <SelectItem value="24">{t("accountSettings.twentyFourHours")}</SelectItem>
+            <SelectItem value="12">
+              {t("accountSettings.twelveHours")}
+            </SelectItem>
+            <SelectItem value="24">
+              {t("accountSettings.twentyFourHours")}
+            </SelectItem>
           </SelectContent>
         </Select>
       </CardContent>

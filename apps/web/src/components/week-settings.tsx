@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Card,
@@ -6,15 +6,15 @@ import {
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
-import { Switch } from "@aqardesk/ui/switch";
-import { useUserMutation, useUserQuery } from "@/hooks/use-user";
-import { useI18n } from "@/locales/client";
+} from "@aqardesk/ui/card"
+import { Switch } from "@aqardesk/ui/switch"
+import { useUserMutation, useUserQuery } from "@/hooks/use-user"
+import { useI18n } from "@/locales/client"
 
 export function WeekSettings() {
-  const t = useI18n();
-  const { data: user } = useUserQuery();
-  const updateUserMutation = useUserMutation();
+  const t = useI18n()
+  const { data: user } = useUserQuery()
+  const updateUserMutation = useUserMutation()
 
   return (
     <Card className="flex flex-col items-stretch justify-between gap-4 sm:flex-row sm:items-center">
@@ -32,10 +32,10 @@ export function WeekSettings() {
           checked={user?.weekStartsOnMonday ?? false}
           disabled={updateUserMutation.isPending}
           onCheckedChange={(weekStartsOnMonday: boolean) => {
-            updateUserMutation.mutate({ weekStartsOnMonday });
+            updateUserMutation.mutate({ weekStartsOnMonday })
           }}
         />
       </CardContent>
     </Card>
-  );
+  )
 }

@@ -5,7 +5,7 @@ import { getQueryClient, HydrateClient } from "@/queries/server"
 
 export const metadata: Metadata = {
   title: "Overview | AqarDesk",
-};
+}
 
 export default async function Overview() {
   const queryClient = getQueryClient()

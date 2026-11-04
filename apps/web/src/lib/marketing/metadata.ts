@@ -49,14 +49,14 @@ const pageCopy = {
         "تواصل مع مكتب علي شوبان للحصول على المساعدة بشأن العقارات المعروضة وخدمات البيع والتأجير.",
     },
     terms: {
-      title: "شروط الاستخدام",
+      title: "شروط استخدام الموقع والخدمات العقارية",
       description:
-        "راجع شروط وأحكام استخدام موقع مكتب علي شوبان والخدمات العقارية المتاحة.",
+        "تعرّف على شروط تصفح العقارات واستخدام خدمات مكتب علي شوبان ونظام AqarDesk، بما في ذلك دقة العروض والحسابات والمحتوى.",
     },
     privacy: {
       title: "سياسة الخصوصية",
       description:
-        "اقرأ عن كيفية تعامل مكتب علي شوبان مع المعلومات والبيانات الشخصية عند استخدام الموقع.",
+        "تعرّف على المعلومات التي يتعامل معها مكتب علي شوبان عند استخدام الموقع ونظام AqarDesk وكيفية استخدامها وحمايتها.",
     },
   },
   en: {
@@ -93,14 +93,14 @@ const pageCopy = {
         "Contact Ali Shoban's Office for help with available properties, sales, and rentals.",
     },
     terms: {
-      title: "Terms of Use",
+      title: "Website and Real Estate Services Terms",
       description:
-        "Review the terms and conditions for using the Ali Shoban's Office website and real estate services.",
+        "Learn the terms for browsing property listings and using Ali Shoban's Office services and the AqarDesk system.",
     },
     privacy: {
       title: "Privacy Policy",
       description:
-        "Learn how Ali Shoban's Office handles personal information when you use the website and services.",
+        "Learn what information Ali Shoban's Office handles when you use its website and AqarDesk, and how it is used and protected.",
     },
   },
 } satisfies Record<

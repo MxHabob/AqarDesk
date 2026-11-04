@@ -14,14 +14,13 @@ import {
   SheetTrigger,
 } from "@aqardesk/ui/components/sheet"
 import { ArrowUpRight, Building2, MapPin, Ruler } from "lucide-react"
-import Image from "next/image"
 import Link from "next/link"
+import { ListingCoverImage } from "@/components/marketing/listing-cover-image"
 import {
   type ListingPhoto,
   ListingPhotoCarousel,
 } from "@/components/marketing/listing-photo-carousel"
 import { SaveListingButton } from "@/components/marketing/save-listing-button"
-import listingImageLoader from "@/lib/listings/image-loader"
 
 type Listing = {
   id: string
@@ -118,11 +117,9 @@ export function ListingCard({
           >
             <span className="relative block aspect-[4/3] w-full overflow-hidden bg-muted">
               {coverPhoto ? (
-                <Image
+                <ListingCoverImage
                   src={coverPhoto.url}
                   alt={coverPhoto.altText || listing.title}
-                  fill
-                  loader={listingImageLoader}
                   sizes="(max-width: 639px) 100vw, (max-width: 1279px) 50vw, 33vw"
                   className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
                 />

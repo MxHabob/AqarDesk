@@ -5,25 +5,14 @@ const defaultLocale = "ar"
 const localeCookieOptions = {
   path: "/",
   maxAge: 31_536_000,
-  sameSite: "strict" as const,
+  sameSite: "lax" as const,
 }
 const dashboardRoutePrefixes = new Set([
-  "apps",
-  "customers",
-  "desktop",
-  "inbox",
-  "invoices",
-  "mfa",
-  "oauth",
-  "reports",
   "owners",
   "properties",
+  "reports",
   "settings",
   "teams",
-  "tracker",
-  "transactions",
-  "upgrade",
-  "vault",
 ])
 
 export function proxy(request: NextRequest) {

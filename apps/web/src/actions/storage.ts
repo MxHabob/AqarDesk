@@ -154,7 +154,10 @@ export async function getStorageReadUrlAction(input: {
 
 export async function getStorageReadUrlsAction(objectKeysInput: string[]) {
   const actor = await getActor()
-  const objectKeys = z.array(z.string().min(1).max(1024)).max(100).parse(objectKeysInput)
+  const objectKeys = z
+    .array(z.string().min(1).max(1024))
+    .max(100)
+    .parse(objectKeysInput)
   await Promise.all(
     objectKeys.map((objectKey) => assertCanAccessObject(actor.id, objectKey))
   )

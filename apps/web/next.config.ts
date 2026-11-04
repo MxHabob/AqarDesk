@@ -38,11 +38,9 @@ const nextConfig: NextConfig = {
     "@aqardesk/categories",
     "@aqardesk/database",
     "@aqardesk/email",
-    "@aqardesk/notifications",
     "@aqardesk/storage",
     "@aqardesk/ui",
     "@aqardesk/utils",
-    "@aqardesk/validators",
   ],
 }
 

@@ -47,7 +47,9 @@ export function DateFormatSettings() {
           }}
         >
           <SelectTrigger className="w-full sm:w-[180px]">
-            <SelectValue placeholder={t("accountSettings.dateFormatPlaceholder")} />
+            <SelectValue
+              placeholder={t("accountSettings.dateFormatPlaceholder")}
+            />
           </SelectTrigger>
           <SelectContent>
             <SelectItem value="dd/MM/yyyy">dd/MM/yyyy</SelectItem>

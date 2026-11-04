@@ -10,11 +10,13 @@ import Link from "next/link"
 import { useState } from "react"
 import { ErrorFallback } from "@/components/error-fallback"
 import { useNotifications } from "@/hooks/use-notifications"
+import { useI18n } from "@/locales/client"
 import { EmptyState } from "./empty-state"
 import { NotificationItem } from "./notification-item"
 
 export function NotificationCenter() {
   const [isOpen, setOpen] = useState(false)
+  const t = useI18n()
 
   const {
     hasUnseenNotifications,
@@ -71,12 +73,13 @@ export function NotificationCenter() {
               <Button
                 render={
                   <Link
-                    href="/settings/notifications"
+                    href="/dashboard/settings"
                     onClick={() => setOpen(false)}
                   />
                 }
                 variant="ghost"
                 size="icon"
+                aria-label={t("common.settings")}
                 className="items-center justify-center transition-colors h-9 w-9 rounded-full bg-ransparent hover:bg-accent me-2"
               >
                 <Icons.Settings size={16} />

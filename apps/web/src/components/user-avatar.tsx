@@ -1,4 +1,4 @@
-"use client";
+"use client"
 
 import {
   Card,
@@ -6,14 +6,14 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "@aqardesk/ui/card";
-import { useI18n } from "@/locales/client";
-import { useUserQuery } from "@/hooks/use-user";
-import { AvatarUpload } from "./avatar-upload";
+} from "@aqardesk/ui/card"
+import { useI18n } from "@/locales/client"
+import { useUserQuery } from "@/hooks/use-user"
+import { AvatarUpload } from "./avatar-upload"
 
 export function UserAvatar() {
-  const t = useI18n();
-  const { data: user } = useUserQuery();
+  const t = useI18n()
+  const { data: user } = useUserQuery()
 
   return (
     <Card>
@@ -28,5 +28,5 @@ export function UserAvatar() {
       </div>
       <CardFooter>{t("userAvatar.footer")}</CardFooter>
     </Card>
-  );
+  )
 }

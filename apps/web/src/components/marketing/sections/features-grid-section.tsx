@@ -1,9 +1,9 @@
-"use client";
+"use client"
 
-import { propertyCategories, type PropertyType } from "@aqardesk/categories";
-import Link from "next/link";
-import { useI18n } from "@/locales/client";
-import { IconMap, MaterialIcon } from "../homepage/icon-mapping";
+import { propertyCategories, type PropertyType } from "@aqardesk/categories"
+import Link from "next/link"
+import { useI18n } from "@/locales/client"
+import { IconMap, MaterialIcon } from "../homepage/icon-mapping"
 
 const propertyTypeIcons = {
   building: "account_balance",
@@ -14,10 +14,10 @@ const propertyTypeIcons = {
   warehouse: "folder_zip",
   yard: "filter_list",
   apartment: "widgets",
-} as const satisfies Record<PropertyType, keyof typeof IconMap>;
+} as const satisfies Record<PropertyType, keyof typeof IconMap>
 
 export function FeaturesGridSection() {
-  const t = useI18n();
+  const t = useI18n()
   const propertyTypeLabels: Record<PropertyType, string> = {
     building: t("propertyTypes.building"),
     land: t("propertyTypes.land"),
@@ -27,7 +27,7 @@ export function FeaturesGridSection() {
     warehouse: t("propertyTypes.warehouse"),
     yard: t("propertyTypes.yard"),
     apartment: t("propertyTypes.apartment"),
-  };
+  }
 
   const renderCategory = (category: (typeof propertyCategories)[number]) => (
     <Link
@@ -51,7 +51,7 @@ export function FeaturesGridSection() {
         </p>
       </div>
     </Link>
-  );
+  )
 
   return (
     <section className="bg-background py-12 sm:py-16 lg:py-24">
@@ -76,5 +76,5 @@ export function FeaturesGridSection() {
         </div>
       </div>
     </section>
-  );
+  )
 }
