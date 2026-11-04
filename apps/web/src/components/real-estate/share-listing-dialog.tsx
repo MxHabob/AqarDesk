@@ -8,6 +8,7 @@ import {
   DialogTitle,
 } from "@aqardesk/ui/components/dialog"
 import { Input } from "@aqardesk/ui/components/input"
+import { Skeleton } from "@aqardesk/ui/components/skeleton"
 import { Textarea } from "@aqardesk/ui/components/textarea"
 import { useToast } from "@aqardesk/ui/use-toast"
 import { Briefcase, Check, Copy, Mail, QrCode, Share2 } from "lucide-react"
@@ -85,6 +86,7 @@ export function ShareListingDialog({
   const [showQr, setShowQr] = useState(false)
   const [supportsNativeShare, setSupportsNativeShare] = useState(false)
   const [isPreparingLink, setIsPreparingLink] = useState(false)
+  const [linkError, setLinkError] = useState(false)
   const [shortLinks, setShortLinks] = useState<
     Record<string, { path: string; expiresAt: string }>
   >({})
@@ -154,41 +156,41 @@ export function ShareListingDialog({
     return path
   }
 
-  async function openDialog() {
-    const listing =
-      listings.find((item) => item.id === initialListingId) ?? listings[0]
-    if (!listing) return
+  async function prepareSharePath(listing: ShareableListing) {
     setIsPreparingLink(true)
-    setSelectedId(listing.id)
-    setMessage(`${t("sharing.defaultMessage")} ${listing.title}`)
-    setOrigin(window.location.origin)
-    setSupportsNativeShare(typeof navigator.share === "function")
-    setCopied(false)
-    setShowQr(false)
+    setLinkError(false)
+    setSharePath("")
     try {
       setSharePath(await getSharePath(listing))
-      setOpen(true)
     } catch {
+      setLinkError(true)
       toast({ type: "error", title: t("sharing.linkCreateFailed") })
     } finally {
       setIsPreparingLink(false)
     }
   }
 
+  async function openDialog() {
+    const listing =
+      listings.find((item) => item.id === initialListingId) ?? listings[0]
+    if (!listing) return
+
+    setSelectedId(listing.id)
+    setMessage(`${t("sharing.defaultMessage")} ${listing.title}`)
+    setOrigin(window.location.origin)
+    setSupportsNativeShare(typeof navigator.share === "function")
+    setCopied(false)
+    setShowQr(false)
+    setOpen(true)
+    await prepareSharePath(listing)
+  }
+
   async function selectListing(listing: ShareableListing) {
-    setIsPreparingLink(true)
     setSelectedId(listing.id)
     setMessage(`${t("sharing.defaultMessage")} ${listing.title}`)
     setCopied(false)
     setShowQr(false)
-    setSharePath("")
-    try {
-      setSharePath(await getSharePath(listing))
-    } catch {
-      toast({ type: "error", title: t("sharing.linkCreateFailed") })
-    } finally {
-      setIsPreparingLink(false)
-    }
+    await prepareSharePath(listing)
   }
 
   async function copyLink() {
@@ -232,7 +234,7 @@ export function ShareListingDialog({
         variant="outline"
         size="sm"
         className={className}
-        disabled={listings.length === 0 || isPreparingLink}
+        disabled={listings.length === 0}
         aria-busy={isPreparingLink}
         title={listings.length === 0 ? t("sharing.noLiveListings") : undefined}
         aria-label={
@@ -300,19 +302,27 @@ export function ShareListingDialog({
                 {t("sharing.linkLabel")}
               </label>
               <div className="flex gap-2">
-                <Input
-                  id={`${formId}-url`}
-                  readOnly
-                  value={shareUrl}
-                  dir="ltr"
-                  className="min-w-0 text-start"
-                  aria-label={t("sharing.linkLabel")}
-                />
+                <div className="relative min-w-0 flex-1">
+                  <Input
+                    id={`${formId}-url`}
+                    readOnly
+                    value={shareUrl}
+                    dir="ltr"
+                    className="w-full text-start"
+                    aria-label={t("sharing.linkLabel")}
+                    aria-busy={isPreparingLink}
+                  />
+                  {isPreparingLink && (
+                    <div className="pointer-events-none absolute inset-y-0 start-3 end-3 flex items-center">
+                      <Skeleton className="h-4 w-3/4" />
+                    </div>
+                  )}
+                </div>
                 <Button
                   type="button"
                   variant="outline"
                   size="icon"
-                  disabled={!shareUrl}
+                  disabled={!shareUrl || isPreparingLink}
                   aria-label={
                     copied ? t("sharing.copied") : t("sharing.copyLink")
                   }
@@ -326,6 +336,25 @@ export function ShareListingDialog({
                   )}
                 </Button>
               </div>
+              {linkError && (
+                <div
+                  className="flex items-center justify-between gap-3 text-xs text-destructive"
+                  role="alert"
+                >
+                  <span>{t("sharing.linkCreateFailed")}</span>
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="xs"
+                    onClick={() => {
+                      if (selectedListing)
+                        void prepareSharePath(selectedListing)
+                    }}
+                  >
+                    {t("sharing.retry")}
+                  </Button>
+                </div>
+              )}
             </div>
 
             <div className="space-y-2">

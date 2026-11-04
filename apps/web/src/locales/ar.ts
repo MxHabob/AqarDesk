@@ -67,6 +67,7 @@ export default {
     qrDescription: "امسح الرمز لفتح العرض.",
     noLiveListings: "لا توجد عروض عامة نشطة للمشاركة.",
     linkCreateFailed: "تعذر إنشاء رابط المشاركة. حاول مرة أخرى.",
+    retry: "إعادة المحاولة",
     shareFailed: "تعذر فتح قائمة المشاركة.",
   },
   common: {

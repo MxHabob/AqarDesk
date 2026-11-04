@@ -4,7 +4,7 @@ export const defaultShortLinkLifetimeDays = 30
 export const maximumShortLinkLifetimeDays = 365
 
 export function createShortLinkToken() {
-  return randomBytes(16).toString("base64url")
+  return randomBytes(12).toString("base64url")
 }
 
 export function hashShortLinkToken(token: string) {

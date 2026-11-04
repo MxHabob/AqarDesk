@@ -354,6 +354,7 @@ export default {
     qrDescription: "Scan the code to open this listing.",
     noLiveListings: "There are no active public listings to share.",
     linkCreateFailed: "Could not create a share link. Please try again.",
+    retry: "Try again",
     shareFailed: "Could not open the sharing menu.",
   },
   common: {
