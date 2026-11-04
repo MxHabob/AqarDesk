@@ -9,7 +9,7 @@ import { UserAvatar } from "@/components/user-avatar"
 
 export function AccountSettings() {
   return (
-    <div className="space-y-12">
+    <div className="space-y-4 sm:space-y-6">
       <UserAvatar />
       <DisplayName />
       <ChangeEmail />

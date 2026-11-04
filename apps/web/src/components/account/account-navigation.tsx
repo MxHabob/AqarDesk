@@ -52,9 +52,12 @@ export function AccountNavigation({
 
   return (
     <div className="border-b pb-4">
-      <div className="flex flex-wrap items-center gap-4">
-        <nav aria-label={t("navigationLabel")} className="min-w-0 flex-1">
-          <ul className="flex gap-5 overflow-x-auto text-sm">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+        <nav
+          aria-label={t("navigationLabel")}
+          className="w-full min-w-0 sm:flex-1"
+        >
+          <ul className="flex gap-5 overflow-x-auto pb-2 text-sm sm:pb-0">
             {items.map((item) => (
               <li className="shrink-0" key={item.href}>
                 <Link
@@ -72,24 +75,26 @@ export function AccountNavigation({
             ))}
           </ul>
         </nav>
-        <Button
-          aria-label={accountSettings("common.close")}
-          onClick={goBack}
-          size="icon"
-          type="button"
-          variant="ghost"
-        >
-          <Icons.Close aria-hidden="true" className="size-5" />
-        </Button>
-        {roleDestination === `/${locale}/dashboard` && (
+        <div className="flex items-center justify-between gap-2 sm:justify-start">
           <Button
-            onClick={() => router.push(roleDestination)}
+            aria-label={accountSettings("common.close")}
+            onClick={goBack}
+            size="icon"
             type="button"
-            variant="outline"
+            variant="ghost"
           >
-            {accountSettings("auth.openDashboard")}
+            <Icons.Close aria-hidden="true" className="size-5" />
           </Button>
-        )}
+          {roleDestination === `/${locale}/dashboard` && (
+            <Button
+              onClick={() => router.push(roleDestination)}
+              type="button"
+              variant="outline"
+            >
+              {accountSettings("auth.openDashboard")}
+            </Button>
+          )}
+        </div>
       </div>
     </div>
   )

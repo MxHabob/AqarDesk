@@ -23,7 +23,7 @@ export function ChangeTheme() {
       </CardHeader>
 
       <CardContent>
-        <div className="w-[240px]">
+        <div className="w-full max-w-[240px]">
           <ThemeSwitch />
         </div>
       </CardContent>

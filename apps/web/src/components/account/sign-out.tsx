@@ -50,7 +50,7 @@ export function SignOut() {
           {t("accountSettings.signOutDescription")}
         </CardDescription>
       </CardHeader>
-      <CardFooter className="flex items-center justify-between gap-4">
+      <CardFooter className="flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
         {error ? (
           <p role="alert" className="text-sm text-destructive">
             {t("auth.signOutError")}
@@ -59,6 +59,7 @@ export function SignOut() {
           <div />
         )}
         <Button
+          className="w-full sm:w-auto"
           disabled={isSigningOut}
           onClick={signOut}
           type="button"

@@ -18,9 +18,9 @@ import {
 import { Input } from "@aqardesk/ui/input"
 import { SubmitButton } from "@aqardesk/ui/submit-button"
 import { z } from "zod/v3"
-import { useI18n } from "@/locales/client"
 import { useUserMutation, useUserQuery } from "@/hooks/use-user"
 import { useZodForm } from "@/hooks/use-zod-form"
+import { useI18n } from "@/locales/client"
 
 const formSchema = z.object({
   fullName: z.string().min(1).max(32).optional(),
@@ -65,7 +65,7 @@ export function DisplayName() {
                   <FormControl>
                     <Input
                       {...field}
-                      className="max-w-[300px]"
+                      className="w-full max-w-[300px]"
                       autoComplete="off"
                       autoCapitalize="none"
                       autoCorrect="off"
@@ -79,12 +79,15 @@ export function DisplayName() {
             />
           </CardContent>
 
-          <CardFooter className="flex justify-between">
-            <div>{t("accountSettings.displayNameLimit")}</div>
+          <CardFooter className="flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
+            <div className="text-muted-foreground">
+              {t("accountSettings.displayNameLimit")}
+            </div>
             <SubmitButton
               type="submit"
               disabled={updateUserMutation.isPending}
               isSubmitting={updateUserMutation.isPending}
+              className="w-full sm:w-auto"
             >
               {t("accountSettings.save")}
             </SubmitButton>

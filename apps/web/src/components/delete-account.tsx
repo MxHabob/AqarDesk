@@ -51,7 +51,7 @@ export function DeleteAccount() {
           {t("accountSettings.deleteDescription")}
         </CardDescription>
       </CardHeader>
-      <CardFooter className="flex justify-between">
+      <CardFooter className="flex-col items-stretch gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div />
 
         <AlertDialog
@@ -64,7 +64,7 @@ export function DeleteAccount() {
           <Button
             type="button"
             variant="destructive"
-            className="hover:bg-destructive text-muted"
+            className="w-full text-muted hover:bg-destructive sm:w-auto"
             onClick={() => {
               setErrorMessage(null)
               setIsOpen(true)

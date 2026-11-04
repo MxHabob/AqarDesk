@@ -30,7 +30,7 @@ export default async function AccountPage({
   const t = await getScopedI18n("account")
 
   return (
-    <section className="space-y-6">
+    <section className="space-y-4 sm:space-y-6">
       <header>
         <h1 className="text-2xl font-semibold">{t("title")}</h1>
       </header>

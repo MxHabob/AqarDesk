@@ -7,8 +7,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@aqardesk/ui/card"
-import { useI18n } from "@/locales/client"
 import { useUserQuery } from "@/hooks/use-user"
+import { useI18n } from "@/locales/client"
 import { AvatarUpload } from "./avatar-upload"
 
 export function UserAvatar() {
@@ -17,7 +17,7 @@ export function UserAvatar() {
 
   return (
     <Card>
-      <div className="flex items-center justify-between gap-6 pe-6">
+      <div className="flex items-center justify-between gap-4 pe-4 sm:gap-6 sm:pe-6">
         <CardHeader className="min-w-0 flex-1">
           <CardTitle className="normal-case tracking-normal">
             {t("userAvatar.title")}
