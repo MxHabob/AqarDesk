@@ -182,7 +182,7 @@ export function BankSearchContent({
         channel: LogEvents.ConnectBankAuthorized.channel,
         provider: "plaid",
       });
-    },
+    }
     onExit: () => {
       setParams({ step: "connect" });
 
@@ -204,7 +204,7 @@ export function BankSearchContent({
       },
       {
         enabled,
-      }
+      },
     ),
     placeholderData: keepPreviousData,
   });
