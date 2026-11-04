@@ -111,7 +111,7 @@ export function Header({
             href="/"
             onClick={() => setIsMenuOpen(false)}
           >
-            <span className="size-6">
+            <span className="size-9">
               <Icons.LogoSmall className="size-full text-foreground" />
             </span>
             <span className="max-w-40 truncate font-sans text-base text-foreground xl:hidden sm:max-w-none">

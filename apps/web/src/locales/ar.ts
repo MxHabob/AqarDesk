@@ -451,11 +451,11 @@ export default {
     openingOfferSectionDescription:
       "استكشف العقارات، وتعرّف على خدماتنا، وتواصل مع فريق المكتب للبدء بخطوتك التالية.",
     homepageDashboardPreview: "معاينة لوحة تحكم AqarDesk",
-    heroEyebrow: "عقارات للبيع والإيجار في اليمن",
-    heroTitleBefore: "اكتشف العقار الذي",
-    heroTitleAccent: "يناسب احتياجك",
+    heroTitleBefore: "ابحث عن عقارك",
+    heroTitleAccent: "المناسب بكل سهولة",
     heroDescription:
-      "تصفّح العقارات المتاحة، واطّلع على مواقعها وتفاصيلها، وتواصل مع مكتب علي شوبان للاستفسار.",
+      "استكشف العروض، وقارن المواقع، وتواصل معنا للحصول على المساعدة.",
+    heroNote: "اعثر على عقارك القادم اليوم",
     browseListings: "تصفح العروض",
     viewListing: "عرض التفاصيل",
     emptyListingsDescription: "لا توجد عقارات منشورة حاليًا.",

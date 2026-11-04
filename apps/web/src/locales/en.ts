@@ -136,11 +136,11 @@ export default {
     browse: "Browse properties",
     browseListings: "Browse listings",
     viewListing: "View property details",
-    heroEyebrow: "Properties for sale and rent in Yemen",
-    heroTitleBefore: "Explore properties",
-    heroTitleAccent: "that fit your needs",
+    heroTitleBefore: "Find your ideal",
+    heroTitleAccent: "property with ease",
     heroDescription:
-      "Browse available properties, review their locations and details, and contact Ali Shoban's Office to learn more.",
+      "Explore listings, compare locations, and contact us for guidance.",
+    heroNote: "Find your next property today",
     featuredTitle: "Available properties",
     featuredDescription:
       "Explore the latest properties available for sale and rent.",

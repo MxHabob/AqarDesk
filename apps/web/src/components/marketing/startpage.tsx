@@ -20,12 +20,18 @@ import Image from "next/image";
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { useScopedI18n } from "@/locales/client";
+import type { HomepageListing } from "./sections/featured-listings-section"
 
 
 
 // Dynamic imports for below-the-fold sections (still SSR for SEO)
 const FeaturesGridSection = dynamic(() =>
   import("./sections/features-grid-section").then((m) => m.FeaturesGridSection),
+);
+const FeaturedListingsSection = dynamic(() =>
+  import("./sections/featured-listings-section").then(
+    (m) => m.FeaturedListingsSection,
+  ),
 );
 const TimeSavingsSection = dynamic(() =>
   import("./sections/time-savings-section").then((m) => m.TimeSavingsSection),
@@ -88,12 +94,10 @@ const videos = [
   },
 ];
 
-export function StartPage() {
+export function StartPage({ listings }: { listings: HomepageListing[] }) {
   const t = useScopedI18n("site");
   const [isVideoLoaded, setIsVideoLoaded] = useState(false);
   const [isPosterLoaded, setIsPosterLoaded] = useState(false);
-  const [isDashboardLightLoaded, setIsDashboardLightLoaded] = useState(false);
-  const [isDashboardDarkLoaded, setIsDashboardDarkLoaded] = useState(false);
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [activeVideoId, setActiveVideoId] = useState("overview");
   const [videoProgress, setVideoProgress] = useState(0);
@@ -234,34 +238,31 @@ export function StartPage() {
                   <span aria-hidden="true">&rarr;</span>
                 </Link>
                 <h1 className="font-serif text-3xl sm:text-3xl md:text-4xl lg:text-6xl xl:text-7xl 2xl:text-7xl 3xl:text-8xl leading-[1.1] tracking-tight text-foreground">
-                  The business stack for{" "}
+                  {t("heroTitleBefore")}{" "}
                   <em className="not-italic text-muted-foreground/80">
-                    modern
-                  </em>{" "}
-                  founders
+                    {t("heroTitleAccent")}
+                  </em>
                 </h1>
 
                 <p className="text-muted-foreground text-base lg:text-lg leading-relaxed font-sans max-w-xl mx-auto">
-                  Send invoices, automatic reconciliation, track billable hours,
-                  get financial insights, and export clean books to your
-                  accountant.
+                  {t("heroDescription")}
                 </p>
               </div>
 
               <div className="flex flex-col items-center gap-3 pt-2">
                 <Button
+                  nativeButton={false}
                   render={
-                    <a href="/login">
-                    <span className="text-inherit text-sm">
-                      Start your trial
-                    </span>
-                    </a>
+                    <Link href="/listings">
+                      <span className="text-inherit text-sm">
+                        {t("browseListings")}
+                      </span>
+                    </Link>
                   }
                   className="btn-inverse h-11 px-6 transition-colors"
                 />
-
                 <p className="text-muted-foreground text-xs font-sans">
-                  14-day free trial آ· Cancel anytime
+                  {t("heroNote")}
                 </p>
                 <div className="flex items-center justify-center gap-3 pt-4">
                   <div className="flex items-center gap-2.5">
@@ -408,64 +409,10 @@ export function StartPage() {
 
               {/* Dashboard overlay - different styles for mobile vs desktop */}
               <div className="absolute inset-0 flex items-center justify-center p-0 lg:p-4 z-[2]">
-                <div className="relative lg:static scale-[0.95] md:scale-100 lg:scale-100 lg:h-full lg:flex lg:flex-col lg:items-center lg:justify-center">
-                  <Image
-                    src="/images/dashboard-light.svg"
-                    alt="Dashboard illustration"
-                    width={1600}
-                    height={1200}
-                    className="w-full h-auto md:!scale-[0.85] lg:!scale-100 lg:object-contain lg:max-w-[85%] 2xl:max-w-[75%] dark:hidden lg:[transform:rotate(-2deg)_skewY(1deg)] lg:[filter:drop-shadow(0_30px_60px_rgba(0,0,0,0.6))] transition-all duration-700 ease-out"
-                    style={{
-                      filter: isDashboardLightLoaded
-                        ? "blur(0px) drop-shadow(0 30px 60px rgba(0,0,0,0.6))"
-                        : "blur(20px)",
-                      transform: isDashboardLightLoaded
-                        ? "scale(1)"
-                        : "scale(1.02)",
-                    }}
-                    priority
-                    fetchPriority="high"
-                    onLoad={() => setIsDashboardLightLoaded(true)}
-                  />
-                  <Image
-                    src="/images/dashboard-dark.svg"
-                    alt="Dashboard illustration"
-                    width={1600}
-                    height={1200}
-                    className="w-full h-auto md:!scale-[0.85] lg:!scale-100 lg:object-contain lg:max-w-[85%] 2xl:max-w-[75%] hidden dark:block lg:[transform:rotate(-2deg)_skewY(1deg)] lg:[filter:drop-shadow(0_30px_60px_rgba(0,0,0,0.6))] transition-all duration-700 ease-out"
-                    style={{
-                      filter: isDashboardDarkLoaded
-                        ? "blur(0px) drop-shadow(0 30px 60px rgba(0,0,0,0.6))"
-                        : "blur(20px)",
-                      transform: isDashboardDarkLoaded
-                        ? "scale(1)"
-                        : "scale(1.02)",
-                    }}
-                    priority
-                    fetchPriority="high"
-                    onLoad={() => setIsDashboardDarkLoaded(true)}
-                  />
-                </div>
+                <Icons.Logo
+                  className="h-24 w-auto text-white drop-shadow-[0_8px_24px_rgba(0,0,0,0.45)] sm:h-32 md:h-40 lg:h-52"
+                />
               </div>
-
-              {/* Play Button Overlay */}
-              <button
-                type="button"
-                onClick={() => {
-                  setIsVideoModalOpen(true);
-                  setActiveVideoId("overview");
-                }}
-                className={`hidden absolute inset-0 z-[4] flex items-center justify-center pointer-events-none transition-opacity duration-500 delay-300 ${
-                  isDashboardLightLoaded || isDashboardDarkLoaded
-                    ? "opacity-100"
-                    : "opacity-0"
-                }`}
-                aria-label="Play video"
-              >
-                <div className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 bg-muted hover:bg-secondary hover:scale-105 flex items-center justify-center transition-all duration-200 pointer-events-auto">
-                  <Icons.Play className="w-5 h-5 sm:w-6 sm:h-6 md:w-7 md:h-7 text-primary" />
-                </div>
-              </button>
             </div>
           </div>
         </div>
@@ -615,6 +562,8 @@ export function StartPage() {
 
       {/* Features Overview Section */}
       <FeaturesGridSection />
+
+      <FeaturedListingsSection listings={listings} />
 
       {/* Divider */}
       <div className="max-w-[1400px] mx-auto">
