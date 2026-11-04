@@ -301,7 +301,7 @@ export default async function ListingDetailsPage({
   }
 
   return (
-    <div className="mx-auto max-w-[1400px] space-y-8 pt-0 pb-12 sm:pt-0 sm:pb-16">
+    <div className="mx-auto max-w-[1400px] space-y-8 pt-32 pb-12">
       <script
         type="application/ld+json"
         // biome-ignore lint/security/noDangerouslySetInnerHtml: JSON-LD is escaped by createSafeJsonLd.
@@ -551,7 +551,7 @@ export default async function ListingDetailsPage({
       {similarListings.length > 0 && (
         <section
           aria-labelledby="similar-listings-heading"
-          className="space-y-5 border-t border-border pt-8"
+          className="space-y-5 pt-8"
         >
           <h2
             id="similar-listings-heading"

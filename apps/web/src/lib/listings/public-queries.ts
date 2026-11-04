@@ -104,6 +104,26 @@ export async function getPublicListingCoverPhotos(listingIds: string[]) {
   return Object.fromEntries(signedPhotos)
 }
 
+export const getPublicHomepageData = cache(async () => {
+  const results = await getFilteredPublicListings({
+    q: "",
+    propertyType: null,
+    listingType: null,
+    minPrice: null,
+    maxPrice: null,
+    minArea: null,
+    maxArea: null,
+    sort: "newest",
+    page: 1,
+    pageSize: 12,
+  })
+  const coverPhotos = await getPublicListingCoverPhotos(
+    results.rows.map((listing) => listing.id)
+  )
+
+  return { results, coverPhotos }
+})
+
 export async function getPublicListingMedia(listingId: string) {
   const rows = await getDatabase()
     .select({

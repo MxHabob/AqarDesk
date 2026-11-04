@@ -12,8 +12,7 @@ import {
 import { SunsetBanner } from "@/components/sunset-banner"
 import { getRoleDestination, getUserRoleKeys } from "@/lib/auth/roles"
 import {
-  getFilteredPublicListings,
-  getPublicListingCoverPhotos,
+  getPublicHomepageData,
   getSelectedPublicCountryCode,
 } from "@/lib/listings/public-queries"
 import {
@@ -86,33 +85,19 @@ export default async function Layout({
   children: ReactNode
   params: Promise<{ locale: string }>
 }) {
-  const [{ locale }, session] = await Promise.all([
+  const [{ locale }, session, t, countryCode, homepageData] = await Promise.all([
     params,
     auth.api.getSession({ headers: await headers() }),
+    getScopedI18n("site"),
+    getSelectedPublicCountryCode(),
+    getPublicHomepageData(),
   ])
-  const t = await getScopedI18n("site")
-  const countryCode = await getSelectedPublicCountryCode()
   const roleKeys = session ? await getUserRoleKeys(session.user.id) : []
   const roleDestination = session ? getRoleDestination(roleKeys, locale) : null
-  const latestListings = await getFilteredPublicListings({
-    q: "",
-    propertyType: null,
-    listingType: null,
-    minPrice: null,
-    maxPrice: null,
-    minArea: null,
-    maxArea: null,
-    sort: "newest",
-    page: 1,
-    pageSize: 12,
-  })
-  const latestListingPhotos = await getPublicListingCoverPhotos(
-    latestListings.rows.map((listing) => listing.id)
-  )
-  const allListingPreviews = latestListings.rows.map((listing) => ({
+  const allListingPreviews = homepageData.results.rows.map((listing) => ({
     id: listing.id,
     title: listing.title,
-    photo: latestListingPhotos[listing.id] ?? null,
+    photo: homepageData.coverPhotos[listing.id] ?? null,
   }))
   const listingsWithPhotos = allListingPreviews.filter(
     (listing) => listing.photo
