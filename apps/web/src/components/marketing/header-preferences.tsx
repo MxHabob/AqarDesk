@@ -7,10 +7,12 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@aqardesk/ui/select"
+import { useRouter } from "next/navigation"
 import { useTransition } from "react"
 import { saveWebsitePreferences } from "@/actions/website-preferences"
 import { websiteCountries } from "@/lib/countries"
 import { useScopedI18n } from "@/locales/client"
+import { locales } from "@/locales/config"
 
 const countryTranslationKeys = {
   YE: "countryYemen",
@@ -46,6 +48,7 @@ export function HeaderPreferences({
   const countryId = `${idPrefix}-header-country`
   const isCompact = idPrefix === "mobile"
   const [isPending, startTransition] = useTransition()
+  const router = useRouter()
   const countryName = (country: (typeof websiteCountries)[number]) =>
     t(countryTranslationKeys[country.code])
   const selectedCountry = websiteCountries.find(
@@ -57,6 +60,22 @@ export function HeaderPreferences({
         locale: nextLocale,
         countryCode: nextCountryCode,
       })
+
+      if (nextLocale !== locale) {
+        const pathSegments = window.location.pathname.split("/").filter(Boolean)
+        const routeSegments = locales.some(
+          (supportedLocale) => supportedLocale === pathSegments[0]
+        )
+          ? pathSegments.slice(1)
+          : pathSegments
+        const route = `/${nextLocale}${routeSegments.length ? `/${routeSegments.join("/")}` : ""}`
+        router.replace(
+          `${route}${window.location.search}${window.location.hash}`
+        )
+        return
+      }
+
+      router.refresh()
     })
   }
 

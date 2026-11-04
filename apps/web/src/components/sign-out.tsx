@@ -33,7 +33,7 @@ export function SignOut() {
 
   return (
     <DropdownMenuItem
-      className="text-xs"
+      className="text-xs normal-case tracking-normal"
       data-track="User Signed Out"
       disabled={isLoading}
       onClick={handleSignOut}

@@ -6,25 +6,46 @@ import { LocaleSettings } from "@/components/locale-settings"
 import { SettingsLoading } from "@/components/settings-loading"
 import { TimeFormatSettings } from "@/components/time-format-settings"
 import { WeekSettings } from "@/components/week-settings"
+import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 import { getQueryClient, HydrateClient } from "@/queries/server"
 import { userSettingsQueryOptions } from "@/queries/user-settings"
 
-export const metadata: Metadata = {
-  title: "Date & Locale | AqarDesk",
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  setStaticParamsLocale(locale)
+  const t = await getScopedI18n("accountSettings")
+
+  return {
+    title: t("dateAndLocale"),
+    robots: { index: false, follow: false },
+  }
 }
 
-export default async function Page() {
+export default async function DateAndLocalePage({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}) {
+  const { locale } = await params
+  setStaticParamsLocale(locale)
+  const t = await getScopedI18n("accountSettings")
   void getQueryClient().prefetchQuery(userSettingsQueryOptions())
+
   return (
     <HydrateClient>
       <Suspense fallback={<SettingsLoading />}>
-        <div className="space-y-12">
+        <section className="space-y-8">
+          <h1 className="text-2xl font-semibold">{t("dateAndLocale")}</h1>
           <LocaleSettings />
           <ChangeTimezone />
           <TimeFormatSettings />
           <DateFormatSettings />
           <WeekSettings />
-        </div>
+        </section>
       </Suspense>
     </HydrateClient>
   )

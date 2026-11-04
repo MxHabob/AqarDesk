@@ -414,8 +414,8 @@ export default {
     clearFilters: "Clear filters",
     resultsCount: "properties",
     perMonth: "per month",
-    favorite: "Save property",
-    unfavorite: "Remove from saved",
+    favorite: "Add to my list",
+    unfavorite: "Remove from my list",
     favoriteError: "Unable to update saved properties. Please try again.",
     signInToFavorite: "Sign in to save this property.",
     pagination: "Property pages",
@@ -526,6 +526,9 @@ export default {
   auth: {
     loginTitle: "Sign in",
     loginDescription: "Sign in to your AqarDesk workspace.",
+    customerLoginTitle: "Sign in to your account",
+    customerLoginDescription:
+      "Sign in to manage your account and saved properties.",
     name: "Name",
     email: "Email address",
     password: "Password",
@@ -625,6 +628,8 @@ export default {
     themeLight: "Light",
     themeDark: "Dark",
     themeSystem: "System",
+    signOutTitle: "Sign out",
+    signOutDescription: "Sign out of your account on this device.",
     deleteTitle: "Delete account",
     deleteDescription:
       "Your account and sign-in data will be permanently deleted. This can't be undone.",

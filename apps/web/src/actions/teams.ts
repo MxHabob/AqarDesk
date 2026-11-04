@@ -15,6 +15,7 @@ import { cookies, headers } from "next/headers"
 import { redirect } from "next/navigation"
 import { z } from "zod"
 import { assertPermission } from "@/lib/auth/permissions"
+import { getRoleDestination, getUserRoleKeys } from "@/lib/auth/roles"
 
 const activeTeamCookie = "AqarDesk-Active-Team"
 
@@ -65,8 +66,20 @@ export async function viewTeamFromAccountAction(formData: FormData) {
       locale: formData.get("locale"),
     })
 
+  const session = await auth.api.getSession({ headers: await headers() })
+  if (!session) throw new Error("Unauthorized")
+
   await switchActiveTeamAction(teamId)
-  redirect(`/${locale}/dashboard`)
+  const destination = getRoleDestination(
+    await getUserRoleKeys(session.user.id),
+    locale
+  )
+  if (!destination) redirect(`/${locale}/login?error=role`)
+  redirect(
+    destination === `/${locale}/dashboard`
+      ? destination
+      : `/${locale}/account/teams`
+  )
 }
 
 export async function archiveActiveTeamAction() {

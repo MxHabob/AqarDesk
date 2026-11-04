@@ -8,15 +8,19 @@ import { useI18n } from "@/locales/client"
 export function LoginForm({
   googleEnabled,
   emailOtpEnabled,
+  callbackURL,
 }: {
   googleEnabled: boolean
   emailOtpEnabled: boolean
+  callbackURL: string
 }) {
   const t = useI18n()
 
   return (
     <div className="w-full space-y-3">
-      {googleEnabled && <OAuthSignIn enabled={googleEnabled} />}
+      {googleEnabled && (
+        <OAuthSignIn callbackURL={callbackURL} enabled={googleEnabled} />
+      )}
 
       {googleEnabled && emailOtpEnabled && (
         <>
@@ -31,12 +35,14 @@ export function LoginForm({
             </div>
           </div>
           <LoginAccordion>
-            <EmailOtpSignIn />
+            <EmailOtpSignIn callbackURL={callbackURL} />
           </LoginAccordion>
         </>
       )}
 
-      {!googleEnabled && emailOtpEnabled && <EmailOtpSignIn />}
+      {!googleEnabled && emailOtpEnabled && (
+        <EmailOtpSignIn callbackURL={callbackURL} />
+      )}
 
       {!googleEnabled && !emailOtpEnabled && (
         <p role="alert" className="text-center text-sm text-destructive">

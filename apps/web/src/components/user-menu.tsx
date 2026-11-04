@@ -54,7 +54,7 @@ export function UserMenu({ onlySignOut }: Props) {
       <DropdownMenuContent className="w-[240px]" sideOffset={10} align="end">
         {!onlySignOut && (
           <>
-            <DropdownMenuLabel>
+            <DropdownMenuLabel className="normal-case tracking-normal">
               <div className="flex justify-between items-center">
                 <div className="flex flex-col">
                   <span className="truncate line-clamp-1 max-w-[155px] block text-xs">
@@ -70,16 +70,22 @@ export function UserMenu({ onlySignOut }: Props) {
             <DropdownMenuSeparator />
 
             <DropdownMenuGroup>
-              <Link href={`/${locale}/dashboard/account`}>
-                <DropdownMenuItem className="text-xs">Account</DropdownMenuItem>
+              <Link href={`/${locale}/account`}>
+                <DropdownMenuItem className="text-xs normal-case tracking-normal">
+                  Account
+                </DropdownMenuItem>
               </Link>
 
-              <Link href={`/${locale}/dashboard/account/support`}>
-                <DropdownMenuItem className="text-xs">Support</DropdownMenuItem>
+              <Link href={`/${locale}/account/support`}>
+                <DropdownMenuItem className="text-xs normal-case tracking-normal">
+                  Support
+                </DropdownMenuItem>
               </Link>
 
               <Link href={`/${locale}/dashboard/teams`}>
-                <DropdownMenuItem className="text-xs">Teams</DropdownMenuItem>
+                <DropdownMenuItem className="text-xs normal-case tracking-normal">
+                  Teams
+                </DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>
 
@@ -87,7 +93,9 @@ export function UserMenu({ onlySignOut }: Props) {
 
             <DropdownMenuGroup>
               <Link href={`/${locale}/apps`}>
-                <DropdownMenuItem className="text-xs">Apps</DropdownMenuItem>
+                <DropdownMenuItem className="text-xs normal-case tracking-normal">
+                  Apps
+                </DropdownMenuItem>
               </Link>
             </DropdownMenuGroup>
 

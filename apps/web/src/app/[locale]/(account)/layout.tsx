@@ -1,15 +1,25 @@
 import { auth } from "@aqardesk/auth/server"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
-import Link from "next/link"
 import { redirect } from "next/navigation"
 import type { ReactNode } from "react"
 import { AccountNavigation } from "@/components/account/account-navigation"
 import { getRoleDestination, getUserRoleKeys } from "@/lib/auth/roles"
+import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
-export const metadata: Metadata = {
-  title: "Customer Account | AqarDesk",
-  robots: { index: false, follow: false },
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string }>
+}): Promise<Metadata> {
+  const { locale } = await params
+  setStaticParamsLocale(locale)
+  const t = await getScopedI18n("account")
+
+  return {
+    title: t("title"),
+    robots: { index: false, follow: false },
+  }
 }
 
 export default async function AccountLayout({
@@ -27,24 +37,17 @@ export default async function AccountLayout({
   }
 
   const roleKeys = await getUserRoleKeys(session.user.id)
-  const destination = getRoleDestination(roleKeys, locale)
-  if (destination !== `/${locale}/account`) {
-    redirect(destination ?? `/${locale}/login?error=role`)
-  }
+  const roleDestination = getRoleDestination(roleKeys, locale)
+  if (!roleDestination) redirect(`/${locale}/login?error=role`)
 
   return (
     <div
-      className="mx-auto min-h-svh max-w-screen-2xl space-y-6 px-4 py-5 sm:px-6 sm:py-8 lg:px-8"
+      className="min-h-svh w-full space-y-8 px-4 py-5 sm:px-6 sm:py-8 lg:px-8"
       dir={locale === "ar" ? "rtl" : "ltr"}
       lang={locale}
     >
-      <header className="flex flex-col gap-5">
-        <Link className="text-lg font-semibold" href={`/${locale}`}>
-          عقار دِسك
-        </Link>
-        <AccountNavigation locale={locale} />
-      </header>
-      <main>{children}</main>
+      <AccountNavigation locale={locale} roleDestination={roleDestination} />
+      <main className="w-full max-w-5xl">{children}</main>
     </div>
   )
 }

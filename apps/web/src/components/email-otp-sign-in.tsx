@@ -10,10 +10,9 @@ import {
 } from "@aqardesk/ui/components/input-otp"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-import { useCurrentLocale, useI18n } from "@/locales/client"
+import { useI18n } from "@/locales/client"
 
-export function EmailOtpSignIn() {
-  const locale = useCurrentLocale()
+export function EmailOtpSignIn({ callbackURL }: { callbackURL: string }) {
   const router = useRouter()
   const t = useI18n()
   const [email, setEmail] = useState("")
@@ -56,7 +55,7 @@ export function EmailOtpSignIn() {
         return
       }
 
-      router.replace(`/${locale}/login/callback`)
+      router.replace(callbackURL)
     } catch {
       setError(true)
     } finally {

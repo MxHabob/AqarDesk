@@ -89,7 +89,7 @@ export function MfaSettingsList({ enabled }: { enabled: boolean }) {
             {isLoading ? t("auth.disablingMfa") : t("auth.disableMfa")}
           </Button>
         ) : (
-          <Button render={<Link href={`/${locale}/dashboard/mfa/setup`} />}>
+          <Button render={<Link href={`/${locale}/account/mfa/setup`} />}>
             {t("auth.enableMfa")}
           </Button>
         )}

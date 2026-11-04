@@ -43,6 +43,18 @@ export async function listUserFavorites(
     .orderBy(desc(schema.favorites.createdAt))
 }
 
+export async function listUserFavoriteListingIds(
+  userId: string,
+  database = getDatabase()
+) {
+  const favorites = await database
+    .select({ listingId: schema.favorites.listingId })
+    .from(schema.favorites)
+    .where(eq(schema.favorites.userId, userId))
+
+  return favorites.map(({ listingId }) => listingId)
+}
+
 export async function isListingFavorite(
   userId: string,
   listingId: string,

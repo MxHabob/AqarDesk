@@ -1,6 +1,7 @@
 import { auth } from "@aqardesk/auth/server"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
+import { DashboardScrollbar } from "@/components/dashboard-scrollbar"
 import { Header } from "@/components/header"
 import { GlobalSheetsProvider } from "@/components/sheets/global-sheets-provider"
 import { Sidebar } from "@/components/sidebar"
@@ -28,6 +29,7 @@ export default async function Layout({
 
   return (
     <div className="relative">
+      <DashboardScrollbar />
       <Sidebar />
       <div className="pb-4 md:ms-[70px]">
         <Header />

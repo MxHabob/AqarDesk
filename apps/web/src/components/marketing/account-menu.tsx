@@ -77,7 +77,7 @@ export function MarketingAccountMenu({
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-60" align="end" sideOffset={10}>
         <DropdownMenuGroup>
-          <DropdownMenuLabel>
+          <DropdownMenuLabel className="normal-case tracking-normal">
             <span className="block truncate text-xs">{user.name}</span>
             <span className="block truncate text-xs font-normal text-muted-foreground">
               {user.email}
@@ -87,20 +87,32 @@ export function MarketingAccountMenu({
         <DropdownMenuSeparator />
 
         <DropdownMenuGroup>
-          {isEmployee && roleDestination ? (
+          {isEmployee && roleDestination && (
             <Link href={roleDestination} onClick={onNavigate}>
-              <DropdownMenuItem>{t("auth.openDashboard")}</DropdownMenuItem>
+              <DropdownMenuItem className="normal-case tracking-normal">
+                {t("auth.openDashboard")}
+              </DropdownMenuItem>
             </Link>
-          ) : roleDestination ? (
+          )}
+          {roleDestination && (
             <>
-              <Link href={roleDestination} onClick={onNavigate}>
-                <DropdownMenuItem>{t("auth.myAccount")}</DropdownMenuItem>
+              <Link href={`/${locale}/account`} onClick={onNavigate}>
+                <DropdownMenuItem className="normal-case tracking-normal">
+                  {t("auth.myAccount")}
+                </DropdownMenuItem>
               </Link>
               <Link href={`/${locale}/account/favorites`} onClick={onNavigate}>
-                <DropdownMenuItem>{t("auth.savedProperties")}</DropdownMenuItem>
+                <DropdownMenuItem className="normal-case tracking-normal">
+                  {t("auth.savedProperties")}
+                </DropdownMenuItem>
+              </Link>
+              <Link href={`/${locale}/account/support`} onClick={onNavigate}>
+                <DropdownMenuItem className="normal-case tracking-normal">
+                  {t("accountSettings.support")}
+                </DropdownMenuItem>
               </Link>
             </>
-          ) : null}
+          )}
 
           {(roleDestination || signOutError) && <DropdownMenuSeparator />}
           {signOutError && (
@@ -109,6 +121,7 @@ export function MarketingAccountMenu({
             </DropdownMenuLabel>
           )}
           <DropdownMenuItem
+            className="normal-case tracking-normal"
             disabled={isSigningOut}
             onClick={() => void signOut()}
           >

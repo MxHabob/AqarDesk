@@ -3,8 +3,8 @@
 import { Button } from "@aqardesk/ui/components/button"
 import Link from "next/link"
 import { useState } from "react"
-import { useCurrentLocale, useI18n } from "@/locales/client"
 import { EnrollMFA } from "@/components/enroll-mfa"
+import { useCurrentLocale, useI18n } from "@/locales/client"
 
 export function SetupMfa() {
   const [enroll, setEnroll] = useState(false)
@@ -12,7 +12,7 @@ export function SetupMfa() {
   const t = useI18n()
 
   return (
-    <main className="flex min-h-screen items-center justify-center p-6">
+    <main className="flex min-h-[50svh] items-center justify-center p-6">
       <section className="w-full max-w-md space-y-6">
         <header className="space-y-2 text-center">
           <h1 className="text-xl font-semibold">{t("auth.twoFactorTitle")}</h1>
@@ -29,7 +29,7 @@ export function SetupMfa() {
               {t("auth.generateCode")}
             </Button>
             <Link
-              href={`/${locale}/dashboard/account/security`}
+              href={`/${locale}/account/security`}
               className="block text-center text-sm text-muted-foreground underline"
             >
               {t("common.cancel")}

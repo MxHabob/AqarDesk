@@ -1,65 +1,96 @@
 "use client"
 
-import { authClient } from "@aqardesk/auth/client"
+import { cn } from "@aqardesk/ui/cn"
 import { Button } from "@aqardesk/ui/components/button"
+import { Icons } from "@aqardesk/ui/icons"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
-import { useScopedI18n } from "@/locales/client"
+import { usePathname, useRouter } from "next/navigation"
+import { useI18n, useScopedI18n } from "@/locales/client"
 
-export function AccountNavigation({ locale }: { locale: string }) {
+export function AccountNavigation({
+  locale,
+  roleDestination,
+}: {
+  locale: string
+  roleDestination: string | null
+}) {
   const t = useScopedI18n("account")
+  const accountSettings = useI18n()
   const router = useRouter()
-  const [error, setError] = useState(false)
-  const [isSigningOut, setIsSigningOut] = useState(false)
+  const pathname = usePathname()
+  const items = [
+    { href: `/${locale}/account`, label: t("title") },
+    {
+      href: `/${locale}/account/date-and-locale`,
+      label: accountSettings("accountSettings.dateAndLocale"),
+    },
+    {
+      href: `/${locale}/account/security`,
+      label: accountSettings("accountSettings.security"),
+    },
+    {
+      href: `/${locale}/account/favorites`,
+      label: t("favoritesTitle"),
+    },
+    {
+      href: `/${locale}/account/teams`,
+      label: accountSettings("accountSettings.teams"),
+    },
+    {
+      href: `/${locale}/account/support`,
+      label: accountSettings("accountSettings.support"),
+    },
+  ]
 
-  async function signOut() {
-    setError(false)
-    setIsSigningOut(true)
-
-    try {
-      const result = await authClient.signOut()
-      if (result.error) {
-        setError(true)
-        return
-      }
-
-      router.replace(`/${locale}/login`)
-      router.refresh()
-    } catch {
-      setError(true)
-    } finally {
-      setIsSigningOut(false)
+  function goBack() {
+    if (window.history.length > 1) {
+      router.back()
+    } else {
+      router.push(`/${locale}`)
     }
   }
 
   return (
-    <div className="flex flex-wrap items-center justify-between gap-4 border-b pb-4">
-      <nav aria-label={t("navigationLabel")}>
-        <ul className="flex flex-wrap gap-4 text-sm">
-          <li>
-            <Link href={`/${locale}/account`}>{t("title")}</Link>
-          </li>
-          <li>
-            <Link href={`/${locale}/account/favorites`}>
-              {t("favoritesTitle")}
-            </Link>
-          </li>
-        </ul>
-      </nav>
-      <Button
-        disabled={isSigningOut}
-        onClick={signOut}
-        type="button"
-        variant="outline"
-      >
-        {isSigningOut ? t("signingOut") : t("signOut")}
-      </Button>
-      {error && (
-        <p role="alert" className="w-full text-sm text-destructive">
-          {t("signOutError")}
-        </p>
-      )}
+    <div className="border-b pb-4">
+      <div className="flex flex-wrap items-center gap-4">
+        <nav aria-label={t("navigationLabel")} className="min-w-0 flex-1">
+          <ul className="flex gap-5 overflow-x-auto text-sm">
+            {items.map((item) => (
+              <li className="shrink-0" key={item.href}>
+                <Link
+                  aria-current={pathname === item.href ? "page" : undefined}
+                  className={cn(
+                    "text-muted-foreground transition-colors hover:text-foreground",
+                    pathname === item.href &&
+                      "font-medium text-foreground underline underline-offset-8"
+                  )}
+                  href={item.href}
+                >
+                  {item.label}
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </nav>
+        <Button
+          aria-label={accountSettings("common.close")}
+          onClick={goBack}
+          size="icon"
+          type="button"
+          variant="ghost"
+        >
+          <Icons.Close aria-hidden="true" className="size-5" />
+        </Button>
+        {roleDestination === `/${locale}/dashboard` && (
+          <Button
+            onClick={() => router.push(roleDestination)}
+            type="button"
+            variant="outline"
+          >
+            {accountSettings("auth.openDashboard")}
+          </Button>
+        )}
+      </div>
     </div>
   )
 }

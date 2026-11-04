@@ -1,8 +1,14 @@
 import "@/styles/marketing.css"
-import { auth } from "@aqardesk/auth/server"
+import {
+  auth,
+  isEmailOtpConfigured,
+  isGoogleAuthConfigured,
+} from "@aqardesk/auth/server"
+import { listUserFavoriteListingIds } from "@aqardesk/database/queries"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import type { ReactNode } from "react"
+import { FavoritesProvider } from "@/components/marketing/favorites-provider"
 import { Footer } from "@/components/marketing/footer"
 import { Header } from "@/components/marketing/header"
 import {
@@ -86,15 +92,20 @@ export default async function Layout({
   children: ReactNode
   params: Promise<{ locale: string }>
 }) {
-  const [{ locale }, session, t, countryCode, homepageData] = await Promise.all([
-    params,
-    auth.api.getSession({ headers: await headers() }),
-    getScopedI18n("site"),
-    getSelectedPublicCountryCode(),
-    getPublicHomepageData(),
-  ])
+  const [{ locale }, session, t, countryCode, homepageData] = await Promise.all(
+    [
+      params,
+      auth.api.getSession({ headers: await headers() }),
+      getScopedI18n("site"),
+      getSelectedPublicCountryCode(),
+      getPublicHomepageData(),
+    ]
+  )
   const roleKeys = session ? await getUserRoleKeys(session.user.id) : []
   const roleDestination = session ? getRoleDestination(roleKeys, locale) : null
+  const favoriteListingIds = session
+    ? await listUserFavoriteListingIds(session.user.id)
+    : []
   const allListingPreviews = homepageData.results.rows.map((listing) => ({
     id: listing.id,
     title: listing.title,
@@ -175,9 +186,16 @@ export default async function Layout({
         }
         roleDestination={roleDestination}
       />
-      <main className="container mx-auto px-4 pt-9 overflow-hidden md:overflow-visible">
-        {children}
-      </main>
+      <FavoritesProvider
+        authenticated={Boolean(session)}
+        emailOtpEnabled={isEmailOtpConfigured}
+        favoriteListingIds={favoriteListingIds}
+        googleEnabled={isGoogleAuthConfigured}
+      >
+        <main className="container mx-auto px-4 pt-9 overflow-hidden md:overflow-visible">
+          {children}
+        </main>
+      </FavoritesProvider>
       <Footer />
     </div>
   )

@@ -4,10 +4,15 @@ import { authClient } from "@aqardesk/auth/client"
 import { Button } from "@aqardesk/ui/components/button"
 import { Icons } from "@aqardesk/ui/components/icons"
 import { useState } from "react"
-import { useCurrentLocale, useI18n } from "@/locales/client"
+import { useI18n } from "@/locales/client"
 
-export function OAuthSignIn({ enabled }: { enabled: boolean }) {
-  const locale = useCurrentLocale()
+export function OAuthSignIn({
+  enabled,
+  callbackURL,
+}: {
+  enabled: boolean
+  callbackURL: string
+}) {
   const t = useI18n()
   const [isLoading, setIsLoading] = useState(false)
   const [error, setError] = useState(false)
@@ -21,7 +26,7 @@ export function OAuthSignIn({ enabled }: { enabled: boolean }) {
     try {
       const { error: signInError } = await authClient.signIn.social({
         provider: "google",
-        callbackURL: `/${locale}/login/callback`,
+        callbackURL,
       })
 
       if (signInError) {

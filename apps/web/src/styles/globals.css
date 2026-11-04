@@ -12,6 +12,17 @@ html.public-listings-page::-webkit-scrollbar {
   display: none;
 }
 
+.dashboard-no-scrollbars,
+.dashboard-no-scrollbars * {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.dashboard-no-scrollbars::-webkit-scrollbar,
+.dashboard-no-scrollbars *::-webkit-scrollbar {
+  display: none;
+}
+
 *:focus {
   outline: none;
 }

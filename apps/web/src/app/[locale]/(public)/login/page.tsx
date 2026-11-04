@@ -80,6 +80,7 @@ export default async function Page({ params, searchParams }: Props) {
             )}
 
             <LoginForm
+              callbackURL={`/${locale}/login/callback`}
               googleEnabled={isGoogleAuthConfigured}
               emailOtpEnabled={isEmailOtpConfigured}
             />

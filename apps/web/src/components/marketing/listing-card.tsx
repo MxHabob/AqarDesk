@@ -16,6 +16,7 @@ import {
 import { ArrowUpRight, Building2, MapPin, Ruler } from "lucide-react"
 import Image from "next/image"
 import Link from "next/link"
+import { SaveListingButton } from "@/components/marketing/save-listing-button"
 
 type Listing = {
   id: string
@@ -88,82 +89,92 @@ export function ListingCard({
   return (
     <article id={`listing-${listing.id}`} className="h-full scroll-mt-4">
       <Sheet>
-        <SheetTrigger
-          render={
-            <button
-              type="button"
-              aria-label={`${labels.quickView}: ${listing.title}`}
-              className="group flex h-full w-full flex-col border border-border bg-background text-start transition-colors hover:border-foreground/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            />
-          }
-        >
-          <span className="relative block aspect-[4/3] w-full overflow-hidden bg-muted">
-            {coverPhoto ? (
-              <Image
-                src={coverPhoto.url}
-                alt={coverPhoto.altText || listing.title}
-                fill
-                unoptimized
-                sizes="(max-width: 639px) 100vw, (max-width: 1279px) 50vw, 33vw"
-                className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+        <div className="flex h-full flex-col border border-border bg-background transition-colors hover:border-foreground/30">
+          <SheetTrigger
+            render={
+              <button
+                type="button"
+                aria-label={`${labels.quickView}: ${listing.title}`}
+                className="group flex w-full flex-1 flex-col text-start focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
               />
-            ) : (
-              <span className="flex h-full flex-col items-center justify-center gap-2 text-muted-foreground">
-                <Building2 aria-hidden className="size-10" />
-                <span className="text-sm">{labels.noImage}</span>
-              </span>
-            )}
-            <span className="absolute start-3 top-3 border border-border bg-background/95 px-2.5 py-0.5 text-xs font-medium">
-              {listing.type === "sale" ? labels.sale : labels.rent}
-            </span>
-          </span>
-
-          <span className="flex flex-1 flex-col gap-3 p-4">
-            <span className="flex items-start justify-between gap-3">
-              <span className="line-clamp-2 text-sm font-medium text-foreground">
-                {listing.title}
-              </span>
-              <span className="shrink-0 border border-border px-1.5 py-0.5 text-[11px] text-muted-foreground">
-                {propertyTypeLabel}
-              </span>
-            </span>
-
-            <span className="text-lg font-semibold text-foreground">
-              {formattedPrice}
-            </span>
-
-            <span className="flex flex-wrap gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
-              {location ? (
-                <span className="inline-flex items-center gap-1.5">
-                  <MapPin aria-hidden className="size-3.5 shrink-0" />
-                  {location}
-                </span>
+            }
+          >
+            <span className="relative block aspect-[4/3] w-full overflow-hidden bg-muted">
+              {coverPhoto ? (
+                <Image
+                  src={coverPhoto.url}
+                  alt={coverPhoto.altText || listing.title}
+                  fill
+                  unoptimized
+                  sizes="(max-width: 639px) 100vw, (max-width: 1279px) 50vw, 33vw"
+                  className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+                />
               ) : (
-                <span>{labels.locationUnavailable}</span>
-              )}
-              {listing.lotAreaM2 !== null && (
-                <span className="inline-flex items-center gap-1.5">
-                  <Ruler aria-hidden className="size-3.5 shrink-0" />
-                  {labels.landArea}: {listing.lotAreaM2} {labels.squareMeters}
+                <span className="flex h-full flex-col items-center justify-center gap-2 text-muted-foreground">
+                  <Building2 aria-hidden className="size-10" />
+                  <span className="text-sm">{labels.noImage}</span>
                 </span>
               )}
-              {listing.buildingAreaM2 !== null && (
-                <span className="inline-flex items-center gap-1.5">
-                  <Ruler aria-hidden className="size-3.5 shrink-0" />
-                  {labels.buildingArea}: {listing.buildingAreaM2}{" "}
-                  {labels.squareMeters}
-                </span>
-              )}
-            </span>
-
-            <span className="mt-auto flex items-center justify-end border-t border-border pt-3 text-xs">
-              <span className="inline-flex items-center gap-1 font-medium text-foreground">
-                {labels.quickView}
-                <ArrowUpRight aria-hidden className="size-3.5" />
+              <span className="absolute start-3 top-3 border border-border bg-background/95 px-2.5 py-0.5 text-xs font-medium">
+                {listing.type === "sale" ? labels.sale : labels.rent}
               </span>
             </span>
-          </span>
-        </SheetTrigger>
+
+            <span className="flex flex-1 flex-col gap-3 p-4">
+              <span className="flex items-start justify-between gap-3">
+                <span className="line-clamp-2 text-sm font-medium text-foreground">
+                  {listing.title}
+                </span>
+                <span className="shrink-0 border border-border px-1.5 py-0.5 text-[11px] text-muted-foreground">
+                  {propertyTypeLabel}
+                </span>
+              </span>
+
+              <span className="text-lg font-semibold text-foreground">
+                {formattedPrice}
+              </span>
+
+              <span className="flex flex-wrap gap-x-3 gap-y-1.5 text-xs text-muted-foreground">
+                {location ? (
+                  <span className="inline-flex items-center gap-1.5">
+                    <MapPin aria-hidden className="size-3.5 shrink-0" />
+                    {location}
+                  </span>
+                ) : (
+                  <span>{labels.locationUnavailable}</span>
+                )}
+                {listing.lotAreaM2 !== null && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <Ruler aria-hidden className="size-3.5 shrink-0" />
+                    {labels.landArea}: {listing.lotAreaM2} {labels.squareMeters}
+                  </span>
+                )}
+                {listing.buildingAreaM2 !== null && (
+                  <span className="inline-flex items-center gap-1.5">
+                    <Ruler aria-hidden className="size-3.5 shrink-0" />
+                    {labels.buildingArea}: {listing.buildingAreaM2}{" "}
+                    {labels.squareMeters}
+                  </span>
+                )}
+              </span>
+            </span>
+          </SheetTrigger>
+
+          <div className="flex items-center justify-between gap-3 border-t border-border px-4 py-3 text-xs">
+            <SaveListingButton listingId={listing.id} />
+            <SheetTrigger
+              render={
+                <button
+                  type="button"
+                  className="inline-flex shrink-0 items-center gap-1 font-medium text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+                />
+              }
+            >
+              {labels.quickView}
+              <ArrowUpRight aria-hidden className="size-3.5" />
+            </SheetTrigger>
+          </div>
+        </div>
 
         <SheetContent
           side="right"

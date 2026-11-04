@@ -121,6 +121,12 @@ export function Header({
 
           {!hideMenuItems && (
             <div className="hidden items-center gap-6 xl:flex">
+              <Link
+                className="text-sm text-muted-foreground transition-colors hover:text-foreground"
+                href="/listings"
+              >
+                {t("browse")}
+              </Link>
               <div className="relative -mx-3 -my-2">
                 <button
                   aria-expanded={isServicesOpen}
@@ -328,6 +334,13 @@ export function Header({
               )}
             </section>
 
+            <Link
+              className="py-2 text-2xl text-primary"
+              href="/listings"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {t("browse")}
+            </Link>
             <Link
               className="py-2 text-2xl text-primary"
               href="/about"

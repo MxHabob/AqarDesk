@@ -42,7 +42,7 @@ export function Sidebar() {
           isExpanded ? "w-full" : "w-[69px]"
         )}
       >
-        <Link href="/" className="absolute start-[22px] transition-none">
+        <Link href="/" className="absolute start-[11px] transition-none">
           <Icons.LogoSmall />
         </Link>
       </div>
