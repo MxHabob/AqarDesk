@@ -1,5 +1,5 @@
 import { cn } from "@aqardesk/ui/cn";
-import { Spinner } from "@aqardesk/ui/spinner";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import Papa from "papaparse";
 import { useCallback, useEffect, useRef, useState } from "react";
 import Dropzone, { type FileRejection } from "react-dropzone";
@@ -74,7 +74,7 @@ export function SelectFile() {
           processingRef.current = null;
         });
     },
-    [setFileColumns, setFirstRows],
+    [setFileColumns, setFirstRows]
   );
 
   useEffect(() => {
@@ -127,16 +127,22 @@ export function SelectFile() {
                 className={cn(
                   "w-full border border-dashed h-[200px] mt-8 mb-8 flex items-center justify-center",
                   isDragActive && "bg-secondary text-primary",
-                  isDragReject && "border-destructive",
+                  isDragReject && "border-destructive"
                 )}
               >
                 <div className="text-center flex items-center justify-center flex-col text-xs text-[#878787]">
                   <input {...getInputProps()} onBlur={onBlur} />
 
                   {isLoading ? (
-                    <div className="flex gap-x-1 items-center">
-                      <Spinner />
-                      <span>Loading...</span>
+                    <div
+                      role="status"
+                      aria-label="Reading file"
+                      aria-busy="true"
+                      className="w-56 space-y-3"
+                    >
+                      <Skeleton className="mx-auto h-8 w-8 rounded-full" />
+                      <Skeleton className="mx-auto h-3 w-3/4" />
+                      <Skeleton className="mx-auto h-2 w-1/2" />
                     </div>
                   ) : (
                     <div>

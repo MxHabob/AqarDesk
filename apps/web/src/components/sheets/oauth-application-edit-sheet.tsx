@@ -15,6 +15,7 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@aqardesk/ui/sheet"
+import { Skeleton } from "@aqardesk/ui/skeleton"
 import { useToast } from "@aqardesk/ui/use-toast"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
@@ -36,7 +37,11 @@ export function OAuthApplicationEditSheet() {
 
   const isOpen = Boolean(applicationId && editApplication)
 
-  const { data: application } = useQuery(
+  const {
+    data: application,
+    isLoading: isLoadingApplication,
+    error: applicationError,
+  } = useQuery(
     trpc.oauthApplications.get.queryOptions(
       { id: applicationId! },
       {
@@ -136,7 +141,7 @@ export function OAuthApplicationEditSheet() {
               <OAuthApplicationStatusBadge status={application.status} />
             )}
 
-            {applicationId && (
+            {application && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <button type="button">
@@ -189,7 +194,37 @@ export function OAuthApplicationEditSheet() {
         </SheetHeader>
 
         <ScrollArea className="h-full p-0 pb-10" hideScrollbar>
-          <OAuthApplicationForm data={application} key={application?.id} />
+          {applicationError ? (
+            <p className="text-sm text-destructive" role="alert">
+              {applicationError instanceof Error
+                ? applicationError.message
+                : "Failed to load the application."}
+            </p>
+          ) : isLoadingApplication ? (
+            <div
+              role="status"
+              aria-label="Loading application form"
+              aria-busy="true"
+              className="space-y-6 p-1"
+            >
+              <Skeleton className="h-10 w-1/2" />
+              <Skeleton className="h-24 w-full" />
+              <div className="grid gap-4 sm:grid-cols-2">
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+                <Skeleton className="h-10 w-full" />
+              </div>
+              <Skeleton className="h-32 w-full" />
+              <Skeleton className="h-10 w-full" />
+            </div>
+          ) : application ? (
+            <OAuthApplicationForm data={application} key={application.id} />
+          ) : (
+            <p className="text-sm text-destructive" role="alert">
+              Application not found.
+            </p>
+          )}
         </ScrollArea>
       </SheetContent>
 

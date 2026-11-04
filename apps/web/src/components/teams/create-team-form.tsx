@@ -1,4 +1,7 @@
+"use client"
+
 import { Button } from "@aqardesk/ui/button"
+import { Icons } from "@aqardesk/ui/icons"
 import { Input } from "@aqardesk/ui/input"
 import { createTeamAction } from "@/actions/teams"
 import { useScopedI18n } from "@/locales/client"
@@ -15,7 +18,14 @@ export function CreateTeamForm() {
         placeholder={t("teamName")}
         aria-label={t("teamName")}
       />
-      <Button type="submit">{t("createTeam")}</Button>
+      <Button
+        type="submit"
+        size="icon"
+        aria-label={t("createTeam")}
+        title={t("createTeam")}
+      >
+        <Icons.Add aria-hidden="true" size={20} />
+      </Button>
     </form>
   )
 }

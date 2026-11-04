@@ -15,10 +15,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import Link from "next/link";
 import { useRef, useState } from "react";
 import { useOnClickOutside } from "usehooks-ts";
-import {
-  getUserTeamsAction,
-  switchActiveTeamAction,
-} from "@/actions/teams";
+import { getUserTeamsAction, switchActiveTeamAction } from "@/actions/teams";
 
 type Props = {
   isExpanded?: boolean;
@@ -61,7 +58,7 @@ export function TeamDropdown({ isExpanded = false }: Props) {
   const {
     data: teamData,
     isLoading: isTeamsLoading,
-    isError: isTeamsError,
+    error: teamsError,
   } = useQuery({
     queryKey: ["user-teams"],
     queryFn: getUserTeamsAction,
@@ -88,8 +85,18 @@ export function TeamDropdown({ isExpanded = false }: Props) {
 
   // Show skeleton while teams are loading
   // Note: user loading is handled by Suspense since useUserQuery uses useSuspenseQuery
-  if (isTeamsLoading || isTeamsError) {
+  if (isTeamsLoading) {
     return <TeamDropdownSkeleton isExpanded={isExpanded} />;
+  }
+
+  if (teamsError && !teamData) {
+    return (
+      <p className="text-xs text-destructive" role="alert">
+        {teamsError instanceof Error
+          ? teamsError.message
+          : "Could not load teams."}
+      </p>
+    );
   }
 
   const handleTeamChange = (teamId: string) => {
@@ -124,7 +131,10 @@ export function TeamDropdown({ isExpanded = false }: Props) {
                     mass: 1.2,
                   }}
                 >
-                  <Link href="/dashboard/teams" onClick={() => setActive(false)}>
+                  <Link
+                    href="/dashboard/teams"
+                    onClick={() => setActive(false)}
+                  >
                     <Button
                       className="w-[32px] h-[32px] bg-background"
                       size="icon"

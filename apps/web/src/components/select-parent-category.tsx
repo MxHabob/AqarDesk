@@ -1,5 +1,5 @@
 import { ComboboxDropdown } from "@aqardesk/ui/combobox-dropdown";
-import { Spinner } from "@aqardesk/ui/spinner";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import { getColorFromName } from "@/utils/categories";
@@ -51,15 +51,15 @@ export function SelectParentCategory({
   hideLoading,
 }: Props) {
   const trpc = useTRPC();
-  const { data, isLoading } = useQuery(
-    trpc.transactionCategories.get.queryOptions(),
+  const { data, isLoading, isError } = useQuery(
+    trpc.transactionCategories.get.queryOptions()
   );
 
   // Filter to only parent categories (no parentId) and exclude specified IDs
   const parentCategories =
     data
       ?.filter(
-        (category) => !category.parentId && !excludeIds.includes(category.id),
+        (category) => !category.parentId && !excludeIds.includes(category.id)
       )
       .map(transformCategory) ?? [];
 
@@ -71,10 +71,18 @@ export function SelectParentCategory({
     ? transformCategory(selectedParent)
     : undefined;
 
+  if (isError && !data) {
+    return (
+      <p className="text-sm text-destructive" role="alert">
+        Could not load categories.
+      </p>
+    );
+  }
+
   if (!selectedParent && isLoading && !hideLoading) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
-        <Spinner />
+      <div role="status" aria-label="Loading parent category" aria-busy="true">
+        <Skeleton className="h-10 w-full" />
       </div>
     );
   }

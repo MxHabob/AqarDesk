@@ -10,10 +10,23 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@aqardesk/ui/dropdown-menu"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@aqardesk/ui/select"
+import { Languages } from "lucide-react"
 import Link from "next/link"
 import { useFileUrl } from "@/hooks/use-file-url"
 import { useUserQuery } from "@/hooks/use-user"
-import { useCurrentLocale } from "@/locales/client"
+import {
+  useChangeLocale,
+  useCurrentLocale,
+  useScopedI18n,
+} from "@/locales/client"
+import { locales } from "@/locales/config"
 import { SignOut } from "./sign-out"
 import { ThemeSwitch } from "./theme-switch"
 
@@ -24,6 +37,8 @@ type Props = {
 export function UserMenu({ onlySignOut }: Props) {
   const { data: user } = useUserQuery()
   const locale = useCurrentLocale()
+  const t = useScopedI18n("site")
+  const changeLocale = useChangeLocale({ preserveSearchParams: true })
   const { url: avatarUrl } = useFileUrl(
     user?.avatarUrl ? { type: "url", url: user.avatarUrl } : null
   )
@@ -90,15 +105,38 @@ export function UserMenu({ onlySignOut }: Props) {
             </DropdownMenuGroup>
 
             <DropdownMenuSeparator />
-
-            <DropdownMenuGroup>
-              <Link href={`/${locale}/apps`}>
-                <DropdownMenuItem className="text-xs normal-case tracking-normal">
-                  Apps
-                </DropdownMenuItem>
-              </Link>
-            </DropdownMenuGroup>
-
+            <div className="flex flex-row justify-between items-center px-2 py-1.5">
+              <p className="text-xs">{t("language")}</p>
+              <div className="relative flex items-center">
+                <Select
+                  value={locale}
+                  onValueChange={(value) => {
+                    if (value && locales.some((item) => item === value)) {
+                      changeLocale(value)
+                    }
+                  }}
+                >
+                  <SelectTrigger className="h-[24px] w-full border-0 bg-transparent py-0.5 ps-6 pe-3 text-xs shadow-none">
+                    <SelectValue>
+                      {locale === "ar" ? t("arabic") : t("english")}
+                    </SelectValue>
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="ar" className="text-xs">
+                      {t("arabic")}
+                    </SelectItem>
+                    <SelectItem value="en" className="text-xs">
+                      {t("english")}
+                    </SelectItem>
+                  </SelectContent>
+                </Select>
+                <Languages
+                  aria-hidden="true"
+                  className="pointer-events-none absolute start-2"
+                  size={12}
+                />
+              </div>
+            </div>
             <DropdownMenuSeparator />
             <div className="flex flex-row justify-between items-center px-2 py-1.5">
               <p className="text-xs">Theme</p>

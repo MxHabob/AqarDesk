@@ -18,7 +18,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@aqardesk/ui/select";
-import { Spinner } from "@aqardesk/ui/spinner";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import { Switch } from "@aqardesk/ui/switch";
 import {
   Tooltip,
@@ -50,7 +50,7 @@ export function FieldMapping({ currencies }: { currencies: string[] }) {
   const mappingRequestIdRef = useRef(0);
   const trpc = useTRPC();
   const { mutateAsync: generateCsvMapping } = useMutation(
-    trpc.transactions.generateCsvMapping.mutationOptions(),
+    trpc.transactions.generateCsvMapping.mutationOptions()
   );
   const { data: bankAccounts } = useQuery(trpc.bankAccounts.get.queryOptions());
   // Use ref to access latest bankAccounts without triggering effect
@@ -138,7 +138,7 @@ export function FieldMapping({ currencies }: { currencies: string[] }) {
               if (currentBankAccounts && currentBankAccounts.length > 0) {
                 const matchingAccount = currentBankAccounts.find(
                   (account) =>
-                    account.currency?.toUpperCase() === detectedCurrency,
+                    account.currency?.toUpperCase() === detectedCurrency
                 );
 
                 if (matchingAccount) {
@@ -173,7 +173,7 @@ export function FieldMapping({ currencies }: { currencies: string[] }) {
     return () => {
       abortController.abort();
     };
-  }, [fileColumns, firstRows]);
+  }, [fileColumns, firstRows, generateCsvMapping, setValue]);
 
   return (
     <div className="mt-6">
@@ -188,7 +188,7 @@ export function FieldMapping({ currencies }: { currencies: string[] }) {
               isStreaming={isStreaming}
               currency={watch("currency")}
             />
-          ),
+          )
         )}
       </div>
 
@@ -281,7 +281,7 @@ export function FieldMapping({ currencies }: { currencies: string[] }) {
                 value={value}
                 onChange={onChange}
                 currencies={Object.values(currencies)?.map(
-                  (currency) => currency,
+                  (currency) => currency
                 )}
               />
             )}
@@ -338,8 +338,8 @@ function FieldRow({
             firstRows
               .slice(0, 5)
               .map((row) => row[value as string]?.trim())
-              .filter((v): v is string => Boolean(v)),
-          ),
+              .filter((v): v is string => Boolean(v))
+          )
         ).slice(0, 5)
       : [];
 
@@ -422,8 +422,8 @@ function FieldRow({
                   <SelectValue placeholder={`Select ${label}`} />
 
                   {isLoading && (
-                    <div className="absolute top-2 end-2">
-                      <Spinner size={16} />
+                    <div className="absolute inset-y-0 start-3 flex items-center">
+                      <Skeleton className="h-4 w-20" />
                     </div>
                   )}
                 </SelectTrigger>
@@ -475,7 +475,7 @@ function FieldRow({
                       <span className="block whitespace-pre-line">
                         {exampleValues
                           .map((val) =>
-                            field === "description" ? capitalCase(val) : val,
+                            field === "description" ? capitalCase(val) : val
                           )
                           .join("\n")}
                       </span>

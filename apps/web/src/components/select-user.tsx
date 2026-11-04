@@ -1,6 +1,6 @@
 "use client";
 
-import { Spinner } from "@aqardesk/ui/spinner";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { useTRPC } from "@/trpc/client";
 import { AssignedUser } from "./assigned-user";
@@ -17,12 +17,34 @@ type Props = {
 
 export function SelectUser({ onSelect }: Props) {
   const trpc = useTRPC();
-  const { data: users, isLoading } = useQuery(trpc.team.members.queryOptions());
+  const {
+    data: users,
+    isLoading,
+    isError,
+  } = useQuery(trpc.team.members.queryOptions());
+
+  if (isError && !users) {
+    return (
+      <p className="text-sm text-destructive" role="alert">
+        Could not load team members.
+      </p>
+    );
+  }
 
   if (isLoading) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
-        <Spinner />
+      <div
+        role="status"
+        aria-label="Loading team members"
+        aria-busy="true"
+        className="w-full space-y-3"
+      >
+        {Array.from({ length: 4 }, (_, index) => (
+          <div key={index.toString()} className="flex items-center gap-2">
+            <Skeleton className="size-8 rounded-full" />
+            <Skeleton className="h-4 w-28" />
+          </div>
+        ))}
       </div>
     );
   }

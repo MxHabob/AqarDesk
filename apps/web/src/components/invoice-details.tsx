@@ -1,6 +1,5 @@
 "use client";
 
-import { TZDate } from "@date-fns/tz";
 import { getFrequencyShortLabel } from "@aqardesk/invoice/recurring";
 import {
   Accordion,
@@ -12,6 +11,7 @@ import { Avatar, AvatarFallback, AvatarImageNext } from "@aqardesk/ui/avatar";
 import { Button } from "@aqardesk/ui/button";
 import { cn } from "@aqardesk/ui/cn";
 import { Icons } from "@aqardesk/ui/icons";
+import { TZDate } from "@date-fns/tz";
 import { useQuery } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { useFileUrl } from "@/hooks/use-file-url";
@@ -37,7 +37,7 @@ export function InvoiceDetails() {
 
   const isOpen = invoiceId !== null;
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     ...trpc.invoice.getById.queryOptions({ id: invoiceId! }),
     enabled: isOpen,
   });
@@ -58,6 +58,16 @@ export function InvoiceDetails() {
 
   if (isLoading) {
     return <InvoiceDetailsSkeleton />;
+  }
+
+  if (error && !data) {
+    return (
+      <p className="text-sm text-destructive" role="alert">
+        {error instanceof Error
+          ? error.message
+          : "Could not load this invoice."}
+      </p>
+    );
   }
 
   if (!data) {
@@ -207,7 +217,7 @@ export function InvoiceDetails() {
                 <span>
                   {format(
                     new Date(scheduledAt),
-                    `MMM d, ${user?.timeFormat === 24 ? "HH:mm" : "h:mm a"}`,
+                    `MMM d, ${user?.timeFormat === 24 ? "HH:mm" : "h:mm a"}`
                   )}
                 </span>
               </span>
@@ -244,7 +254,7 @@ export function InvoiceDetails() {
                 <span>
                   {getFrequencyShortLabel(
                     recurring.frequency,
-                    recurring.frequencyInterval,
+                    recurring.frequencyInterval
                   )}
                   {recurringSequence && recurring.endCount
                     ? ` (${recurringSequence} of ${recurring.endCount})`
@@ -322,7 +332,7 @@ export function InvoiceDetails() {
                     .map(
                       (
                         invoice: { date: string; amount: number },
-                        index: number,
+                        index: number
                       ) => {
                         // Check if this is the first invoice in the series and it's scheduled
                         const isCurrentScheduledInvoice =
@@ -336,14 +346,14 @@ export function InvoiceDetails() {
                             className={cn(
                               "flex items-center justify-between text-sm",
                               isCurrentScheduledInvoice &&
-                                "bg-muted/50 -mx-2 px-2 py-1 rounded",
+                                "bg-muted/50 -mx-2 px-2 py-1 rounded"
                             )}
                           >
                             <div className="flex items-center gap-2">
                               <span className="w-[100px]">
                                 {format(
                                   new TZDate(invoice.date, "UTC"),
-                                  "MMM d, yyyy",
+                                  "MMM d, yyyy"
                                 )}
                               </span>
                               <span className="text-muted-foreground">
@@ -361,7 +371,7 @@ export function InvoiceDetails() {
                             />
                           </div>
                         );
-                      },
+                      }
                     )}
                   {/* Show ellipsis if there are more invoices */}
                   {((recurring.endCount &&

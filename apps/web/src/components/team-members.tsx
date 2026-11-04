@@ -1,3 +1,5 @@
+"use client"
+
 import { Button } from "@aqardesk/ui/button"
 import {
   Select,

@@ -22,7 +22,7 @@ export function InboxSheetDetails() {
 
   const isOpen = Boolean(params.inboxId && params.inboxType === "details");
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     ...trpc.inbox.getById.queryOptions({
       id: params.inboxId!,
     }),
@@ -38,6 +38,14 @@ export function InboxSheetDetails() {
       return pages.find((d) => d.id === params.inboxId);
     },
   });
+
+  if (error && !data) {
+    return (
+      <p className="text-sm text-destructive" role="alert">
+        {error instanceof Error ? error.message : "Could not load this item."}
+      </p>
+    );
+  }
 
   if (isLoading || !data) {
     return (

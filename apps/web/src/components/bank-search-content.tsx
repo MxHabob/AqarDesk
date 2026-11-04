@@ -148,11 +148,11 @@ export function BankSearchContent({
           setPlaidToken(result.data.link_token);
         }
       },
-    }),
+    })
   );
 
   const exchangeToken = useMutation(
-    trpc.banking.plaidExchange.mutationOptions(),
+    trpc.banking.plaidExchange.mutationOptions()
   );
 
   useScript("https://cdn.teller.io/connect/connect.js", {
@@ -204,7 +204,7 @@ export function BankSearchContent({
       },
       {
         enabled,
-      },
+      }
     ),
     placeholderData: keepPreviousData,
   });

@@ -37,12 +37,24 @@ export function NotificationSettings() {
   const t = useI18n();
   const trpc = useTRPC();
 
-  const { data: notificationTypes, isLoading } = useQuery(
-    trpc.notificationSettings.getAll.queryOptions(),
-  );
+  const {
+    data: notificationTypes,
+    isLoading,
+    error,
+  } = useQuery(trpc.notificationSettings.getAll.queryOptions());
 
   if (isLoading) {
     return <NotificationSettingsSkeleton />;
+  }
+
+  if (error && !notificationTypes) {
+    return (
+      <p className="text-sm text-destructive" role="alert">
+        {error instanceof Error
+          ? error.message
+          : "Could not load notification settings."}
+      </p>
+    );
   }
 
   // Group notifications by category
@@ -51,14 +63,14 @@ export function NotificationSettings() {
       // Include all channel settings (in_app, email, push)
       const filteredSettings = notificationType.settings.filter(
         (
-          setting,
+          setting
         ): setting is {
           channel: "in_app" | "email" | "push";
           enabled: boolean;
         } =>
           setting.channel === "in_app" ||
           setting.channel === "email" ||
-          setting.channel === "push",
+          setting.channel === "push"
       );
 
       // Skip if no settings remain after filtering
@@ -78,7 +90,7 @@ export function NotificationSettings() {
       // Get display info from i18n translations
       const displayInfo = getNotificationDisplayInfoWithFallback(
         notificationType.type,
-        t,
+        t
       );
 
       acc[category].notifications.push({
@@ -105,7 +117,7 @@ export function NotificationSettings() {
           }>;
         }>;
       }
-    >,
+    >
   );
 
   // Sort categories by order, then by name
@@ -115,7 +127,7 @@ export function NotificationSettings() {
         return a.order - b.order;
       }
       return a.category.localeCompare(b.category);
-    },
+    }
   );
 
   return (

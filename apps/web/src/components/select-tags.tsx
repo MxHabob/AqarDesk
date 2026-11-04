@@ -9,6 +9,7 @@ import {
 import { Input } from "@aqardesk/ui/input"
 import { Label } from "@aqardesk/ui/label"
 import MultipleSelector from "@aqardesk/ui/multiple-selector"
+import { Skeleton } from "@aqardesk/ui/skeleton"
 import { SubmitButton } from "@aqardesk/ui/submit-button"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useState } from "react"
@@ -34,7 +35,7 @@ export function SelectTags({ tags, onSelect, onRemove, onChange }: Props) {
 
   const trpc = useTRPC()
   const queryClient = useQueryClient()
-  const { data } = useQuery(trpc.tags.get.queryOptions())
+  const { data, isLoading, isError } = useQuery(trpc.tags.get.queryOptions())
 
   const updateTagMutation = useMutation(
     trpc.tags.update.mutationOptions({
@@ -72,6 +73,22 @@ export function SelectTags({ tags, onSelect, onRemove, onChange }: Props) {
       id: tag.id,
     }))
     .filter((tag) => !selected.some((s) => s.id === tag.id))
+
+  if (isError && !data) {
+    return (
+      <p className="text-sm text-destructive" role="alert">
+        Could not load tags.
+      </p>
+    )
+  }
+
+  if (isLoading && selected.length === 0) {
+    return (
+      <div role="status" aria-label="Loading tags" aria-busy="true">
+        <Skeleton className="h-10 w-full" />
+      </div>
+    )
+  }
 
   const handleDelete = () => {
     if (editingTag?.id) {

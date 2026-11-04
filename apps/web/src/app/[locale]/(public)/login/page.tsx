@@ -44,7 +44,7 @@ export default async function Page({ params, searchParams }: Props) {
   return (
     <main
       dir="ltr"
-      className="dark relative flex min-h-svh bg-background text-foreground"
+      className="relative flex min-h-svh bg-background text-foreground"
     >
       <header className="fixed inset-x-0 top-0 z-50 px-4 py-3 sm:px-6 xl:px-8">
         <Link
@@ -52,7 +52,7 @@ export default async function Page({ params, searchParams }: Props) {
           aria-label="AqarDesk"
           className="inline-flex items-center transition-opacity hover:opacity-75"
         >
-          <Icons.LogoSmall className="text-white" />
+          <Icons.LogoSmall className="text-foreground" />
         </Link>
       </header>
 

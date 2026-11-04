@@ -8,8 +8,9 @@ import {
   CommandItem,
   CommandList,
 } from "@aqardesk/ui/components/command"
+import { Skeleton } from "@aqardesk/ui/components/skeleton"
 import { useQuery } from "@tanstack/react-query"
-import { Building2, LoaderCircle, Tag, UsersRound } from "lucide-react"
+import { Building2, Tag, UsersRound } from "lucide-react"
 import { useEffect, useMemo, useState } from "react"
 import { searchSystemAction } from "@/actions/search/global-search"
 import { useRealEstateParams } from "@/hooks/use-real-estate-params"
@@ -104,6 +105,7 @@ export function Search() {
   const {
     data: results = [],
     isFetching,
+    isLoading,
     error,
   } = useQuery({
     queryKey: ["global-real-estate-search", searchTerm],
@@ -203,15 +205,30 @@ export function Search() {
           }}
           className="h-[55px] px-4 py-0"
         />
-        {isFetching && (
-          <LoaderCircle
-            aria-label="جارٍ البحث"
-            className="absolute end-4 top-1/2 size-4 -translate-y-1/2 animate-spin text-muted-foreground"
-          />
-        )}
       </div>
 
       <CommandList className="global-search-list min-h-0 max-h-none flex-1 px-2">
+        {isLoading && searchTerm.length >= 2 && (
+          <div
+            role="status"
+            aria-label="جارٍ البحث"
+            aria-busy="true"
+            className="space-y-3 py-3"
+          >
+            {Array.from({ length: 4 }, (_, index) => (
+              <div
+                key={index.toString()}
+                className="flex items-center gap-3 rounded-md px-2 py-2"
+              >
+                <Skeleton className="size-4 shrink-0 rounded-sm" />
+                <div className="min-w-0 flex-1 space-y-2">
+                  <Skeleton className="h-4 w-2/5" />
+                  <Skeleton className="h-3 w-1/4" />
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
         {navigationError && (
           <p className="p-3 text-sm text-destructive" role="alert">
             {navigationError}

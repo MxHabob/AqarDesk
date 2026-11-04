@@ -8,8 +8,10 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@aqardesk/ui/components/sheet"
+import { Skeleton } from "@aqardesk/ui/components/skeleton"
+import { useQuery, useQueryClient } from "@tanstack/react-query"
 import { X } from "lucide-react"
-import { useEffect, useState } from "react"
+import { useState } from "react"
 import {
   getListingFormData,
   getOwnerFormData,
@@ -40,82 +42,82 @@ function CloseButton({ onClose }: { onClose: () => void }) {
   )
 }
 
+function RealEstateFormSkeleton({ fields = 8 }: { fields?: number }) {
+  return (
+    <div
+      role="status"
+      aria-label="جارٍ تحميل النموذج"
+      aria-busy="true"
+      className="min-h-0 flex-1 space-y-6 overflow-y-auto"
+    >
+      <div className="grid gap-4 sm:grid-cols-2">
+        {Array.from({ length: fields }, (_, index) => (
+          <div key={index.toString()} className="space-y-2">
+            <Skeleton className="h-4 w-20" />
+            <Skeleton className="h-10 w-full" />
+          </div>
+        ))}
+      </div>
+      <div className="space-y-3">
+        <Skeleton className="h-4 w-28" />
+        <Skeleton className="h-24 w-full" />
+      </div>
+    </div>
+  )
+}
+
+function getLoadErrorMessage(error: unknown, fallback: string) {
+  return error instanceof Error ? error.message : fallback
+}
+
 export function PropertySheet() {
   const { createProperty, propertyId, propertyMode, setParams } =
     useRealEstateParams()
-  const [data, setData] = useState<Awaited<
-    ReturnType<typeof getPropertyFormData>
-  > | null>(null)
-  const [owners, setOwners] = useState<
-    Awaited<ReturnType<typeof getPropertyOwnerOptions>>
-  >([])
-  const [error, setError] = useState<string>()
-  const [defaultCountryCode, setDefaultCountryCode] = useState<string | null>(
-    null
-  )
+  const queryClient = useQueryClient()
   const isOpen = Boolean(createProperty || propertyId)
   const readOnly = propertyMode === "details"
+  const propertyQuery = useQuery({
+    queryKey: ["real-estate-sheet", "property", propertyId],
+    queryFn: () =>
+      propertyId ? getPropertyFormData(propertyId) : Promise.resolve(null),
+    enabled: isOpen && Boolean(propertyId),
+    staleTime: 30_000,
+  })
+  const ownersQuery = useQuery({
+    queryKey: ["real-estate-sheet", "owner-options"],
+    queryFn: getPropertyOwnerOptions,
+    enabled: isOpen,
+    staleTime: 30_000,
+  })
+  const countryQuery = useQuery({
+    queryKey: ["real-estate-sheet", "default-country"],
+    queryFn: getPropertyDefaultCountryCode,
+    enabled: isOpen && Boolean(createProperty),
+    staleTime: 30_000,
+  })
+  const data = propertyQuery.data
+  const owners = ownersQuery.data ?? []
+  const error = propertyQuery.error ?? ownersQuery.error ?? countryQuery.error
+  const isFormLoading =
+    isOpen &&
+    ((Boolean(propertyId) && propertyQuery.isLoading) ||
+      (Boolean(createProperty) && countryQuery.isLoading) ||
+      ownersQuery.isLoading)
 
   const close = () =>
     setParams({ createProperty: null, propertyId: null, propertyMode: null })
 
-  useEffect(() => {
-    let active = true
-    setError(undefined)
-    setData(null)
+  const handleSaved = () => {
     if (propertyId) {
-      getPropertyFormData(propertyId)
-        .then((result) => {
-          if (active) setData(result)
-        })
-        .catch((loadError) => {
-          if (active) {
-            setError(
-              loadError instanceof Error
-                ? loadError.message
-                : "تعذر تحميل بيانات العقار."
-            )
-          }
-        })
-    } else {
-      setData(null)
-      setDefaultCountryCode(null)
-      if (createProperty) {
-        getPropertyDefaultCountryCode()
-          .then((countryCode) => {
-            if (active) setDefaultCountryCode(countryCode)
-          })
-          .catch((loadError) => {
-            if (active) {
-              setError(
-                loadError instanceof Error
-                  ? loadError.message
-                  : "تعذر تحميل دولة المكتب."
-              )
-            }
-          })
-      }
+      void queryClient.invalidateQueries({
+        queryKey: ["real-estate-sheet", "property", propertyId],
+      })
     }
-
-    if (isOpen) {
-      getPropertyOwnerOptions()
-        .then((result) => {
-          if (active) setOwners(result)
-        })
-        .catch((loadError) => {
-          if (active) {
-            setError(
-              loadError instanceof Error
-                ? loadError.message
-                : "تعذر تحميل قائمة الملاك."
-            )
-          }
-        })
-    }
-    return () => {
-      active = false
-    }
-  }, [createProperty, isOpen, propertyId])
+    void queryClient.invalidateQueries({
+      queryKey: ["real-estate-sheet", "property-options"],
+    })
+    close()
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
@@ -142,13 +144,13 @@ export function PropertySheet() {
         </SheetHeader>
         {error ? (
           <p className="text-sm text-destructive" role="alert">
-            {error}
+            {getLoadErrorMessage(error, "تعذر تحميل بيانات العقار.")}
           </p>
+        ) : isFormLoading ? (
+          <RealEstateFormSkeleton />
         ) : propertyId && !data ? (
-          <p className="text-sm text-muted-foreground">جارٍ تحميل العقار...</p>
-        ) : createProperty && !defaultCountryCode ? (
-          <p className="text-sm text-muted-foreground">
-            جارٍ تحميل بيانات المكتب...
+          <p className="text-sm text-destructive" role="alert">
+            تعذر العثور على العقار.
           </p>
         ) : (
           <div className="min-h-0 flex-1">
@@ -156,9 +158,9 @@ export function PropertySheet() {
               key={data?.property.id ?? "new-property"}
               data={data ?? undefined}
               ownerOptions={owners}
-              defaultCountryCode={defaultCountryCode ?? "SA"}
+              defaultCountryCode={countryQuery.data ?? "SA"}
               readOnly={readOnly}
-              onSaved={close}
+              onSaved={handleSaved}
             />
           </div>
         )}
@@ -170,59 +172,41 @@ export function PropertySheet() {
 export function ListingSheet() {
   const { createListing, listingId, listingMode, setParams } =
     useRealEstateParams()
-  const [data, setData] = useState<Awaited<
-    ReturnType<typeof getListingFormData>
-  > | null>(null)
-  const [properties, setProperties] = useState<
-    Awaited<ReturnType<typeof getPropertyOptions>>
-  >([])
-  const [error, setError] = useState<string>()
+  const queryClient = useQueryClient()
   const [isSaving, setIsSaving] = useState(false)
   const isOpen = Boolean(createListing || listingId)
   const readOnly = listingMode === "details"
+  const listingQuery = useQuery({
+    queryKey: ["real-estate-sheet", "listing", listingId],
+    queryFn: () =>
+      listingId ? getListingFormData(listingId) : Promise.resolve(null),
+    enabled: isOpen && Boolean(listingId),
+    staleTime: 30_000,
+  })
+  const propertiesQuery = useQuery({
+    queryKey: ["real-estate-sheet", "property-options"],
+    queryFn: getPropertyOptions,
+    enabled: isOpen,
+    staleTime: 30_000,
+  })
+  const data = listingQuery.data
+  const properties = propertiesQuery.data ?? []
+  const error = listingQuery.error ?? propertiesQuery.error
   const close = () =>
     setParams({ createListing: null, listingId: null, listingMode: null })
+  const isFormLoading =
+    isOpen &&
+    ((Boolean(listingId) && listingQuery.isLoading) ||
+      propertiesQuery.isLoading)
 
-  useEffect(() => {
-    let active = true
-    setError(undefined)
-    setData(null)
+  const handleSaved = () => {
     if (listingId) {
-      getListingFormData(listingId)
-        .then((result) => {
-          if (active) setData(result)
-        })
-        .catch((loadError) => {
-          if (active) {
-            setError(
-              loadError instanceof Error
-                ? loadError.message
-                : "تعذر تحميل الإعلان."
-            )
-          }
-        })
-    } else {
-      setData(null)
+      void queryClient.invalidateQueries({
+        queryKey: ["real-estate-sheet", "listing", listingId],
+      })
     }
-    if (isOpen) {
-      getPropertyOptions()
-        .then((result) => {
-          if (active) setProperties(result)
-        })
-        .catch((loadError) => {
-          if (active) {
-            setError(
-              loadError instanceof Error
-                ? loadError.message
-                : "تعذر تحميل العقارات."
-            )
-          }
-        })
-    }
-    return () => {
-      active = false
-    }
-  }, [isOpen, listingId])
+    close()
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
@@ -264,10 +248,14 @@ export function ListingSheet() {
         </SheetHeader>
         {error ? (
           <p className="text-sm text-destructive" role="alert">
-            {error}
+            {getLoadErrorMessage(error, "تعذر تحميل الإعلان.")}
           </p>
+        ) : isFormLoading ? (
+          <RealEstateFormSkeleton />
         ) : listingId && !data ? (
-          <p className="text-sm text-muted-foreground">جارٍ تحميل الإعلان...</p>
+          <p className="text-sm text-destructive" role="alert">
+            تعذر العثور على الإعلان.
+          </p>
         ) : (
           <div className="scrollbar-hide min-h-0 flex-1 space-y-8 overflow-y-auto">
             <ListingForm
@@ -275,7 +263,7 @@ export function ListingSheet() {
               data={data ?? undefined}
               properties={properties}
               readOnly={readOnly}
-              onSaved={close}
+              onSaved={handleSaved}
               showSubmitButton={false}
               onPendingChange={setIsSaving}
             />
@@ -287,7 +275,7 @@ export function ListingSheet() {
             )}
           </div>
         )}
-        {!readOnly && !(listingId && !data) && !error && (
+        {!readOnly && !isFormLoading && !error && (
           <SheetFooter className="-mx-6 mt-4 border-t bg-[#fafaf9] px-6 pb-2 pt-4 dark:bg-[#0c0c0c]">
             <RealEstateSubmitButton
               label={listingId ? "حفظ الإعلان" : "إنشاء الإعلان"}
@@ -304,39 +292,31 @@ export function ListingSheet() {
 
 export function OwnerSheet() {
   const { createOwner, ownerId, ownerMode, setParams } = useRealEstateParams()
-  const [data, setData] = useState<Awaited<
-    ReturnType<typeof getOwnerFormData>
-  > | null>(null)
-  const [error, setError] = useState<string>()
+  const queryClient = useQueryClient()
   const isOpen = Boolean(createOwner || ownerId)
   const readOnly = ownerMode === "details"
+  const ownerQuery = useQuery({
+    queryKey: ["real-estate-sheet", "owner", ownerId],
+    queryFn: () =>
+      ownerId ? getOwnerFormData(ownerId) : Promise.resolve(null),
+    enabled: isOpen && Boolean(ownerId),
+    staleTime: 30_000,
+  })
+  const data = ownerQuery.data
   const close = () =>
     setParams({ createOwner: null, ownerId: null, ownerMode: null })
 
-  useEffect(() => {
-    let active = true
-    setError(undefined)
+  const handleSaved = () => {
     if (ownerId) {
-      getOwnerFormData(ownerId)
-        .then((result) => {
-          if (active) setData(result)
-        })
-        .catch((loadError) => {
-          if (active) {
-            setError(
-              loadError instanceof Error
-                ? loadError.message
-                : "تعذر تحميل بيانات المالك."
-            )
-          }
-        })
-    } else {
-      setData(null)
+      void queryClient.invalidateQueries({
+        queryKey: ["real-estate-sheet", "owner", ownerId],
+      })
     }
-    return () => {
-      active = false
-    }
-  }, [ownerId])
+    void queryClient.invalidateQueries({
+      queryKey: ["real-estate-sheet", "owner-options"],
+    })
+    close()
+  }
 
   return (
     <Sheet open={isOpen} onOpenChange={(open) => !open && close()}>
@@ -356,13 +336,15 @@ export function OwnerSheet() {
           </SheetTitle>
           <CloseButton onClose={close} />
         </SheetHeader>
-        {error ? (
+        {ownerQuery.error ? (
           <p className="text-sm text-destructive" role="alert">
-            {error}
+            {getLoadErrorMessage(ownerQuery.error, "تعذر تحميل بيانات المالك.")}
           </p>
+        ) : ownerId && ownerQuery.isLoading ? (
+          <RealEstateFormSkeleton fields={5} />
         ) : ownerId && !data ? (
-          <p className="text-sm text-muted-foreground">
-            جارٍ تحميل بيانات المالك...
+          <p className="text-sm text-destructive" role="alert">
+            تعذر العثور على بيانات المالك.
           </p>
         ) : (
           <div className="min-h-0 flex-1">
@@ -370,7 +352,7 @@ export function OwnerSheet() {
               key={data?.owner.id ?? "new-owner"}
               data={data ?? undefined}
               readOnly={readOnly}
-              onSaved={close}
+              onSaved={handleSaved}
             />
           </div>
         )}

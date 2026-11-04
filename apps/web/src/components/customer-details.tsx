@@ -1,6 +1,5 @@
 "use client";
 
-import { TZDate } from "@date-fns/tz";
 import {
   Accordion,
   AccordionContent,
@@ -29,6 +28,7 @@ import {
   TableRow,
 } from "@aqardesk/ui/table";
 import { useToast } from "@aqardesk/ui/use-toast";
+import { TZDate } from "@date-fns/tz";
 import {
   keepPreviousData,
   useInfiniteQuery,
@@ -70,7 +70,7 @@ function formatTimezoneWithLocalTime(timezone: string): {
 
     // Calculate hour difference
     const customerDate = new Date(
-      now.toLocaleString("en-US", { timeZone: timezone }),
+      now.toLocaleString("en-US", { timeZone: timezone })
     );
     const userDate = new Date(now.toLocaleString("en-US"));
     const diffMs = customerDate.getTime() - userDate.getTime();
@@ -123,12 +123,13 @@ export function CustomerDetails() {
           duration: 2500,
         });
       },
-    }),
+    })
   );
 
   const {
     data: customer,
     isLoading: isLoadingCustomer,
+    error: customerError,
     refetch,
   } = useQuery({
     ...trpc.customers.getById.queryOptions({ id: customerId! }),
@@ -150,7 +151,7 @@ export function CustomerDetails() {
         queryClient.setQueryData(
           trpc.customers.getById.queryKey({ id: customerId! }),
           (old: typeof customer) =>
-            old ? { ...old, enrichmentStatus: "pending" as const } : old,
+            old ? { ...old, enrichmentStatus: "pending" as const } : old
         );
       },
       onError: (error) => {
@@ -165,7 +166,7 @@ export function CustomerDetails() {
         // Refetch after mutation settles
         refetch();
       },
-    }),
+    })
   );
 
   // Mutation for cancelling enrichment
@@ -259,7 +260,7 @@ export function CustomerDetails() {
     },
     {
       getNextPageParam: ({ meta }) => meta?.cursor,
-    },
+    }
   );
 
   const {
@@ -288,7 +289,7 @@ export function CustomerDetails() {
       return;
     }
     const url = new URL(
-      `${process.env.NEXT_PUBLIC_API_URL}/files/download/invoice`,
+      `${process.env.NEXT_PUBLIC_API_URL}/files/download/invoice`
     );
     url.searchParams.set("id", invoiceId);
     url.searchParams.set("fk", user.fileKey);
@@ -297,6 +298,16 @@ export function CustomerDetails() {
 
   if (isLoadingCustomer) {
     return <CustomerDetailsSkeleton />;
+  }
+
+  if (customerError && !customer) {
+    return (
+      <p className="text-sm text-destructive" role="alert">
+        {customerError instanceof Error
+          ? customerError.message
+          : "Could not load this customer."}
+      </p>
+    );
   }
 
   if (!customer) {
@@ -347,7 +358,7 @@ export function CustomerDetails() {
             <div
               className={cn(
                 "size-9 rounded-full flex items-center justify-center bg-muted text-muted-foreground font-medium flex-shrink-0",
-                customer.website && "hidden",
+                customer.website && "hidden"
               )}
             >
               {customer.name.charAt(0).toUpperCase()}
@@ -758,7 +769,7 @@ export function CustomerDetails() {
                       {customer.timezone &&
                         (() => {
                           const tz = formatTimezoneWithLocalTime(
-                            customer.timezone,
+                            customer.timezone
                           );
                           return (
                             <motion.div
@@ -1213,7 +1224,7 @@ export function CustomerDetails() {
                               {invoice.issueDate
                                 ? format(
                                     new TZDate(invoice.issueDate, "UTC"),
-                                    "MMM d",
+                                    "MMM d"
                                   )
                                 : "-"}
                             </TableCell>
@@ -1221,7 +1232,7 @@ export function CustomerDetails() {
                               {invoice.dueDate
                                 ? format(
                                     new TZDate(invoice.dueDate, "UTC"),
-                                    "MMM d",
+                                    "MMM d"
                                   )
                                 : "-"}
                             </TableCell>
@@ -1281,6 +1292,32 @@ export function CustomerDetails() {
                             </TableCell>
                           </TableRow>
                         ))}
+                        {isFetchingNextPage &&
+                          Array.from({ length: 3 }, (_, index) => (
+                            <TableRow
+                              key={`loading-${index.toString()}`}
+                              aria-hidden="true"
+                            >
+                              <TableCell>
+                                <Skeleton className="h-4 w-16" />
+                              </TableCell>
+                              <TableCell>
+                                <Skeleton className="h-4 w-12" />
+                              </TableCell>
+                              <TableCell>
+                                <Skeleton className="h-4 w-12" />
+                              </TableCell>
+                              <TableCell>
+                                <Skeleton className="h-4 w-16" />
+                              </TableCell>
+                              <TableCell>
+                                <Skeleton className="h-4 w-14" />
+                              </TableCell>
+                              <TableCell data-hide-in-pdf="true">
+                                <Skeleton className="mx-auto h-4 w-4" />
+                              </TableCell>
+                            </TableRow>
+                          ))}
                       </TableBody>
                     </Table>
                   </div>
@@ -1322,7 +1359,7 @@ export function CustomerDetails() {
                     disabled={isFetchingNextPage}
                     data-hide-in-pdf="true"
                   >
-                    {isFetchingNextPage ? "Loading..." : "Load More"}
+                    Load More
                   </Button>
                 )}
               </div>

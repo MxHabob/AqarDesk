@@ -55,7 +55,7 @@ export function TransactionDetails() {
     },
   });
 
-  const { data, isLoading } = useQuery({
+  const { data, isLoading, error } = useQuery({
     ...trpc.transactions.getById.queryOptions({ id: transactionId! }),
     enabled: Boolean(transactionId),
     staleTime: 30 * 1000, // 30 seconds - prevents excessive refetches when reopening
@@ -106,10 +106,10 @@ export function TransactionDetails() {
         // Snapshot the previous values
         const previousData = {
           details: queryClient.getQueryData(
-            trpc.transactions.getById.queryKey({ id: transactionId! }),
+            trpc.transactions.getById.queryKey({ id: transactionId! })
           ),
           list: queryClient.getQueryData(
-            trpc.transactions.get.infiniteQueryKey(),
+            trpc.transactions.get.infiniteQueryKey()
           ),
         };
 
@@ -119,10 +119,10 @@ export function TransactionDetails() {
           (old: any) => {
             if (variables.categorySlug) {
               const categories = queryClient.getQueryData(
-                trpc.transactionCategories.get.queryKey(),
+                trpc.transactionCategories.get.queryKey()
               );
               const category = categories?.find(
-                (c) => c.slug === variables.categorySlug,
+                (c) => c.slug === variables.categorySlug
               );
 
               if (category) {
@@ -138,7 +138,7 @@ export function TransactionDetails() {
               ...old,
               ...variables,
             };
-          },
+          }
         );
 
         // Optimistically update list view
@@ -159,16 +159,16 @@ export function TransactionDetails() {
                         ...(variables.categorySlug && {
                           category: queryClient
                             .getQueryData(
-                              trpc.transactionCategories.get.queryKey(),
+                              trpc.transactionCategories.get.queryKey()
                             )
                             ?.find((c) => c.slug === variables.categorySlug),
                         }),
                       }
-                    : transaction,
+                    : transaction
                 ),
               })),
             };
-          },
+          }
         );
 
         return { previousData };
@@ -177,11 +177,11 @@ export function TransactionDetails() {
         // Revert both caches on error
         queryClient.setQueryData(
           trpc.transactions.getById.queryKey({ id: transactionId! }),
-          context?.previousData.details,
+          context?.previousData.details
         );
         queryClient.setQueryData(
           trpc.transactions.get.infiniteQueryKey(),
-          context?.previousData.list,
+          context?.previousData.list
         );
       },
       onSettled: () => {
@@ -193,7 +193,7 @@ export function TransactionDetails() {
           queryKey: trpc.transactions.get.infiniteQueryKey(),
         });
       },
-    }),
+    })
   );
 
   const createTransactionTagMutation = useMutation(
@@ -207,7 +207,7 @@ export function TransactionDetails() {
           queryKey: trpc.transactions.get.infiniteQueryKey(),
         });
       },
-    }),
+    })
   );
 
   const deleteTransactionTagMutation = useMutation(
@@ -221,7 +221,7 @@ export function TransactionDetails() {
           queryKey: trpc.transactions.get.infiniteQueryKey(),
         });
       },
-    }),
+    })
   );
 
   const updateTransactionsMutation = useMutation(
@@ -235,8 +235,18 @@ export function TransactionDetails() {
           queryKey: trpc.transactions.get.infiniteQueryKey(),
         });
       },
-    }),
+    })
   );
+
+  if (error && !data) {
+    return (
+      <p className="text-sm text-destructive" role="alert">
+        {error instanceof Error
+          ? error.message
+          : "Could not load this transaction."}
+      </p>
+    );
+  }
 
   if (isLoading || !data) {
     return (
@@ -335,7 +345,7 @@ export function TransactionDetails() {
                 <span
                   className={cn(
                     "text-4xl select-text font-serif",
-                    data?.amount > 0 && "text-[#00C969]",
+                    data?.amount > 0 && "text-[#00C969]"
                   )}
                 >
                   <FormatAmount
@@ -545,7 +555,7 @@ export function TransactionDetails() {
                         | "monthly"
                         | "annually"
                         | "irregular",
-                    }),
+                    })
                   );
 
                   if (

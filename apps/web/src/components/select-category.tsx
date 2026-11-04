@@ -1,5 +1,5 @@
 import { ComboboxDropdown } from "@aqardesk/ui/combobox-dropdown"
-import { Spinner } from "@aqardesk/ui/spinner"
+import { Skeleton } from "@aqardesk/ui/skeleton"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
 import { useTRPC } from "@/trpc/client"
 import { getColorFromName } from "@/utils/categories"
@@ -82,7 +82,7 @@ export function SelectCategory({
 }: Props) {
   const trpc = useTRPC()
   const queryClient = useQueryClient()
-  const { data, isLoading } = useQuery(
+  const { data, isLoading, isError } = useQuery(
     trpc.transactionCategories.get.queryOptions()
   )
 
@@ -112,10 +112,18 @@ export function SelectCategory({
   // @ts-expect-error - slug is not nullable
   const selectedValue = selected ? transformCategory(selected) : undefined
 
+  if (isError && !data) {
+    return (
+      <p className="text-sm text-destructive" role="alert">
+        Could not load categories.
+      </p>
+    )
+  }
+
   if (!selected && isLoading && !hideLoading) {
     return (
-      <div className="w-full h-full flex items-center justify-center">
-        <Spinner />
+      <div role="status" aria-label="Loading category" aria-busy="true">
+        <Skeleton className="h-10 w-full" />
       </div>
     )
   }

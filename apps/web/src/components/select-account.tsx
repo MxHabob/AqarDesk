@@ -3,6 +3,7 @@ import {
   type ComboboxItem,
 } from "@aqardesk/ui/combobox-dropdown";
 import type { PopoverContent } from "@aqardesk/ui/popover";
+import { Skeleton } from "@aqardesk/ui/skeleton";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import type React from "react";
 import { useEffect, useState } from "react";
@@ -38,7 +39,9 @@ export function SelectAccount({
   const queryClient = useQueryClient();
   const [selectedItem, setSelectedItem] = useState<SelectedItem | null>(null);
 
-  const { data, isLoading } = useQuery(trpc.bankAccounts.get.queryOptions());
+  const { data, isLoading, isError } = useQuery(
+    trpc.bankAccounts.get.queryOptions()
+  );
 
   const createBankAccountMutation = useMutation(
     trpc.bankAccounts.create.mutationOptions({
@@ -63,7 +66,7 @@ export function SelectAccount({
           });
         }
       },
-    }),
+    })
   );
 
   useEffect(() => {
@@ -81,8 +84,20 @@ export function SelectAccount({
     }
   }, [value, data]);
 
+  if (isError && !data) {
+    return (
+      <p className="text-sm text-destructive" role="alert">
+        Could not load accounts.
+      </p>
+    );
+  }
+
   if (isLoading) {
-    return null;
+    return (
+      <div role="status" aria-label="Loading accounts" aria-busy="true">
+        <Skeleton className="h-10 w-full" />
+      </div>
+    );
   }
 
   return (
