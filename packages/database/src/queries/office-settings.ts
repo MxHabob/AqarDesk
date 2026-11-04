@@ -75,6 +75,7 @@ export async function updateOfficeSettings(
               city: before.city,
               countryCode: before.countryCode,
               defaultCurrency: before.defaultCurrency,
+              propertyFieldSettings: before.propertyFieldSettings,
               timezone: before.timezone,
             }
           : null,
@@ -86,6 +87,7 @@ export async function updateOfficeSettings(
           city: settings.city,
           countryCode: settings.countryCode,
           defaultCurrency: settings.defaultCurrency,
+          propertyFieldSettings: settings.propertyFieldSettings,
           timezone: settings.timezone,
         },
       },

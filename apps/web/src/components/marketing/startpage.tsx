@@ -1,5 +1,6 @@
 "use client"
 
+import type { PropertyFieldSetting } from "@aqardesk/categories"
 import { Button } from "@aqardesk/ui/button"
 import { Icons } from "@aqardesk/ui/icons"
 import {
@@ -92,7 +93,13 @@ const videos = [
   },
 ]
 
-export function StartPage({ listings }: { listings: HomepageListing[] }) {
+export function StartPage({
+  listings,
+  fieldSettings,
+}: {
+  listings: HomepageListing[]
+  fieldSettings?: Record<string, Record<string, PropertyFieldSetting>>
+}) {
   const t = useScopedI18n("site")
   const [isVideoLoaded, setIsVideoLoaded] = useState(false)
   const [isPosterLoaded, setIsPosterLoaded] = useState(false)
@@ -560,7 +567,10 @@ export function StartPage({ listings }: { listings: HomepageListing[] }) {
       {/* Features Overview Section */}
       <FeaturesGridSection />
 
-      <FeaturedListingsSection listings={listings} />
+      <FeaturedListingsSection
+        listings={listings}
+        fieldSettings={fieldSettings}
+      />
 
       {/* Divider */}
       <div className="max-w-[1400px] mx-auto">

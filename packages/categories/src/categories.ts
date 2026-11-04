@@ -1,4 +1,5 @@
 import type { PropertyCategory } from "./types"
+import type { ListingType, PropertyType } from "./types"
 
 export const propertyCategories = [
   {
@@ -42,3 +43,17 @@ export const propertyCategories = [
     nameEn: "Apartments",
   },
 ] as const satisfies readonly PropertyCategory[]
+
+export const listingTypesByPropertyType: Record<
+  PropertyType,
+  readonly ListingType[]
+> = {
+  building: ["sale"],
+  land: ["sale"],
+  house_villa: ["sale", "rent"],
+  investment: ["rent"],
+  commercial: ["rent"],
+  warehouse: ["rent"],
+  yard: ["rent"],
+  apartment: ["rent"],
+}

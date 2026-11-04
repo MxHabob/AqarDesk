@@ -1,6 +1,10 @@
 "use server"
 
 import { auth } from "@aqardesk/auth/server"
+import {
+  listingTypesByPropertyType,
+  propertyFieldsByType,
+} from "@aqardesk/categories"
 import { getDatabase, schema } from "@aqardesk/database"
 import type {
   DatabaseTransaction,
@@ -147,6 +151,18 @@ export async function getPropertyDefaultCountryCode() {
   const actor = await getActor()
   await assertPermission(actor.id, "properties.create")
   return (await getOfficeSettings()).countryCode
+}
+
+export async function getPropertyFieldSettingsAction() {
+  const actor = await getActor()
+  const [canRead, canCreate] = await Promise.all([
+    hasPermission(actor.id, "properties.read"),
+    hasPermission(actor.id, "properties.create"),
+  ])
+  if (!canRead && !canCreate) {
+    await assertPermission(actor.id, "properties.read")
+  }
+  return (await getOfficeSettings()).propertyFieldSettings ?? {}
 }
 
 export async function getPropertyOwnerOptions() {
@@ -486,6 +502,17 @@ export async function savePropertyAction(
 
   const permission = id ? "properties.update" : "properties.create"
   await assertPermission(actor.id, permission)
+  const fieldSettings =
+    (await getOfficeSettings()).propertyFieldSettings?.[type.data] ?? {}
+  const missingRequiredField = propertyFieldsByType[type.data].find(
+    (field) =>
+      fieldSettings[field.key]?.required && !readText(formData, field.key)
+  )
+  if (missingRequiredField) {
+    return {
+      error: `يرجى إدخال الحقل المطلوب: ${fieldSettings[missingRequiredField.key]?.label || missingRequiredField.label}.`,
+    }
+  }
   const ownerIds = z
     .array(idSchema)
     .safeParse(
@@ -637,6 +664,7 @@ async function saveDetails(
             hasBasement: optionalBoolean("hasBasement"),
             hasGuardRoom: optionalBoolean("hasGuardRoom"),
             deedIssuer: optionalText("deedIssuer"),
+            additionalDetails: optionalText("additionalDetails"),
           },
         }
       case "investment":
@@ -655,6 +683,7 @@ async function saveDetails(
           type,
           propertyId,
           values: {
+            propertySubtype: optionalText("propertySubtype"),
             previousActivity: optionalText("previousActivity"),
             openingCount: optionalInteger("openingCount"),
             toiletCount: optionalInteger("toiletCount"),
@@ -668,6 +697,7 @@ async function saveDetails(
           type,
           propertyId,
           values: {
+            propertySubtype: optionalText("propertySubtype"),
             openingCount: optionalInteger("openingCount"),
             toiletCount: optionalInteger("toiletCount"),
             additionalDetails: optionalText("additionalDetails"),
@@ -678,6 +708,7 @@ async function saveDetails(
           type,
           propertyId,
           values: {
+            propertySubtype: optionalText("propertySubtype"),
             requestedActivity: optionalText("requestedActivity"),
             hasFence: optionalBoolean("hasFence"),
             hasRoof: optionalBoolean("hasRoof"),
@@ -762,6 +793,11 @@ export async function saveListingAction(
     return { error: "حدد ما إذا كان المكتب يتولى الإعلان." }
   }
   await assertPermission(actor.id, id ? "listings.update" : "listings.create")
+  const property = await getPropertyById(propertyId.data)
+  if (!property) return { error: "العقار المحدد غير موجود." }
+  if (!listingTypesByPropertyType[property.type].includes(type.data)) {
+    return { error: "نوع الإعلان لا يتوافق مع فئة العقار المختارة." }
+  }
 
   const source = z
     .enum(["office", "owner_direct", "external_broker", "referral", "other"])
@@ -859,20 +895,52 @@ export async function saveOwnerAction(
   if (phones.some((phone) => phone.length > 40)) {
     return { error: "رقم الهاتف طويل جدًا." }
   }
+  const whatsappPhones = readText(formData, "whatsappPhones")
+    .split(/\r?\n/)
+    .map((phoneNumber) => phoneNumber.trim())
+    .filter(Boolean)
+  if (
+    whatsappPhones.some((phone) => phone.length > 40 || !phones.includes(phone))
+  ) {
+    return {
+      error: "أرقام واتساب يجب أن تكون أرقامًا مسجلة ضمن أرقام التواصل.",
+    }
+  }
+  const offerTypes = z
+    .array(z.enum(["sale", "rent"]))
+    .max(2)
+    .safeParse(
+      formData
+        .getAll("offerTypes")
+        .filter((value): value is string => typeof value === "string")
+    )
+  if (!offerTypes.success) return { error: "أنواع العروض غير صالحة." }
+  const contactViaOffice = z
+    .enum(["true", "false"])
+    .safeParse(readText(formData, "contactViaOffice") || "true")
+  if (!contactViaOffice.success) {
+    return { error: "حدد طريقة التواصل مع المالك." }
+  }
+
+  const ownerValues = {
+    name: name.data,
+    offerTypes: [...new Set(offerTypes.data)],
+    buildingType: nullableText(readText(formData, "buildingType")),
+    city: nullableText(readText(formData, "city")),
+    district: nullableText(readText(formData, "district")),
+    neighborhood: nullableText(readText(formData, "neighborhood")),
+    street: nullableText(readText(formData, "street")),
+    contactViaOffice: contactViaOffice.data === "true",
+    notes: nullableText(readText(formData, "notes")),
+  }
 
   const database = getDatabase()
   const owner = await database.transaction(async (transaction) => {
     const result = id
-      ? await updateOwner(
-          id,
-          { name: name.data, notes: nullableText(readText(formData, "notes")) },
-          actor,
-          transaction
-        )
+      ? await updateOwner(id, ownerValues, actor, transaction)
       : await createOwner(
           {
-            name: name.data,
-            notes: nullableText(readText(formData, "notes")),
+            ...ownerValues,
             createdById: actor.id,
           },
           actor,
@@ -881,7 +949,10 @@ export async function saveOwnerAction(
     if (!result) throw new Error("تعذر حفظ بيانات المالك.")
     await setOwnerPhones(
       result.id,
-      phones.map((phoneNumber) => ({ phoneNumber })),
+      phones.map((phoneNumber) => ({
+        phoneNumber,
+        isWhatsapp: whatsappPhones.includes(phoneNumber),
+      })),
       actor,
       transaction
     )

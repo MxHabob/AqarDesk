@@ -11,6 +11,13 @@ export type OwnerRow = Awaited<ReturnType<typeof listOwners>>[number]
 type SetParams = ReturnType<typeof useRealEstateParams>["setParams"]
 type OwnerLabels = {
   owner: string
+  offers: string
+  location: string
+  officeContact: string
+  sale: string
+  rent: string
+  viaOffice: string
+  directContact: string
   notes: string
   dateAdded: string
   actions: string
@@ -66,6 +73,49 @@ export function getOwnersColumns(
       cell: ({ getValue }) => (
         <span className="font-medium">{getValue<string>()}</span>
       ),
+    },
+    {
+      id: "offers",
+      accessorFn: (row) => row.offerTypes.join(" "),
+      header: labels.offers,
+      size: 220,
+      minSize: 160,
+      cell: ({ row }) => {
+        const offers = row.original.offerTypes
+          .map((type) => (type === "sale" ? labels.sale : labels.rent))
+          .join("، ")
+        return (
+          [offers, row.original.buildingType].filter(Boolean).join(" · ") ||
+          labels.notAvailable
+        )
+      },
+    },
+    {
+      id: "location",
+      accessorFn: (row) =>
+        [row.city, row.district, row.neighborhood, row.street]
+          .filter(Boolean)
+          .join(" "),
+      header: labels.location,
+      size: 260,
+      minSize: 180,
+      cell: ({ row }) =>
+        [
+          row.original.city,
+          row.original.district,
+          row.original.neighborhood,
+          row.original.street,
+        ]
+          .filter(Boolean)
+          .join("، ") || labels.notAvailable,
+    },
+    {
+      accessorKey: "contactViaOffice",
+      header: labels.officeContact,
+      size: 160,
+      minSize: 120,
+      cell: ({ getValue }) =>
+        getValue<boolean>() ? labels.viaOffice : labels.directContact,
     },
     {
       accessorKey: "notes",

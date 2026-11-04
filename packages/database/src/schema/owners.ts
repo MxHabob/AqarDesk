@@ -1,5 +1,7 @@
+import { sql } from "drizzle-orm"
 import {
   boolean,
+  check,
   index,
   pgTable,
   text,
@@ -15,6 +17,16 @@ export const owners = pgTable(
   {
     id: uuid("id").defaultRandom().primaryKey(),
     name: text("name").notNull(),
+    offerTypes: text("offer_types")
+      .array()
+      .notNull()
+      .default(sql`'{}'::text[]`),
+    buildingType: text("building_type"),
+    city: text("city"),
+    district: text("district"),
+    neighborhood: text("neighborhood"),
+    street: text("street"),
+    contactViaOffice: boolean("contact_via_office").notNull().default(true),
     notes: text("notes"),
     createdById: text("created_by_id").references(() => users.id, {
       onDelete: "set null",
@@ -27,7 +39,13 @@ export const owners = pgTable(
       .defaultNow(),
     archivedAt: timestamp("archived_at", { withTimezone: true }),
   },
-  (table) => [index("owner_name_idx").on(table.name)]
+  (table) => [
+    index("owner_name_idx").on(table.name),
+    check(
+      "owner_offer_types_valid",
+      sql`${table.offerTypes} <@ array['sale', 'rent']::text[]`
+    ),
+  ]
 )
 
 export const ownerPhones = pgTable(

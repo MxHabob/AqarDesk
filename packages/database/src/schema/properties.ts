@@ -157,6 +157,7 @@ export const houseVillaDetails = pgTable(
     hasBasement: boolean("has_basement"),
     hasGuardRoom: boolean("has_guard_room"),
     deedIssuer: text("deed_issuer"),
+    additionalDetails: text("additional_details"),
   },
   (table) => [
     check(
@@ -186,6 +187,7 @@ export const commercialDetails = pgTable(
     propertyId: uuid("property_id")
       .primaryKey()
       .references(() => properties.id, { onDelete: "cascade" }),
+    propertySubtype: text("property_subtype"),
     previousActivity: text("previous_activity"),
     openingCount: integer("opening_count"),
     toiletCount: integer("toilet_count"),
@@ -211,6 +213,7 @@ export const warehouseDetails = pgTable(
     propertyId: uuid("property_id")
       .primaryKey()
       .references(() => properties.id, { onDelete: "cascade" }),
+    propertySubtype: text("property_subtype"),
     openingCount: integer("opening_count"),
     toiletCount: integer("toilet_count"),
     additionalDetails: text("additional_details"),
@@ -231,6 +234,7 @@ export const yardDetails = pgTable("yard_details", {
   propertyId: uuid("property_id")
     .primaryKey()
     .references(() => properties.id, { onDelete: "cascade" }),
+  propertySubtype: text("property_subtype"),
   requestedActivity: text("requested_activity"),
   hasFence: boolean("has_fence"),
   hasRoof: boolean("has_roof"),

@@ -1,3 +1,4 @@
+import { getOfficeSettings } from "@aqardesk/database/queries"
 import type { HomepageListing } from "@/components/marketing/sections/featured-listings-section"
 import { StartPage } from "@/components/marketing/startpage"
 import {
@@ -22,10 +23,8 @@ export async function generateMetadata({ params }: Props) {
 export default async function Page({ params }: Props) {
   const { locale } = await params
   setStaticParamsLocale(locale)
-  const [translate, { results, coverPhotos }] = await Promise.all([
-    getI18n(),
-    getPublicHomepageData(),
-  ])
+  const [translate, { results, coverPhotos }, officeSettings] =
+    await Promise.all([getI18n(), getPublicHomepageData(), getOfficeSettings()])
   const propertyTypeLabels = {
     building: translate("propertyTypes.building"),
     land: translate("propertyTypes.land"),
@@ -60,5 +59,10 @@ export default async function Page({ params }: Props) {
     }
   })
 
-  return <StartPage listings={listings} />
+  return (
+    <StartPage
+      listings={listings}
+      fieldSettings={officeSettings.propertyFieldSettings ?? {}}
+    />
+  )
 }

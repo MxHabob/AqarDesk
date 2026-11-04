@@ -160,6 +160,13 @@ export default async function ListingDetailsPage({
     yard: translate("propertyTypes.yard"),
     apartment: translate("propertyTypes.apartment"),
   }
+  const fieldSettings =
+    officeSettings.propertyFieldSettings?.[listing.propertyType] ?? {}
+  const isPubliclyVisible = (key: string) =>
+    fieldSettings[key]?.visiblePublicly ??
+    !["address", "primaryStreet", "secondaryStreet"].includes(key)
+  const publicFieldLabel = (key: string, defaultLabel: string) =>
+    fieldSettings[key]?.label || defaultLabel
   const price =
     listing.listingType === "sale" ? listing.salePrice : listing.monthlyRent
   const formattedPrice =
@@ -171,9 +178,9 @@ export default async function ListingDetailsPage({
         )} ${listing.currencyCode}${listing.listingType === "rent" ? ` / ${t("perMonth")}` : ""}`
       : listingT("notAvailable")
   const location = [
-    listing.neighborhood,
-    listing.district,
-    listing.city,
+    isPubliclyVisible("neighborhood") ? listing.neighborhood : null,
+    isPubliclyVisible("district") ? listing.district : null,
+    isPubliclyVisible("city") ? listing.city : null,
   ].filter((value): value is string => Boolean(value))
   const formatLocation = new Intl.ListFormat(locale).format(location)
   const detailLabels: Record<string, string> = {
@@ -188,6 +195,7 @@ export default async function ListingDetailsPage({
     hasBasement: t("hasBasement"),
     hasGuardRoom: t("hasGuardRoom"),
     investmentType: t("investmentType"),
+    propertySubtype: "النوع",
     additionalDetails: t("additionalDetails"),
     previousActivity: t("previousActivity"),
     openingCount: t("openingCount"),
@@ -204,6 +212,14 @@ export default async function ListingDetailsPage({
     floorNumber: t("floorNumber"),
     buildingType: t("buildingType"),
     preferredTenant: t("preferredTenant"),
+  }
+  const sharedFieldLabels: Record<string, string> = {
+    city: t("city"),
+    district: t("district"),
+    neighborhood: t("neighborhood"),
+    address: t("address"),
+    primaryStreet: t("primaryStreet"),
+    secondaryStreet: t("secondaryStreet"),
   }
   const enumValues: Record<string, Record<string, string>> = {
     finish: {
@@ -222,10 +238,16 @@ export default async function ListingDetailsPage({
     },
   }
 
-  const detailFacts = Object.entries(propertyDetails ?? {}).flatMap(
-    ([key, value]) => {
+  const detailFacts = Object.entries(propertyDetails ?? {})
+    .flatMap(([key, value]) => {
       const label = detailLabels[key]
-      if (!label || value === null || value === undefined || value === "") {
+      if (
+        !label ||
+        !isPubliclyVisible(key) ||
+        value === null ||
+        value === undefined ||
+        value === ""
+      ) {
         return []
       }
       const displayValue =
@@ -234,35 +256,85 @@ export default async function ListingDetailsPage({
             ? t("yes")
             : t("no")
           : (enumValues[key]?.[String(value)] ?? String(value))
-      return [{ label, value: displayValue }]
-    }
-  )
+      return [
+        {
+          key,
+          label: publicFieldLabel(key, label),
+          value: displayValue,
+          order: fieldSettings[key]?.order ?? 999,
+        },
+      ]
+    })
+    .sort((left, right) => left.order - right.order)
 
-  const areaFacts = [
-    listing.lotAreaM2 !== null && {
-      label: t("landArea"),
+  const areaFacts: Array<{
+    key: string
+    label: string
+    value: string
+    order: number
+  }> = []
+  if (isPubliclyVisible("lotAreaM2") && listing.lotAreaM2 !== null) {
+    areaFacts.push({
+      key: "lotAreaM2",
+      label: publicFieldLabel("lotAreaM2", t("landArea")),
       value: `${listing.lotAreaM2} ${listingT("squareMeters")}`,
-    },
-    listing.buildingAreaM2 !== null && {
-      label: t("buildingArea"),
+      order: fieldSettings.lotAreaM2?.order ?? 999,
+    })
+  }
+  if (isPubliclyVisible("buildingAreaM2") && listing.buildingAreaM2 !== null) {
+    areaFacts.push({
+      key: "buildingAreaM2",
+      label: publicFieldLabel("buildingAreaM2", t("buildingArea")),
       value: `${listing.buildingAreaM2} ${listingT("squareMeters")}`,
-    },
-    listing.frontageM !== null && {
-      label: t("frontage"),
+      order: fieldSettings.buildingAreaM2?.order ?? 999,
+    })
+  }
+  if (isPubliclyVisible("frontageM") && listing.frontageM !== null) {
+    areaFacts.push({
+      key: "frontageM",
+      label: publicFieldLabel("frontageM", t("frontage")),
       value: `${listing.frontageM} ${listingT("meters")}`,
-    },
-    listing.depthM !== null && {
-      label: t("depth"),
+      order: fieldSettings.frontageM?.order ?? 999,
+    })
+  }
+  if (isPubliclyVisible("depthM") && listing.depthM !== null) {
+    areaFacts.push({
+      key: "depthM",
+      label: publicFieldLabel("depthM", t("depth")),
       value: `${listing.depthM} ${listingT("meters")}`,
-    },
-  ].filter((fact): fact is { label: string; value: string } => Boolean(fact))
+      order: fieldSettings.depthM?.order ?? 999,
+    })
+  }
+  areaFacts.sort((left, right) => left.order - right.order)
 
-  const facts = [...areaFacts, ...detailFacts]
+  const commonFacts = Object.entries(sharedFieldLabels)
+    .flatMap(([key, defaultLabel]) => {
+      if (!isPubliclyVisible(key)) return []
+      const value = listing[key as keyof typeof listing]
+      if (typeof value !== "string" || !value) return []
+      return [
+        {
+          key,
+          label: publicFieldLabel(key, defaultLabel),
+          value,
+          order: fieldSettings[key]?.order ?? 999,
+        },
+      ]
+    })
+    .sort((left, right) => left.order - right.order)
+  const facts = [...commonFacts, ...areaFacts, ...detailFacts].sort(
+    (left, right) => left.order - right.order
+  )
   const coordinates =
-    listing.latitude && listing.longitude
+    isPubliclyVisible("latitude") &&
+    isPubliclyVisible("longitude") &&
+    listing.latitude &&
+    listing.longitude
       ? `https://www.google.com/maps?q=${listing.latitude},${listing.longitude}`
       : null
-  const description = listing.description || listing.publicNotes
+  const description = isPubliclyVisible("description")
+    ? listing.description || listing.publicNotes
+    : listing.publicNotes
   const listingUrl = getSiteUrl(`/${locale}/listings/${listing.id}`)
   const listingStructuredData = {
     "@context": "https://schema.org",
@@ -308,9 +380,12 @@ export default async function ListingDetailsPage({
         name: listing.title,
         address: {
           "@type": "PostalAddress",
-          ...(listing.neighborhood && { streetAddress: listing.neighborhood }),
-          ...(listing.district && { addressRegion: listing.district }),
-          ...(listing.city && { addressLocality: listing.city }),
+          ...(isPubliclyVisible("neighborhood") &&
+            listing.neighborhood && { streetAddress: listing.neighborhood }),
+          ...(isPubliclyVisible("district") &&
+            listing.district && { addressRegion: listing.district }),
+          ...(isPubliclyVisible("city") &&
+            listing.city && { addressLocality: listing.city }),
         },
       },
     },
@@ -442,7 +517,7 @@ export default async function ListingDetailsPage({
               <dl className="grid gap-x-8 sm:grid-cols-2">
                 {facts.map((fact) => (
                   <div
-                    key={fact.label}
+                    key={fact.key}
                     className="flex items-start justify-between gap-4 border-b border-border py-4"
                   >
                     <dt className="text-sm text-muted-foreground">
@@ -543,6 +618,7 @@ export default async function ListingDetailsPage({
               <ListingCard
                 key={similarListing.id}
                 listing={similarListing}
+                fieldSettings={officeSettings.propertyFieldSettings ?? {}}
                 coverPhoto={similarPhotos[similarListing.id]?.[0]}
                 photos={similarPhotos[similarListing.id]}
                 propertyTypeLabel={

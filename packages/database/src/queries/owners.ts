@@ -39,6 +39,13 @@ export async function listOwners(
     .select({
       id: schema.owners.id,
       name: schema.owners.name,
+      offerTypes: schema.owners.offerTypes,
+      buildingType: schema.owners.buildingType,
+      city: schema.owners.city,
+      district: schema.owners.district,
+      neighborhood: schema.owners.neighborhood,
+      street: schema.owners.street,
+      contactViaOffice: schema.owners.contactViaOffice,
       notes: schema.owners.notes,
       createdById: schema.owners.createdById,
       createdAt: schema.owners.createdAt,
@@ -122,7 +129,19 @@ export async function createOwner(
 export async function updateOwner(
   id: string,
   values: Partial<
-    Pick<typeof schema.owners.$inferInsert, "name" | "notes" | "archivedAt">
+    Pick<
+      typeof schema.owners.$inferInsert,
+      | "name"
+      | "offerTypes"
+      | "buildingType"
+      | "city"
+      | "district"
+      | "neighborhood"
+      | "street"
+      | "contactViaOffice"
+      | "notes"
+      | "archivedAt"
+    >
   >,
   actor: { id: string; name?: string | null; email?: string | null },
   database: DatabaseOrTransaction = getDatabase()

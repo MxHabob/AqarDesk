@@ -1,6 +1,6 @@
 "use client"
 
-import type { PropertyType } from "@aqardesk/categories"
+import type { PropertyFieldSetting, PropertyType } from "@aqardesk/categories"
 import { ArrowUpLeft, ArrowUpRight } from "lucide-react"
 import Link from "next/link"
 import { ListingCard } from "@/components/marketing/listing-card"
@@ -26,8 +26,10 @@ export type HomepageListing = {
 
 export function FeaturedListingsSection({
   listings,
+  fieldSettings,
 }: {
   listings: HomepageListing[]
+  fieldSettings?: Record<string, Record<string, PropertyFieldSetting>>
 }) {
   const t = useScopedI18n("site")
   const tListings = useScopedI18n("publicListings")
@@ -96,6 +98,7 @@ export function FeaturedListingsSection({
                 key={listing.id}
                 labels={labels}
                 listing={listing}
+                fieldSettings={fieldSettings}
                 locale={locale}
                 propertyTypeLabel={listing.propertyTypeLabel}
               />

@@ -36,6 +36,9 @@ export async function SettingsNavigation() {
     ...(permissions["office_settings.read"]
       ? [{ path: "/dashboard/settings", label: settings("general") }]
       : []),
+    ...(permissions["office_settings.manage"]
+      ? [{ path: "/dashboard/settings/fields", label: "حقول العقارات" }]
+      : []),
     ...(permissions["teams.read"] || permissions["teams.manage"]
       ? [{ path: "/dashboard/settings/members", label: settings("members") }]
       : []),

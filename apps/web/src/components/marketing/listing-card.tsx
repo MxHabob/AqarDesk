@@ -1,4 +1,4 @@
-import type { PropertyType } from "@aqardesk/categories"
+import type { PropertyFieldSetting, PropertyType } from "@aqardesk/categories"
 import {
   Accordion,
   AccordionContent,
@@ -70,6 +70,7 @@ type ListingCardProps = {
   propertyTypeLabel: string
   locale: string
   labels: ListingCardLabels
+  fieldSettings?: Record<string, Record<string, PropertyFieldSetting>>
 }
 
 export function ListingCard({
@@ -80,7 +81,13 @@ export function ListingCard({
   propertyTypeLabel,
   locale,
   labels,
+  fieldSettings,
 }: ListingCardProps) {
+  const settings = fieldSettings?.[listing.propertyType] ?? {}
+  const isPubliclyVisible = (key: string) =>
+    settings[key]?.visiblePublicly !== false
+  const fieldLabel = (key: string, defaultLabel: string) =>
+    settings[key]?.label || defaultLabel
   const price =
     listing.type === "sale" ? listing.salePrice : listing.monthlyRent
   const formattedPrice =
@@ -92,9 +99,10 @@ export function ListingCard({
           Number(price)
         )} ${listing.currencyCode}${listing.type === "rent" ? ` / ${labels.perMonth}` : ""}`
   const location = new Intl.ListFormat(locale).format(
-    [listing.city, listing.district].filter((value): value is string =>
-      Boolean(value)
-    )
+    [
+      isPubliclyVisible("city") ? listing.city : null,
+      isPubliclyVisible("district") ? listing.district : null,
+    ].filter((value): value is string => Boolean(value))
   )
   const detailsHref = returnTo
     ? `/listings/${listing.id}?returnTo=${encodeURIComponent(returnTo)}`
@@ -157,19 +165,22 @@ export function ListingCard({
                 ) : (
                   <span>{labels.locationUnavailable}</span>
                 )}
-                {listing.lotAreaM2 !== null && (
-                  <span className="inline-flex items-center gap-1.5">
-                    <Ruler aria-hidden className="size-3.5 shrink-0" />
-                    {labels.landArea}: {listing.lotAreaM2} {labels.squareMeters}
-                  </span>
-                )}
-                {listing.buildingAreaM2 !== null && (
-                  <span className="inline-flex items-center gap-1.5">
-                    <Ruler aria-hidden className="size-3.5 shrink-0" />
-                    {labels.buildingArea}: {listing.buildingAreaM2}{" "}
-                    {labels.squareMeters}
-                  </span>
-                )}
+                {isPubliclyVisible("lotAreaM2") &&
+                  listing.lotAreaM2 !== null && (
+                    <span className="inline-flex items-center gap-1.5">
+                      <Ruler aria-hidden className="size-3.5 shrink-0" />
+                      {fieldLabel("lotAreaM2", labels.landArea)}:{" "}
+                      {listing.lotAreaM2} {labels.squareMeters}
+                    </span>
+                  )}
+                {isPubliclyVisible("buildingAreaM2") &&
+                  listing.buildingAreaM2 !== null && (
+                    <span className="inline-flex items-center gap-1.5">
+                      <Ruler aria-hidden className="size-3.5 shrink-0" />
+                      {fieldLabel("buildingAreaM2", labels.buildingArea)}:{" "}
+                      {listing.buildingAreaM2} {labels.squareMeters}
+                    </span>
+                  )}
               </span>
             </span>
           </SheetTrigger>
@@ -247,22 +258,26 @@ export function ListingCard({
                       {location || labels.locationUnavailable}
                     </dd>
                   </div>
-                  {listing.lotAreaM2 !== null && (
-                    <div className="flex items-center justify-between gap-4 py-3">
-                      <dt>{labels.landArea}</dt>
-                      <dd className="text-end font-medium text-foreground">
-                        {listing.lotAreaM2} {labels.squareMeters}
-                      </dd>
-                    </div>
-                  )}
-                  {listing.buildingAreaM2 !== null && (
-                    <div className="flex items-center justify-between gap-4 py-3">
-                      <dt>{labels.buildingArea}</dt>
-                      <dd className="text-end font-medium text-foreground">
-                        {listing.buildingAreaM2} {labels.squareMeters}
-                      </dd>
-                    </div>
-                  )}
+                  {isPubliclyVisible("lotAreaM2") &&
+                    listing.lotAreaM2 !== null && (
+                      <div className="flex items-center justify-between gap-4 py-3">
+                        <dt>{fieldLabel("lotAreaM2", labels.landArea)}</dt>
+                        <dd className="text-end font-medium text-foreground">
+                          {listing.lotAreaM2} {labels.squareMeters}
+                        </dd>
+                      </div>
+                    )}
+                  {isPubliclyVisible("buildingAreaM2") &&
+                    listing.buildingAreaM2 !== null && (
+                      <div className="flex items-center justify-between gap-4 py-3">
+                        <dt>
+                          {fieldLabel("buildingAreaM2", labels.buildingArea)}
+                        </dt>
+                        <dd className="text-end font-medium text-foreground">
+                          {listing.buildingAreaM2} {labels.squareMeters}
+                        </dd>
+                      </div>
+                    )}
                 </dl>
               </AccordionContent>
             </AccordionItem>

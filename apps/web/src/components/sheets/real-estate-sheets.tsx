@@ -16,6 +16,7 @@ import {
   getListingFormData,
   getOwnerFormData,
   getPropertyDefaultCountryCode,
+  getPropertyFieldSettingsAction,
   getPropertyFormData,
   getPropertyOptions,
   getPropertyOwnerOptions,
@@ -195,14 +196,25 @@ export function PropertySheet() {
     enabled: isOpen && Boolean(createProperty),
     staleTime: 30_000,
   })
+  const fieldSettingsQuery = useQuery({
+    queryKey: ["real-estate-sheet", "property-field-settings"],
+    queryFn: getPropertyFieldSettingsAction,
+    enabled: isOpen,
+    staleTime: 5 * 60_000,
+  })
   const data = propertyQuery.data
   const owners = ownersQuery.data ?? []
-  const error = propertyQuery.error ?? ownersQuery.error ?? countryQuery.error
+  const error =
+    propertyQuery.error ??
+    ownersQuery.error ??
+    countryQuery.error ??
+    fieldSettingsQuery.error
   const isFormLoading =
     isOpen &&
     ((Boolean(propertyId) && propertyQuery.isLoading) ||
       (Boolean(createProperty) && countryQuery.isLoading) ||
-      ownersQuery.isLoading)
+      ownersQuery.isLoading ||
+      fieldSettingsQuery.isLoading)
 
   const close = () =>
     setParams({ createProperty: null, propertyId: null, propertyMode: null })
@@ -258,6 +270,7 @@ export function PropertySheet() {
               key={data?.property.id ?? "new-property"}
               data={data ?? undefined}
               ownerOptions={owners}
+              fieldSettings={fieldSettingsQuery.data}
               defaultCountryCode={countryQuery.data ?? "SA"}
               readOnly={readOnly}
               onSaved={handleSaved}

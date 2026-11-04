@@ -1,5 +1,10 @@
 "use client"
 
+import {
+  type ListingType,
+  listingTypesByPropertyType,
+  type PropertyType,
+} from "@aqardesk/categories"
 import { useRouter } from "next/navigation"
 import { useActionState, useEffect, useRef, useState } from "react"
 import type { getListingFormData } from "@/actions/real-estate"
@@ -14,9 +19,17 @@ type ListingData = NonNullable<Awaited<ReturnType<typeof getListingFormData>>>
 type PropertyOption = {
   id: string
   title: string
-  type: string
+  type: PropertyType
   city: string | null
   district: string | null
+}
+
+function getAllowedListingTypes(
+  properties: PropertyOption[],
+  propertyId: string
+): readonly ListingType[] {
+  const property = properties.find((option) => option.id === propertyId)
+  return property ? listingTypesByPropertyType[property.type] : ["sale", "rent"]
 }
 
 const listingStatusOptions = {
@@ -57,11 +70,12 @@ export function ListingForm({
 }) {
   const router = useRouter()
   const [state, formAction, isPending] = useActionState(saveListingAction, {})
-  const [listingType, setListingType] = useState(data?.listing.type ?? "sale")
-  const handledSavedId = useRef<string | null>(null)
   const joined = data
   const propertyId = joined?.listing.propertyId ?? joined?.property.id
   const isEditing = Boolean(joined?.listing.id)
+  const [listingType, setListingType] = useState(data?.listing.type ?? "sale")
+  const [selectedPropertyId, setSelectedPropertyId] = useState(propertyId ?? "")
+  const handledSavedId = useRef<string | null>(null)
 
   useEffect(() => {
     if (state.saved && state.id && handledSavedId.current !== state.id) {
@@ -110,6 +124,19 @@ export function ListingForm({
                 label: `${property.title} — ${property.city ?? ""} ${property.district ?? ""}`,
               })),
             ]}
+            onChange={(value) => {
+              setSelectedPropertyId(value)
+              const selectedProperty = properties.find(
+                (property) => property.id === value
+              )
+              if (!selectedProperty) return
+              const allowedTypes =
+                listingTypesByPropertyType[selectedProperty.type]
+              const nextType = allowedTypes[0]
+              if (!allowedTypes.includes(listingType) && nextType) {
+                setListingType(nextType)
+              }
+            }}
             disabled={readOnly || isEditing}
             required
           />
@@ -124,10 +151,12 @@ export function ListingForm({
                 setListingType(value)
               }
             }}
-            options={[
-              { value: "sale", label: "بيع" },
-              { value: "rent", label: "إيجار" },
-            ]}
+            options={getAllowedListingTypes(properties, selectedPropertyId).map(
+              (type) => ({
+                value: type,
+                label: type === "sale" ? "بيع" : "إيجار",
+              })
+            )}
             required
           />
           {!createAsDraft && (

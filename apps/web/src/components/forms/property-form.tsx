@@ -1,5 +1,6 @@
 "use client"
 
+import type { PropertyFieldSetting, PropertyType } from "@aqardesk/categories"
 import { propertyCategories } from "@aqardesk/categories"
 import {
   Select,
@@ -91,6 +92,7 @@ const detailsFields: Record<
       options: yesNoOptions,
     },
     { name: "deedIssuer", label: "جهة إصدار الصك" },
+    { name: "additionalDetails", label: "تفاصيل إضافية", type: "textarea" },
   ],
   investment: [
     { name: "investmentType", label: "نوع الاستثمار" },
@@ -104,6 +106,7 @@ const detailsFields: Record<
     { name: "additionalDetails", label: "تفاصيل إضافية", type: "textarea" },
   ],
   commercial: [
+    { name: "propertySubtype", label: "النوع" },
     { name: "previousActivity", label: "النشاط السابق" },
     { name: "openingCount", label: "عدد الفتحات", type: "number" },
     { name: "toiletCount", label: "عدد دورات المياه", type: "number" },
@@ -117,11 +120,13 @@ const detailsFields: Record<
     { name: "additionalDetails", label: "تفاصيل إضافية", type: "textarea" },
   ],
   warehouse: [
+    { name: "propertySubtype", label: "النوع" },
     { name: "openingCount", label: "عدد الفتحات", type: "number" },
     { name: "toiletCount", label: "عدد دورات المياه", type: "number" },
     { name: "additionalDetails", label: "تفاصيل إضافية", type: "textarea" },
   ],
   yard: [
+    { name: "propertySubtype", label: "النوع" },
     { name: "requestedActivity", label: "النشاط المطلوب" },
     { name: "hasFence", label: "مسوّر", type: "select", options: yesNoOptions },
     { name: "hasRoof", label: "مغطى", type: "select", options: yesNoOptions },
@@ -180,15 +185,39 @@ function getDetailValue(details: object | undefined, name: string) {
   return ""
 }
 
+const commonFields = [
+  { name: "description", label: "الوصف", type: "textarea" as const },
+  { name: "city", label: "المدينة" },
+  { name: "district", label: "الحي" },
+  { name: "neighborhood", label: "الجوار" },
+  { name: "address", label: "الموقع / العنوان" },
+  { name: "primaryStreet", label: "الشارع الرئيسي" },
+  { name: "secondaryStreet", label: "الشارع الآخر" },
+  { name: "lotAreaM2", label: "مساحة الأرض (م²)", type: "number" as const },
+  {
+    name: "buildingAreaM2",
+    label: "مساحة المبنى (م²)",
+    type: "number" as const,
+  },
+  { name: "frontageM", label: "واجهة الأرض (م)", type: "number" as const },
+  { name: "depthM", label: "عمق الأرض (م)", type: "number" as const },
+  { name: "latitude", label: "خط العرض", type: "number" as const },
+  { name: "longitude", label: "خط الطول", type: "number" as const },
+]
+
 export function PropertyForm({
   data,
   defaultCountryCode = "SA",
+  fieldSettings = {},
   ownerOptions = [],
   readOnly = false,
   onSaved,
 }: {
   data?: PropertyData
   defaultCountryCode?: string
+  fieldSettings?: Partial<
+    Record<PropertyType, Record<string, PropertyFieldSetting>>
+  >
   ownerOptions?: Awaited<ReturnType<typeof getPropertyOwnerOptions>>
   readOnly?: boolean
   onSaved?: () => void
@@ -200,6 +229,19 @@ export function PropertyForm({
   )
   const isEditing = Boolean(data?.property.id)
   const details = data?.details ?? undefined
+  const settingsForType = fieldSettings[propertyType] ?? {}
+  const isVisibleInForm = (key: string) =>
+    settingsForType[key]?.visibleInForm !== false
+  const fieldLabel = (key: string, defaultLabel: string) =>
+    settingsForType[key]?.label || defaultLabel
+  const configuredFields = [
+    ...commonFields,
+    ...(detailsFields[propertyType] ?? []),
+  ].sort(
+    (left, right) =>
+      (settingsForType[left.name]?.order ?? 999) -
+      (settingsForType[right.name]?.order ?? 999)
+  )
 
   useEffect(() => {
     if (state.saved) {
@@ -247,7 +289,7 @@ export function PropertyForm({
             required
           />
           <RealEstateField
-            label="اسم العقار"
+            label={fieldLabel("title", "اسم العقار")}
             name="title"
             defaultValue={data?.property.title}
             required
@@ -255,106 +297,68 @@ export function PropertyForm({
             placeholder="مثال: فيلا في حي..."
           />
         </div>
-        <RealEstateField
-          label="الوصف"
-          name="description"
-          type="textarea"
-          defaultValue={data?.property.description}
-          disabled={readOnly}
-        />
+        <h3 className="border-b pb-2 text-sm font-medium">مواصفات العقار</h3>
         <div className="grid gap-4 sm:grid-cols-2">
-          <RealEstateField
-            label="المدينة"
-            name="city"
-            defaultValue={data?.property.city}
-            disabled={readOnly}
-          />
-          <RealEstateField
-            label="الحي"
-            name="district"
-            defaultValue={data?.property.district}
-            disabled={readOnly}
-          />
-          <RealEstateField
-            label="المنطقة / الحي الفرعي"
-            name="neighborhood"
-            defaultValue={data?.property.neighborhood}
-            disabled={readOnly}
-          />
-          <RealEstateField
-            label="العنوان"
-            name="address"
-            defaultValue={data?.property.address}
-            disabled={readOnly}
-          />
-          <RealEstateField
-            label="الشارع الرئيسي"
-            name="primaryStreet"
-            defaultValue={data?.property.primaryStreet}
-            disabled={readOnly}
-          />
-          <RealEstateField
-            label="الشارع الفرعي"
-            name="secondaryStreet"
-            defaultValue={data?.property.secondaryStreet}
-            disabled={readOnly}
-          />
-          <RealEstateField
-            label="مساحة الأرض (م²)"
-            name="lotAreaM2"
-            type="number"
-            min={0}
-            step={0.01}
-            defaultValue={data?.property.lotAreaM2}
-            disabled={readOnly}
-          />
-          <RealEstateField
-            label="مساحة البناء (م²)"
-            name="buildingAreaM2"
-            type="number"
-            min={0}
-            step={0.01}
-            defaultValue={data?.property.buildingAreaM2}
-            disabled={readOnly}
-          />
-          <RealEstateField
-            label="الواجهة (م)"
-            name="frontageM"
-            type="number"
-            min={0}
-            step={0.01}
-            defaultValue={data?.property.frontageM}
-            disabled={readOnly}
-          />
-          <RealEstateField
-            label="العمق (م)"
-            name="depthM"
-            type="number"
-            min={0}
-            step={0.01}
-            defaultValue={data?.property.depthM}
-            disabled={readOnly}
-          />
-          <RealEstateField
-            label="خط العرض"
-            name="latitude"
-            type="number"
-            min={-90}
-            max={90}
-            step={0.000001}
-            defaultValue={data?.property.latitude}
-            disabled={readOnly}
-          />
-          <RealEstateField
-            label="خط الطول"
-            name="longitude"
-            type="number"
-            min={-180}
-            max={180}
-            step={0.000001}
-            defaultValue={data?.property.longitude}
-            disabled={readOnly}
-          />
+          {configuredFields.map((field) => {
+            const isCommonField = commonFields.some(
+              (commonField) => commonField.name === field.name
+            )
+            const rawValue = isCommonField
+              ? data?.property[field.name as keyof typeof data.property]
+              : getDetailValue(details, field.name)
+            if (!isVisibleInForm(field.name)) {
+              return rawValue === null ||
+                rawValue === undefined ||
+                rawValue === "" ? null : (
+                <input
+                  key={field.name}
+                  type="hidden"
+                  name={field.name}
+                  value={String(rawValue)}
+                />
+              )
+            }
+
+            const value =
+              typeof rawValue === "string" || typeof rawValue === "number"
+                ? rawValue
+                : ""
+            return (
+              <RealEstateField
+                key={field.name}
+                {...field}
+                label={fieldLabel(field.name, field.label)}
+                defaultValue={value}
+                disabled={readOnly}
+                min={
+                  field.name === "latitude"
+                    ? -90
+                    : field.name === "longitude"
+                      ? -180
+                      : field.type === "number"
+                        ? 0
+                        : undefined
+                }
+                max={
+                  field.name === "latitude"
+                    ? 90
+                    : field.name === "longitude"
+                      ? 180
+                      : undefined
+                }
+                step={
+                  field.name === "latitude" || field.name === "longitude"
+                    ? 0.000001
+                    : field.type === "number"
+                      ? isCommonField
+                        ? 0.01
+                        : 1
+                      : undefined
+                }
+                required={settingsForType[field.name]?.required}
+              />
+            )
+          })}
         </div>
 
         <div className="flex flex-col gap-2 text-sm font-medium">
@@ -386,20 +390,6 @@ export function PropertyForm({
           <span className="text-xs font-normal text-muted-foreground">
             يمكن اختيار أكثر من مالك. أضف المالك أولًا من صفحة الملاك.
           </span>
-        </div>
-
-        <h3 className="border-b pb-2 text-sm font-medium">مواصفات العقار</h3>
-        <div className="grid gap-4 sm:grid-cols-2">
-          {(detailsFields[propertyType] ?? []).map((field) => (
-            <RealEstateField
-              key={field.name}
-              {...field}
-              defaultValue={getDetailValue(details, field.name)}
-              disabled={readOnly}
-              min={field.type === "number" ? 0 : undefined}
-              step={field.type === "number" ? 1 : undefined}
-            />
-          ))}
         </div>
         {state.error && <RealEstateFormError message={state.error} />}
       </div>

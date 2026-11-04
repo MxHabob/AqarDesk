@@ -29,6 +29,21 @@ export const officeSettings = pgTable(
     postalCode: text("postal_code"),
     countryCode: text("country_code").notNull().default("SA"),
     defaultCurrency: text("default_currency").notNull().default("SAR"),
+    propertyFieldSettings: jsonb("property_field_settings").$type<
+      Record<
+        string,
+        Record<
+          string,
+          {
+            visibleInForm?: boolean
+            visiblePublicly?: boolean
+            required?: boolean
+            label?: string
+            order?: number
+          }
+        >
+      >
+    >(),
     timezone: text("timezone").notNull().default("Asia/Riyadh"),
     fiscalYearStartMonth: integer("fiscal_year_start_month")
       .notNull()

@@ -1,4 +1,5 @@
 import { propertyCategories } from "@aqardesk/categories"
+import { getOfficeSettings } from "@aqardesk/database/queries"
 import {
   Select,
   SelectContent,
@@ -53,6 +54,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
     getScopedI18n("publicListings"),
     getI18n(),
   ])
+  const officeSettings = await getOfficeSettings()
   const filters = loadPublicListingSearchParams(rawSearchParams)
   const hasActiveFilters = Boolean(
     filters.q.trim() ||
@@ -335,6 +337,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
                     <ListingCard
                       key={listing.id}
                       listing={listing}
+                      fieldSettings={officeSettings.propertyFieldSettings ?? {}}
                       returnTo={pageHref(
                         filters.page,
                         `#listing-${listing.id}`

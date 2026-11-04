@@ -72,6 +72,13 @@ export function OwnersTable({
     () =>
       getOwnersColumns(setParams, locale, {
         owner: t("realEstateTables.owner"),
+        offers: t("realEstateTables.offers"),
+        location: t("realEstateTables.location"),
+        officeContact: t("realEstateTables.officeContact"),
+        sale: t("realEstateTables.sale"),
+        rent: t("realEstateTables.rent"),
+        viaOffice: t("realEstateTables.viaOffice"),
+        directContact: t("realEstateTables.directContact"),
         notes: t("realEstateTables.notes"),
         dateAdded: t("realEstateTables.dateAdded"),
         actions: t("realEstateTables.actions"),
