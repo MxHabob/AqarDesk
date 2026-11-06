@@ -15,7 +15,7 @@ export const users = pgTable("user", {
   emailVerified: boolean("email_verified").notNull().default(false),
   listingEmailNotifications: boolean("listing_email_notifications")
     .notNull()
-    .default(false),
+    .default(true),
   listingEmailNotificationsUpdatedAt: timestamp(
     "listing_email_notifications_updated_at",
     { withTimezone: true }
