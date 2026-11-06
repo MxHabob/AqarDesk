@@ -10,19 +10,22 @@ import {
   Text,
 } from "@react-email/components"
 import type { ReactNode } from "react"
+import { emailDesignTokens } from "../design-tokens"
 
 export interface EmailLayoutProps {
+  locale?: "ar" | "en"
   preview: string
   recipientName: string
   heading: string
   description: string
-  actionLabel: string
-  actionUrl: string
+  actionLabel?: string
+  actionUrl?: string
   officeName: string
   children?: ReactNode
 }
 
 export function EmailLayout({
+  locale = "ar",
   preview,
   recipientName,
   heading,
@@ -32,44 +35,88 @@ export function EmailLayout({
   officeName,
   children,
 }: EmailLayoutProps) {
+  const isArabic = locale === "ar"
   return (
-    <Html lang="ar" dir="rtl">
+    <Html lang={locale} dir={isArabic ? "rtl" : "ltr"}>
       <Head />
       <Preview>{preview}</Preview>
       <Body
-        style={{ backgroundColor: "#f6f7f8", fontFamily: "Arial, sans-serif" }}
+        style={{
+          backgroundColor: emailDesignTokens.color.surface,
+          color: emailDesignTokens.color.foreground,
+          fontFamily: "Arial, sans-serif",
+          padding: "20px 12px",
+        }}
       >
         <Container
           style={{
-            backgroundColor: "#ffffff",
-            borderRadius: "12px",
-            margin: "32px auto",
+            backgroundColor: emailDesignTokens.color.background,
+            border: emailDesignTokens.border,
+            borderRadius: emailDesignTokens.radius.card,
+            margin: "0 auto",
             maxWidth: "560px",
-            padding: "32px",
+            padding: "28px",
           }}
         >
           <Section>
-            <Text>مرحبًا {recipientName}،</Text>
-            <Heading style={{ fontSize: "22px" }}>{heading}</Heading>
-            <Text>{description}</Text>
-            {children}
-            <Button
-              href={actionUrl}
+            <Text
               style={{
-                backgroundColor: "#111111",
-                borderRadius: "8px",
-                color: "#ffffff",
-                display: "inline-block",
-                padding: "12px 20px",
-                textDecoration: "none",
+                color: emailDesignTokens.color.foreground,
+                fontSize: "15px",
+                fontWeight: 700,
+                margin: "0 0 24px",
               }}
             >
-              {actionLabel}
-            </Button>
-            <Text>
-              مع التحية،
-              <br />
               {officeName}
+            </Text>
+            <Text>
+              {isArabic ? `مرحبًا ${recipientName}،` : `Hello ${recipientName},`}
+            </Text>
+            <Heading
+              style={{
+                color: emailDesignTokens.color.foreground,
+                fontSize: "22px",
+              }}
+            >
+              {heading}
+            </Heading>
+            <Text
+              style={{
+                color: emailDesignTokens.color.mutedForeground,
+                lineHeight: "1.7",
+              }}
+            >
+              {description}
+            </Text>
+            {children}
+            {actionLabel && actionUrl && (
+              <Button
+                href={actionUrl}
+                style={{
+                  backgroundColor: emailDesignTokens.color.primary,
+                  border: emailDesignTokens.border,
+                  borderRadius: emailDesignTokens.radius.control,
+                  color: emailDesignTokens.color.primaryForeground,
+                  display: "inline-block",
+                  fontWeight: 700,
+                  padding: "12px 20px",
+                  textDecoration: "none",
+                }}
+              >
+                {actionLabel}
+              </Button>
+            )}
+            <Text
+              style={{
+                borderTop: emailDesignTokens.border,
+                color: emailDesignTokens.color.mutedForeground,
+                marginTop: "28px",
+                paddingTop: "20px",
+              }}
+            >
+              {isArabic ? "مع التحية،" : "Regards,"}
+              <br />
+              AqarDesk
             </Text>
           </Section>
         </Container>

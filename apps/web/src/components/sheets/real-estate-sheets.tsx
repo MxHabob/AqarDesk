@@ -448,6 +448,7 @@ export function ListingSheet() {
               showSubmitButton={false}
               onPendingChange={setIsSaving}
               createAsDraft={isCreateWorkflow && !workflowListingId}
+              showListingNotificationsOption={isReviewStep}
             />
             {listingId && data?.listing.id && (
               <ListingMediaForm

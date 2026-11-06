@@ -1,0 +1,66 @@
+import { Heading, Text } from "@react-email/components"
+import { EmailLayout } from "../components/email-layout"
+import { emailDesignTokens } from "../design-tokens"
+import { renderEmail } from "../render"
+
+export async function createSignInCodeEmail(input: {
+  to: string
+  code: string
+  locale: "ar" | "en"
+  expiresInMinutes: number
+  officeName?: string
+}) {
+  const arabic = input.locale === "ar"
+  const subject = arabic
+    ? "رمز تسجيل الدخول إلى عقار دِسك"
+    : "Your AqarDesk sign-in code"
+  const preview = arabic
+    ? `رمز التحقق صالح لمدة ${input.expiresInMinutes} دقائق`
+    : `Your verification code expires in ${input.expiresInMinutes} minutes`
+  const heading = arabic ? "رمز تسجيل الدخول" : "Your sign-in code"
+  const description = arabic
+    ? `استخدم الرمز أدناه لإكمال تسجيل الدخول. تنتهي صلاحيته خلال ${input.expiresInMinutes} دقائق. إذا لم تطلبه، فتجاهل هذه الرسالة.`
+    : `Use the code below to finish signing in. It expires in ${input.expiresInMinutes} minutes. If you did not request it, you can ignore this email.`
+  const html = await renderEmail(
+    <EmailLayout
+      locale={input.locale}
+      preview={preview}
+      recipientName={arabic ? "بك" : "there"}
+      heading={heading}
+      description={description}
+      officeName={input.officeName ?? "AqarDesk"}
+    >
+      <Heading
+        style={{
+          backgroundColor: emailDesignTokens.color.surface,
+          border: emailDesignTokens.border,
+          borderRadius: emailDesignTokens.radius.card,
+          color: emailDesignTokens.color.foreground,
+          fontSize: "28px",
+          letterSpacing: "8px",
+          padding: "18px",
+          textAlign: "center",
+        }}
+      >
+        {input.code}
+      </Heading>
+      <Text
+        style={{
+          color: emailDesignTokens.color.mutedForeground,
+          fontSize: "12px",
+        }}
+      >
+        {arabic
+          ? "لا تشارك هذا الرمز مع أي شخص."
+          : "Never share this code with anyone."}
+      </Text>
+    </EmailLayout>
+  )
+
+  return {
+    to: input.to,
+    subject,
+    html,
+    text: `${heading}\n\n${description}\n\n${input.code}\n\n${arabic ? "لا تشارك هذا الرمز مع أي شخص." : "Never share this code with anyone."}\n\n${arabic ? "مع التحية،" : "Regards,"}\n${input.officeName ?? "AqarDesk"}`,
+  }
+}

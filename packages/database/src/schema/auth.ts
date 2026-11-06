@@ -13,6 +13,13 @@ export const users = pgTable("user", {
   name: text("name").notNull(),
   email: text("email").notNull().unique(),
   emailVerified: boolean("email_verified").notNull().default(false),
+  listingEmailNotifications: boolean("listing_email_notifications")
+    .notNull()
+    .default(false),
+  listingEmailNotificationsUpdatedAt: timestamp(
+    "listing_email_notifications_updated_at",
+    { withTimezone: true }
+  ),
   image: text("image"),
   twoFactorEnabled: boolean("two_factor_enabled").notNull().default(false),
   locale: text("locale").notNull().default("ar"),

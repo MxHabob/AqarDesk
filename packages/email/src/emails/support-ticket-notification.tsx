@@ -1,13 +1,5 @@
-import {
-  Body,
-  Container,
-  Head,
-  Heading,
-  Html,
-  Preview,
-  Section,
-  Text,
-} from "@react-email/components"
+import { Section, Text } from "@react-email/components"
+import { EmailLayout } from "../components/email-layout"
 import { renderEmail } from "../render"
 
 export interface SupportTicketNotificationInput {
@@ -37,51 +29,35 @@ export async function createSupportTicketNotificationEmail(
     ...(input.sourceUrl ? ["", `Page: ${input.sourceUrl}`] : []),
   ].join("\n")
   const html = await renderEmail(
-    <Html lang="en">
-      <Head />
-      <Preview>{preview}</Preview>
-      <Body
-        style={{
-          backgroundColor: "#f6f7f8",
-          fontFamily: "Arial, sans-serif",
-          padding: "24px 12px",
-        }}
-      >
-        <Container
-          style={{
-            backgroundColor: "#ffffff",
-            border: "1px solid #e5e7eb",
-            margin: "0 auto",
-            maxWidth: "600px",
-            padding: "28px",
-          }}
-        >
-          <Heading style={{ fontSize: "20px", margin: "0 0 20px" }}>
-            New AqarDesk support request
-          </Heading>
-          <Section>
-            <Text>
-              <strong>From:</strong> {input.fullName} ({input.email})
-            </Text>
-            <Text>
-              <strong>Type:</strong> {input.type}
-            </Text>
-            <Text>
-              <strong>Priority:</strong> {input.priority}
-            </Text>
-            <Text>
-              <strong>Subject:</strong> {input.subject}
-            </Text>
-            <Text style={{ whiteSpace: "pre-wrap" }}>{input.message}</Text>
-            {input.sourceUrl && (
-              <Text>
-                <strong>Page:</strong> {input.sourceUrl}
-              </Text>
-            )}
-          </Section>
-        </Container>
-      </Body>
-    </Html>
+    <EmailLayout
+      locale="en"
+      preview={preview}
+      recipientName="support team"
+      heading="New support request"
+      description="A new AqarDesk support request was received."
+      officeName="AqarDesk"
+    >
+      <Section>
+        <Text>
+          <strong>From:</strong> {input.fullName} ({input.email})
+        </Text>
+        <Text>
+          <strong>Type:</strong> {input.type}
+        </Text>
+        <Text>
+          <strong>Priority:</strong> {input.priority}
+        </Text>
+        <Text>
+          <strong>Subject:</strong> {input.subject}
+        </Text>
+        <Text style={{ whiteSpace: "pre-wrap" }}>{input.message}</Text>
+        {input.sourceUrl && (
+          <Text>
+            <strong>Page:</strong> {input.sourceUrl}
+          </Text>
+        )}
+      </Section>
+    </EmailLayout>
   )
 
   return {

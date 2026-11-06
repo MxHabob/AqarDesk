@@ -19,6 +19,7 @@ export function validateActionUrl(value: string) {
 
 export async function createActionEmail({
   to,
+  locale = "ar",
   recipientName,
   officeName,
   subject,
@@ -31,6 +32,7 @@ export async function createActionEmail({
   text,
 }: {
   to: string
+  locale?: "ar" | "en"
   recipientName: string
   officeName: string
   subject: string
@@ -45,6 +47,7 @@ export async function createActionEmail({
   const safeActionUrl = validateActionUrl(actionUrl)
   const html = await renderEmail(
     <EmailLayout
+      locale={locale}
       preview={preview}
       recipientName={recipientName}
       heading={heading}

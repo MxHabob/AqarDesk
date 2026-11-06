@@ -47,8 +47,19 @@ after checking the user's permission to access that listing.
   separate listing type.
 - `@aqardesk/utils` formats numbers and currencies by locale and formats dates
   with date-fns and its Arabic locale.
-- `@aqardesk/email` contains provider-neutral Arabic RTL templates; an email
-  provider is not configured yet.
+- `@aqardesk/email` contains shared Arabic/English templates and the Resend
+  delivery adapter. The web app stores outbound mail in PostgreSQL and sends
+  it through a bounded outbox worker.
+
+Configure `RESEND_API_KEY`, a verified `EMAIL_FROM` sender, and `CRON_SECRET`.
+Use a random `CRON_SECRET` of at least 32 characters. Schedule regular POST
+requests to `/api/cron/email-outbox` with the
+`Authorization: Bearer <CRON_SECRET>` header. Listing emails are sent only to
+verified users who opted in; their preference is editable in account settings
+and each message supports one-click unsubscribe. The listing save flow only
+queues a campaign; background processing expands recipients and sends in
+batches, keeping email delivery off the dashboard request path. Essential
+account messages are not affected by marketing preferences.
 
 ## Code quality
 

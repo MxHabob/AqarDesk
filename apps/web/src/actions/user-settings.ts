@@ -19,6 +19,7 @@ const userSettingsSchema = z
       .optional(),
     timeFormat: z.union([z.literal(12), z.literal(24)]).optional(),
     weekStartsOnMonday: z.boolean().optional(),
+    listingEmailNotifications: z.boolean().optional(),
     email: z.email().optional(),
   })
   .strict()
@@ -33,6 +34,7 @@ export async function getCurrentUserSettingsAction() {
     id: user.id,
     fullName: user.name,
     email: user.email,
+    emailVerified: user.emailVerified,
     avatarUrl: user.image,
     locale: user.locale,
     timezone: user.timezone,
@@ -40,6 +42,7 @@ export async function getCurrentUserSettingsAction() {
     dateFormat: user.dateFormat,
     timeFormat: user.timeFormat,
     weekStartsOnMonday: user.weekStartsOnMonday,
+    listingEmailNotifications: user.listingEmailNotifications,
   }
 }
 
@@ -58,6 +61,9 @@ export async function updateCurrentUserSettingsAction(input: unknown) {
   const { email: _email, fullName, avatarUrl, ...providedUpdates } = values
   const updates = {
     ...providedUpdates,
+    ...(providedUpdates.listingEmailNotifications !== undefined
+      ? { listingEmailNotificationsUpdatedAt: new Date() }
+      : {}),
     ...(fullName !== undefined ? { name: fullName } : {}),
     ...(avatarUrl !== undefined ? { image: avatarUrl } : {}),
   }
@@ -72,6 +78,7 @@ export async function updateCurrentUserSettingsAction(input: unknown) {
     id: user.id,
     fullName: user.name,
     email: user.email,
+    emailVerified: user.emailVerified,
     avatarUrl: user.image,
     locale: user.locale,
     timezone: user.timezone,
@@ -79,5 +86,6 @@ export async function updateCurrentUserSettingsAction(input: unknown) {
     dateFormat: user.dateFormat,
     timeFormat: user.timeFormat,
     weekStartsOnMonday: user.weekStartsOnMonday,
+    listingEmailNotifications: user.listingEmailNotifications,
   }
 }

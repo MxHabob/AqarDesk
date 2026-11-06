@@ -5,6 +5,7 @@ import { ChangeEmail } from "@/components/change-email"
 import { ChangeTheme } from "@/components/change-theme"
 import { DeleteAccount } from "@/components/delete-account"
 import { DisplayName } from "@/components/display-name"
+import { ListingEmailNotifications } from "@/components/listing-email-notifications"
 import { UserAvatar } from "@/components/user-avatar"
 
 export function AccountSettings() {
@@ -13,6 +14,7 @@ export function AccountSettings() {
       <UserAvatar />
       <DisplayName />
       <ChangeEmail />
+      <ListingEmailNotifications />
       <ChangeTheme />
       <SignOut />
       <DeleteAccount />

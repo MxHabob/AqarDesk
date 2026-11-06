@@ -364,6 +364,18 @@ export default {
     supportSent: "تم إرسال طلب الدعم.",
     supportError: "تعذر إرسال الطلب. حاول مجددًا.",
   },
+  emailNotifications: {
+    title: "إشعارات البريد الإلكتروني",
+    description:
+      "يمكنك تغيير تفضيلاتك في أي وقت. رسائل الأمان والمعاملات الضرورية لا تتأثر بهذا الخيار.",
+    listingUpdates: "إشعارات العقارات والعروض الجديدة",
+    verifyEmailToSubscribe: "أكّد بريدك الإلكتروني لتفعيل الاشتراك.",
+  },
+  listingEmailCampaign: {
+    sendToSubscribers: "إرسال الإعلان للمشتركين بالبريد الإلكتروني",
+    subscriberConsentNote:
+      "سيصل الإعلان إلى المستخدمين الذين فعّلوا إشعارات العقارات وأكدوا بريدهم الإلكتروني فقط.",
+  },
   auth: {
     loginTitle: "تسجيل الدخول",
     loginDescription: "سجّل الدخول إلى مساحة عمل مكتبك العقاري.",

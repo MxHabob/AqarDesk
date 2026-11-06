@@ -5,6 +5,7 @@ import {
   listingTypesByPropertyType,
   type PropertyType,
 } from "@aqardesk/categories"
+import { Checkbox } from "@aqardesk/ui/components/checkbox"
 import { useRouter } from "next/navigation"
 import { useActionState, useEffect, useRef, useState } from "react"
 import type { getListingFormData } from "@/actions/real-estate"
@@ -14,8 +15,10 @@ import {
   RealEstateFormError,
   RealEstateSubmitButton,
 } from "@/components/forms/real-estate-fields"
+import { useScopedI18n } from "@/locales/client"
 
 type ListingData = NonNullable<Awaited<ReturnType<typeof getListingFormData>>>
+type ListingStatus = ListingData["listing"]["status"]
 type PropertyOption = {
   id: string
   title: string
@@ -51,6 +54,18 @@ const listingStatusOptions = {
   ],
 }
 
+function isListingStatus(value: string): value is ListingStatus {
+  return [
+    "draft",
+    "active",
+    "reserved",
+    "sold",
+    "rented",
+    "expired",
+    "withdrawn",
+  ].some((status) => status === value)
+}
+
 export function ListingForm({
   data,
   properties,
@@ -59,6 +74,7 @@ export function ListingForm({
   showSubmitButton = true,
   onPendingChange,
   createAsDraft = false,
+  showListingNotificationsOption = false,
 }: {
   data?: ListingData
   properties: PropertyOption[]
@@ -67,13 +83,19 @@ export function ListingForm({
   showSubmitButton?: boolean
   onPendingChange?: (pending: boolean) => void
   createAsDraft?: boolean
+  showListingNotificationsOption?: boolean
 }) {
+  const t = useScopedI18n("listingEmailCampaign")
   const router = useRouter()
   const [state, formAction, isPending] = useActionState(saveListingAction, {})
   const joined = data
   const propertyId = joined?.listing.propertyId ?? joined?.property.id
   const isEditing = Boolean(joined?.listing.id)
   const [listingType, setListingType] = useState(data?.listing.type ?? "sale")
+  const [listingStatus, setListingStatus] = useState(
+    data?.listing.status ?? "draft"
+  )
+  const [notifySubscribers, setNotifySubscribers] = useState(false)
   const [selectedPropertyId, setSelectedPropertyId] = useState(propertyId ?? "")
   const handledSavedId = useRef<string | null>(null)
 
@@ -104,6 +126,13 @@ export function ListingForm({
         <input type="hidden" name="propertyId" value={propertyId ?? ""} />
       )}
       {createAsDraft && <input type="hidden" name="status" value="draft" />}
+      {showListingNotificationsOption && (
+        <input
+          type="hidden"
+          name="notifySubscribers"
+          value={String(notifySubscribers && listingStatus === "active")}
+        />
+      )}
       <div
         className={
           showSubmitButton
@@ -164,8 +193,13 @@ export function ListingForm({
               label="الحالة"
               name="status"
               type="select"
-              defaultValue={joined?.listing.status ?? "draft"}
+              defaultValue={listingStatus}
               disabled={readOnly}
+              onChange={(value) => {
+                if (isListingStatus(value)) {
+                  setListingStatus(value)
+                }
+              }}
               options={listingStatusOptions[listingType]}
               required
             />
@@ -271,6 +305,26 @@ export function ListingForm({
             ]}
           />
         </div>
+        {showListingNotificationsOption && listingStatus === "active" && (
+          <div className="space-y-2 border border-border p-4">
+            <label
+              htmlFor="listing-notify-subscribers"
+              className="flex cursor-pointer items-start gap-3 text-sm"
+            >
+              <Checkbox
+                id="listing-notify-subscribers"
+                checked={notifySubscribers}
+                onCheckedChange={(checked) =>
+                  setNotifySubscribers(checked === true)
+                }
+              />
+              <span className="font-medium">{t("sendToSubscribers")}</span>
+            </label>
+            <p className="ps-7 text-xs text-muted-foreground">
+              {t("subscriberConsentNote")}
+            </p>
+          </div>
+        )}
         <RealEstateField
           label="ملاحظات عامة"
           name="publicNotes"

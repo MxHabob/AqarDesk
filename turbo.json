@@ -16,7 +16,9 @@
     "GOOGLE_CLIENT_ID",
     "GOOGLE_CLIENT_SECRET",
     "RESEND_API_KEY",
-    "EMAIL_FROM"
+    "EMAIL_FROM",
+    "CRON_SECRET",
+    "NEXT_PUBLIC_APP_URL"
   ],
   "tasks": {
     "build": {

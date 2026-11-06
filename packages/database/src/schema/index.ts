@@ -1,5 +1,7 @@
 export * from "./access-control"
 export * from "./auth"
+export * from "./email-campaigns"
+export * from "./email-outbox"
 export * from "./enums"
 export * from "./favorites"
 export * from "./invitations"

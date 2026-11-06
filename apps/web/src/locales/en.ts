@@ -1029,6 +1029,19 @@ export default {
     supportSent: "Your support request has been sent.",
     supportError: "Unable to send your request. Please try again.",
   },
+  emailNotifications: {
+    title: "Email notifications",
+    description:
+      "Change your preferences at any time. Essential security and transactional emails are unaffected.",
+    listingUpdates: "New property and listing updates",
+    verifyEmailToSubscribe:
+      "Verify your email address to enable this subscription.",
+  },
+  listingEmailCampaign: {
+    sendToSubscribers: "Email this listing to subscribers",
+    subscriberConsentNote:
+      "Only users who opted in to property emails and verified their address will receive it.",
+  },
   realEstateTables: {
     propertyTitle: "Property",
     city: "City",

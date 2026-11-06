@@ -1,4 +1,10 @@
 import { getDatabase, schema } from "@aqardesk/database"
+import type { EmailMessage } from "@aqardesk/email"
+import {
+  createResendEmailProvider,
+  createSignInCodeEmail,
+  createWelcomeEmail,
+} from "@aqardesk/email"
 import { type Auth, type BetterAuthOptions, betterAuth } from "better-auth"
 import { drizzleAdapter } from "better-auth/adapters/drizzle"
 import { APIError, createAuthMiddleware } from "better-auth/api"
@@ -11,8 +17,8 @@ const secret = process.env.BETTER_AUTH_SECRET
 const baseURL = process.env.BETTER_AUTH_URL
 const googleClientId = process.env.GOOGLE_CLIENT_ID
 const googleClientSecret = process.env.GOOGLE_CLIENT_SECRET
-const resendApiKey = process.env.RESEND_API_KEY
-const emailFrom = process.env.EMAIL_FROM
+const resendApiKey = process.env.RESEND_API_KEY?.trim()
+const emailFrom = process.env.EMAIL_FROM?.trim()
 const socialProviders =
   googleClientId && googleClientSecret
     ? {
@@ -48,45 +54,33 @@ export const isGoogleAuthConfigured = Boolean(
 )
 export const isEmailOtpConfigured = Boolean(resendApiKey && emailFrom)
 
-async function sendResendEmail({
-  to,
-  subject,
-  text,
-  html,
-}: {
-  to: string
-  subject: string
-  text: string
-  html: string
-}) {
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${resendApiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: emailFrom,
-      to: [to],
-      subject,
-      text,
-      html,
+const resendProvider =
+  isEmailOtpConfigured && resendApiKey && emailFrom
+    ? createResendEmailProvider({ apiKey: resendApiKey, from: emailFrom })
+    : undefined
+
+async function sendResendEmail(message: EmailMessage) {
+  if (!resendProvider) {
+    throw new Error("Email delivery is not configured.")
+  }
+  await resendProvider.send(message)
+}
+
+async function getEmailContext(email: string) {
+  const database = getDatabase()
+  const [user, office] = await Promise.all([
+    database.query.users.findFirst({
+      where: (users, { eq }) => eq(users.email, email.toLowerCase()),
+      columns: { locale: true },
     }),
-  })
-
-  if (!response.ok) {
-    const body: unknown = await response.json().catch(() => null)
-    const message =
-      typeof body === "object" &&
-      body !== null &&
-      "message" in body &&
-      typeof body.message === "string"
-        ? `: ${body.message}`
-        : ""
-
-    throw new Error(
-      `Resend rejected the email (${response.status} ${response.statusText})${message}.`
-    )
+    database.query.officeSettings.findFirst({
+      columns: { name: true },
+    }),
+  ])
+  const locale: "ar" | "en" = user?.locale === "en" ? "en" : "ar"
+  return {
+    locale,
+    officeName: office?.name ?? "AqarDesk",
   }
 }
 
@@ -101,12 +95,15 @@ const otpOptions = isEmailOtpConfigured
         user: { email: string }
         otp: string
       }) => {
-        await sendResendEmail({
+        const { locale, officeName } = await getEmailContext(user.email)
+        const message = await createSignInCodeEmail({
           to: user.email,
-          subject: "AqarDesk sign-in verification code",
-          text: `Your AqarDesk verification code is ${otp}. It expires in three minutes. If you did not request it, you can ignore this email.\n\nرمز التحقق من عقار دِسك هو ${otp}. تنتهي صلاحيته خلال ثلاث دقائق.`,
-          html: `<p>Your AqarDesk verification code is:</p><p style="font-size:24px;font-weight:600;letter-spacing:8px">${otp}</p><p>This code expires in three minutes. If you did not request it, you can ignore this email.</p><hr /><p dir="rtl">رمز التحقق من عقار دِسك هو <strong>${otp}</strong>. تنتهي صلاحيته خلال ثلاث دقائق.</p>`,
+          code: otp,
+          locale,
+          expiresInMinutes: 3,
+          officeName,
         })
+        await sendResendEmail(message)
       },
     }
   : undefined
@@ -116,12 +113,15 @@ const emailOTPPlugin = otpOptions
       otpLength: 6,
       expiresIn: 180,
       sendVerificationOTP: async ({ email, otp }) => {
-        await sendResendEmail({
+        const { locale, officeName } = await getEmailContext(email)
+        const message = await createSignInCodeEmail({
           to: email,
-          subject: "Your AqarDesk sign-in code",
-          text: `Your AqarDesk sign-in code is ${otp}. It expires in three minutes. If you did not request it, you can ignore this email.\n\nرمز تسجيل الدخول إلى عقار دِسك هو ${otp}. تنتهي صلاحيته خلال ثلاث دقائق.`,
-          html: `<p>Your AqarDesk sign-in code is:</p><p style="font-size:24px;font-weight:600;letter-spacing:8px">${otp}</p><p>This code expires in three minutes. If you did not request it, you can ignore this email.</p><hr /><p dir="rtl">رمز تسجيل الدخول إلى عقار دِسك هو <strong>${otp}</strong>. تنتهي صلاحيته خلال ثلاث دقائق.</p>`,
+          code: otp,
+          locale,
+          expiresInMinutes: 3,
+          officeName,
         })
+        await sendResendEmail(message)
       },
     })
   : undefined
@@ -208,6 +208,32 @@ const authOptions: BetterAuthOptions = {
               .insert(schema.userRoles)
               .values({ userId: user.id, roleId: "customer" })
               .onConflictDoNothing()
+
+            if (user.emailVerified) {
+              const locale = user.locale === "en" ? "en" : "ar"
+              const office = await transaction.query.officeSettings.findFirst({
+                columns: { name: true },
+              })
+              const welcome = await createWelcomeEmail({
+                to: user.email,
+                recipientName: user.name,
+                officeName: office?.name ?? "AqarDesk",
+                locale,
+                accountUrl: new URL(`/${locale}/listings`, baseURL).toString(),
+              })
+              await transaction
+                .insert(schema.emailOutbox)
+                .values({
+                  dedupeKey: `welcome:${user.id}`,
+                  recipientUserId: user.id,
+                  recipientEmail: user.email,
+                  category: "transactional",
+                  subject: welcome.subject,
+                  html: welcome.html,
+                  text: welcome.text,
+                })
+                .onConflictDoNothing()
+            }
           })
         },
       },

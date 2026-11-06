@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@aqardesk/database": "workspace:*",
+    "@aqardesk/email": "workspace:*",
     "better-auth": "^1.7.15",
     "drizzle-orm": "^0.45.4"
   },

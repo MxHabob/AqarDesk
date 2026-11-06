@@ -7,6 +7,8 @@ application.
 Email/password sign-in and sign-up are disabled. Passwordless email OTP sign-in
 is enabled when `RESEND_API_KEY` and `EMAIL_FROM` are configured; email OTP
 sign-in verifies ownership of the address before creating a customer account.
+Sign-in messages use the shared branded email package. Verified new accounts
+receive a welcome message through the application email outbox.
 New accounts receive the `customer` role. Google sign-in and sign-up are enabled
 when both `GOOGLE_CLIENT_ID` and `GOOGLE_CLIENT_SECRET` are set. Configure the
 Google OAuth redirect URI as `${BETTER_AUTH_URL}/api/auth/callback/google`.

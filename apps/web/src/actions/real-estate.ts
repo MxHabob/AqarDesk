@@ -779,6 +779,12 @@ export async function saveListingAction(
     .string()
     .regex(/^[A-Z]{3}$/)
     .safeParse(readText(formData, "currencyCode"))
+  if (id && !idSchema.safeParse(id).success) {
+    return { error: "معرّف الإعلان غير صالح." }
+  }
+  const notifySubscribers = z
+    .enum(["true", "false"])
+    .safeParse(readText(formData, "notifySubscribers") || "false")
 
   if (!propertyId.success) return { error: "اختر عقارًا صحيحًا." }
   if (!type.success || !status.success)
@@ -786,6 +792,12 @@ export async function saveListingAction(
   if (!price.success) return { error: "أدخل سعرًا صحيحًا." }
   if (!currencyCode.success)
     return { error: "رمز العملة يجب أن يتكون من ثلاثة أحرف." }
+  if (!notifySubscribers.success) {
+    return { error: "خيار إرسال إشعارات العقارات غير صالح." }
+  }
+  if (notifySubscribers.data === "true" && status.data !== "active") {
+    return { error: "يجب نشر الإعلان قبل إرسال إشعاراته." }
+  }
   const handledByOffice = z
     .enum(["true", "false"])
     .safeParse(readText(formData, "handledByOffice"))
@@ -793,7 +805,22 @@ export async function saveListingAction(
     return { error: "حدد ما إذا كان المكتب يتولى الإعلان." }
   }
   await assertPermission(actor.id, id ? "listings.update" : "listings.create")
-  const property = await getPropertyById(propertyId.data)
+  if (status.data === "active") {
+    await assertPermission(actor.id, "listings.publish")
+  }
+  if (["sold", "rented", "expired", "withdrawn"].includes(status.data)) {
+    await assertPermission(actor.id, "listings.close")
+  }
+  const previousListing = id ? await getListingById(id) : null
+  if (id && !previousListing) return { error: "الإعلان المحدد غير موجود." }
+  if (
+    previousListing &&
+    previousListing.listing.propertyId !== propertyId.data
+  ) {
+    return { error: "العقار المحدد لا يطابق الإعلان." }
+  }
+  const property =
+    previousListing?.property ?? (await getPropertyById(propertyId.data))
   if (!property) return { error: "العقار المحدد غير موجود." }
   if (!listingTypesByPropertyType[property.type].includes(type.data)) {
     return { error: "نوع الإعلان لا يتوافق مع فئة العقار المختارة." }
@@ -812,6 +839,10 @@ export async function saveListingAction(
 
   const values = {
     status: status.data,
+    publishedAt:
+      status.data === "active"
+        ? (previousListing?.listing.publishedAt ?? new Date())
+        : (previousListing?.listing.publishedAt ?? null),
     salePrice: type.data === "sale" ? price.data : null,
     monthlyRent: type.data === "rent" ? price.data : null,
     keyMoney:
@@ -852,6 +883,26 @@ export async function saveListingAction(
           transaction
         )
     if (!result) throw new Error("تعذر حفظ الإعلان.")
+    if (
+      notifySubscribers.data === "true" &&
+      status.data === "active" &&
+      (!previousListing ||
+        (previousListing.listing.status === "draft" &&
+          !previousListing.listing.publishedAt))
+    ) {
+      await transaction
+        .insert(schema.emailCampaigns)
+        .values({
+          listingId: result.id,
+          propertyTitle: property.title,
+          listingType: type.data,
+          price: price.data,
+          currencyCode: currencyCode.data,
+        })
+        .onConflictDoNothing({
+          target: schema.emailCampaigns.listingId,
+        })
+    }
     return result
   })
   return { id: listing.id, saved: true }

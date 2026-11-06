@@ -19,7 +19,10 @@ import {
   revokeUserInvitation,
   setUserRoles,
 } from "@aqardesk/database/queries"
-import { createStaffInvitationEmail } from "@aqardesk/email"
+import {
+  createResendEmailProvider,
+  createStaffInvitationEmail,
+} from "@aqardesk/email"
 import { revalidatePath } from "next/cache"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
@@ -81,31 +84,14 @@ async function sendInvitationEmail(input: {
     to: input.email,
     recipientName: input.name,
     officeName: input.officeName,
+    locale: input.locale === "en" ? "en" : "ar",
     invitationUrl: getInvitationUrl(input.locale, input.token),
     expiresInHours: Math.max(
       1,
       Math.ceil((input.expiresAt.getTime() - Date.now()) / (60 * 60 * 1000))
     ),
   })
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to: [input.email],
-      subject: email.subject,
-      html: email.html,
-      text: email.text,
-    }),
-  })
-  if (!response.ok) {
-    throw new Error(
-      `Invitation email delivery failed (${response.status} ${response.statusText}).`
-    )
-  }
+  await createResendEmailProvider({ apiKey, from }).send(email)
 }
 
 async function getActor() {

@@ -1,4 +1,7 @@
-import { createSupportTicketNotificationEmail } from "@aqardesk/email"
+import {
+  createResendEmailProvider,
+  createSupportTicketNotificationEmail,
+} from "@aqardesk/email"
 import { SUPPORT_EMAIL } from "@/utils/constants"
 
 type SendSupportEmailInput = {
@@ -44,27 +47,11 @@ export async function sendSupportEmail(input: SendSupportEmailInput) {
     ...input,
     priority: normalizePriority(input.priority),
   })
-  const response = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from,
-      to: [SUPPORT_EMAIL],
-      reply_to: input.email.trim().toLowerCase(),
-      subject: email.subject,
-      html: email.html,
-      text: email.text,
-    }),
+  await createResendEmailProvider({ apiKey, from }).send({
+    ...email,
+    to: SUPPORT_EMAIL,
+    replyTo: input.email.trim().toLowerCase(),
   })
-
-  if (!response.ok) {
-    throw new Error(
-      `Resend rejected the support email (${response.status} ${response.statusText}).`
-    )
-  }
 
   return { sent: true }
 }

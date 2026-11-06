@@ -17,6 +17,9 @@ export async function getUserById(
       email: schema.users.email,
       twoFactorEnabled: schema.users.twoFactorEnabled,
       emailVerified: schema.users.emailVerified,
+      listingEmailNotifications: schema.users.listingEmailNotifications,
+      listingEmailNotificationsUpdatedAt:
+        schema.users.listingEmailNotificationsUpdatedAt,
       image: schema.users.image,
       locale: schema.users.locale,
       timezone: schema.users.timezone,
@@ -44,6 +47,7 @@ export async function getUserByEmail(
       name: schema.users.name,
       email: schema.users.email,
       emailVerified: schema.users.emailVerified,
+      listingEmailNotifications: schema.users.listingEmailNotifications,
       image: schema.users.image,
       locale: schema.users.locale,
       timezone: schema.users.timezone,
@@ -81,6 +85,7 @@ export async function listUsers(
         name: schema.users.name,
         email: schema.users.email,
         emailVerified: schema.users.emailVerified,
+        listingEmailNotifications: schema.users.listingEmailNotifications,
         twoFactorEnabled: schema.users.twoFactorEnabled,
         image: schema.users.image,
         locale: schema.users.locale,
@@ -193,6 +198,8 @@ export async function updateUser(
       | "name"
       | "email"
       | "emailVerified"
+      | "listingEmailNotifications"
+      | "listingEmailNotificationsUpdatedAt"
       | "image"
       | "locale"
       | "timezone"
@@ -211,6 +218,9 @@ export async function updateUser(
         name: schema.users.name,
         email: schema.users.email,
         emailVerified: schema.users.emailVerified,
+        listingEmailNotifications: schema.users.listingEmailNotifications,
+        listingEmailNotificationsUpdatedAt:
+          schema.users.listingEmailNotificationsUpdatedAt,
         image: schema.users.image,
         locale: schema.users.locale,
         timezone: schema.users.timezone,
@@ -233,6 +243,9 @@ export async function updateUser(
         name: schema.users.name,
         email: schema.users.email,
         emailVerified: schema.users.emailVerified,
+        listingEmailNotifications: schema.users.listingEmailNotifications,
+        listingEmailNotificationsUpdatedAt:
+          schema.users.listingEmailNotificationsUpdatedAt,
         image: schema.users.image,
         locale: schema.users.locale,
         timezone: schema.users.timezone,
@@ -257,6 +270,7 @@ export async function updateUser(
             name: user.name,
             email: user.email,
             emailVerified: user.emailVerified,
+            listingEmailNotifications: user.listingEmailNotifications,
             image: user.image,
             locale: user.locale,
             timezone: user.timezone,
