@@ -5,32 +5,39 @@ import { motion } from "framer-motion"
 import type { ReactNode } from "react"
 import { Portal } from "@/components/portal"
 
-interface BottomBarProps {
-  selectedCount: number
-  onDeselect: () => void
-  selectedLabel: string
-  deselectLabel: string
+type BottomBarProps = {
+  position?: "top" | "bottom"
   children: ReactNode
-}
+} & (
+  | {
+      statusLabel: string
+      selectedCount?: never
+      onDeselect?: never
+      selectedLabel?: never
+      deselectLabel?: never
+    }
+  | {
+      statusLabel?: never
+      selectedCount: number
+      onDeselect: () => void
+      selectedLabel: string
+      deselectLabel: string
+    }
+)
 
-/**
- * Generic bottom bar for table multi-select actions
- * Appears at the bottom of the screen when items are selected
- */
+/** Shared action bar for table selection and pending form changes. */
 export function BottomBar({
-  selectedCount,
-  onDeselect,
-  selectedLabel,
-  deselectLabel,
+  position = "bottom",
   children,
+  ...props
 }: BottomBarProps) {
   return (
     <Portal>
       <motion.div
-        className="h-12 fixed bottom-6 start-0 end-0 pointer-events-none flex justify-center z-50"
-        initial={{ y: 100 }}
+        className={`fixed ${position === "top" ? "top-6" : "bottom-6"} start-0 end-0 z-50 flex h-12 justify-center pointer-events-none`}
+        initial={{ y: position === "top" ? -100 : 100 }}
         animate={{ y: 0 }}
-        exit={{ y: 100 }}
+        exit={{ y: position === "top" ? -100 : 100 }}
         transition={{ duration: 0.2, ease: "easeOut" }}
       >
         <div className="relative pointer-events-auto h-12 w-[min(100%-2rem,720px)]">
@@ -43,19 +50,27 @@ export function BottomBar({
             transition={{ duration: 0.15 }}
           />
           <div className="relative flex h-12 items-center justify-between gap-2 overflow-hidden ps-4 pe-2">
-            <span className="shrink-0 text-sm">
-              {selectedCount} {selectedLabel}
-            </span>
+            {"statusLabel" in props ? (
+              <span className="min-w-0 truncate text-sm" role="status">
+                {props.statusLabel}
+              </span>
+            ) : (
+              <span className="shrink-0 text-sm">
+                {props.selectedCount} {props.selectedLabel}
+              </span>
+            )}
 
             <div className="flex min-w-0 items-center gap-x-1 overflow-x-auto scrollbar-hide sm:gap-x-2">
-              <Button
-                variant="ghost"
-                size="sm"
-                className="text-muted-foreground"
-                onClick={onDeselect}
-              >
-                <span>{deselectLabel}</span>
-              </Button>
+              {"onDeselect" in props && (
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="text-muted-foreground"
+                  onClick={props.onDeselect}
+                >
+                  <span>{props.deselectLabel}</span>
+                </Button>
+              )}
 
               {children}
             </div>

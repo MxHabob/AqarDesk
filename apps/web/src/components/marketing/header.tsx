@@ -1,5 +1,6 @@
 "use client"
 
+import { Button } from "@aqardesk/ui/button"
 import { cn } from "@aqardesk/ui/cn"
 import { Icons } from "@aqardesk/ui/icons"
 import { motion } from "motion/react"
@@ -176,12 +177,12 @@ export function Header({
                     user={user}
                   />
                 ) : (
-                  <Link
-                    className="inline-flex min-h-10 items-center justify-center bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                    href="/login"
+                  <Button
+                    render={<Link href="/login" />}
+                    className="h-10 min-w-0 shrink-0 whitespace-nowrap px-4"
                   >
                     {t("login")}
-                  </Link>
+                  </Button>
                 )}
               </div>
             </div>
@@ -231,12 +232,12 @@ export function Header({
                   user={user}
                 />
               ) : (
-                <Link
-                  className="inline-flex min-h-10 items-center justify-center bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-colors hover:bg-primary/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
-                  href="/login"
+                <Button
+                  render={<Link href="/login" />}
+                  className="h-10 min-w-0 shrink-0 whitespace-nowrap px-2.5 text-xs sm:px-4 sm:text-sm"
                 >
                   {t("login")}
-                </Link>
+                </Button>
               )}
             </div>
           )}

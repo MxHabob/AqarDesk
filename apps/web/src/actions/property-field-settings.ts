@@ -58,7 +58,10 @@ export async function savePropertyFieldSettingsAction(formData: FormData) {
     updatedById: session.user.id,
   })
 
-  revalidatePath("/[locale]/dashboard/settings/fields", "page")
-  revalidatePath("/[locale]/dashboard", "layout")
+  revalidatePath(`/${locale}/dashboard/settings/fields`)
+  revalidatePath(`/${locale}/dashboard`, "layout")
+  revalidatePath(`/${locale}`)
+  revalidatePath(`/${locale}/listings`)
+  revalidatePath(`/${locale}/listings/[listingId]`, "page")
   redirect(`/${locale}/dashboard/settings/fields?type=${propertyType}&saved=1`)
 }
