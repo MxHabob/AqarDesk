@@ -451,10 +451,11 @@ export default {
   },
   site: {
     home: "Home",
+    askUs: "Ask us on WhatsApp",
     about: "About us",
     services: "Services",
     portfolio: "Portfolio",
-    login: "Sign in",
+    login: "Login",
     officeName: "Ali Shoban's Office",
     titleTemplate: "%s | Ali Shoban's Office",
     closeServicesMenu: "Close services menu",

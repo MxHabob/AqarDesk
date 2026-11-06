@@ -4,11 +4,15 @@ import {
   isEmailOtpConfigured,
   isGoogleAuthConfigured,
 } from "@aqardesk/auth/server"
-import { listUserFavoriteListingIds } from "@aqardesk/database/queries"
+import {
+  getOfficeSettings,
+  listUserFavoriteListingIds,
+} from "@aqardesk/database/queries"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import type { ReactNode } from "react"
 import { FavoritesProvider } from "@/components/marketing/favorites-provider"
+import { FloatingContactButton } from "@/components/marketing/floating-contact-button"
 import { Footer } from "@/components/marketing/footer"
 import { Header } from "@/components/marketing/header"
 import {
@@ -21,6 +25,7 @@ import {
   getPublicHomepageData,
   getSelectedPublicCountryCode,
 } from "@/lib/listings/public-queries"
+import { getWhatsAppContactUrl } from "@/lib/marketing/contact"
 import {
   createSafeJsonLd,
   getMarketingPageCopy,
@@ -92,14 +97,18 @@ export default async function Layout({
   children: ReactNode
   params: Promise<{ locale: string }>
 }) {
-  const [{ locale }, session, t, countryCode, homepageData] = await Promise.all(
-    [
+  const [{ locale }, session, t, countryCode, homepageData, officeSettings] =
+    await Promise.all([
       params,
       auth.api.getSession({ headers: await headers() }),
       getScopedI18n("site"),
       getSelectedPublicCountryCode(),
       getPublicHomepageData(),
-    ]
+      getOfficeSettings(),
+    ])
+  const contactUrl = getWhatsAppContactUrl(
+    officeSettings.phone,
+    officeSettings.countryCode
   )
   const roleKeys = session ? await getUserRoleKeys(session.user.id) : []
   const roleDestination = session ? getRoleDestination(roleKeys, locale) : null
@@ -196,6 +205,7 @@ export default async function Layout({
           {children}
         </main>
       </FavoritesProvider>
+      <FloatingContactButton href={contactUrl} />
       <Footer />
     </div>
   )

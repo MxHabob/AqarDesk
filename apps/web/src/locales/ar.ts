@@ -698,11 +698,12 @@ export default {
   },
   site: {
     home: "الرئيسية",
+    askUs: "اسألنا عبر واتساب",
     about: "من نحن",
     services: "خدماتنا",
     portfolio: "ملف الأعمال",
     browse: "تصفح العقارات",
-    login: "تسجيل الدخول",
+    login: "دخول",
     officeName: "مكتب علي شوبان",
     titleTemplate: "%s | مكتب علي شوبان",
     closeServicesMenu: "إغلاق قائمة الخدمات",

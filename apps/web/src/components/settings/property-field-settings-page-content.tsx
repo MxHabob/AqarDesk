@@ -100,7 +100,6 @@ export function PropertyFieldSettingsPageContent({
     <section className="space-y-6">
       <header className="space-y-2">
         <h1 className="text-xl font-semibold">{t("title")}</h1>
-        <p className="text-sm text-muted-foreground">{t("description")}</p>
       </header>
 
       <nav aria-label={t("categories")} className="flex flex-wrap gap-2">
