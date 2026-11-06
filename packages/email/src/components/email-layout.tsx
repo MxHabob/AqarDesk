@@ -42,40 +42,48 @@ export function EmailLayout({
       <Preview>{preview}</Preview>
       <Body
         style={{
-          backgroundColor: emailDesignTokens.color.surface,
+          backgroundColor: emailDesignTokens.color.background,
           color: emailDesignTokens.color.foreground,
           fontFamily: "Arial, sans-serif",
-          padding: "20px 12px",
+          padding: "24px 16px",
         }}
       >
         <Container
           style={{
-            backgroundColor: emailDesignTokens.color.background,
-            border: emailDesignTokens.border,
-            borderRadius: emailDesignTokens.radius.card,
             margin: "0 auto",
-            maxWidth: "560px",
-            padding: "28px",
+            maxWidth: "520px",
+            padding: "12px 8px",
           }}
         >
           <Section>
             <Text
               style={{
                 color: emailDesignTokens.color.foreground,
-                fontSize: "15px",
+                borderBottom: emailDesignTokens.border,
+                fontSize: "16px",
                 fontWeight: 700,
-                margin: "0 0 24px",
+                margin: "0 0 28px",
+                paddingBottom: "16px",
               }}
             >
               {officeName}
             </Text>
-            <Text>
+            <Text
+              style={{
+                color: emailDesignTokens.color.mutedForeground,
+                fontSize: "14px",
+                margin: "0 0 12px",
+              }}
+            >
               {isArabic ? `مرحبًا ${recipientName}،` : `Hello ${recipientName},`}
             </Text>
             <Heading
               style={{
                 color: emailDesignTokens.color.foreground,
-                fontSize: "22px",
+                fontSize: "23px",
+                fontWeight: 700,
+                lineHeight: "1.4",
+                margin: "0 0 12px",
               }}
             >
               {heading}
@@ -84,6 +92,7 @@ export function EmailLayout({
               style={{
                 color: emailDesignTokens.color.mutedForeground,
                 lineHeight: "1.7",
+                margin: "0 0 20px",
               }}
             >
               {description}
@@ -99,7 +108,7 @@ export function EmailLayout({
                   color: emailDesignTokens.color.primaryForeground,
                   display: "inline-block",
                   fontWeight: 700,
-                  padding: "12px 20px",
+                  padding: "12px 18px",
                   textDecoration: "none",
                 }}
               >
@@ -110,13 +119,16 @@ export function EmailLayout({
               style={{
                 borderTop: emailDesignTokens.border,
                 color: emailDesignTokens.color.mutedForeground,
+                fontSize: "13px",
                 marginTop: "28px",
-                paddingTop: "20px",
+                paddingTop: "16px",
               }}
             >
               {isArabic ? "مع التحية،" : "Regards,"}
               <br />
-              AqarDesk
+              <strong style={{ color: emailDesignTokens.color.foreground }}>
+                {officeName}
+              </strong>
             </Text>
           </Section>
         </Container>

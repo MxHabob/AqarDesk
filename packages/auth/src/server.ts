@@ -80,7 +80,8 @@ async function getEmailContext(email: string) {
   const locale: "ar" | "en" = user?.locale === "en" ? "en" : "ar"
   return {
     locale,
-    officeName: office?.name ?? "AqarDesk",
+    officeName:
+      office?.name.trim() || (locale === "ar" ? "المكتب" : "Your office"),
   }
 }
 
@@ -217,7 +218,9 @@ const authOptions: BetterAuthOptions = {
               const welcome = await createWelcomeEmail({
                 to: user.email,
                 recipientName: user.name,
-                officeName: office?.name ?? "AqarDesk",
+                officeName:
+                  office?.name.trim() ||
+                  (locale === "ar" ? "المكتب" : "Your office"),
                 locale,
                 accountUrl: new URL(`/${locale}/listings`, baseURL).toString(),
               })

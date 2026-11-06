@@ -21,7 +21,9 @@ export async function createListingUpdateEmail(input: {
     : input.listingType === "sale"
       ? "For sale"
       : "For rent"
-  const subject = arabic ? "عقار جديد قد يهمك" : "A new property you may like"
+  const subject = arabic
+    ? `${input.officeName} | عقار جديد قد يهمك`
+    : `${input.officeName} | A new property you may like`
   const preview = `${input.propertyTitle} — ${listingType}`
   const description = arabic
     ? "أُضيف عقار جديد إلى العروض. يمكنك الاطلاع على التفاصيل من الرابط أدناه."
@@ -39,12 +41,10 @@ export async function createListingUpdateEmail(input: {
     >
       <Text
         style={{
-          backgroundColor: emailDesignTokens.color.surface,
-          border: emailDesignTokens.border,
-          borderRadius: emailDesignTokens.radius.control,
           color: emailDesignTokens.color.foreground,
           fontSize: "14px",
-          padding: "12px 14px",
+          fontWeight: 700,
+          margin: "0 0 20px",
         }}
       >
         {listingType} · {input.price}

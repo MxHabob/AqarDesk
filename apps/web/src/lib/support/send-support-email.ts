@@ -1,7 +1,9 @@
+import { getDatabase, schema } from "@aqardesk/database"
 import {
   createResendEmailProvider,
   createSupportTicketNotificationEmail,
 } from "@aqardesk/email"
+import { eq } from "drizzle-orm"
 import { SUPPORT_EMAIL } from "@/utils/constants"
 
 type SendSupportEmailInput = {
@@ -43,8 +45,13 @@ export async function sendSupportEmail(input: SendSupportEmailInput) {
     )
   }
 
+  const office = await getDatabase().query.officeSettings.findFirst({
+    where: eq(schema.officeSettings.id, "default"),
+    columns: { name: true },
+  })
   const email = await createSupportTicketNotificationEmail({
     ...input,
+    officeName: office?.name.trim() || "Office",
     priority: normalizePriority(input.priority),
   })
   await createResendEmailProvider({ apiKey, from }).send({

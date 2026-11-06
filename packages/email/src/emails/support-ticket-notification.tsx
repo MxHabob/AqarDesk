@@ -3,6 +3,7 @@ import { EmailLayout } from "../components/email-layout"
 import { renderEmail } from "../render"
 
 export interface SupportTicketNotificationInput {
+  officeName: string
   fullName: string
   email: string
   subject: string
@@ -17,7 +18,7 @@ export async function createSupportTicketNotificationEmail(
 ) {
   const preview = `New ${input.priority} support request: ${input.subject}`
   const text = [
-    "A new AqarDesk support request was received.",
+    `A new support request was received by ${input.officeName}.`,
     "",
     `Name: ${input.fullName}`,
     `Email: ${input.email}`,
@@ -34,8 +35,8 @@ export async function createSupportTicketNotificationEmail(
       preview={preview}
       recipientName="support team"
       heading="New support request"
-      description="A new AqarDesk support request was received."
-      officeName="AqarDesk"
+      description={`A new support request was received by ${input.officeName}.`}
+      officeName={input.officeName}
     >
       <Section>
         <Text>
@@ -61,7 +62,7 @@ export async function createSupportTicketNotificationEmail(
   )
 
   return {
-    subject: `[AqarDesk support] ${input.subject}`,
+    subject: `[${input.officeName}] ${input.subject}`,
     text,
     html,
   }

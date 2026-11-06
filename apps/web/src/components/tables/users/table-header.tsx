@@ -36,9 +36,6 @@ export function UsersTableHeader({
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold">{t("usersTitle")}</h1>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {t("usersDescription")}
-          </p>
         </div>
         <div className="flex w-full flex-wrap items-center gap-2 sm:w-auto">
           <form

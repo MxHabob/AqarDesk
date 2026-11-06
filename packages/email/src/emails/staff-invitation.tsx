@@ -32,8 +32,8 @@ export async function createStaffInvitationEmail(
     officeName: input.officeName,
     subject:
       locale === "ar"
-        ? "دعوة للانضمام إلى AqarDesk"
-        : "Invitation to join AqarDesk",
+        ? `${input.officeName} | دعوة للانضمام إلى فريق المكتب`
+        : `${input.officeName} | Invitation to join the office team`,
     preview:
       locale === "ar"
         ? "دعوة للانضمام إلى فريق المكتب"

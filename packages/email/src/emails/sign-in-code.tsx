@@ -11,9 +11,10 @@ export async function createSignInCodeEmail(input: {
   officeName?: string
 }) {
   const arabic = input.locale === "ar"
+  const officeName = input.officeName ?? (arabic ? "المكتب" : "Your office")
   const subject = arabic
-    ? "رمز تسجيل الدخول إلى عقار دِسك"
-    : "Your AqarDesk sign-in code"
+    ? `${officeName} | رمز تسجيل الدخول`
+    : `${officeName} | Sign-in code`
   const preview = arabic
     ? `رمز التحقق صالح لمدة ${input.expiresInMinutes} دقائق`
     : `Your verification code expires in ${input.expiresInMinutes} minutes`
@@ -28,18 +29,15 @@ export async function createSignInCodeEmail(input: {
       recipientName={arabic ? "بك" : "there"}
       heading={heading}
       description={description}
-      officeName={input.officeName ?? "AqarDesk"}
+      officeName={officeName}
     >
       <Heading
         style={{
-          backgroundColor: emailDesignTokens.color.surface,
-          border: emailDesignTokens.border,
-          borderRadius: emailDesignTokens.radius.card,
           color: emailDesignTokens.color.foreground,
-          fontSize: "28px",
+          fontSize: "32px",
           letterSpacing: "8px",
-          padding: "18px",
-          textAlign: "center",
+          margin: "24px 0 8px",
+          textAlign: input.locale === "ar" ? "right" : "left",
         }}
       >
         {input.code}
@@ -61,6 +59,6 @@ export async function createSignInCodeEmail(input: {
     to: input.to,
     subject,
     html,
-    text: `${heading}\n\n${description}\n\n${input.code}\n\n${arabic ? "لا تشارك هذا الرمز مع أي شخص." : "Never share this code with anyone."}\n\n${arabic ? "مع التحية،" : "Regards,"}\n${input.officeName ?? "AqarDesk"}`,
+    text: `${heading}\n\n${description}\n\n${input.code}\n\n${arabic ? "لا تشارك هذا الرمز مع أي شخص." : "Never share this code with anyone."}\n\n${arabic ? "مع التحية،" : "Regards,"}\n${officeName}`,
   }
 }

@@ -62,9 +62,6 @@ export function UserInvitations({
       <header className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h2 className="text-xl font-semibold">{t("title")}</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            {t("description")}
-          </p>
         </div>
         <Button type="button" onClick={() => setOpen(true)}>
           {t("inviteUser")}

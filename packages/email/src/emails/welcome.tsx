@@ -10,18 +10,18 @@ export async function createWelcomeEmail(input: {
   const copy =
     input.locale === "ar"
       ? {
-          subject: "مرحبًا بك في عقار دِسك",
+          subject: `${input.officeName} | مرحبًا بك`,
           preview: "تم إنشاء حسابك بنجاح",
-          heading: "مرحبًا بك في عقار دِسك",
+          heading: "مرحبًا بك",
           description:
             "يسعدنا انضمامك إلينا. يمكنك الآن استكشاف العقارات وإدارة تفضيلات حسابك.",
           actionLabel: "استكشف العقارات",
           text: `مرحبًا ${input.recipientName}،\n\nتم إنشاء حسابك بنجاح. يمكنك الآن استكشاف العقارات وإدارة تفضيلات حسابك.\n\nاستكشف العقارات: ${input.accountUrl}\n\nمع التحية،\n${input.officeName}`,
         }
       : {
-          subject: "Welcome to AqarDesk",
+          subject: `${input.officeName} | Welcome`,
           preview: "Your account is ready",
-          heading: "Welcome to AqarDesk",
+          heading: "Welcome",
           description:
             "We're glad you're here. You can now explore properties and manage your account preferences.",
           actionLabel: "Explore properties",
