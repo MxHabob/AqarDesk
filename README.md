@@ -52,7 +52,13 @@ after checking the user's permission to access that listing.
   it through a bounded outbox worker.
 
 Configure `RESEND_API_KEY`, a verified `EMAIL_FROM` sender, and `CRON_SECRET`.
-Use a random `CRON_SECRET` of at least 32 characters. Schedule regular POST
+Use a random `CRON_SECRET` of at least 32 characters and configure it in the
+production environment. For Vercel Hobby, `apps/web/vercel.json` declares a
+Vercel Schedule that POSTs to `/api/cron/email-outbox` every 15 minutes. Enable
+Vercel Schedules for the team, set the project root directory to `apps/web`,
+and verify the schedule and its execution history in the Vercel dashboard after
+deploying to production. Requests to `/api/cron/email-outbox` require the
+`Authorization: Bearer <CRON_SECRET>` header. Schedule regular POST
 requests to `/api/cron/email-outbox` with the
 `Authorization: Bearer <CRON_SECRET>` header. Listing emails are sent only to
 verified users who opted in; their preference is editable in account settings

@@ -3,6 +3,7 @@ import { getDatabase, schema } from "@aqardesk/database"
 import { eq, inArray, sql } from "drizzle-orm"
 import { getEmailProvider, getEmailSiteOrigin } from "@/lib/email/config"
 import { expandListingCampaigns } from "@/lib/email/expand-listing-campaigns"
+import { sqlTimestamp } from "@/lib/email/sql-timestamp"
 import { createUnsubscribeToken } from "@/lib/email/unsubscribe"
 
 const batchSize = 25
@@ -52,17 +53,21 @@ export async function POST(request: Request) {
         status: "failed",
         lockedAt: null,
         lastError: "Worker lease expired after the maximum delivery attempts.",
-        updatedAt: now,
+        updatedAt: sqlTimestamp(now),
       })
       .where(
-        sql`${schema.emailOutbox.status} = 'processing' and ${schema.emailOutbox.lockedAt} < ${staleLock} and ${schema.emailOutbox.attempts} >= ${maxAttempts}`
+        sql`${schema.emailOutbox.status} = 'processing' and ${schema.emailOutbox.lockedAt} < ${sqlTimestamp(staleLock)} and ${schema.emailOutbox.attempts} >= ${maxAttempts}`
       )
 
     await transaction
       .update(schema.emailOutbox)
-      .set({ status: "pending", lockedAt: null, updatedAt: now })
+      .set({
+        status: "pending",
+        lockedAt: null,
+        updatedAt: sqlTimestamp(now),
+      })
       .where(
-        sql`${schema.emailOutbox.status} = 'processing' and ${schema.emailOutbox.lockedAt} < ${staleLock} and ${schema.emailOutbox.attempts} < ${maxAttempts}`
+        sql`${schema.emailOutbox.status} = 'processing' and ${schema.emailOutbox.lockedAt} < ${sqlTimestamp(staleLock)} and ${schema.emailOutbox.attempts} < ${maxAttempts}`
       )
 
     const candidates = await transaction
@@ -72,7 +77,7 @@ export async function POST(request: Request) {
       })
       .from(schema.emailOutbox)
       .where(
-        sql`${schema.emailOutbox.status} = 'pending' and ${schema.emailOutbox.availableAt} <= ${now} and ${schema.emailOutbox.attempts} < ${maxAttempts}`
+        sql`${schema.emailOutbox.status} = 'pending' and ${schema.emailOutbox.availableAt} <= ${sqlTimestamp(now)} and ${schema.emailOutbox.attempts} < ${maxAttempts}`
       )
       .orderBy(schema.emailOutbox.availableAt, schema.emailOutbox.createdAt)
       .limit(batchSize)
@@ -83,9 +88,9 @@ export async function POST(request: Request) {
       .update(schema.emailOutbox)
       .set({
         status: "processing",
-        lockedAt: now,
+        lockedAt: sqlTimestamp(now),
         attempts: sql`${schema.emailOutbox.attempts} + 1`,
-        updatedAt: now,
+        updatedAt: sqlTimestamp(now),
       })
       .where(
         inArray(
@@ -111,7 +116,11 @@ export async function POST(request: Request) {
         if (!row.recipientUserId) {
           await database
             .update(schema.emailOutbox)
-            .set({ status: "skipped", lockedAt: null, updatedAt: new Date() })
+            .set({
+              status: "skipped",
+              lockedAt: null,
+              updatedAt: sqlTimestamp(new Date()),
+            })
             .where(eq(schema.emailOutbox.id, row.id))
           skipped += 1
           continue
@@ -132,7 +141,11 @@ export async function POST(request: Request) {
         if (!recipient?.emailVerified || !recipient.listingEmailNotifications) {
           await database
             .update(schema.emailOutbox)
-            .set({ status: "skipped", lockedAt: null, updatedAt: new Date() })
+            .set({
+              status: "skipped",
+              lockedAt: null,
+              updatedAt: sqlTimestamp(new Date()),
+            })
             .where(eq(schema.emailOutbox.id, row.id))
           skipped += 1
           continue
@@ -178,10 +191,10 @@ export async function POST(request: Request) {
         .set({
           status: "sent",
           lockedAt: null,
-          sentAt: new Date(),
+          sentAt: sqlTimestamp(new Date()),
           providerMessageId: result.id ?? null,
           lastError: null,
-          updatedAt: new Date(),
+          updatedAt: sqlTimestamp(new Date()),
         })
         .where(eq(schema.emailOutbox.id, row.id))
       sent += 1
@@ -200,9 +213,11 @@ export async function POST(request: Request) {
           lockedAt: null,
           ...(isFinalAttempt
             ? {}
-            : { availableAt: new Date(Date.now() + retryDelay) }),
+            : {
+                availableAt: sqlTimestamp(new Date(Date.now() + retryDelay)),
+              }),
           lastError: message,
-          updatedAt: new Date(),
+          updatedAt: sqlTimestamp(new Date()),
         })
         .where(eq(schema.emailOutbox.id, row.id))
       failed += 1

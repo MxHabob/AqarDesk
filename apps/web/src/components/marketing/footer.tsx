@@ -41,6 +41,10 @@ export function Footer() {
       items: [
         { href: "/terms", label: t("marketingFooter.terms") },
         { href: "/policy", label: t("marketingFooter.privacy") },
+        {
+          href: "https://maps.app.goo.gl/JdX7quRDEFcRYbY49",
+          label: t("marketingFooter.location"),
+        },
       ],
     },
   ]
@@ -63,15 +67,27 @@ export function Footer() {
                   {group.title}
                 </h3>
                 <div className="space-y-2.5">
-                  {group.items.map((item) => (
-                    <Link
-                      key={item.href}
-                      href={item.href}
-                      className="block font-sans text-sm text-muted-foreground transition-colors hover:text-foreground"
-                    >
-                      {item.label}
-                    </Link>
-                  ))}
+                  {group.items.map((item) =>
+                    item.href.startsWith("https://") ? (
+                      <a
+                        key={item.href}
+                        href={item.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="block font-sans text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {item.label}
+                      </a>
+                    ) : (
+                      <Link
+                        key={item.href}
+                        href={item.href}
+                        className="block font-sans text-sm text-muted-foreground transition-colors hover:text-foreground"
+                      >
+                        {item.label}
+                      </Link>
+                    )
+                  )}
                 </div>
               </div>
             ))}

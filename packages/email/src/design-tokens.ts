@@ -6,7 +6,7 @@ export const emailDesignTokens = {
     mutedForeground: "#616161",
     border: "#dbdad7",
     primary: "#ffca06",
-    primaryForeground: "#35530e",
+    primaryForeground: "#121212",
   },
   radius: {
     control: "6px",

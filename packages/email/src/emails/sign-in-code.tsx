@@ -32,20 +32,23 @@ export async function createSignInCodeEmail(input: {
       officeName={officeName}
     >
       <Heading
+        dir="ltr"
         style={{
           color: emailDesignTokens.color.foreground,
           fontSize: "32px",
           letterSpacing: "8px",
           margin: "24px 0 8px",
-          textAlign: input.locale === "ar" ? "right" : "left",
+          textAlign: "center",
         }}
       >
         {input.code}
       </Heading>
       <Text
+        dir={arabic ? "rtl" : "ltr"}
         style={{
           color: emailDesignTokens.color.mutedForeground,
           fontSize: "12px",
+          textAlign: arabic ? "right" : "left",
         }}
       >
         {arabic

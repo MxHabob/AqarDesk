@@ -1,6 +1,7 @@
 import { type getDatabase, schema } from "@aqardesk/database"
 import { createListingUpdateEmail } from "@aqardesk/email"
 import { and, asc, eq, gt, isNull, lte, or, sql } from "drizzle-orm"
+import { sqlTimestamp } from "@/lib/email/sql-timestamp"
 
 const campaignRecipientBatchSize = 100
 const campaignExpansionLimit = 3
@@ -21,10 +22,10 @@ export async function expandListingCampaigns(
       status: "failed",
       lockedAt: null,
       lastError: "Campaign lease expired after the maximum expansion attempts.",
-      updatedAt: now,
+      updatedAt: sqlTimestamp(now),
     })
     .where(
-      sql`${schema.emailCampaigns.status} = 'processing' and ${schema.emailCampaigns.lockedAt} < ${new Date(now.getTime() - lockTimeoutMs)} and ${schema.emailCampaigns.attempts} >= ${maxAttempts}`
+      sql`${schema.emailCampaigns.status} = 'processing' and ${schema.emailCampaigns.lockedAt} < ${sqlTimestamp(new Date(now.getTime() - lockTimeoutMs))} and ${schema.emailCampaigns.attempts} >= ${maxAttempts}`
     )
 
   for (
@@ -41,7 +42,7 @@ export async function expandListingCampaigns(
           .select()
           .from(schema.emailCampaigns)
           .where(
-            sql`(${schema.emailCampaigns.status} = 'pending' and ${schema.emailCampaigns.availableAt} <= ${now} and ${schema.emailCampaigns.attempts} < ${maxAttempts}) or (${schema.emailCampaigns.status} = 'processing' and ${schema.emailCampaigns.lockedAt} < ${new Date(now.getTime() - lockTimeoutMs)} and ${schema.emailCampaigns.attempts} < ${maxAttempts})`
+            sql`(${schema.emailCampaigns.status} = 'pending' and ${schema.emailCampaigns.availableAt} <= ${sqlTimestamp(now)} and ${schema.emailCampaigns.attempts} < ${maxAttempts}) or (${schema.emailCampaigns.status} = 'processing' and ${schema.emailCampaigns.lockedAt} < ${sqlTimestamp(new Date(now.getTime() - lockTimeoutMs))} and ${schema.emailCampaigns.attempts} < ${maxAttempts})`
           )
           .orderBy(asc(schema.emailCampaigns.createdAt))
           .limit(1)
@@ -55,9 +56,9 @@ export async function expandListingCampaigns(
           .update(schema.emailCampaigns)
           .set({
             status: "processing",
-            lockedAt: now,
+            lockedAt: sqlTimestamp(now),
             attempts: attempt,
-            updatedAt: now,
+            updatedAt: sqlTimestamp(now),
           })
           .where(eq(schema.emailCampaigns.id, campaign.id))
 
@@ -163,11 +164,11 @@ export async function expandListingCampaigns(
             lastRecipientUserId:
               batch.at(-1)?.id ?? campaign.lastRecipientUserId,
             lockedAt: null,
-            availableAt: now,
-            completedAt: hasMoreRecipients ? null : now,
+            availableAt: sqlTimestamp(now),
+            completedAt: hasMoreRecipients ? null : sqlTimestamp(now),
             attempts: 0,
             lastError: null,
-            updatedAt: now,
+            updatedAt: sqlTimestamp(now),
           })
           .where(eq(schema.emailCampaigns.id, campaign.id))
 
@@ -189,10 +190,10 @@ export async function expandListingCampaigns(
         .set({
           status: attempt >= maxAttempts ? "failed" : "pending",
           attempts: attempt,
-          availableAt: new Date(Date.now() + retryDelay),
+          availableAt: sqlTimestamp(new Date(Date.now() + retryDelay)),
           lockedAt: null,
           lastError: message,
-          updatedAt: new Date(),
+          updatedAt: sqlTimestamp(new Date()),
         })
         .where(eq(schema.emailCampaigns.id, campaignId))
       console.error("Failed to expand an email campaign batch.", {
