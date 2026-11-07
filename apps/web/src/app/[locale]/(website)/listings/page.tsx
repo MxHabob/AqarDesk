@@ -10,11 +10,10 @@ import {
 import Link from "next/link"
 import type { SearchParams } from "nuqs"
 import { MaterialIcon } from "@/components/marketing/homepage/icon-mapping"
-import { ListingCard } from "@/components/marketing/listing-card"
 import { ListingsFilterAutoSubmit } from "@/components/marketing/listings-filter-auto-submit"
 import { ListingsFiltersResponsive } from "@/components/marketing/listings-filters-responsive"
+import { ListingsInfiniteResults } from "@/components/marketing/listings-infinite-results"
 import { ListingsPageViewport } from "@/components/marketing/listings-page-viewport"
-import { ListingsResultsScroller } from "@/components/marketing/listings-results-scroller"
 import {
   getFilteredPublicListings,
   getPublicListingPhotos,
@@ -55,7 +54,11 @@ export default async function ListingsPage({ params, searchParams }: Props) {
     getI18n(),
   ])
   const officeSettings = await getOfficeSettings()
-  const filters = loadPublicListingSearchParams(rawSearchParams)
+  const filters = {
+    ...loadPublicListingSearchParams(rawSearchParams),
+    page: 1,
+    pageSize: 12,
+  }
   const hasActiveFilters = Boolean(
     filters.q.trim() ||
       filters.propertyType ||
@@ -64,8 +67,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
       filters.maxPrice !== null ||
       filters.minArea !== null ||
       filters.maxArea !== null ||
-      filters.sort !== "newest" ||
-      filters.page > 1
+      filters.sort !== "newest"
   )
   const results = await getFilteredPublicListings(filters)
   const listingPhotos = await getPublicListingPhotos(
@@ -82,50 +84,24 @@ export default async function ListingsPage({ params, searchParams }: Props) {
     apartment: translate("propertyTypes.apartment"),
   }
 
-  const pageHref = (page: number, anchor = "#listings-results") => {
-    const query = new URLSearchParams()
-    if (filters.q) query.set("q", filters.q)
-    if (filters.propertyType) query.set("propertyType", filters.propertyType)
-    if (filters.listingType) query.set("listingType", filters.listingType)
-    if (filters.minPrice !== null)
-      query.set("minPrice", String(filters.minPrice))
-    if (filters.maxPrice !== null)
-      query.set("maxPrice", String(filters.maxPrice))
-    if (filters.minArea !== null) query.set("minArea", String(filters.minArea))
-    if (filters.maxArea !== null) query.set("maxArea", String(filters.maxArea))
-    query.set("sort", filters.sort)
-    query.set("page", String(page))
-    query.set("pageSize", String(filters.pageSize))
-    return `/listings?${query.toString()}${anchor}`
-  }
-
-  const firstVisiblePage = Math.max(
-    1,
-    Math.min(filters.page - 2, results.pageCount - 4)
-  )
-  const visiblePages = Array.from(
-    { length: Math.min(5, results.pageCount) },
-    (_, index) => firstVisiblePage + index
-  )
-
   return (
     <ListingsPageViewport>
-      <header className="shrink-0 border-b border-border pb-4">
-        <h1 className="font-serif text-3xl text-foreground sm:text-4xl">
-          {t("title")}
-        </h1>
+      <header className="flex flex-col gap-4 pb-5 sm:flex-row sm:items-end sm:justify-between">
+        <div className="space-y-2">
+          <h1 className="font-serif text-3xl tracking-tight text-foreground sm:text-4xl">
+            {t("title")}
+          </h1>
+          <p className="max-w-2xl text-sm leading-6 text-muted-foreground sm:text-base">
+            {t("description")}
+          </p>
+        </div>
       </header>
 
-      <div className="grid min-w-0 grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-[17rem_minmax(0,1fr)] lg:items-start lg:gap-6">
-        <ListingsFiltersResponsive
-          title={t("filters")}
-          closeLabel={t("close")}
-          resultCount={results.total}
-          resultLabel={t("resultsCount")}
-        >
+      <div className="grid min-w-0 grid-cols-1 gap-5 sm:gap-6 lg:grid-cols-[17rem_minmax(0,1fr)] lg:items-start lg:gap-7">
+        <ListingsFiltersResponsive title={t("filters")} closeLabel={t("close")}>
           <form
             method="get"
-            className="space-y-4 border border-border bg-background p-4"
+            className="space-y-5 rounded-lg border border-border bg-card p-4 sm:p-5 lg:border-0 lg:bg-transparent lg:p-0"
           >
             <ListingsFilterAutoSubmit />
             {hasActiveFilters && (
@@ -140,7 +116,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
               </div>
             )}
             <label className="block min-w-0">
-              <span className="relative block focus-within:ring-2 focus-within:ring-ring/40">
+              <span className="relative block rounded-lg focus-within:ring-2 focus-within:ring-ring/40">
                 <span className="pointer-events-none absolute inset-y-0 start-3 flex items-center text-muted-foreground">
                   <MaterialIcon name="search" size={16} />
                 </span>
@@ -150,7 +126,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
                   defaultValue={filters.q}
                   aria-label={t("search")}
                   placeholder={t("search")}
-                  className="h-10 w-full rounded-none border border-border bg-background pe-3 ps-10 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none"
+                  className="h-11 w-full rounded-lg border border-input bg-background pe-3 ps-10 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none"
                 />
               </span>
             </label>
@@ -180,7 +156,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
                         (filters.propertyType ?? "all") === option.value
                       }
                     />
-                    <span className="flex min-h-9 items-center border-s-2 border-transparent px-3 text-sm text-muted-foreground transition-colors hover:bg-secondary peer-checked:border-foreground peer-checked:bg-secondary peer-checked:font-medium peer-checked:text-foreground peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring/50">
+                    <span className="flex min-h-10 items-center rounded-md border-s-2 border-transparent px-3 text-sm text-muted-foreground transition-colors hover:bg-secondary peer-checked:border-primary peer-checked:bg-secondary peer-checked:font-medium peer-checked:text-foreground peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring/50">
                       {option.label}
                     </span>
                   </label>
@@ -192,7 +168,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
               <legend className="text-sm font-medium">
                 {t("listingTypeFilter")}
               </legend>
-              <div className="grid grid-cols-3 bg-muted/50 p-1">
+              <div className="grid grid-cols-3 rounded-lg bg-muted/60 p-1">
                 {[
                   { value: "", label: t("any") },
                   { value: "sale", label: t("sale") },
@@ -212,9 +188,9 @@ export default async function ListingsPage({ params, searchParams }: Props) {
                       }
                     />
                     <span
-                      className={`flex min-h-9 items-center justify-center px-1 text-center text-xs transition-colors hover:bg-background/70 sm:text-sm ${
+                      className={`flex min-h-9 items-center justify-center rounded-md px-1 text-center text-xs transition-colors hover:bg-background/70 sm:text-sm ${
                         index > 0 ? "ms-1" : ""
-                      } peer-checked:bg-background peer-checked:text-foreground peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring/50`}
+                      } peer-checked:bg-background peer-checked:text-foreground peer-checked:shadow-sm peer-focus-visible:outline-none peer-focus-visible:ring-2 peer-focus-visible:ring-ring/50`}
                     >
                       {option.label}
                     </span>
@@ -236,7 +212,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
                     placeholder={t("rangeFrom")}
                     aria-label={t("minPrice")}
                     defaultValue={filters.minPrice ?? ""}
-                    className="h-9 min-w-0 w-full rounded-none border border-border bg-background px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+                    className="h-10 min-w-0 w-full rounded-md border border-input bg-background px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                   />
                 </label>
                 <label className="min-w-0">
@@ -249,7 +225,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
                     placeholder={t("rangeTo")}
                     aria-label={t("maxPrice")}
                     defaultValue={filters.maxPrice ?? ""}
-                    className="h-9 min-w-0 w-full rounded-none border border-border bg-background px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+                    className="h-10 min-w-0 w-full rounded-md border border-input bg-background px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                   />
                 </label>
               </div>
@@ -268,7 +244,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
                     placeholder={t("rangeFrom")}
                     aria-label={t("minArea")}
                     defaultValue={filters.minArea ?? ""}
-                    className="h-9 min-w-0 w-full rounded-none border border-border bg-background px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+                    className="h-10 min-w-0 w-full rounded-md border border-input bg-background px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                   />
                 </label>
                 <label className="min-w-0">
@@ -281,7 +257,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
                     placeholder={t("rangeTo")}
                     aria-label={t("maxArea")}
                     defaultValue={filters.maxArea ?? ""}
-                    className="h-9 min-w-0 w-full rounded-none border border-border bg-background px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
+                    className="h-10 min-w-0 w-full rounded-md border border-input bg-background px-3 text-sm transition-colors placeholder:text-muted-foreground/70 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/40"
                   />
                 </label>
               </div>
@@ -300,7 +276,7 @@ export default async function ListingsPage({ params, searchParams }: Props) {
               >
                 <SelectTrigger
                   aria-label={t("sort")}
-                  className="h-10 w-full border border-border bg-background px-3 text-sm focus-visible:ring-2 focus-visible:ring-ring/40"
+                  className="h-10 w-full rounded-md border border-input bg-background px-3 text-sm focus-visible:ring-2 focus-visible:ring-ring/40"
                 >
                   <SelectValue />
                 </SelectTrigger>
@@ -314,120 +290,67 @@ export default async function ListingsPage({ params, searchParams }: Props) {
               </Select>
             </div>
 
-            <input type="hidden" name="pageSize" value={filters.pageSize} />
+            <input type="hidden" name="pageSize" value="12" />
           </form>
         </ListingsFiltersResponsive>
 
-        <ListingsResultsScroller page={filters.page}>
+        <div
+          id="listings-results"
+          className="min-w-0 scroll-mt-24 space-y-6 sm:space-y-8"
+        >
           <section
             aria-label={t("title")}
             className="min-w-0 space-y-4 sm:space-y-5"
           >
-            <div className="hidden justify-start border-b border-border pb-3 lg:flex">
-              <p className="text-sm font-medium text-muted-foreground">
-                {results.total} {t("resultsCount")}
-              </p>
-            </div>
             {results.rows.length ? (
-              <div className="grid gap-4 sm:grid-cols-2 xl:grid-cols-3">
-                {results.rows.map((listing) => {
-                  const photos = listingPhotos[listing.id] ?? []
-                  const coverPhoto = photos[0]
-                  return (
-                    <ListingCard
-                      key={listing.id}
-                      listing={listing}
-                      fieldSettings={officeSettings.propertyFieldSettings ?? {}}
-                      returnTo={pageHref(
-                        filters.page,
-                        `#listing-${listing.id}`
-                      )}
-                      coverPhoto={coverPhoto}
-                      photos={photos}
-                      propertyTypeLabel={
-                        propertyTypeLabels[listing.propertyType]
-                      }
-                      locale={locale}
-                      labels={{
-                        sale: t("sale"),
-                        rent: t("rent"),
-                        perMonth: t("perMonth"),
-                        quickView: t("quickView"),
-                        openFullListing: t("openFullListing"),
-                        locationUnavailable: t("locationUnavailable"),
-                        propertyDetails: t("propertyDetails"),
-                        location: t("location"),
-                        price: t("price"),
-                        notAvailable: t("notAvailable"),
-                        noImage: t("noImage"),
-                        landArea: t("landArea"),
-                        buildingArea: t("buildingArea"),
-                        squareMeters: t("squareMeters"),
-                        close: t("close"),
-                        zoomImage: t("zoomImage"),
-                        zoomIn: t("zoomIn"),
-                        zoomOut: t("zoomOut"),
-                        previousImage: t("previousImage"),
-                        nextImage: t("nextImage"),
-                        imagePosition: t("imagePosition"),
-                        playSlideshow: t("playSlideshow"),
-                        pauseSlideshow: t("pauseSlideshow"),
-                      }}
-                    />
-                  )
-                })}
-              </div>
+              <ListingsInfiniteResults
+                filters={filters}
+                initialPage={{
+                  rows: results.rows,
+                  listingPhotos,
+                  page: results.page,
+                  pageCount: results.pageCount,
+                }}
+                fieldSettings={officeSettings.propertyFieldSettings ?? {}}
+                propertyTypeLabels={propertyTypeLabels}
+                locale={locale}
+                labels={{
+                  sale: t("sale"),
+                  rent: t("rent"),
+                  perMonth: t("perMonth"),
+                  quickView: t("quickView"),
+                  openFullListing: t("openFullListing"),
+                  locationUnavailable: t("locationUnavailable"),
+                  propertyDetails: t("propertyDetails"),
+                  location: t("location"),
+                  price: t("price"),
+                  notAvailable: t("notAvailable"),
+                  noImage: t("noImage"),
+                  landArea: t("landArea"),
+                  buildingArea: t("buildingArea"),
+                  squareMeters: t("squareMeters"),
+                  close: t("close"),
+                  zoomImage: t("zoomImage"),
+                  zoomIn: t("zoomIn"),
+                  zoomOut: t("zoomOut"),
+                  previousImage: t("previousImage"),
+                  nextImage: t("nextImage"),
+                  imagePosition: t("imagePosition"),
+                  playSlideshow: t("playSlideshow"),
+                  pauseSlideshow: t("pauseSlideshow"),
+                  noResults: t("noResults"),
+                  loadingMore: t("loadingMore"),
+                  loadMoreError: t("loadMoreError"),
+                  retry: t("retry"),
+                }}
+              />
             ) : (
-              <div className="border border-dashed border-border px-6 py-16 text-center text-muted-foreground">
-                {t("noResults")}
+              <div className="rounded-lg border border-dashed border-border bg-card/60 px-6 py-16 text-center text-muted-foreground">
+                <p className="font-medium text-foreground">{t("noResults")}</p>
               </div>
             )}
           </section>
-
-          {results.pageCount > 1 && (
-            <nav
-              aria-label={t("pagination")}
-              className="flex flex-wrap items-center justify-center gap-2 border-t border-border pt-5"
-            >
-              {results.page > 1 && (
-                <Link
-                  href={pageHref(results.page - 1)}
-                  className="border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
-                >
-                  {t("previousPage")}
-                </Link>
-              )}
-              {visiblePages.map((page) =>
-                page === results.page ? (
-                  <span
-                    key={page}
-                    aria-current="page"
-                    className="inline-flex size-9 items-center justify-center bg-foreground text-sm font-medium text-background"
-                  >
-                    {page}
-                  </span>
-                ) : (
-                  <Link
-                    key={page}
-                    href={pageHref(page)}
-                    aria-label={`${t("page")} ${page}`}
-                    className="inline-flex size-9 items-center justify-center border border-border text-sm transition-colors hover:bg-muted"
-                  >
-                    {page}
-                  </Link>
-                )
-              )}
-              {results.page < results.pageCount && (
-                <Link
-                  href={pageHref(results.page + 1)}
-                  className="border border-border px-3 py-2 text-sm transition-colors hover:bg-muted"
-                >
-                  {t("nextPage")}
-                </Link>
-              )}
-            </nav>
-          )}
-        </ListingsResultsScroller>
+        </div>
       </div>
     </ListingsPageViewport>
   )

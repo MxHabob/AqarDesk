@@ -1,9 +1,19 @@
-import { auth } from "@aqardesk/auth/server"
-import { listUserFavorites } from "@aqardesk/database/queries"
+import {
+  auth,
+  isEmailOtpConfigured,
+  isGoogleAuthConfigured,
+} from "@aqardesk/auth/server"
+import type { PropertyType } from "@aqardesk/categories"
+import {
+  getOfficeSettings,
+  listUserFavorites,
+} from "@aqardesk/database/queries"
 import type { Metadata } from "next"
 import { headers } from "next/headers"
 import { redirect } from "next/navigation"
-import { getScopedI18n, setStaticParamsLocale } from "@/locales/server"
+import { FavoriteListingsGrid } from "@/components/account/favorite-listings-grid"
+import { getPublicListingPhotos } from "@/lib/listings/public-queries"
+import { getI18n, getScopedI18n, setStaticParamsLocale } from "@/locales/server"
 
 export async function generateMetadata({
   params,
@@ -27,7 +37,12 @@ export default async function AccountFavoritesPage({
 }) {
   const { locale } = await params
   setStaticParamsLocale(locale)
-  const t = await getScopedI18n("account")
+  const [t, listingT, translate, officeSettings] = await Promise.all([
+    getScopedI18n("account"),
+    getScopedI18n("publicListings"),
+    getI18n(),
+    getOfficeSettings(),
+  ])
   const session = await auth.api.getSession({ headers: await headers() })
 
   if (!session) {
@@ -35,6 +50,32 @@ export default async function AccountFavoritesPage({
   }
 
   const listings = await listUserFavorites(session.user.id)
+  const photos = await getPublicListingPhotos(
+    listings.map((listing) => listing.listingId)
+  )
+  const propertyTypeLabels: Record<PropertyType, string> = {
+    building: translate("propertyTypes.building"),
+    land: translate("propertyTypes.land"),
+    house_villa: translate("propertyTypes.house_villa"),
+    investment: translate("propertyTypes.investment"),
+    commercial: translate("propertyTypes.commercial"),
+    warehouse: translate("propertyTypes.warehouse"),
+    yard: translate("propertyTypes.yard"),
+    apartment: translate("propertyTypes.apartment"),
+  }
+  const favoriteListings = listings.map((listing) => ({
+    id: listing.listingId,
+    type: listing.listingType,
+    salePrice: listing.salePrice,
+    monthlyRent: listing.monthlyRent,
+    currencyCode: listing.currencyCode,
+    title: listing.title,
+    propertyType: listing.propertyType,
+    city: listing.city,
+    district: listing.district,
+    lotAreaM2: listing.lotAreaM2,
+    buildingAreaM2: listing.buildingAreaM2,
+  }))
 
   return (
     <section className="space-y-5">
@@ -44,30 +85,42 @@ export default async function AccountFavoritesPage({
           {t("favoritesDescription")}
         </p>
       </div>
-      {listings.length === 0 ? (
-        <p className="rounded-lg border p-5 text-sm text-muted-foreground">
-          {t("emptyFavorites")}
-        </p>
-      ) : (
-        <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {listings.map((listing) => (
-            <li
-              className="space-y-2 rounded-lg border p-4"
-              key={listing.listingId}
-            >
-              <h2 className="font-medium">{listing.title}</h2>
-              <p className="text-sm text-muted-foreground">
-                {[listing.district, listing.city]
-                  .filter(Boolean)
-                  .join(t("locationSeparator"))}
-              </p>
-              <p className="text-xs text-muted-foreground">
-                {listing.propertyType}
-              </p>
-            </li>
-          ))}
-        </ul>
-      )}
+      <FavoriteListingsGrid
+        listings={favoriteListings}
+        photos={photos}
+        favoriteIds={favoriteListings.map((listing) => listing.id)}
+        fieldSettings={officeSettings.propertyFieldSettings ?? {}}
+        propertyTypeLabels={propertyTypeLabels}
+        locale={locale}
+        emptyLabel={t("emptyFavorites")}
+        googleEnabled={isGoogleAuthConfigured}
+        emailOtpEnabled={isEmailOtpConfigured}
+        labels={{
+          sale: listingT("sale"),
+          rent: listingT("rent"),
+          perMonth: listingT("perMonth"),
+          quickView: listingT("quickView"),
+          openFullListing: listingT("openFullListing"),
+          locationUnavailable: listingT("locationUnavailable"),
+          propertyDetails: listingT("propertyDetails"),
+          location: listingT("location"),
+          price: listingT("price"),
+          notAvailable: listingT("notAvailable"),
+          noImage: listingT("noImage"),
+          landArea: listingT("landArea"),
+          buildingArea: listingT("buildingArea"),
+          squareMeters: listingT("squareMeters"),
+          close: listingT("close"),
+          zoomImage: listingT("zoomImage"),
+          zoomIn: listingT("zoomIn"),
+          zoomOut: listingT("zoomOut"),
+          previousImage: listingT("previousImage"),
+          nextImage: listingT("nextImage"),
+          imagePosition: listingT("imagePosition"),
+          playSlideshow: listingT("playSlideshow"),
+          pauseSlideshow: listingT("pauseSlideshow"),
+        }}
+      />
     </section>
   )
 }

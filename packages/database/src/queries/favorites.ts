@@ -18,6 +18,8 @@ export async function listUserFavorites(
       propertyType: schema.properties.type,
       city: schema.properties.city,
       district: schema.properties.district,
+      lotAreaM2: schema.properties.lotAreaM2,
+      buildingAreaM2: schema.properties.buildingAreaM2,
       createdAt: schema.favorites.createdAt,
     })
     .from(schema.favorites)
